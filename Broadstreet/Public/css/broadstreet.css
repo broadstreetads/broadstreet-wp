@@ -1,0 +1,192 @@
+#main .box {
+    margin: 20px 0px;
+    -moz-box-shadow: 0 0 5px #888;
+    -webkit-box-shadow: 0 0 5px#888;
+    box-shadow: 0 0 5px #888;    
+}
+
+#main .box .title {
+    background: #f1f1f1;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#main .box .content {
+    background: #fff;
+    padding: 10px;
+    font-size: 15px;
+}
+
+#main .left_column {
+    width: 600px;
+    float: left;
+}
+
+#main .right_column {
+    padding-left: 10px;
+    padding-top: 20px;
+    width: 250px;
+    float: left;
+}
+
+#main .right_column p {
+    text-align: justify;
+}
+
+#main .oconf_logo {
+    border: 1px solid #ccc;
+}
+
+#main {
+    min-width: 880px;
+}
+
+.information {
+    padding: 5px;
+    background: #f1f1f1;
+    border: 1px solid #ccc;
+    font-size: 13px;
+}
+.information .name {
+    color: #000;
+    display: inline-block;
+    width: 300px;
+    font-style: italic;
+}
+.information .value {
+    color: #555;
+    display: inline-block;
+    width: 250px;
+    text-align: right;
+}
+.smallbreak {
+    margin: 3px 0px;
+    border: 0px;
+    border-bottom: 1px solid #ccc;
+}
+
+.good_info {
+    color: green;
+    font-style: italic;
+    padding-top: 2px;
+    padding-bottom: 5px;
+    font-size: 13px;
+}
+
+.bad_info {
+    color: red;
+    font-style: italic;
+    padding-top: 2px;
+    padding-bottom: 5px;
+    font-size: 13px;
+}
+
+.notice_info {
+    color: #8E2323;
+    font-style: italic;
+    padding-top: 2px;
+    padding-bottom: 5px;
+    font-size: 13px;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.power_button {
+    float: right;
+}
+
+.index_loading {
+    float: left;
+}
+
+.clearfix {
+    clear: both;
+}
+
+.spacebox {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.about {
+    font-size: 10px;
+    font-style: italic;
+}
+
+#loading-icon {
+    display: none;
+}
+
+.break {
+    border: 1px dotted #ddd;
+    border-width: 1px 0px 0px 0px;
+    margin: 10px 0px;
+    width: 565px;
+    clear:both;
+}
+
+.option .check {
+    display:inline-block;
+    float:left;
+    width:15px;
+}
+
+.option .name {
+    color:#555555;
+    display:inline-block;
+    font-weight:bold;
+    margin-left:10px;
+    font-size:13px;
+}
+
+.option .desc {
+    color:#777777;
+    font-size:13px;
+    margin-left:25px;
+}
+
+.option input {
+    margin:2px 0 0;
+}
+
+.option .success {
+    display:none;
+    margin-left: 10px;
+    color: green;
+}
+
+.nomargin {
+    margin-left: 0px !important;
+}
+
+.control-container {
+    margin-top: 13px;
+    margin-left: 15px;
+    float: left;
+}
+
+.save-container {
+    margin-top: 3px;
+    margin-right: 15px;
+    float: right;
+}
+
+.control-label {
+    width: 300px;
+    float: left;
+}
+
+.control-container input[type="text"] {
+    width: 250px;
+}
+
+.save-container input {
+    padding: 5px 15px;
+}
