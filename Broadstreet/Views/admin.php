@@ -29,7 +29,7 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
-                                API Key
+                                Access Token
                                 
                                 <span class="error <?php if(!$key_valid) echo "visible"; ?>" id="key-invalid">Invalid</span>
                                 <span class="success <?php if($key_valid) echo "visible"; ?>" id="key-valid">Valid</span>
