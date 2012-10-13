@@ -50,7 +50,7 @@ jQuery(function($){
                         }
 
                     } else {
-                        $('#network').append($('<option id="-1">Enter a valid token above</option>'));
+                        $('#network').append($('<option value="-1">Enter a valid token above</option>'));
                         $('#key-valid').hide().removeClass('visible');
                         $('#key-invalid').fadeIn().addClass('visible');
                     }

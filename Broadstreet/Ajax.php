@@ -34,7 +34,7 @@ class Broadstreet_Ajax
                 Broadstreet_Utility::setOption(Broadstreet_Core::KEY_NETWORK_ID, $networks[0]->id);
             }
             
-            Broadstreet_Utility::refreshZoneCache();
+            //Broadstreet_Utility::refreshZoneCache();
         }
         catch(Exception $ex)
         {

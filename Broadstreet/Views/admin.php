@@ -60,7 +60,7 @@
                                 <option <?php if($network_id == $network->id) echo "selected"; ?> value="<?php echo $network->id ?>"><?php echo htmlentities($network->name) ?></option>
                                 <?php endforeach; ?>
                                 <?php if(count($networks) == 0): ?>
-                                <option id="-1">Enter a valid token above</option>
+                                <option value="-1">Enter a valid token above</option>
                                 <?php endif; ?>
                             </select>
                         </div>

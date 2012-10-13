@@ -207,10 +207,10 @@ class Broadstreet_Zone_Widget extends WP_Widget
         
        ?>
         <div class="widget-content">
-       <?php if($error): ?>
-            <p style="color: red; font-weight: bold;">Broadstreet isn't
-            currently configured correctly. Go to 'Settings', then 'Broadstreet',
-            and make sure your access token is correct.</p>
+       <?php if(count($zones) == 0): ?>
+            <p style="color: green; font-weight: bold;">You either have no zones or
+                Broadstreet isn't configured correctly. Go to 'Settings', then 'Broadstreet',
+            and make sure your access token is correct, and make sure you have zones set up.</p>
         <?php else: ?>
         <input class="widefat" type="hidden" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="" />
        <p>
