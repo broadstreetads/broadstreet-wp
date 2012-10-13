@@ -173,8 +173,11 @@ class Broadstreet_Utility
         try
         {
             $zones  = $api->getNetworkZones($network_id);
-            
-            Broadstreet_Cache::set(self::KEY_ZONE_CACHE, $zones, Broadstreet_Config::get('zone_cache_ttl_seconds'));
+
+            if(is_array($zones))
+                Broadstreet_Cache::set(self::KEY_ZONE_CACHE, $zones, Broadstreet_Config::get('zone_cache_ttl_seconds'));
+            else
+                Broadstreet_Cache::get(self::KEY_ZONE_CACHE, FALSE, TRUE);
         }
         catch(Exception $ex)
         {
