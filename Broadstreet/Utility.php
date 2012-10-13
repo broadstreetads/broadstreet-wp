@@ -69,8 +69,8 @@ class Broadstreet_Utility
      * @return string the base URL
      */
     public static function getBroadstreetBaseURL()
-    {
-        return (get_bloginfo('url') . '/wp-content/plugins/Broadstreet/Broadstreet/');
+    {   
+        return (get_bloginfo('url') . '/wp-content/plugins/broadstreet/Broadstreet/');
     }
 
     /**
