@@ -1,6 +1,8 @@
 <?php
 /**
- * This is the PHP client for Broadstreet 
+ * This is the PHP client for Broadstreet
+ * @link http://broadstreetads.com
+ * @author Broadstreet Ads <labs@broadstreetads.com>
  */
 
 /**
@@ -23,6 +25,12 @@ class Broadstreet
      */
     protected $host = 'my.broadstreetads.com';
     
+    /**
+     * The constructor
+     * @param string $access_token A user's access token
+     * @param string $host The API endpoint host. Optional. Defaults to
+     *  my.broadstreetads.com
+     */
     public function __construct($access_token, $host = null)
     {
         if($host !== null)
@@ -35,7 +43,7 @@ class Broadstreet
     
     /**
      * Get a list of networks this token has access to
-     * @return object
+     * @return array
      */
     public function getNetworks()
     {
@@ -56,6 +64,7 @@ class Broadstreet
      * @param type $uri
      * @return type
      * @throws Broadstreet_DependencyException 
+     * @throws Broadstreet_AuthException 
      */
     protected function _get($uri, $options = array())
     {
