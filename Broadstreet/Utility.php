@@ -12,6 +12,10 @@
  */
 class Broadstreet_Utility
 {
+    const KEY_ZONE_CACHE = 'BROADSTREET_ZONE_CACHE';
+    
+    protected static $_zoneCache = NULL;
+    
     /**
      * Sets a Wordpress option
      * @param string $name The name of the option to set
@@ -132,6 +136,56 @@ class Broadstreet_Utility
         }
 
         return FALSE;
+    }
+    
+    
+    public static function getZoneCache()
+    {
+        if(self::$_zoneCache !== NULL) return self::$_zoneCache;
+        
+        $zones = Broadstreet_Cache::get(self::KEY_ZONE_CACHE, FALSE, FALSE);
+        
+        if($zones === FALSE)
+        {
+            $zones = self::refreshZoneCache();
+        }
+        else
+        {
+            $kzones = array();
+            foreach($zones as $zone)
+                $kzones[$zone->id] = $zone;
+
+            $zones = $kzones;
+        }
+        
+        self::$_zoneCache = $zones;
+        
+        return self::$_zoneCache;
+    }
+    
+    public static function refreshZoneCache()
+    {
+        $api_key     = self::getOption(Broadstreet_Core::KEY_API_KEY);
+        $network_id  = self::getOption(Broadstreet_Core::KEY_NETWORK_ID);
+        
+        $api = new Broadstreet($api_key);
+
+        try
+        {
+            $zones  = $api->getNetworkZones($network_id);
+            
+            Broadstreet_Cache::set(self::KEY_ZONE_CACHE, $zones, Broadstreet_Config::get('zone_cache_ttl_seconds'));
+        }
+        catch(Exception $ex)
+        {
+            $zones = array();
+        }
+
+        $kzones = array();
+        foreach($zones as $zone)
+            $kzones[$zone->id] = $zone;
+        
+        return $kzones;
     }
 
     /**

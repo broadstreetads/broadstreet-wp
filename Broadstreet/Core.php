@@ -8,8 +8,8 @@
  */
 
 require_once dirname(__FILE__) . '/Ajax.php';
+require_once dirname(__FILE__) . '/Cache.php';
 require_once dirname(__FILE__) . '/Config.php';
-require_once dirname(__FILE__) . '/Document.php';
 require_once dirname(__FILE__) . '/Benchmark.php';
 require_once dirname(__FILE__) . '/Log.php';
 require_once dirname(__FILE__) . '/Model.php';
@@ -129,7 +129,6 @@ class Broadstreet_Core
             catch(Exception $ex)
             {
                 $data['networks'] = array();
-                $data['errors'][] = "Your API wasn't accepted by the Broadstreet server. Double check it!";
                 $data['key_valid'] = false;
             }
         }
@@ -168,11 +167,13 @@ class Broadstreet_Zone_Widget extends WP_Widget
      function widget($args, $instance)
      {
          extract($args);
-         $zone        = $instance['w_zone'];
-
-         echo $before_widget;
          
-         echo "AD";
+         $zone_id   = $instance['w_zone'];
+         $zone_data = Broadstreet_Utility::getZoneCache();
+         
+         echo $before_widget;
+
+         echo $zone_data[$zone_id]->html;
 
          echo $after_widget;
      }
@@ -187,7 +188,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
      {
         $instance = $old_instance;
         
-        $instance['w_zone']        = $new_instance['w_zone'];
+        $instance['w_zone'] = $new_instance['w_zone'];
 
         return $instance;
      }
@@ -200,17 +201,27 @@ class Broadstreet_Zone_Widget extends WP_Widget
      {
 
         $defaults = array('w_title' => 'Broadstreet Ad Zones', 'w_info_string' => '', 'w_opener' => '', 'w_closer' => '');
-		    $instance = wp_parse_args((array) $instance, $defaults);
+		$instance = wp_parse_args((array) $instance, $defaults);
+        
+        $zones = Broadstreet_Utility::refreshZoneCache();
+        
        ?>
         <div class="widget-content">
+       <?php if($error): ?>
+            <p style="color: red; font-weight: bold;">Broadstreet isn't
+            currently configured correctly. Go to 'Settings', then 'Broadstreet',
+            and make sure your access token is correct.</p>
+        <?php else: ?>
         <input class="widefat" type="hidden" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="" />
        <p>
             <label for="<?php echo $this->get_field_id('w_info_string'); ?>">Zone</label>
-            <select class="widefat" id="<?php echo $this->get_field_id( 'w_zone' ); ?>" name="<?php echo $this->get_field_name('w_zone'); ?>" />
-                <option value="">Zone #1</option>
+            <select class="widefat" id="<?php echo $this->get_field_id( 'w_zone' ); ?>" name="<?php echo $this->get_field_name('w_zone'); ?>" >
+                <?php foreach($zones as $id => $zone): ?>
+                <option <?php if($instance['w_zone'] == $zone->id) echo "selected" ?> value="<?php echo $zone->id ?>"><?php echo $zone->name ?></option>
+                <?php endforeach; ?>
             </select>
-            <small>You can create new zones <a href="#">here</a></small>
        </p>
+        <?php endif; ?>
         </div>
        <?php
      }

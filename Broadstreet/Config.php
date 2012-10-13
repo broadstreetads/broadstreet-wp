@@ -19,6 +19,8 @@ class Broadstreet_Config
     {
         $config = array();
         # Set config values below
+        
+        $config['zone_cache_ttl_seconds'] = 60*15; // 15 minutes
 
         $config['log'] = array (
 
