@@ -29,10 +29,14 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
-                                API Key<span class="success" id="save-success">Saved!</span>
+                                API Key
+                                
+                                <span class="error <?php if(!$key_valid) echo "visible"; ?>" id="key-invalid">Invalid</span>
+                                <span class="success <?php if($key_valid) echo "visible"; ?>" id="key-valid">Valid</span>
+                                
                             </div>
                             <div class="desc nomargin">
-                                This can be found <a href="#">here</a><br />
+                                This can be found <a target="_blank" href="http://my.broadstreetads.com/access-token">here</a> when you're logged in to Broadstreet.<br />
                             </div>
                         </div>
                         <div class="control-container">
@@ -44,10 +48,33 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
+                                Publisher Selection                                
+                            </div>
+                            <div class="desc nomargin">
+                                Which publisher or network does this site fall under?
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <select id="network" type="text">
+                                <?php foreach($networks as $network): ?>
+                                <option <?php if($network_id == $network->id) echo "selected"; ?> value="<?php echo $network->id ?>"><?php echo htmlentities($network->name) ?></option>
+                                <?php endforeach; ?>
+                                <?php if(count($networks) == 0): ?>
+                                <option id="-1">Enter a valid token above</option>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="break"></div>
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">
                                 
                             </div>
                         </div>
                         <div class="save-container">
+                            <span class="success" id="save-success">Saved!</span>
                             <input id="save" type="button" value="Save" name="" />
                         </div>
                     </div>

@@ -17,6 +17,7 @@ require_once dirname(__FILE__) . '/Net.php';
 require_once dirname(__FILE__) . '/Utility.php';
 require_once dirname(__FILE__) . '/View.php';
 require_once dirname(__FILE__) . '/Exception.php';
+require_once dirname(__FILE__) . '/Vendor/Broadstreet.php';
 
 if (! class_exists('Broadstreet_Core')):
 
@@ -28,6 +29,7 @@ if (! class_exists('Broadstreet_Core')):
 class Broadstreet_Core
 {
     CONST KEY_API_KEY             = 'Broadstreet_API_Key';
+    CONST KEY_NETWORK_ID          = 'Broadstreet_Network_Key';
     CONST KEY_INSTALL_REPORT      = false;
 
     /**
@@ -108,9 +110,28 @@ class Broadstreet_Core
 
         $data['service_tag'] = Broadstreet_Utility::getServiceTag();
         $data['api_key']     = Broadstreet_Utility::getOption(self::KEY_API_KEY);
+        $data['network_id']  = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
+        $data['errors']      = array();
         
-        if(!$data['api_key']) {
-            $data['errors'] = array('You dont have an API key set yet! Set it below.');
+        if(!$data['api_key']) 
+        {
+            $data['errors'][] = 'You dont have an API key set yet! Set it below.';
+        } 
+        else 
+        {
+            $api = new Broadstreet($data['api_key']);
+            
+            try
+            {
+                $data['networks']  = $api->getNetworks();
+                $data['key_valid'] = true;
+            }
+            catch(Exception $ex)
+            {
+                $data['networks'] = array();
+                $data['errors'][] = "Your API wasn't accepted by the Broadstreet server. Double check it!";
+                $data['key_valid'] = false;
+            }
         }
 
         Broadstreet_View::load('admin', $data);

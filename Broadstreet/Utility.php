@@ -167,8 +167,7 @@ class Broadstreet_Utility
         $report['u'] = get_bloginfo('url');
         $report['e'] = get_bloginfo('admin_email');
         $report['c'] = Broadstreet_Model::getPublishedPostCount();
-        $report['d'] = Broadstreet_Config::get('driver', 'NONE?');
-        $report['v'] = Broadstreet_VERSION;
+        $report['v'] = BROADSTREET_VERSION;
 
         if($message)
             $report['m'] = $message;

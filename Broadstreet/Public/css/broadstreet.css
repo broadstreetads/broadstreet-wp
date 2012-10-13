@@ -34,10 +34,6 @@
     text-align: justify;
 }
 
-#main .oconf_logo {
-    border: 1px solid #ccc;
-}
-
 #main {
     min-width: 880px;
 }
@@ -160,6 +156,20 @@
     display:none;
     margin-left: 10px;
     color: green;
+}
+
+.option .error {
+    display:none;
+    margin-left: 10px;
+    color: red;
+}
+
+.visible {
+    display: inline !important;
+}
+
+.hidden {
+    display: none;
 }
 
 .nomargin {
