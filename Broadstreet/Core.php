@@ -60,9 +60,27 @@ class Broadstreet_Core
         add_action('admin_init', 	array($this, 'adminInitCallback' ));
         add_action('admin_notices',     array($this, 'adminWarningCallback'));
         add_action('widgets_init', array($this, 'registerWidget'));
+        add_action('add_meta_boxes', array($this, 'addMetaBoxes'));
+        add_shortcode('broadstreet', array($this, 'shortcode'));
 
         # -- Below is administration AJAX functionality
         add_action('wp_ajax_save_settings', array('Broadstreet_Ajax', 'saveSettings'));
+    }
+    
+    static function addMetaBoxes()
+    {
+        add_meta_box( 
+            'broadstreet_sectionid',
+            __( 'Broadstreet Zone Info', 'broadstreet_textdomain' ),
+            array(__CLASS__, 'broadstreetInfoBox'),
+            'post' 
+        );
+        add_meta_box(
+            'broadstreet_sectionid',
+            __( 'Broadstreet Zone Info', 'broadstreet_textdomain'), 
+            array(__CLASS__, 'broadstreetInfoBox'),
+            'page'
+        );
     }
 
     /**
@@ -137,12 +155,44 @@ class Broadstreet_Core
     }
     
     /**
+     * Handler for the broadstreet info box below a post or page
+     * @param type $post 
+     */
+    public function broadstreetInfoBox($post) 
+    {
+        // Use nonce for verification
+        wp_nonce_field(plugin_basename(__FILE__), 'broadstreetnoncename');
+
+        $zone_data = Broadstreet_Utility::getZoneCache();
+        
+        Broadstreet_View::load('infoBox', array('zones' => $zone_data));
+    }
+    
+    /**
+     * Handler for in-post shortcodes
+     * @param array $attrs
+     * @return string 
+     */
+    public function shortcode($attrs)
+    {
+        $zone_data = Broadstreet_Utility::getZoneCache();
+        
+        if(isset($attrs['zone'])
+            && isset($zone_data[$attrs['zone']])) {
+            return $zone_data[$attrs['zone']]->html;
+        } else {
+            return '';
+        }   
+    }
+    
+    /**
      * The callback used to register the widget
      */
     public function registerWidget()
     {
         register_widget('Broadstreet_Zone_Widget');
     }
+    
 }
 
 /**
