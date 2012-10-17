@@ -31,6 +31,9 @@ class Broadstreet_Core
     CONST KEY_API_KEY             = 'Broadstreet_API_Key';
     CONST KEY_NETWORK_ID          = 'Broadstreet_Network_Key';
     CONST KEY_INSTALL_REPORT      = false;
+    CONST BIZ_POST_TYPE           = 'broadstreet_biz';
+    
+    CONST BIZ_ENABLED             = false;
 
     /**
      * The constructor
@@ -62,12 +65,13 @@ class Broadstreet_Core
         add_action('widgets_init', array($this, 'registerWidget'));
         add_action('add_meta_boxes', array($this, 'addMetaBoxes'));
         add_shortcode('broadstreet', array($this, 'shortcode'));
+        add_action('init', array($this, 'createPostTypes'));
 
         # -- Below is administration AJAX functionality
         add_action('wp_ajax_save_settings', array('Broadstreet_Ajax', 'saveSettings'));
     }
     
-    static function addMetaBoxes()
+    public function addMetaBoxes()
     {
         add_meta_box( 
             'broadstreet_sectionid',
@@ -81,6 +85,17 @@ class Broadstreet_Core
             array(__CLASS__, 'broadstreetInfoBox'),
             'page'
         );
+        
+        if(self::BIZ_ENABLED):
+        add_meta_box(
+            'broadstreet_sectionid',
+            __( 'Business Details', 'broadstreet_textdomain'), 
+            array(__CLASS__, 'broadstreetBusinessBox'),
+            self::BIZ_POST_TYPE,
+            'normal',
+            'high'
+        );
+        endif;
     }
 
     /**
@@ -166,6 +181,49 @@ class Broadstreet_Core
         $zone_data = Broadstreet_Utility::getZoneCache();
         
         Broadstreet_View::load('infoBox', array('zones' => $zone_data));
+    }
+    
+    /**
+     * Handler for the broadstreet info box below a post or page
+     * @param type $post 
+     */
+    public function broadstreetBusinessBox($post) 
+    {
+        // Use nonce for verification
+        wp_nonce_field(plugin_basename(__FILE__), 'broadstreetnoncename');
+        
+        Broadstreet_View::load('businessMetaBox', array());
+    }
+    
+    public function createPostTypes()
+    {
+        if(self::BIZ_ENABLED):
+        register_post_type( self::BIZ_POST_TYPE,
+            array (
+                'labels' => array(
+                    'name' => __( 'Businesses'),
+                    'singular_name' => __( 'Business'),
+                    'add_new_item' => __('Add New Business Profile', 'your_text_domain'),
+                    'edit_item' => __('Edit Business', 'your_text_domain'),
+                    'new_item' => __('New Business Profile', 'your_text_domain'),
+                    'all_items' => __('All Businesses', 'your_text_domain'),
+                    'view_item' => __('View This Business', 'your_text_domain'),
+                    'search_items' => __('Search Businesses', 'your_text_domain'),
+                    'not_found' =>  __('No businesses found', 'your_text_domain'),
+                    'not_found_in_trash' => __('No businesses found in Trash', 'your_text_domain'), 
+                    'parent_item_colon' => '',
+                    'menu_name' => __('Businesses', 'your_text_domain')
+                ),
+            'description' => 'Businesses for inclusion in the Broadstreet business directory',
+            'public' => true,
+            'has_archive' => true,
+            'menu_position' => 5,
+            'supports' => array('title', 'editor', 'thumbnail', 'comments'),
+            'rewrite' => array('slug' => 'businesses'),
+            'taxonomies' => array('category', 'post_tag')
+            )
+        );
+        endif;
     }
     
     /**
