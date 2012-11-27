@@ -82,6 +82,34 @@ class Broadstreet_Model
 
         return $wpdb->get_results($sql);
     }
+    
+    public static function getPostMeta($post_ids = array(), $defaults = array())
+    {
+        if(count($post_ids) == 0) return array();
+        
+        global $wpdb;
+
+        $table = self::getTableName('postmeta');
+
+        /* Process posts in batches of 20 from the db */
+        $sql = "SELECT post_id, meta_key, meta_value
+                FROM $table
+                WHERE post_id IN (".implode(',', $post_ids).")";
+
+        $results = $wpdb->get_results($sql);
+        
+        $meta = array();
+        
+        foreach($results as $result)
+        {
+            if(isset($meta[$result->post_id]) && !is_array($meta[$result->post_id]))
+                $meta[$result->post_id] = $defaults;
+            
+            $meta[$result->post_id][$result->meta_key] = $result->meta_value;
+        }
+        
+        return $meta;
+    }
 
     public static function getCategories()
     {

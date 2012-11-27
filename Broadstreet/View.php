@@ -16,8 +16,9 @@ class Broadstreet_View
      *  to be PHP)
      * @param array $data An associative array of data that be be extracted and
      *  available to the view
+     * @param bool $return Return the output instead of outputting it
      */
-    public static function load($file, $data = array())
+    public static function load($file, $data = array(), $return = false)
     {
         $file = dirname(__FILE__) . '/Views/' . $file . '.php';
 
@@ -30,6 +31,15 @@ class Broadstreet_View
         # Extract the variables into the global scope so the views can use them
         extract($data);
 
-        include($file);
+        if(!$return)
+        {
+            include($file);
+        }
+        else
+        {
+            ob_start();
+            include($file);
+            return ob_get_clean();
+        }
     }
 }

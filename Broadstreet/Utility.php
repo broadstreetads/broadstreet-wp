@@ -13,8 +13,139 @@
 class Broadstreet_Utility
 {
     const KEY_ZONE_CACHE = 'BROADSTREET_ZONE_CACHE';
+    const KEY_RW_FLUSH   = 'BROADSTREET_RW_FLUSH';
     
     protected static $_zoneCache = NULL;
+    protected static $_apiKeyValid = NULL;
+    protected static $_businessEnabled = NULL;
+
+    /**
+     * Build an address from a meta array
+     * @param type $meta The array of meta fields that come back for a business
+     * @param type $single_line Whether the address should be on a single line
+     * @param type $multi_html Whether multi-line addresses should be formatted
+     *  in html
+     * @return string The address
+     */
+    public static function buildAddressFromMeta($meta, $single_line = false, $multi_html = true)
+    {
+        $address = '';
+        
+        if($single_line)
+        {
+            if($meta['bs_address_1'])
+                $address = "{$meta['bs_address_1']}"; 
+            
+            if($meta['bs_address_2'])
+                $address .= ", {$meta['bs_address_2']}";
+                
+            $address .= ", {$meta['bs_city']}, {$meta['bs_state']}";
+            
+            if($meta['bs_postal'])
+                $address .= ", {$meta['bs_postal']}";
+        }
+        else
+        {
+            if($meta['bs_address_1'])
+                $address = "{$meta['bs_address_1']}"; 
+            
+            if($meta['bs_address_2'])
+                $address .= "\n{$meta['bs_address_2']}";
+                
+            $address .= "\n{$meta['bs_city']}, {$meta['bs_state']}";
+            
+            if($meta['bs_postal'])
+                $address .= " {$meta['bs_postal']}";
+                
+            if($multi_html)
+                $address = nl2br($address);
+        }
+        
+        return $address;
+    }
+    
+    /**
+     * Get the current user's Broadstreet API key
+     * @return boolean 
+     */
+    public static function getApiKey()
+    {
+        $api_key = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_API_KEY);
+        
+        if(!$api_key) 
+            return FALSE;
+        else
+            return $api_key;
+    }
+    
+    /**
+     * Get this publication's network ID
+     * @return boolean 
+     */
+    public static function getNetworkId()
+    {
+        return Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
+    }
+
+    /**
+     * Check that the user's API key exists and is valid
+     * @return boolean 
+     */
+    public static function checkApiKey($return_key = FALSE)
+    {
+        if(self::$_apiKeyValid !== NULL)
+            return self::$_apiKeyValid;
+        
+        $api_key = self::getApiKey();
+        
+        if(!$api_key) 
+        {
+            self::$_apiKeyValid = FALSE;
+            return FALSE;
+        }
+        else 
+        {
+            $api = new Broadstreet($api_key);
+            
+            try
+            {
+                $api->getNetworks();
+                self::$_apiKeyValid = TRUE;
+                
+                if($return_key) 
+                    return $api_key; 
+                else 
+                    return TRUE;
+            }
+            catch(Exception $ex)
+            {
+                self::$_apiKeyValid = TRUE;
+                return FALSE;
+            }
+        }
+    }
+    
+    /**
+     * Check whether businesses are enabled. The API must be valid for this to
+     *  be true
+     * @return boolean 
+     */
+    public static function isBusinessEnabled()
+    {
+        if(self::$_businessEnabled === FALSE) return FALSE;
+        if(self::$_apiKeyValid === FALSE) return FALSE;
+        
+        if(Broadstreet_Utility::getOption(Broadstreet_Core::KEY_BIZ_ENABLED))
+        {
+            self::$_businessEnabled = TRUE;
+            return true;
+        }
+        else
+        {
+            self::$_businessEnabled = FALSE;
+            return false;
+        }
+    }
     
     /**
      * Sets a Wordpress option
@@ -47,6 +178,145 @@ class Broadstreet_Utility
         if( $value !== FALSE ) return $value;
         return $default;
     }
+    
+    /**
+     * If rewrite rules haven't been flushed, flush them.
+     * @param $clear Force a flush
+     */
+    public static function flushRewrites($force = FALSE)
+    {
+        if($force || !self::getOption(self::KEY_RW_FLUSH))
+        {
+            flush_rewrite_rules();
+            self::setOption(self::KEY_RW_FLUSH, 'TRUE');
+        }
+    }
+    
+    /**
+     * Sets a Wordpress meta value
+     * @param string $name The name of the field to set
+     * @param string $value The value of the field to set
+     */
+    public static function setPostMeta($post_id, $name, $value)
+    {
+        if (get_post_meta($post_id, $name, true) !== FALSE)
+        {
+            update_post_meta($post_id, $name, $value);
+        }
+        else
+        {
+            add_post_meta($post_id, $name, $value);
+        }
+    }
+
+    /**
+     * Gets a post meta value
+     * @param string    $name The name of the field
+     * @param mixed     $default The default value to return if one doesn't exist
+     * @return string   The value if the field does exist
+     */
+    public static function getPostMeta($post_id, $name, $default = FALSE)
+    {
+        $value = get_post_meta($post_id, $name, true);
+        if( $value !== FALSE ) return maybe_unserialize($value);
+        return $default;
+    }
+    
+    /**
+     * Gets post meta values, cleaned up, singlefied (or not)
+     * @param int       $post_id The id of the post
+     * $param array     $defaults Assoc array of meta key names with value defaults
+     * @param bool      $singles Whether to collapse value field to first value
+     *  (default true)
+     */
+    public static function getAllPostMeta($post_id, $defaults = array(), $singles = true)
+    {
+        $meta = get_post_meta($post_id);
+        
+        foreach($defaults as $key => $value)
+        {
+            if(!isset($meta[$key])) {
+                $meta[$key] = $value;
+            }
+        }
+        
+        if(!$singles) return $meta;
+        
+        $new_meta = array();
+        
+        # Meta fields come back nested in an array, fix that
+        # unless the option is intended to be an array,
+        # given the defaults
+        foreach($meta as $key => $value) 
+        {
+            if(is_array(@$defaults[$key]) && count($value))
+                $new_meta[$key] = maybe_unserialize($value[0]);
+            else
+                $new_meta[$key] = (is_array($value) && count($value)) ? $value[0] : $value;
+        }
+        
+        return $new_meta;
+    }
+    
+    /**
+     * Figure out whether we're in a the_exceprt call stack
+     * @return bool Whether we're in an excerpt 
+     */
+    public static function inExcerpt()
+    {
+        $stacktrace = debug_backtrace();
+        
+        foreach($stacktrace as $call)
+            if($call['function'] == 'get_the_excerpt')
+                return true;
+            
+        return false;
+    }
+    
+    public static function toTime($time)
+    {
+        return date("g:i a", strtotime($time));
+    }
+    
+    /**
+     * Import data about a business based on a seed URL. Makes a call to the
+     *  broadstreet backend
+     * @param string $url The seed URL to start from
+     * @param int $attach_post_id
+     * @return type 
+     */
+    public static function importBusiness($url, $attach_post_id = 0)
+    {
+        $api_key    = self::getApiKey();
+        $network_id = self::getNetworkId();
+        $broadstreet= new Broadstreet($api_key);
+        
+        $meta     = (array)$broadstreet->magicImport($url, $network_id);
+        $defaults = Broadstreet_Core::$_businessDefaults;
+        
+        //print_r($meta); exit;
+        
+        foreach($defaults as $key => $value)
+        {
+            if(!isset($meta[$key]) || is_null($meta[$key]))
+                $meta[$key] = $value;
+        }
+        
+        # Improt the images locally
+        $count  = 0;
+        $images = array();
+        
+        foreach($meta['images'] as $image)
+        {
+            $img = Broadstreet_Utility::importImage($image, $attach_post_id, $meta['name'] . ' ' . ($count + 1));
+            if($img) $images[] = $img;
+            $count++;
+        }
+        
+        $meta['images'] = $images;
+                
+        return $meta;
+    }
 
     /**
      * Get a value from an associative array. The specified key may or may
@@ -62,6 +332,15 @@ class Broadstreet_Utility
             return $array[$key];
         else
             return $default;
+    }
+    
+    /**
+     * Get the site's base URL
+     * @return string
+     */
+    public static function getSiteBaseURL()
+    {
+        return get_bloginfo('url');
     }
 
     /**
@@ -81,7 +360,7 @@ class Broadstreet_Utility
     {
         return self::getBroadstreetBaseURL() . 'Public/img/';
     }
-
+    
     /**
      * Get the base url for plugin CSS
      * @return string
@@ -98,6 +377,15 @@ class Broadstreet_Utility
     public static function getJSBaseURL()
     {
         return self::getBroadstreetBaseURL() . 'Public/js/';
+    }
+    
+    /**
+     * Get the base URL for plugin javascript
+     * @return string
+     */
+    public static function getVendorBaseURL()
+    {
+        return self::getBroadstreetBaseURL() . 'Public/vendor/';
     }
 
     /**
@@ -138,7 +426,10 @@ class Broadstreet_Utility
         return FALSE;
     }
     
-    
+    /**
+     * Get the broadstreet zone cache
+     * @return array
+     */
     public static function getZoneCache()
     {
         if(self::$_zoneCache !== NULL) return self::$_zoneCache;
@@ -163,6 +454,10 @@ class Broadstreet_Utility
         return self::$_zoneCache;
     }
     
+    /**
+     * Force a refresh of the zone cache
+     * @return array 
+     */
     public static function refreshZoneCache()
     {
         $api_key     = self::getOption(Broadstreet_Core::KEY_API_KEY);
@@ -249,6 +544,44 @@ class Broadstreet_Utility
             self::setOption(Broadstreet_Core::KEY_INSTALL_REPORT, 'true');
         }
     }
+    
+    /**
+     * Download an image from a URL an import it into the Media gallery
+     * @param type $url The URL of the photo to fetch
+     * @return string The new locally-hosted URL
+     */
+    public static function importImage($url, $post_id = 0, $desc = 'Business photo')
+    {
+        $tmp = download_url($url);
+
+        # Set variables for storage
+        # fix file filename for query strings
+        preg_match('/[^\?]+\.(jpg|JPG|jpe|JPE|jpeg|JPEG|gif|GIF|png|PNG)/', $url, $matches);
+        
+        if(!count($matches)) return false;
+        
+        $file_array['name'] = basename($matches[0]);
+        $file_array['tmp_name'] = $tmp;
+
+        # If error storing temporarily, unlink
+        if (is_wp_error($tmp)) 
+        {
+            @unlink($file_array['tmp_name']);
+            $file_array['tmp_name'] = '';
+        }
+
+        # Do the validation and storage stuff
+        $id = media_handle_sideload($file_array, $post_id, $desc);
+
+        # If error storing permanently, unlink
+        if (is_wp_error($id)) 
+        {
+            @unlink($file_array['tmp_name']);
+            return false;
+        }
+
+        return wp_get_attachment_url( $id );
+    }
 
     /**
      * Get any reports / warnings / messages from the Broadstreet server.
@@ -276,21 +609,6 @@ class Broadstreet_Utility
             return FALSE;
 
         return $content;
-    }
-
-    /**
-     * Given a boost value (probably between 0 and 100, scale it between to
-     *  other values most likely specific to a driver)
-     * @param float $boost_value The value to be scaled
-     * @param float $low The lower bound of the boost value
-     * @param float $high The upper bound of the boost value
-     * @return float The scaled value
-     */
-    public static function getScaledBoostValue($boost_value, $low, $high)
-    {
-        return round(($boost_value / (Broadstreet_Core::DEFAULT_BASE_HIGH - Broadstreet_Core::DEFAULT_BASE_LOW))
-                * ($high - $low) + $low, 
-                1);
     }
 
     /**

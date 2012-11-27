@@ -5,13 +5,30 @@ Requires at least: 3.0
 Tested up to: 3.4.2
 Stable tag: 1.0.0
 
-This plugin will help you easily place your Broadstreet Ad zones.
+Integrate Broadstreet business directory and adserving power into your site.
 
 == Description ==
 
-If you have an account with Broadstreet, don't go through the trouble of
-copying and pasting ad tags onto your Wordpress site. With this plugin, you
-can place ad zones via widgets.
+For Broadstreet users (if you aren't a user, sign up here):
+
+Introducing first business directory of it's kind, this Broadstreet-powered
+plug-in is the first practical and portable business directory for Wordpress.
+
+This was built for local publishers.
+
+* Magic import: Automatically crawl the web to fill in business details and photos
+* Business updates: Allow businesses to post a message on their profile via text message, Facebook, or Twitter
+* Easily create a photo gallery for each business
+
+... And everything else you would expect of a business directory.
+
+Broadstreet was build by the developers of a local, independent news blog in
+Red Bank, NJ. We built it to help monetize our much-loved community site.
+If you're a local publisher struggling to monetize your site, Broadstreet is
+for you.
+
+PS: You can easily integrate your Broadstreet adserver zones with this
+plugin too.
 
 **How to:**
 

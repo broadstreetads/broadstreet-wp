@@ -1,5 +1,5 @@
 <div id="main">
-      <img src="<?php echo Broadstreet_Utility::getImageBaseURL(); ?>broadstreet-header.png" alt="" />
+      <?php Broadstreet_View::load('admin/global/header') ?>
       <div class="left_column">
          <?php if($errors): ?>
              <div class="box">
@@ -70,7 +70,22 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
-                                
+                                Enable Business Directory                                
+                            </div>
+                            <div class="desc nomargin">
+                                Would you like to enable the Broadstreet business directory? Requires an API Key.
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <input id="business_enabled" type="checkbox" value="TRUE" <?php if($key_valid && $business_enabled) echo 'checked="checked"'; ?> <?php if(!$key_valid) echo 'disabled="disabled"'; ?> />
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="break"></div>
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">
+                                <a href="?page=Broadstreet-Help">How to Get Started</a>
                             </div>
                         </div>
                         <div class="save-container">
@@ -83,30 +98,11 @@
             </div>
         </div>
         <div class="about">
-            <?php echo $about; ?>
+            <?php //echo $about; ?>
         </div>
       </div>
       <div class="right_column">
-          <a href="http://broadstreetads.com" target="_blank">
-            <img class="oconf_logo" src="<?php echo Broadstreet_Utility::getImageBaseURL(); ?>marty.png" alt="" />
-          </a>
-          <?php
-                if($message = Broadstreet_Utility::getBroadstreetMessage())
-                {
-                    echo $message;
-                }
-          ?>
-          <h3>Have a bug report?</h3>
-          <p>
-              We like to crush bugs as soon as we hear about them!
-              Be sure to give us as much detail as possible,
-              such as the number of posts you have, any error messages that
-              were given, and any behavior you've observed.
-          </p>
-          <p>
-              Send any and all reports to <a href="mailto:ohcrap@broadstreetads.com">ohcrap@broadstreetads.com</a>. Thanks
-              for using Broadstreet!
-          </p>
+          <?php Broadstreet_View::load('admin/global/sidebar') ?>
       </div>
     </div>
       <div class="clearfix"></div>

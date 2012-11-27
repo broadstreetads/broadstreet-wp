@@ -1,5 +1,7 @@
 jQuery(function($){
     
+    var needRefresh = false;
+    
     /**
     * Check a response fromt he server to see if the call was successful (uses
     *  success flag, not HTTP error codes)
@@ -18,6 +20,10 @@ jQuery(function($){
         jQuery(span_id).show().delay(500).fadeOut();
     }
     
+    $('#business_enabled').click(function() {
+        needRefresh = true;
+    });
+    
     $('#save').click(function() {
         
         var network_id = $('#network').val();
@@ -25,6 +31,7 @@ jQuery(function($){
         jQuery.post(ajaxurl, {
              action: 'save_settings', 
              api_key: $('#api_key').val(),
+             business_enabled: $('#business_enabled').is(':checked'),
              network_id: network_id
             }, 
             function(response) {
@@ -49,14 +56,177 @@ jQuery(function($){
                             $('#network').append(opt);
                         }
 
+                        $('#business_enabled')
+                            .attr('disabled', false);
+
                     } else {
                         $('#network').append($('<option value="-1">Enter a valid token above</option>'));
                         $('#key-valid').hide().removeClass('visible');
                         $('#key-invalid').fadeIn().addClass('visible');
+                        $('#business_enabled').attr('checked', false).attr('disabled', 'disabled');
+                    }
+                    
+                    if(needRefresh) {
+                        location.reload();
                     }
                 }
             },
         'json');
     });
     
+    
+    $('#save_bs_advertiser').click(function(e) {
+        e.preventDefault();
+        
+        var el = $(e.target);
+        var name = el.attr('data-name');
+        
+        $.post(ajaxurl, {
+            action: 'create_advertiser',
+            name: name
+        }, function(response) {
+            console.log(response);
+            if(response.success) {
+                
+                $('#bs_advertiser_id').append(
+                    $('<option value="' + response.advertiser.id + '" selected="selected">' + response.advertiser.name + '</option>')
+                );
+            }
+        },
+        'json');
+    });
+    
+    $('#bs_update_source').change(showUpdateDetails);
+    
+    function showUpdateDetails() {
+        var type = $('#bs_update_source').val();
+        
+        $('#bs_source_details').children().hide();
+        $('#bs_source_' + type + '_detail').show();
+    }
+    
+    $('#bs_source_details').children().hide();
+    showUpdateDetails();
+    
+   var uploadField = '';
+    var newItem = null;
+
+    $('.upload-button').click(function() {        
+        window.send_to_editor = image_upload_handler;
+        tb_show('', 'media-upload.php?type=image&amp;amp;amp;TB_iframe=true');
+        return false;
+    });
+    
+    $('.menu-upload-button').click(function() {        
+        window.send_to_editor = menu_upload_handler;
+        tb_show('', 'media-upload.php?type=image&amp;amp;amp;TB_iframe=true');
+        return false;
+    });
+    
+    window.remove_image = function(e) {
+        e.preventDefault();
+        el = $(e.target);
+        
+        if(confirm('Are you sure?'))
+        {
+            el = $(el);
+            el.parents('li').remove();
+        }
+        
+        window.rewrite_image_names();
+    };
+    
+    function menu_upload_handler(html) {
+        // It's probably a pdf or some non-image'
+        url = $(html).attr('href');
+        
+        // Okay, maybe it's an image
+        if(!url) url = $('img',html).attr('src');
+        
+        $('#bs_menu').val(url);
+        tb_remove();
+    }
+
+    function image_upload_handler(html) {
+        imgurl = $('img',html).attr('src');
+        add_images(imgurl);
+        tb_remove();
+    };
+    
+    function add_images(imgurl) {
+        if(!$.isArray(imgurl)) imgurl = [imgurl];
+        
+        for(var i in imgurl) {
+            var a, img, rm;
+            a = $('<a target="_blank">').attr('href', imgurl[i]);
+            rm = $('<a class="bs-remove" href="#">Remove</a>');
+            rm.click(window.remove_image);
+            img = $('<img src="' + imgurl[i] + '" alt="Photo" />');
+            a.append(img).append('<br />').append(rm);
+
+            uploadField = $('<input class="upload" type="hidden" value="" />');
+            uploadField.attr('name', 'bs_images[' + $('#bs_image_list').children().length + ']');
+            uploadField.val(imgurl[i]);
+
+            $('#bs_image_list').append(
+                $('<li>').append(a).append(uploadField)
+            );
+        }
+        
+        window.rewrite_image_names();
+    }
+    
+    window.rewrite_image_names = function() {
+        var len = $('#bs_image_list').children.length;
+        
+        $('#bs_image_list').children().each(function(i, li) {
+            li = $(li);
+            li.children('input').attr('name', 'bs_images[' + i + ']');
+            if(i == 0) {
+                li.addClass('featured');
+            } else {
+                li.removeClass('featured');
+            }
+        });
+    };
+    
+    $('#bs-import').click(function(e) {
+        e.preventDefault();
+        var id = $('#bs-business-id').val();
+        
+        if(!id) {
+            alert("Enter the business' Facebook page URL");
+            return false;
+        }
+        
+        $('#import-progress').show();
+        
+        $.post(ajaxurl, {id:id, post_id: window.bs_post_id, action: 'import_facebook'}, function(response) {
+            console.log(response);
+            if(response.success) {
+                var count = 0;
+                for(var key in response.profile) {
+                    if(response.profile[key]) {
+                        count++;
+                        $('#bs-meta-table').find('[name="' + key + '"]').val(response.profile[key]);
+                    }
+                }
+                add_images(response.profile.images);
+                
+                if(confirm('We were able to pull back a title and/or description for this business. Should we place it in the editor above?')) {
+                    $('#title').val(response.profile.name);
+                    tinymce.get('content').focus();
+                    tinyMCE.activeEditor.setContent(response.profile.description);
+                }
+
+                alert(count + ' fields were magically imported!')
+            } else {
+                alert("We couldn't couldn't import any information.")
+            }
+            $('#import-progress').hide();
+        }, 'json')
+    });
+    
+    $('.bs-remove').click(window.remove_image);
+    $('#bs_image_list').sortable({update: window.rewrite_image_names });
 });

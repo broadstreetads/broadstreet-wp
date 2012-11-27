@@ -42,6 +42,83 @@ class Broadstreet
     }
     
     /**
+     * Magically get back business data based off a seed URL
+     * @param type $provider 
+     */
+    public function magicImport($seed_url, $network_id)
+    {
+        return $this->_get("/networks/$network_id/import", array(), array('preview' => 'true', 'lookup' => $seed_url))->body->detail;
+    }
+    
+    /**
+     * Create an advertiser
+     * @param string $name The name of the advertiser
+     * @return mixed
+     */
+    public function createAdvertiser($network_id, $name)
+    {
+        return $this->_post("/networks/$network_id/advertisers", array('name' => $name))->body->advertiser;
+    }
+    
+    /**
+     * Create an advertisement
+     * @param string $name The name of the advertisement
+     * @param string $type The type of advertisement
+     * @return mixed
+     */
+    public function createAdvertisement($network_id, $advertiser_id, $name, $type, $options = array())
+    {
+        $params = array('name' => $name, 'type' => $type) + $options;
+        
+        return $this->_post("/networks/$network_id/advertisers/$advertiser_id/advertisements", $params)->body->advertisement;
+    }
+    
+    /**
+     * Update an advertisement
+     * @param string $name The name of the advertisement
+     * @param string $type The type of advertisement
+     * @return mixed
+     */
+    public function updateAdvertisement($network_id, $advertiser_id, $advertisement_id, $params = array())
+    {
+        return $this->_put("/networks/$network_id/advertisers/$advertiser_id/advertisements/$advertisement_id", $params)->body->advertisement;
+    }
+    
+    /**
+     * Get a list of advertisers this token has access to 
+     */
+    public function getAdvertisers($network_id)
+    {
+        return $this->_get("/networks/$network_id/advertisers")->body->advertisers;
+    }
+    
+    /**
+     * Get information about a given advertisement
+     * @param int $network_id
+     * @param int $advertiser_id
+     * @param int $advertisement_id
+     * @return object
+     */
+    public function getAdvertisement($network_id, $advertiser_id, $advertisement_id)
+    {
+        return $this->_get("/networks/$network_id/advertisers/$advertiser_id/advertisements/$advertisement_id")
+                    ->body->advertisement;
+    }
+    
+    /**
+     * Get information about a given advertisement source
+     * @param int $network_id
+     * @param int $advertiser_id
+     * @param int $advertisement_id
+     * @return object
+     */
+    public function getAdvertisementSource($network_id, $advertiser_id, $advertisement_id)
+    {   
+        return $this->_get("/networks/$network_id/advertisers/$advertiser_id/advertisements/$advertisement_id/source")
+                    ->body->source;
+    }
+    
+    /**
      * Get a list of networks this token has access to
      * @return array
      */
@@ -60,15 +137,32 @@ class Broadstreet
     }
     
     /**
+     * The the update source of an advertisement
+     * @param int $network_id
+     * @param int $advertiser_id
+     * @param int $advertisement_id
+     * @param string $type
+     * @param array $options
+     * @return object 
+     */
+    public function setAdvertisementSource($network_id, $advertiser_id, $advertisement_id, $type, $options = array())
+    {
+        $params = array('type' => $type) + $options;
+
+        return $this->_post("/networks/$network_id/advertisers/$advertiser_id/advertisements/$advertisement_id/source", $params)
+                    ->body->advertisement;
+    }
+    
+    /**
      * Gets a response from the server
      * @param type $uri
      * @return type
      * @throws Broadstreet_DependencyException 
      * @throws Broadstreet_AuthException 
      */
-    protected function _get($uri, $options = array())
+    protected function _get($uri, $options = array(), $query_args = array())
     {
-        $url = $this->_buildRequestURL($uri);
+        $url = $this->_buildRequestURL($uri, $query_args);
 
         if(!function_exists('curl_exec'))
         {
@@ -81,32 +175,78 @@ class Broadstreet
         curl_setopt_array($curl_handle, $options);
 
         $body   = curl_exec($curl_handle);
-        $status = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
+        $status = (string)curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
         
         if($status == '403')
         {
             throw new Broadstreet_AuthException("Broadstreet API Auth Denied (HTTP 403)");
+        }
+        
+        if($status == '500')
+        {
+            throw new Broadstreet_ServerException("Broadstreet API had a 500 error");
+        }
+        
+        if($status[0] != '2')
+        {
+            throw new Broadstreet_ServerException("Server threw HTTP $status for call to $uri with cURL params " . print_r($options, true));
         }
 
         return (object)(array('url' => $url, 'body' => @json_decode($body), 'status' => $status));
     }
     
     /**
+     * POST data to the server
+     * @param string $uri
+     * @param array $data Assoc. array of post data
+     * @return mixed
+     */
+    protected function _post($uri, $data)
+    {
+        return $this->_get($uri, array(                                        
+            CURLOPT_POST       => true,
+            CURLOPT_POSTFIELDS => $data)
+        );
+    }
+    
+    /**
+     * PUT data to the server
+     * @param string $uri
+     * @param array $data Assoc. array of post data
+     * @return mixed
+     */
+    public function _put($uri, $data = false, $options = array())
+    {
+        $data    = http_build_query($data);
+
+        $options = array (
+                        CURLOPT_CUSTOMREQUEST => 'PUT',
+                        CURLOPT_POSTFIELDS    => $data
+                        ) + $options;
+        
+        $result = $this->_get($uri, $options);
+        
+        return $result;
+    }   
+    
+    /**
      * Build a valid request URL from the URI given and the API key
      * @param string $uri
      * @return string 
      */
-    protected function _buildRequestURL($uri)
+    protected function _buildRequestURL($uri, $query_args = array())
     {
-        $uri = ltrim($uri, '/');
-        
+        $uri      = ltrim($uri, '/');
+
         return "http://"
                 . $this->host
                 . '/api/'
                 . self::API_VERSION
                 . '/'
                 . $uri
-                . '?access_token='
+                . (count($query_args) ? '?' . http_build_query($query_args) : '')
+                . (count($query_args) ? '&' : '?')
+                . 'access_token='
                 . $this->accessToken;      
     }
 }
@@ -114,3 +254,4 @@ class Broadstreet
 class Broadstreet_GeneralException extends Exception {}
 class Broadstreet_DependencyException extends Broadstreet_GeneralException {}
 class Broadstreet_AuthException extends Broadstreet_GeneralException {}
+class Broadstreet_ServerException extends Broadstreet_GeneralException {}

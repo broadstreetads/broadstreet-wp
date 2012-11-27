@@ -2,14 +2,15 @@
 /*
 Plugin Name: Broadstreet
 Plugin URI: http://broadstreetads.com
-Description: Integrate your Broadstreet ad zones via a widget
+Description: Integrate Broadstreet business directory and adserving power into your site
 Version: 1.0.0
 Author: Broadstreet
 Author URI: http://broadstreetads.com
 */
 
 require dirname(__FILE__) . '/Broadstreet/Core.php';
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 # Start the beast
 $engine = new Broadstreet_Core;
 $engine->execute();

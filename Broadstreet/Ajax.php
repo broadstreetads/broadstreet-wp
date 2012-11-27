@@ -21,6 +21,7 @@ class Broadstreet_Ajax
     {
         Broadstreet_Utility::setOption(Broadstreet_Core::KEY_API_KEY, $_POST['api_key']);
         Broadstreet_Utility::setOption(Broadstreet_Core::KEY_NETWORK_ID, $_POST['network_id']);
+        Broadstreet_Utility::setOption(Broadstreet_Core::KEY_BIZ_ENABLED, $_POST['business_enabled'] === 'true');
         
         $api = new Broadstreet($_POST['api_key']);
 
@@ -40,8 +41,28 @@ class Broadstreet_Ajax
         {
             $networks = array();
             $key_valid = false;
+            
+            # Clear any options that aren't valid following the failed API key config
+            Broadstreet_Utility::setOption(Broadstreet_Core::KEY_BIZ_ENABLED, FALSE);
         }
         
         die(json_encode(array('success' => true, 'key_valid' => $key_valid, 'networks' => $networks)));
+    }
+    
+    public static function createAdvertiser()
+    {
+        $api_key    = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_API_KEY);
+        $network_id = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
+        
+        $api        = new Broadstreet($api_key);
+        $advertiser = $api->createAdvertiser($network_id, stripslashes($_POST['name']));
+        
+        die(json_encode(array('success' => true, 'advertiser' => $advertiser)));
+    }
+    
+    public static function importFacebook()
+    {
+        $profile = Broadstreet_Utility::importBusiness($_POST['id'], $_POST['post_id']);
+        die(json_encode(array('success' => (bool)$profile, 'profile' => $profile)));
     }
 }
