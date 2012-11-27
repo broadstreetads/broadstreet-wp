@@ -22,6 +22,10 @@
         -webkit-box-sizing: border-box;
     }
     
+    .thumb {
+        height: 40px;
+    }
+    
     .biz-data {
         padding-left: 5px;
     }
@@ -59,6 +63,10 @@
         text-align: center;
     }
     
+    a.nodec {
+        text-decoration: none !important;
+    }
+    
 </style>
 <?php if($meta['bs_update_source']): ?>
     <div class="sponsored-listing">
@@ -67,19 +75,38 @@
 <?php endif; ?>
 <div id="biz-column-1">
     <?php if(count($meta['bs_images'])): ?>
-    <img class="boxed-sizing" src="<?php echo $meta['bs_images'][0] ?>" alt="" width="100%" />
+        <a class="nodec" target="_blank" href="<?php echo $meta['bs_images'][0] ?>">
+            <img class="boxed-sizing" src="<?php echo $meta['bs_images'][0] ?>" alt="" width="100%" />
+        </a>
     <div></div>
+    <?php endif; ?>
+    <?php if(count($meta['bs_images']) > 1): ?>
+        <?php for($i = 1; $i < count($meta['bs_images']); $i++): ?>
+            <a class="nodec" target="_blank" href="<?php echo $meta['bs_images'][$i] ?>">
+                <img class="thumb boxed-sizing" src="<?php echo $meta['bs_images'][$i] ?>" alt=""  />
+            </a>
+        <?php endfor; ?>
+    <?php endif; ?>
     <div class="basic-info">
         <?php if($meta['bs_address_1']): ?>
         <?php echo Broadstreet_Utility::buildAddressFromMeta($meta); ?>
         <?php endif; ?>
         <br />
         <?php if($meta['bs_address_1']): ?>
-        <a target="_blank" href="https://maps.google.com/?q=<?php echo urlencode(Broadstreet_Utility::buildAddressFromMeta($meta, true)) ?>">view map</a><br />
+        <a target="_blank" href="https://maps.google.com/?q=<?php echo urlencode(Broadstreet_Utility::buildAddressFromMeta($meta, true)) ?>">View map</a><br />
         <?php endif; ?>
         <?php if($meta['bs_phone']): ?>
-        <?php echo $meta['bs_phone'] ?>
+        <?php echo $meta['bs_phone'] ?><br />
         <?php endif; ?>
+        <?php if($meta['bs_website']): ?>
+        <a target="_blank"  href="<?php echo $meta['bs_website'] ?>">View website</a>
+        <?php endif; ?>
+    </div>
+    <div class="basic-info">
+    <?php if($meta['bs_menu']): ?>
+        <div><strong>Menu</strong></div>
+        <div><a target="_blank" href="<?php echo $meta['bs_menu'] ?>">View or download a menu </a></div>
+    <?php endif; ?>
     </div>
     <?php if($meta['bs_publisher_review']): ?>
     <div><a href="<?php echo $meta['bs_publisher_review'] ?>">Read a <?php bloginfo('name') ?> Review</a></div>
@@ -157,7 +184,6 @@
             <a target="_blank" href="<?php echo $meta['bs_yelp'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'yelp.png' ?>" alt="yelp" width="20" /></a>
             <?php endif; ?>
         <?php endif; ?>
-    <?php endif; ?>
     
 </div>
 <div id="biz-column-2" class="boxed-sizing">

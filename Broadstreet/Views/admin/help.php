@@ -8,7 +8,9 @@
               available to Wordpress users, and an account with us provides
               that. To get set up, send a quick email to 
               <a href="mailto:kenny@broadstreetads.com">kenny@broadstreetads.com</a>
-              and we'll get you set up.
+              and we'll get you set up. If you have more general questions on
+              who Broadstreet is or how to make money with this plugin, see the
+              <a href="#faq">FAQ</a> section.
           </p>
           
           <h2>Quick Start</h2>
@@ -123,12 +125,62 @@
           <h3>How to Add Business/Categories To A Menu</h3>
           
           <p>
+              Modern Wordpress themes allow admins to design their own menus
+              for use in their site. You'll undoubtedly want a link to your
+              business directory in your site's main navigation menu.
+          </p>
+          
+          <p>
+              If your Wordpress theme is menu-capable, head to 
+              Appearance &LongRightArrow; Menus, or <a href="nav-menus.php">click here</a>.
+              Click on the main menu on your site. The name of your main menu
+              is likely different from the one pictured:
+          </p>
+          
+          <img class="figure" alt="Select a menu" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/select-menu.png" />
+          
+          <p>
+              <img align="left" class="figure" alt="Business categories" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/menu-business-cats.png" />
+              Now you should see the items in your menu. To add a business
+              category, just scroll down the page on find the "Business Category"
+              box on the left, and select "View All". Select the business category
+              you would like to add to your menu.
+          </p>
+          
+          <p>
+              Once you click "Add to Menu", the item you selected will appear
+              in your menu. At this point, you can arrange the position of the 
+              item by dragging and dropping it. You can also add new menu items
+              or nest menu items (depending on the theme). When you're finished,
+              don't forget to click "Save Menu" on the upper-right.
+          </p>
+          
+          <img class="figure" alt="Complete menu" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/menu-done.png" />
+          
+          <p>
+              If you just want to link to your business directory as a whole, and
+              not any business category in particular, scroll to the top of the
+              page and look for the "Custom Links" menu. There, you can create
+              a custom menu item.
+          </p>
+          
+          <p>
+              <img align="left" class="figure" alt="Custom menu item" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/menu-custom.png" />
               
+              Type in a name like 'Business Directory', which will be the name
+              of the menu item on your site. This can be anything you'd like.
+              Also, paste in the URL to your business directory. For you this
+              URL is: <br/>
+              <a href="<?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Broadstreet_Core::BIZ_SLUG ?>">
+                  <?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Broadstreet_Core::BIZ_SLUG ?>
+              </a>.<br/>
+              Click "Add to Menu", and arrange it as yout would have done in
+              the example above.
           </p>
           
           <h2>Placing Broadstreet Ads</h2>
             
-          <p>You can place Broadstreet ads in one of two ways:</p>
+          <p>You can place Broadstreet ad zone in one of two ways:</p>
           
           <ol>
               <li>Within a post, with a special shortcode</li>
@@ -137,6 +189,34 @@
           
           <h3>Placing ad zones via a widget</h3>
           
+          <p>
+              On the <a href="#">widgets page</a>, drag and drop the
+              "Broadstreet Ad Zone" widget to a widget area you would like
+              the ad zone to appear in. From there, select an ad zone to show
+              and click "Save".
+          </p>
+          
+          <img class="figure" alt="Sidebar widget" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/sidebar-widget.png" />
+          
+          <h3>Placing ad zones right in a post</h3>
+          
+          <p>
+              A common, but usually difficult need is to place an ad in the middle
+              of a post. Perhaps you're profiling a business or organization
+              and they have an ad that would be useful in the post.
+          </p>
+          
+          <p>
+              When editing a post, there will be an information box with a list
+              of shortcodes you can use to place an ad zone. Just copy and
+              paste that shortcode into the post and save. The ad will appear
+              in that position. You can usually use the editor tools to align
+              the ad to the left, middle, or right.
+          </p>
+          
+          <img class="figure" alt="Shortcode list" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/shortcode-list.png" />
+          
+          <a id="faq"></a>
           <h2>FAQs</h2>
           
           <p>Here are some answers to frequently asked questions regarding
@@ -145,6 +225,76 @@
           </p>
           
           <h3>Why do I need an account with Broadstreet to use this plugin?</h3>
+          
+          <p>
+            This plugin uses special functionality that can't be accomplished
+            using Wordpress itself, so we use the Broadstreet ad server to
+            do the heavy lifting required. We want to make sure only authorized
+            users are using this functionality since it uses our resources.
+          </p>
+          
+          <h3>What exactly is this "Broadstreet"?</h3>
+          
+          <p>
+              <a href="http://broadstreetads.com/">Broadstreet</a> 
+              is a company that was founded to help local publishers
+              monetize their websites. Ad revenue for local news hasn't really
+              kept pace with online ad revenue as a whole, and our mission is
+              to change that.
+          </p>
+          
+          <h3>Does this plugin cost money?</h3>
+          
+          <p>
+              The core functionality of the plugin, like creating business profiles,
+              is free to use. The extra 
+              features such as the Magic Import and the Updateable Messages
+              have a cost associated with them since they use Broadstreet's
+              adserver and other resources.
+          </p>
+          
+          <h3>How will this make me money?</h3>
+          
+          <p>
+              There are few different ways publishers make money from local
+              businesses with this plugin. Here are some more common ways:
+          </p>
+          <ul>
+              <li><p>Charge businesses for a listing in your directory</p></li>
+              <li>
+                  <p>
+                      Give businesses a free listing, then charge them for
+                      requesting edits, like working and adding pictures
+                  </p>
+              </li>
+              <li>
+                  <p>
+                      Upsell businesses on the ability to use the updateable
+                      message feature we provide. For $xxx monthly, they'll be able
+                      to post specials and other deals right from their Facebook
+                      or Twitter account without ever logging in to their system.
+                  </p>
+              </li>
+              <li>
+                  <p>
+                      Charge them to be listed in a special category, like 
+                      "Lunch Specials." How cool would it be to have a listing
+                      of all the places to grab lunch in town, and each has
+                      updateble messages on their profile? It's the one stop for
+                      lunch time.
+                  </p>
+              </li>
+          </ul>
+          <p>
+              It's all about finding ways to do things that competition like
+              print media can't do.
+          </p>
+          
+          <h3>Who can I talk to if I get stuck?</h3>
+          
+          <p>
+              <a href="mailto:kenny@broadstreetads.com">kenny@broadstreetads.com</a>
+          </p>
           
       </div>
       <div class="right_column">
