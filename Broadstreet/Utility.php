@@ -511,22 +511,17 @@ class Broadstreet_Utility
      * Makes a call to the Broadstreet service to collect information information
      *  on the blog in case of errors and other needs.
      */
-    public static function sendReport($message = FALSE)
+    public static function sendReport($message = 'General')
     {
-        $base   = 'http://report.Broadstreet2.com?';
-        $report = array();
-        $report['t'] = get_bloginfo('name');
-        $report['u'] = get_bloginfo('url');
-        $report['e'] = get_bloginfo('admin_email');
-        $report['c'] = Broadstreet_Model::getPublishedPostCount();
-        $report['v'] = BROADSTREET_VERSION;
+        $report = "$message\n";
+        $report .= get_bloginfo('name'). "\n";
+        $report .= get_bloginfo('url'). "\n";
+        $report .= get_bloginfo('admin_email'). "\n";
+        $report .= 'WP Version: ' . get_bloginfo('version'). "\n";
+        $report .= 'Plugin Version: ' . BROADSTREET_VERSION . "\n";
+        $report .= "$message\n";
 
-        if($message)
-            $report['m'] = $message;
-
-        $report = http_build_query($report);
-
-        return @file_get_contents("{$base}{$report}");
+        @wp_mail('plugin-help@broadstreetads.com', "Report: $message", $report);
     }
 
     /**

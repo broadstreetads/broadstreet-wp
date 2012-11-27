@@ -31,7 +31,7 @@ class Broadstreet_Core
     CONST KEY_API_KEY             = 'Broadstreet_API_Key';
     CONST KEY_NETWORK_ID          = 'Broadstreet_Network_Key';
     CONST KEY_BIZ_ENABLED         = 'Broadstreet_Biz_Enabled';
-    CONST KEY_INSTALL_REPORT      = false;
+    CONST KEY_INSTALL_REPORT      = 'Broadstreet_Installed';
     CONST BIZ_POST_TYPE           = 'bs_business';
     CONST BIZ_TAXONOMY            = 'business_category';
     CONST BIZ_SLUG                = 'businesses';

@@ -1,5 +1,5 @@
     <a href="http://broadstreetads.com" target="_blank">
-        <img class="oconf_logo" src="<?php echo Broadstreet_Utility::getImageBaseURL(); ?>marty.png" alt="" />
+        <img class="oconf_logo" src="<?php echo Broadstreet_Utility::getImageBaseURL(); ?>marty.png" alt="Say 'Hi' to Marty" title="Say 'Hi' to Marty" />
     </a>
     <?php
         if($message = Broadstreet_Utility::getBroadstreetMessage())
