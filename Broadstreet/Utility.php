@@ -531,12 +531,25 @@ class Broadstreet_Utility
      */
     public static function sendInstallReportIfNew()
     {
-        $sent = self::getOption(Broadstreet_Core::KEY_INSTALL_REPORT);
+        $install_key = Broadstreet_Core::KEY_INSTALL_REPORT;
+        $upgrade_key = Broadstreet_Core::KEY_INSTALL_REPORT . BROADSTREET_VERSION;
+        
+        $sent = self::getOption($install_key)
+                    && self::getOption($upgrade_key);
 
         if($sent === FALSE)
-        {
-            self::sendReport("Installation");
-            self::setOption(Broadstreet_Core::KEY_INSTALL_REPORT, 'true');
+        {   
+            if(!$install_key)
+            {
+                self::sendReport("Installation");
+                self::setOption($install_key, 'true');
+                self::setOption($upgrade_key, 'true');
+            }
+            else
+            {
+                self::sendReport("Upgrade");
+                self::setOption($upgrade_key, 'true');
+            }
         }
     }
     
@@ -594,7 +607,7 @@ class Broadstreet_Utility
         $driver = Broadstreet_Config::get('driver');
         $count  = Broadstreet_Model::getPublishedPostCount();
 
-        $url     = "http://report.Broadstreet2.com/messages?d=$driver&c=$count";
+        $url     = "http://broadstreetads.com/messages?d=$driver&c=$count";
         $content = file_get_contents($url);
 
         self::setOption(Broadstreet_Core::KEY_LAST_MESSAGE, $content);
