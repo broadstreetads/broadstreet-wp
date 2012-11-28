@@ -20,7 +20,8 @@ class Broadstreet_Config
         $config = array();
         # Set config values below
         
-        $config['zone_cache_ttl_seconds'] = 60*15; // 15 minutes
+        $config['zone_cache_ttl_seconds']    = 60*15; // 15 minutes
+        $config['network_cache_ttl_seconds'] = 60*60; // 1  hours
 
         $config['log'] = array (
 
@@ -70,14 +71,14 @@ class Broadstreet_Config
      *  config item is nested in subarrays, you can use dot-separated strings
      *  to specifykey items. For example, given a config setup like:
      *
-     *  $config['driver-configs'] = array (
-     *      'Javalucene' = array (
+     *  $config['example-config'] = array (
+     *      'test' = array (
      *          port => '12345',
      *          host => 'localhost'
      *      )
      *  )
      *
-     * I could use Broadstreet_Config::get('driver-configs.Javalucene.port') to get
+     * I could use Broadstreet_Config::get('example-config.test.port') to get
      *  the port.
      * @param string $default A value to return if the key wasn't found
      * @return string The configuration value

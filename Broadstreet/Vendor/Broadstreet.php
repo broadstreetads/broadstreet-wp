@@ -74,6 +74,16 @@ class Broadstreet
     }
     
     /**
+     * Get base account information for a network, including whether a card is
+     *  on file, the cost of an import (in cents), etc
+     * @param int $network_id 
+     */
+    public function getNetwork($network_id)
+    {
+        return $this->_get("/networks/$network_id")->body->network;
+    }
+    
+    /**
      * Update an advertisement
      * @param string $name The name of the advertisement
      * @param string $type The type of advertisement

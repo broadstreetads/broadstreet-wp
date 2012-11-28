@@ -342,6 +342,7 @@ class Broadstreet_Core
         $network_id       = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
         $advertiser_id    = Broadstreet_Utility::getPostMeta($post->ID, 'bs_advertiser_id');
         $advertisement_id = Broadstreet_Utility::getPostMeta($post->ID, 'bs_advertisement_id');
+        $network_info     = Broadstreet_Utility::getNetwork();
         
         $api = $this->getBroadstreetClient();
         
@@ -349,7 +350,6 @@ class Broadstreet_Core
         {
             $meta['preferred_hash_tag'] = $api->getAdvertisement($network_id, $advertiser_id, $advertisement_id)
                                     ->preferred_hash_tag;
-            
         }
         
         try
@@ -361,7 +361,11 @@ class Broadstreet_Core
             $advertisers = array();
         }
         
-        Broadstreet_View::load('admin/businessMetaBox', array('meta' => $meta, 'advertisers' => $advertisers));
+        Broadstreet_View::load('admin/businessMetaBox', array(
+            'meta'        => $meta, 
+            'advertisers' => $advertisers, 
+            'network'     => $network_info
+        ));
     }
 
     /**
@@ -674,7 +678,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
             <label for="<?php echo $this->get_field_id('w_info_string'); ?>">Zone</label>
             <select class="widefat" id="<?php echo $this->get_field_id( 'w_zone' ); ?>" name="<?php echo $this->get_field_name('w_zone'); ?>" >
                 <?php foreach($zones as $id => $zone): ?>
-                <option <?php if($instance['w_zone'] == $zone->id) echo "selected" ?> value="<?php echo $zone->id ?>"><?php echo $zone->name ?></option>
+                <option <?php if(isset($instance['w_zone']) && $instance['w_zone'] == $zone->id) echo "selected" ?> value="<?php echo $zone->id ?>"><?php echo $zone->name ?></option>
                 <?php endforeach; ?>
             </select>
        </p>

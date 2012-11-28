@@ -20,6 +20,8 @@
               getting your business directory up and running quickly.
           </p>
           
+          <iframe width="560" height="315" src="http://www.youtube.com/embed/Dv5Z3bL9eUM" frameborder="0" allowfullscreen></iframe>
+          
           <h2>Using the Business Directory</h2>
           
           <p>

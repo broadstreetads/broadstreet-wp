@@ -98,7 +98,7 @@
         <tbody>
             <tr>
                 <td width="30%" class="label">
-                    Magic Import ($1) <img id="import-progress" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>ajax-loader-rotate.gif" alt="Progress!" /><br />
+                    Magic Import ($<?php echo number_format($network->import_cost/100, 2) ?>) <img id="import-progress" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>ajax-loader-rotate.gif" alt="Progress!" /><br />
                     <img align="left" width="40" class="oconf_logo" src="<?php echo Broadstreet_Utility::getImageBaseURL(); ?>marty.png" alt="" />
                     <em>If the business has a Facebook page, we can auto-fill some fields and crawl the web for images.</em>
                 </td>

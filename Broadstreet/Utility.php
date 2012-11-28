@@ -14,6 +14,7 @@ class Broadstreet_Utility
 {
     const KEY_ZONE_CACHE = 'BROADSTREET_ZONE_CACHE';
     const KEY_RW_FLUSH   = 'BROADSTREET_RW_FLUSH';
+    const KEY_NET_INFO   = 'BROADSTREET_NET_INFO';
     
     protected static $_zoneCache = NULL;
     protected static $_apiKeyValid = NULL;
@@ -85,6 +86,28 @@ class Broadstreet_Utility
     public static function getNetworkId()
     {
         return Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
+    }
+    
+    /**
+     * Get info about the network this blog is registered as, and cache it
+     * @return boolean 
+     */
+    public static function getNetwork()
+    {
+        //$info = self::getOption(self::KEY_NET_INFO);
+        
+        $info = Broadstreet_Cache::get('network_info');
+        
+        if($info) return $info;
+
+        $broadstreet = new Broadstreet(self::getApiKey());
+        $info = $broadstreet->getNetwork(self::getNetworkId());
+
+        Broadstreet_Cache::set('network_info', $info, Broadstreet_Config::get('network_cache_ttl_seconds'));
+        
+        self::setOption(self::KEY_NET_INFO, $info);
+        
+        return $info;
     }
 
     /**
@@ -513,6 +536,7 @@ class Broadstreet_Utility
      */
     public static function sendReport($message = 'General')
     {
+        
         $report = "$message\n";
         $report .= get_bloginfo('name'). "\n";
         $report .= get_bloginfo('url'). "\n";
@@ -532,14 +556,16 @@ class Broadstreet_Utility
     public static function sendInstallReportIfNew()
     {
         $install_key = Broadstreet_Core::KEY_INSTALL_REPORT;
-        $upgrade_key = Broadstreet_Core::KEY_INSTALL_REPORT . BROADSTREET_VERSION;
+        $upgrade_key = Broadstreet_Core::KEY_INSTALL_REPORT .'_'. BROADSTREET_VERSION;
         
-        $sent = self::getOption($install_key)
-                    && self::getOption($upgrade_key);
-
+        $installed = self::getOption($install_key);
+        $upgraded  = self::getOption($upgrade_key);
+ 
+        $sent = ($installed && $upgraded);
+        
         if($sent === FALSE)
         {   
-            if(!$install_key)
+            if(!$installed)
             {
                 self::sendReport("Installation");
                 self::setOption($install_key, 'true');
