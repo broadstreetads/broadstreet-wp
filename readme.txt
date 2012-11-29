@@ -3,13 +3,13 @@ Contributors: Broadstreet
 Tags: broadstreet,local,publishers,hyperlocal,independent,news,business,directory
 Requires at least: 3.0
 Tested up to: 3.4.2
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 
 Integrate Broadstreet business directory and adserving power into your site.
 
 == Description ==
 
-For Broadstreet users (if you aren't a user, sign up here):
+For Broadstreet users. If you aren't a user, you can sign up after installing.
 
 Introducing first business directory of it's kind, this Broadstreet-powered
 plug-in is the first practical and portable business directory for Wordpress.
