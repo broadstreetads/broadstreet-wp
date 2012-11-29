@@ -189,7 +189,7 @@ class Broadstreet
         
         if($status == '403')
         {
-            throw new Broadstreet_AuthException("Broadstreet API Auth Denied (HTTP 403)");
+            throw new Broadstreet_ServerException("Broadstreet API Auth Denied (HTTP 403)", @json_decode($body));
         }
         
         if($status == '500')

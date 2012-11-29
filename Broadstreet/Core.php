@@ -228,7 +228,13 @@ class Broadstreet_Core
      */
     public function adminWarningCallback()
     {
+        if(in_array($GLOBALS['pagenow'], array('edit.php', 'post.php', 'post-new.php')))
+        {
+            $info = Broadstreet_Utility::getNetwork();
 
+            if(!$info || !$info->cc_on_file)
+                echo '<div class="updated"><p>You\'re <strong>almost ready</strong> to start using Broadstreet! Check the <a href="admin.php?page=Broadstreet">plugin page</a> to take care of the last steps. When that\'s done, this message will clear shortly after.</p></div>';
+        }
     }
 
     /**
@@ -275,8 +281,9 @@ class Broadstreet_Core
         $data['business_enabled']   = Broadstreet_Utility::getOption(self::KEY_BIZ_ENABLED);
         $data['network_id']         = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
         $data['errors']             = array();
-        $data['networks'] = array();
-        $data['key_valid'] = false;
+        $data['networks']           = array();
+        $data['key_valid']          = false;
+        $data['has_cc']             = false;
         
         if(get_page_by_path('businesses'))
         {
@@ -300,6 +307,10 @@ class Broadstreet_Core
             {
                 $data['networks']  = $api->getNetworks();
                 $data['key_valid'] = true;
+                $data['network']   = Broadstreet_Utility::getNetwork(true);
+                
+                if(!$data['network']->cc_on_file)
+                    $data['errors'][] = 'Your account does not have a credit card on file for your selected network below. The "Magic Import" and "Updateable Message" features will not work until <a target="_blank" href="http://my.broadstreetads.com/networks/'. $data['network_id'] .'/payment_detail/edit">you add a card here.</a>';
             }
             catch(Exception $ex)
             {

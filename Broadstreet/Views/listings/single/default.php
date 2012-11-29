@@ -23,7 +23,7 @@
     }
     
     .thumb {
-        height: 40px;
+        height: 40px !important;
     }
     
     .biz-data {

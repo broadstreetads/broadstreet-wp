@@ -92,20 +92,28 @@ class Broadstreet_Utility
      * Get info about the network this blog is registered as, and cache it
      * @return boolean 
      */
-    public static function getNetwork()
+    public static function getNetwork($force_refresh = false)
     {
-        //$info = self::getOption(self::KEY_NET_INFO);
+        $info = false;
         
-        $info = Broadstreet_Cache::get('network_info');
+        if(!$force_refresh)
+            $info = Broadstreet_Cache::get('network_info');
         
         if($info) return $info;
 
-        $broadstreet = new Broadstreet(self::getApiKey());
-        $info = $broadstreet->getNetwork(self::getNetworkId());
+        try
+        {
+            $broadstreet = new Broadstreet(self::getApiKey());
+            $info = $broadstreet->getNetwork(self::getNetworkId());
 
-        Broadstreet_Cache::set('network_info', $info, Broadstreet_Config::get('network_cache_ttl_seconds'));
+            Broadstreet_Cache::set('network_info', $info, Broadstreet_Config::get('network_cache_ttl_seconds'));
         
-        self::setOption(self::KEY_NET_INFO, $info);
+            self::setOption(self::KEY_NET_INFO, $info);
+        }
+        catch(Exception $ex)
+        {
+            return false;
+        }
         
         return $info;
     }
@@ -550,7 +558,7 @@ class Broadstreet_Utility
         $report .= 'Plugin Version: ' . BROADSTREET_VERSION . "\n";
         $report .= "$message\n";
 
-        @wp_mail('plugin-help@broadstreetads.com', "Report: $message", $report);
+        @wp_mail('plugin@broadstreetads.com', "Report: $message", $report);
     }
 
     /**
