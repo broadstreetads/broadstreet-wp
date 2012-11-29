@@ -275,6 +275,8 @@ class Broadstreet_Core
         $data['business_enabled']   = Broadstreet_Utility::getOption(self::KEY_BIZ_ENABLED);
         $data['network_id']         = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
         $data['errors']             = array();
+        $data['networks'] = array();
+        $data['key_valid'] = false;
         
         if(get_page_by_path('businesses'))
         {
@@ -288,7 +290,7 @@ class Broadstreet_Core
         
         if(!$data['api_key']) 
         {
-            $data['errors'][] = 'You dont have an API key set yet! Set it below.';
+            $data['errors'][] = 'You dont have an API key set yet! Set it below. If you don\'t have an account with us, <a target="blank" href="http://my.broadstreetads.com/register">sign up here</a>.';
         } 
         else 
         {
