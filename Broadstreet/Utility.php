@@ -314,7 +314,12 @@ class Broadstreet_Utility
         $network_id = self::getNetworkId();
         $broadstreet= new Broadstreet($api_key);
         
-        $meta     = (array)$broadstreet->magicImport($url, $network_id);
+        $import   = $broadstreet->magicImport($url, $network_id);
+        
+        $meta         = (array)$import->detail;
+        $meta['charged'] = (bool)$import->cost;
+        $meta['cost']    = number_format($import->cost / 100, 2);
+        
         $defaults = Broadstreet_Core::$_businessDefaults;
         
         //print_r($meta); exit;

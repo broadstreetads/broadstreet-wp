@@ -47,7 +47,7 @@ class Broadstreet
      */
     public function magicImport($seed_url, $network_id)
     {
-        return $this->_get("/networks/$network_id/import", array(), array('preview' => 'true', 'lookup' => $seed_url))->body->detail;
+        return $this->_get("/networks/$network_id/import", array(), array('lookup' => $seed_url))->body;
     }
     
     /**
@@ -199,7 +199,7 @@ class Broadstreet
         
         if($status[0] != '2')
         {
-            throw new Broadstreet_ServerException("Server threw HTTP $status for call to $uri with cURL params " . print_r($options, true));
+            throw new Broadstreet_ServerException("Server threw HTTP $status for call to $uri with cURL params " . print_r($options, true), @json_decode($body));
         }
 
         return (object)(array('url' => $url, 'body' => @json_decode($body), 'status' => $status));
@@ -264,4 +264,10 @@ class Broadstreet
 class Broadstreet_GeneralException extends Exception {}
 class Broadstreet_DependencyException extends Broadstreet_GeneralException {}
 class Broadstreet_AuthException extends Broadstreet_GeneralException {}
-class Broadstreet_ServerException extends Broadstreet_GeneralException {}
+class Broadstreet_ServerException extends Broadstreet_GeneralException {
+    public $error;
+    public function __construct($message, $error = '') {
+        $this->error = $error;
+        parent::__construct($message);
+    }
+}

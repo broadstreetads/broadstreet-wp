@@ -219,9 +219,14 @@ jQuery(function($){
                     tinyMCE.activeEditor.setContent(response.profile.description);
                 }
 
-                alert(count + ' fields were magically imported!')
+                alert(count + ' fields were magically imported!');
+                
+                if(!response.profile.charged) {
+                    alert("Since we couldn't retrieve all of the standard information, this import is on the house.")
+                }
+                
             } else {
-                alert("We couldn't couldn't import any information.")
+                alert("There was an error importing. Message: " + response.message);
             }
             $('#import-progress').hide();
         }, 'json')

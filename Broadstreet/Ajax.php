@@ -62,7 +62,14 @@ class Broadstreet_Ajax
     
     public static function importFacebook()
     {
-        $profile = Broadstreet_Utility::importBusiness($_POST['id'], $_POST['post_id']);
-        die(json_encode(array('success' => (bool)$profile, 'profile' => $profile)));
+        try
+        {
+            $profile = Broadstreet_Utility::importBusiness($_POST['id'], $_POST['post_id']);
+            die(json_encode(array('success' => (bool)$profile, 'profile' => $profile)));
+        } 
+        catch(Broadstreet_ServerException $ex)
+        {
+            die(json_encode(array('success' => false, 'message' => ($ex->error ? $ex->error->message : 'Server error. This issue has been reported to the folks at Broadstreet.'))));
+        }
     }
 }
