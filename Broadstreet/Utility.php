@@ -330,8 +330,6 @@ class Broadstreet_Utility
         
         $defaults = Broadstreet_Core::$_businessDefaults;
         
-        //print_r($meta); exit;
-        
         foreach($defaults as $key => $value)
         {
             if(!isset($meta[$key]) || is_null($meta[$key]))
@@ -345,6 +343,7 @@ class Broadstreet_Utility
         foreach($meta['images'] as $image)
         {
             $img = Broadstreet_Utility::importImage($image, $attach_post_id, $meta['name'] . ' ' . ($count + 1));
+
             if($img) $images[] = $img;
             $count++;
         }

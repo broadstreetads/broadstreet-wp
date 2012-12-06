@@ -119,6 +119,7 @@ class Broadstreet_Core
         if(Broadstreet_Utility::isBusinessEnabled())
         {
             add_action('init', array($this, 'createPostTypes'));
+            add_action('wp_enqueue_scripts', array($this, 'addPostStyles'));
             add_action('pre_get_posts', array($this, 'modifyPostListing'));
             add_filter('the_content', array($this, 'postTemplate'), 100);
             add_filter('the_excerpt', array($this, 'postExcerpt'), 100);
@@ -207,6 +208,14 @@ class Broadstreet_Core
                 'normal',
                 'high'
             );        
+        }
+    }
+    
+    public function addPostStyles()
+    {
+        if(get_post_type() == self::BIZ_POST_TYPE && !is_admin())
+        {
+            wp_enqueue_style ('Broadstreet-styles-listings', Broadstreet_Utility::getCSSBaseURL() . 'listings.css');
         }
     }
     
@@ -475,7 +484,7 @@ class Broadstreet_Core
      * @return string Content
      */
     public function postTemplate($content)
-    {
+    {   
         # Only do this for business posts, and don't do it
         #  for excerpts
         if(!Broadstreet_Utility::inExcerpt() 

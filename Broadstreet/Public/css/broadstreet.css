@@ -201,6 +201,10 @@
     padding: 5px 15px;
 }
 
+.control-container select {
+    width: 250px;
+}
+
 /* Help section */
 img.figure {
     
