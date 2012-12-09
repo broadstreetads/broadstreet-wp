@@ -306,7 +306,7 @@ class Broadstreet_Core
         
         if(!$data['api_key']) 
         {
-            $data['errors'][] = 'You dont have an API key set yet! Set it below. If you don\'t have an account with us, <a target="blank" href="http://my.broadstreetads.com/register">sign up here</a>.';
+            $data['errors'][] = '<strong>You dont have an API key set yet!</strong><ol><li>If you already have a Broadstreet adserving account, <a href="http://my.broadstreetads.com/access-token">get your key here</a>.</li><li>If you don\'t have an account with us, <a target="blank" href="http://my.broadstreetads.com/register">sign up here</a>, create a network for this site, then <a href="http://my.broadstreetads.com/access-token">get your key here</a>.</li></ol>';
         } 
         else 
         {

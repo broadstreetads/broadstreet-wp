@@ -142,6 +142,7 @@ jQuery(function($){
         
         // Okay, maybe it's an image
         if(!url) url = $('img',html).attr('src');
+        if(!url) url = $(html).attr('src');
         
         $('#bs_menu').val(url);
         tb_remove();
@@ -149,6 +150,7 @@ jQuery(function($){
 
     function image_upload_handler(html) {
         imgurl = $('img',html).attr('src');
+        if(!imgurl) imgurl = $(html).attr('src');
         add_images(imgurl);
         tb_remove();
     };
