@@ -10,6 +10,10 @@ then
   exit 1
 fi
 
-sed -i "s/$1/$2/g" readme.txt
-sed -i "s/$1/$2/g" broadstreet.php
-sed -i "s/$1/$2/g" Broadstreet/Config.php
+sed -i.bak "s/$1/$2/g" 'readme.txt'
+sed -i.bak "s/$1/$2/g" 'broadstreet.php'
+sed -i.bak "s/$1/$2/g" 'Broadstreet/Config.php'
+
+rm readme.txt.bak
+rm broadstreet.php.bak
+rm Broadstreet/Config.php.bak
