@@ -640,6 +640,7 @@ class Broadstreet_Utility
             }
             else
             {
+                self::flushRewrites(true);
                 self::sendReport("Upgrade");
                 self::setOption($upgrade_key, 'true');
             }
