@@ -1,0 +1,15 @@
+#/bin/sh
+
+# This is a simple deploy script for bumping the version
+
+
+if [ -z "$1" -o -z "$2" ]
+then
+  echo "Usage: ./deploy OLD_VERSION NEW_VERSION"
+  echo "Old a new tags names are required"
+  exit 1
+fi
+
+sed -i "s/$1/$2/g" readme.txt
+sed -i "s/$1/$2/g" broadstreet.php
+sed -i "s/$1/$2/g" Broadstreet/Config.php
