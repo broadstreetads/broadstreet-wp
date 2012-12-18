@@ -10,9 +10,12 @@ then
   exit 1
 fi
 
-sed -i.bak "s/$1/$2/g" 'readme.txt'
-sed -i.bak "s/$1/$2/g" 'broadstreet.php'
-sed -i.bak "s/$1/$2/g" 'Broadstreet/Config.php'
+OLD=`echo $1 | sed 's/\./\\\./g'`
+NEW=`echo $2 | sed 's/\./\\\./g'`
+
+sed -i.bak "s/$OLD/$NEW/g" 'readme.txt'
+sed -i.bak "s/$OLD/$NEW/g" 'broadstreet.php'
+sed -i.bak "s/$OLD/$NEW/g" 'Broadstreet/Config.php'
 
 rm readme.txt.bak
 rm broadstreet.php.bak

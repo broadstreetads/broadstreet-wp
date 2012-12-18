@@ -27,6 +27,7 @@ rsync -avz --exclude=".*/" $GIT/* $SVN
 # Do some handywork
 rm deploy
 rm README.md
+rm version-bump
 #mv wp-readme.txt readme.txt
 
 cd ../
