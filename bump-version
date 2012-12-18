@@ -6,7 +6,7 @@
 if [ -z "$1" -o -z "$2" ]
 then
   echo "Usage: ./deploy OLD_VERSION NEW_VERSION"
-  echo "Old a new tags names are required"
+  echo "Old and new tags names are required"
   exit 1
 fi
 
