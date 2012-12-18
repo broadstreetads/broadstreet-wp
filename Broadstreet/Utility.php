@@ -19,7 +19,7 @@ class Broadstreet_Utility
     protected static $_zoneCache = NULL;
     protected static $_apiKeyValid = NULL;
     protected static $_businessEnabled = NULL;
-
+    
     /**
      * Build an address from a meta array
      * @param type $meta The array of meta fields that come back for a business
@@ -221,6 +221,61 @@ class Broadstreet_Utility
             flush_rewrite_rules();
             self::setOption(self::KEY_RW_FLUSH, 'TRUE');
         }
+    }
+    
+    /**
+     * Fix a malformed URL
+     * @param string $url
+     * @return string
+     */
+    public static function fixURL($url)
+    {
+        if(!strstr($url, 'http://'))
+            $url = "http://$url";
+        
+        return $url;
+    }
+    
+    /**
+     * Resize a video embed snippet's dimensions to a given width and height
+     *  Height is optional
+     * @param string $url
+     * @return string
+     */
+    public static function setVideoWidth($snippet, $new_width, $new_height = false, $keep_proportional = true)
+    {
+        if(preg_match('#width=[\\\'"](\d+)[\\\'"]#', $snippet, $matches))
+        {
+            $old_width = $matches[1];
+            
+            if(!$new_height && preg_match('#height=[\\\'"](\d+)[\\\'"]#', $snippet, $matches))
+            {
+                $height = $matches[1];
+            }
+            else
+            {
+                $height = $new_height;
+            }
+            
+            if($keep_proportional)
+            {
+                $ratio   = $new_width / $old_width;
+                $height  = round($height*$ratio);
+                $width   = $new_width;
+            }
+            else
+            {
+                $width   = $new_width;
+            }
+            
+            $width  = "width=\"$width\"";
+            $height = "height=\"$height\"";
+            
+            $snippet = preg_replace('#width=[\\\'"]\d+[\\\'"]#', $width, $snippet);
+            $snippet = preg_replace('#height=[\\\'"]\d+[\\\'"]#', $height, $snippet);
+        }
+        
+        return $snippet;
     }
     
     /**

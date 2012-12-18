@@ -107,13 +107,16 @@
         <?php if($meta['bs_twitter'] || $meta['bs_twitter'] || $meta['bs_twitter']): ?>
         <div class="section-label"><strong>Web</strong></div>
             <?php if($meta['bs_twitter']): ?>
-            <a class="nodec" target="_blank" href="<?php echo $meta['bs_twitter'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'twitter.png' ?>" alt="twitter" width="20" /></a>
+            <a class="nodec" target="_blank" href="<?php echo $meta['bs_twitter'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'twitter.png' ?>" alt="Twitter" width="20" /></a>
             <?php endif; ?>
             <?php if($meta['bs_facebook']): ?>
-            <a class="nodec" target="_blank" href="<?php echo $meta['bs_facebook'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'facebook.png' ?>" alt="facebook" width="20" /></a>
+            <a class="nodec" target="_blank" href="<?php echo $meta['bs_facebook'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'facebook.png' ?>" alt="Facebook" width="20" /></a>
+            <?php endif; ?>
+            <?php if($meta['bs_gplus']): ?>
+            <a class="nodec" target="_blank" href="<?php echo $meta['bs_gplus'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'google.png' ?>" alt="Google Plus" width="20" /></a>
             <?php endif; ?>
             <?php if($meta['bs_yelp']): ?>
-            <a class="nodec" target="_blank" href="<?php echo $meta['bs_yelp'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'yelp.png' ?>" alt="yelp" width="20" /></a>
+            <a class="nodec" target="_blank" href="<?php echo $meta['bs_yelp'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'yelp.png' ?>" alt="Yelp" width="20" /></a>
             <?php endif; ?>
         <?php endif; ?>
     
@@ -121,4 +124,7 @@
 <div id="biz-column-2" class="boxed-sizing">
     <?php echo $content; ?>
 </div>
+
+<div class="bs-video">Video</div>
+<?php echo Broadstreet_Utility::setVideoWidth($meta['bs_video'], 350); ?>
 <div class="clearfix"></div>

@@ -249,6 +249,26 @@
             <td class="label">Yelp URL</td>
             <td><input placeholder="http://yelp.com/biz/business-name" type="text" name="bs_yelp" value="<?php echo $meta['bs_yelp'] ?>" /></td>
         </tr>
+        <tr>
+            <td class="label">Google Plus URL</td>
+            <td><input placeholder="https://plus.google.com/112513709762074435437" type="text" name="bs_gplus" value="<?php echo $meta['bs_gplus'] ?>" /></td>
+        </tr>
+        <?php if($show_offers): ?>
+        <tr>
+            <td class="label">Special Offer Image &amp; Link</td>
+            <td>
+                <input placeholder="http://example.com/offer.jpg" id="bs_offer" class="short" type="text" name="bs_offer" value="<?php echo $meta['bs_offer'] ?>" />
+                <a href="#" class="offer-upload-button">Upload a file</a>
+                <br />
+                <input placeholder="http://example.com/offer-landing-page" id="bs_offer_link" class="short" type="text" name="bs_offer_link" value="<?php echo $meta['bs_offer_link'] ?>" />
+                <strong>Click Url (optional)</strong>
+            </td>
+        </tr>
+        <?php endif; ?>
+        <tr>
+            <td class="label">Video Embed Code Snippet</td>
+            <td><textarea name="bs_video"><?php echo htmlentities($meta['bs_video']) ?></textarea></td>
+        </tr>
     </tbody>
 </table>
 

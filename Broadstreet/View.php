@@ -18,7 +18,7 @@ class Broadstreet_View
      *  available to the view
      * @param bool $return Return the output instead of outputting it
      */
-    public static function load($file, $data = array(), $return = false)
+    public static function load($file, $data = array(), $return = false, $eval = true)
     {
         $file = dirname(__FILE__) . '/Views/' . $file . '.php';
 
@@ -33,12 +33,18 @@ class Broadstreet_View
 
         if(!$return)
         {
-            include($file);
+            if($eval)
+                include($file);
+            else
+                readfile($file);
         }
         else
         {
             ob_start();
-            include($file);
+            if($eval)
+                include($file);
+            else
+                readfile($file);
             return ob_get_clean();
         }
     }

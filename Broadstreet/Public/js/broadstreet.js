@@ -123,6 +123,12 @@ jQuery(function($){
         return false;
     });
     
+    $('.offer-upload-button').click(function() {        
+        window.send_to_editor = offer_upload_handler;
+        tb_show('', 'media-upload.php?type=image&amp;amp;amp;TB_iframe=true');
+        return false;
+    });
+    
     window.remove_image = function(e) {
         e.preventDefault();
         el = $(e.target);
@@ -145,6 +151,18 @@ jQuery(function($){
         if(!url) url = $(html).attr('src');
         
         $('#bs_menu').val(url);
+        tb_remove();
+    }
+    
+    function offer_upload_handler(html) {
+        // It's probably a pdf or some non-image'
+        url = $(html).attr('href');
+        
+        // Okay, maybe it's an image
+        if(!url) url = $('img',html).attr('src');
+        if(!url) url = $(html).attr('src');
+        
+        $('#bs_offer').val(url);
         tb_remove();
     }
 

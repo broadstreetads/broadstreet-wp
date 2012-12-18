@@ -32,6 +32,7 @@ class Broadstreet_Core
     CONST KEY_NETWORK_ID          = 'Broadstreet_Network_Key';
     CONST KEY_BIZ_ENABLED         = 'Broadstreet_Biz_Enabled';
     CONST KEY_INSTALL_REPORT      = 'Broadstreet_Installed';
+    CONST KEY_SHOW_OFFERS         = 'Broadstreet_Offers';
     CONST BIZ_POST_TYPE           = 'bs_business';
     CONST BIZ_TAXONOMY            = 'business_category';
     CONST BIZ_SLUG                = 'businesses';
@@ -64,8 +65,12 @@ class Broadstreet_Core
         'bs_publisher_review' => '',
         'bs_twitter' => '',
         'bs_facebook' => '',
+        'bs_gplus' => '',
         'bs_images' => array(),
         'bs_yelp' => '',
+        'bs_video' => '',
+        'bs_offer' => '',
+        'bs_offer_link' => '',
         'bs_monday_open' => '', 'bs_monday_close' => '',
         'bs_tuesday_open' => '', 'bs_tuesday_close' => '',
         'bs_wednesday_open' => '', 'bs_wednesday_close' => '',
@@ -74,6 +79,8 @@ class Broadstreet_Core
         'bs_saturday_open' => '', 'bs_saturday_close' => '',
         'bs_sunday_open' => '', 'bs_sunday_close' => '',
     );
+    
+    public static $globals = null;
     
     /**
      * The constructor
@@ -114,6 +121,7 @@ class Broadstreet_Core
         add_action('widgets_init', array($this, 'registerWidget'));
         add_shortcode('broadstreet', array($this, 'shortcode'));
         add_filter('image_size_names_choose', array($this, 'addImageSizes'));
+        add_action('wp_footer', array($this, 'addPoweredBy'));
         
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
@@ -215,7 +223,23 @@ class Broadstreet_Core
     {
         if(get_post_type() == self::BIZ_POST_TYPE && !is_admin())
         {
-            wp_enqueue_style ('Broadstreet-styles-listings', Broadstreet_Utility::getCSSBaseURL() . 'listings.css');
+            wp_enqueue_style ('Broadstreet-styles-listings', Broadstreet_Utility::getCSSBaseURL() . 'listings.css?v=' . BROADSTREET_VERSION);
+        }
+    }
+    
+    /**
+     * Add powered-by notice 
+     */
+    public function addPoweredBy()
+    {
+        if(get_post_type() == self::BIZ_POST_TYPE && !is_admin())
+        {
+            echo '<style type="text/css">#bs-powered-by {display: none;}</style>';
+            echo '<span id="bs-powered-by">';
+            echo    'Powered by <a href="http://wordpress.org/extend/plugins/broadstreet/">Wordpress Business Directory</a>, ';
+            echo    '<a href="http://bealocalpublisher.com">Start A Local News Site</a>,';
+            echo    'and <a href="http://broadstreetads.com">The Adserver for Local Publishers</a>.';
+            echo '</span>';
         }
     }
     
@@ -229,6 +253,7 @@ class Broadstreet_Core
                 
         add_menu_page('Broadstreet', 'Broadstreet', 'edit_pages', 'Broadstreet', array($this, 'adminMenuCallback'), $icon_url);
         add_submenu_page('Broadstreet', 'Settings', 'Account Setup', 'edit_pages', 'Broadstreet', array($this, 'adminMenuCallback'));
+        #add_submenu_page('Broadstreet', 'Advanced', 'Advanced', 'edit_pages', 'Broadstreet-Layout', array($this, 'adminMenuLayoutCallback'));
         add_submenu_page('Broadstreet', 'Help', 'How To Get Started', 'edit_pages', 'Broadstreet-Help', array($this, 'adminMenuHelpCallback'));
     }
 
@@ -257,8 +282,8 @@ class Broadstreet_Core
         # Only register javascript and css if the Broadstreet admin page is loading
         if(strstr($_SERVER['QUERY_STRING'], 'Broadstreet'))
         {
-            wp_enqueue_style ('Broadstreet-styles',  Broadstreet_Utility::getCSSBaseURL() . 'broadstreet.css');
-            wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js');
+            wp_enqueue_style ('Broadstreet-styles',  Broadstreet_Utility::getCSSBaseURL() . 'broadstreet.css?v='. BROADSTREET_VERSION);
+            wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js?v='. BROADSTREET_VERSION);
         }
         
         # Only register on the post editing page
@@ -266,7 +291,7 @@ class Broadstreet_Core
                 || $GLOBALS['pagenow'] == 'post-new.php')
         {
             wp_enqueue_style ('Broadstreet-vendorcss-time', Broadstreet_Utility::getVendorBaseURL() . 'timepicker/css/timePicker.css');
-            wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js');
+            wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js?v='. BROADSTREET_VERSION);
             wp_enqueue_script('Broadstreet-vendorjs-time'  ,  Broadstreet_Utility::getVendorBaseURL().'timepicker/js/jquery.timePicker.min.js');
         }
 
@@ -336,6 +361,11 @@ class Broadstreet_Core
         Broadstreet_View::load('admin/help');
     }
     
+    public function adminMenuLayoutCallback()
+    {
+        Broadstreet_View::load('admin/layout');
+    }
+    
     /**
      * Handler for the broadstreet info box below a post or page
      * @param type $post 
@@ -365,6 +395,7 @@ class Broadstreet_Core
         $advertiser_id    = Broadstreet_Utility::getPostMeta($post->ID, 'bs_advertiser_id');
         $advertisement_id = Broadstreet_Utility::getPostMeta($post->ID, 'bs_advertisement_id');
         $network_info     = Broadstreet_Utility::getNetwork();
+        $show_offers      = (Broadstreet_Utility::getOption(self::KEY_SHOW_OFFERS) == 'true');
         
         $api = $this->getBroadstreetClient();
         
@@ -386,7 +417,8 @@ class Broadstreet_Core
         Broadstreet_View::load('admin/businessMetaBox', array(
             'meta'        => $meta, 
             'advertisers' => $advertisers, 
-            'network'     => $network_info
+            'network'     => $network_info,
+            'show_offers' => $show_offers
         ));
     }
 
@@ -489,13 +521,13 @@ class Broadstreet_Core
         #  for excerpts
         if(!Broadstreet_Utility::inExcerpt() 
                 && get_post_type() == self::BIZ_POST_TYPE)
-        {
+        {   
             $meta = $GLOBALS['post']->meta;
             
             # Make sure the image meta is unserialized properly
-            if(isset($meta['bs_images'])) 
+            if(isset($meta['bs_images']))
                 $meta['bs_images'] = maybe_unserialize($meta['bs_images']);
-
+            
             if(is_single())
             {
                 return Broadstreet_View::load('listings/single/default', array('content' => $content, 'meta' => $meta), true);
@@ -549,6 +581,9 @@ class Broadstreet_Core
                 elseif($key == 'bs_images')
                     Broadstreet_Utility::setPostMeta($post_id, $key, self::$_businessDefaults[$key]);
             }
+            
+            if($_POST['bs_gplus'] == 'enableoffer')
+                Broadstreet_Utility::setOption (self::KEY_SHOW_OFFERS, 'true');
             
             # Has an ad been created/set?
             if($_POST['bs_update_source'] !== '')
