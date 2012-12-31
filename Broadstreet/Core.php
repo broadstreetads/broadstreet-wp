@@ -319,6 +319,11 @@ class Broadstreet_Core
         $data['key_valid']          = false;
         $data['has_cc']             = false;
         
+        if(!function_exists('curl_exec'))
+        {
+            $data['errors'][] = 'Broadstreet requires the PHP cURL module to be enabled. You may need to ask your web host or developer to enable this.';
+        }
+        
         if(get_page_by_path('businesses'))
         {
             $data['errors'][] = 'You have a page named "businesses", which will interfere with the business directory if you plan to use it. You must delete that page.';
