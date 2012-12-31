@@ -125,6 +125,8 @@
     <?php echo $content; ?>
 </div>
 
+<?php if($meta['bs_video']): ?>
 <div class="bs-video">Video</div>
 <?php echo Broadstreet_Utility::setVideoWidth($meta['bs_video'], 350); ?>
+<?php endif; ?>
 <div class="clearfix"></div>
