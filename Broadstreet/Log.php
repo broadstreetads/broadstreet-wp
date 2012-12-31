@@ -83,13 +83,13 @@ class Broadstreet_Log
     public static function instance($logDirectory = FALSE, $priority = FALSE)
     {
         # Didn't set a priority? Well, I suppose you'll see everything
-        if($priority) $priority = Broadstreet_Log::DEBUG;
+        if($priority) $priority = Broadstreet_Config::get('log.level');
 
         # Directory doesn't exist? Created that directory (and all
         # directories on the way)
         if($logDirectory === FALSE)
         {
-            $logDirectory = dirname(__FILE__);
+            $logDirectory = Broadstreet_Config::get('log.directory');
         }
 
         # Do we already have an instance of a logger for this directory?

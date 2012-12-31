@@ -26,7 +26,7 @@ class Broadstreet_Config
         $config['log'] = array (
 
             'level'     => Broadstreet_Log::ERROR,
-            'directory' => '/tmp/Broadstreet/'
+            'directory' => dirname(__FILE__) . '/Logs'
 
         );
 
