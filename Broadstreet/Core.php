@@ -344,7 +344,7 @@ class Broadstreet_Core
                 $data['network']   = Broadstreet_Utility::getNetwork(true);
                 
                 if(!$data['network']->cc_on_file)
-                    $data['errors'][] = 'Your account does not have a credit card on file for your selected network below. The "Magic Import" and "Updateable Message" features will not work until <a target="_blank" href="http://my.broadstreetads.com/networks/'. $data['network_id'] .'/payment_detail/edit">you add a card here.</a>';
+                    $data['errors'][] = 'Your account does not have a credit card on file for your selected network below. The "Magic Import" and "Updateable Message" features will not work until <a target="_blank" href="http://my.broadstreetads.com/networks/'. $data['network_id'] .'/accounts">you add a card here.</a>';
             }
             catch(Exception $ex)
             {

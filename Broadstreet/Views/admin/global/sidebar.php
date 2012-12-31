@@ -7,6 +7,7 @@
             echo $message;
         }
     ?>
+    <div class="fb-like" data-href="http://www.facebook.com/broadstreetads" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true"></div>
     <h3>Looking for an adserver?</h3>
     <p>
         Ask us about our landmark adserver, built for independent publishers.
