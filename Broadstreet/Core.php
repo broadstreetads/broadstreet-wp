@@ -117,6 +117,7 @@ class Broadstreet_Core
         # -- Below is core functionality --
         add_action('admin_menu', 	array($this, 'adminCallback'     ));
         add_action('admin_init', 	array($this, 'adminInitCallback' ));
+        add_action('init',          array($this, 'addZoneTag' ));
         add_action('admin_notices',     array($this, 'adminWarningCallback'));
         add_action('widgets_init', array($this, 'registerWidget'));
         add_shortcode('broadstreet', array($this, 'shortcode'));
@@ -243,6 +244,15 @@ class Broadstreet_Core
         }
     }
     
+    public function addZoneTag()
+    {
+        # Add Broadstreet ad zone CDN
+        if(!is_admin()) 
+        {
+            wp_enqueue_script('Broadstreet-cdn', 'http://cdn.broadstreetads.com/init.js');
+        }
+    }
+    
 
     /**
      * A callback executed whenever the user tried to access the Broadstreet admin page
@@ -294,7 +304,6 @@ class Broadstreet_Core
             wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js?v='. BROADSTREET_VERSION);
             wp_enqueue_script('Broadstreet-vendorjs-time'  ,  Broadstreet_Utility::getVendorBaseURL().'timepicker/js/jquery.timePicker.min.js');
         }
-
     }
 
     /**
@@ -470,7 +479,7 @@ class Broadstreet_Core
     }
      
     public function createPostTypes()
-    {
+    {        
         register_post_type(self::BIZ_POST_TYPE,
             array (
                 'labels' => array(
