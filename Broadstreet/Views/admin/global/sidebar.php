@@ -7,10 +7,27 @@
             echo $message;
         }
     ?>
-    <div class="fb-like" data-href="http://www.facebook.com/broadstreetads" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true"></div>
+    
+    <h3>
+<?php 
+$m = array(
+'Baby Can You <a target="_blank" href="http://www.youtube.com/watch?v=wxVLHaHUI4E">Dig It?</a>', 
+'Baby I Need Your <a target="_blank" href="http://www.youtube.com/watch?v=joqjBAJx4ZA">Loving</a>', 
+'Do You .. <a target="_blank" href="http://www.youtube.com/watch?v=EwqhJyUyoHU">Love Me?</a>'
+); 
+    
+echo $m[array_rand($m)]; ?></h3>
+
+    <div>
+        <div class="fb-like" data-href="http://www.facebook.com/broadstreetads" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true"></div>
+    <a href="https://twitter.com/broadstreetads" class="twitter-follow-button" data-show-count="false">Follow @broadstreetads</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>    
+    </div>
+
     <h3>Looking for an adserver?</h3>
     <p>
-        Ask us about our landmark adserver, built for independent publishers.
+        Ask us about <a target="_blank" href="http://broadstreetads.com/ad-platform/adserving/">our landmark adserver</a>, 
+        built for independent publishers.
         It fixes all those little quirks that the makers of OpenX and DFP
         forgot about. You know, like slowness and "why isn't my ad serving?" troubles. 
         Oh, and it's faster too.

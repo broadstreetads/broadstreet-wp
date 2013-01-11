@@ -16,6 +16,7 @@ require_once dirname(__FILE__) . '/Model.php';
 require_once dirname(__FILE__) . '/Net.php';
 require_once dirname(__FILE__) . '/Utility.php';
 require_once dirname(__FILE__) . '/View.php';
+require_once dirname(__FILE__) . '/Widget.php';
 require_once dirname(__FILE__) . '/Exception.php';
 require_once dirname(__FILE__) . '/Vendor/Broadstreet.php';
 
@@ -358,7 +359,7 @@ class Broadstreet_Core
                 $data['network']   = Broadstreet_Utility::getNetwork(true);
                 
                 if(!$data['network']->cc_on_file)
-                    $data['errors'][] = 'Your account does not have a credit card on file for your selected network below. The "Magic Import" and "Updateable Message" features will not work until <a target="_blank" href="http://my.broadstreetads.com/networks/'. $data['network_id'] .'/accounts">you add a card here.</a>';
+                    $data['errors'][] = 'Your account does not have a credit card on file for your selected network below. The premium "Magic Import" and "Updateable Message" features, <strong>although entirely optional</strong>, will not work until <a target="_blank" href="http://my.broadstreetads.com/networks/'. $data['network_id'] .'/accounts">you add a card here</a>. Your information is confidential, secure, and <em>never</em> shared.';
             }
             catch(Exception $ex)
             {
@@ -577,6 +578,9 @@ class Broadstreet_Core
     public function registerWidget()
     {
         register_widget('Broadstreet_Zone_Widget');
+        register_widget('Broadstreet_Business_Listing_Widget');
+        register_widget('Broadstreet_Business_Profile_Widget');
+        register_widget('Broadstreet_Business_Categories_Widget');
     }
 
     /**
@@ -673,91 +677,5 @@ class Broadstreet_Core
         }   
     }    
 }
-
-/**
- * This is an optional widget to display a broadstreet zone
- */
-class Broadstreet_Zone_Widget extends WP_Widget
-{
-    /**
-     * Set the widget options
-     */
-     function __construct()
-     {
-        $widget_ops = array('classname' => 'bs_zones', 'description' => 'A list of your Broadstreet zones');
-        $this->WP_Widget('bs_zones', 'Broadstreet Ad Zone', $widget_ops);
-     }
-
-     /**
-      * Display the widget on the sidebar
-      * @param array $args
-      * @param array $instance
-      */
-     function widget($args, $instance)
-     {
-         extract($args);
-         
-         $zone_id   = $instance['w_zone'];
-         $zone_data = Broadstreet_Utility::getZoneCache();
-         
-         if($zone_data)
-         {
-            echo $before_widget;
-
-            echo $zone_data[$zone_id]->html;
-
-            echo $after_widget;
-         }
-     }
-
-     /**
-      * Update the widget info from the admin panel
-      * @param array $new_instance
-      * @param array $old_instance
-      * @return array
-      */
-     function update($new_instance, $old_instance)
-     {
-        $instance = $old_instance;
-        
-        $instance['w_zone'] = $new_instance['w_zone'];
-
-        return $instance;
-     }
-
-     /**
-      * Display the widget update form
-      * @param array $instance
-      */
-     function form($instance) 
-     {
-
-        $defaults = array('w_title' => 'Broadstreet Ad Zones', 'w_info_string' => '', 'w_opener' => '', 'w_closer' => '');
-		$instance = wp_parse_args((array) $instance, $defaults);
-        
-        $zones = Broadstreet_Utility::refreshZoneCache();
-        
-       ?>
-        <div class="widget-content">
-       <?php if(count($zones) == 0): ?>
-            <p style="color: green; font-weight: bold;">You either have no zones or
-                Broadstreet isn't configured correctly. Go to 'Settings', then 'Broadstreet',
-            and make sure your access token is correct, and make sure you have zones set up.</p>
-        <?php else: ?>
-        <input class="widefat" type="hidden" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="" />
-       <p>
-            <label for="<?php echo $this->get_field_id('w_info_string'); ?>">Zone</label>
-            <select class="widefat" id="<?php echo $this->get_field_id( 'w_zone' ); ?>" name="<?php echo $this->get_field_name('w_zone'); ?>" >
-                <?php foreach($zones as $id => $zone): ?>
-                <option <?php if(isset($instance['w_zone']) && $instance['w_zone'] == $zone->id) echo "selected" ?> value="<?php echo $zone->id ?>"><?php echo $zone->name ?></option>
-                <?php endforeach; ?>
-            </select>
-       </p>
-        <?php endif; ?>
-        </div>
-       <?php
-     }
-}
-
 
 endif;

@@ -1,3 +1,7 @@
+<?php 
+$has_thumbnail = has_post_thumbnail($GLOBALS['post']->ID); 
+$thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['post']->ID));
+?>
 <?php if($meta['bs_update_source']): ?>
     <div class="sponsored-listing">
         <?php echo $meta['bs_advertisement_html'] ?>

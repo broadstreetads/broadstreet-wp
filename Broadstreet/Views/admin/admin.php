@@ -9,8 +9,8 @@
                         </div>
                         <div class="content">
                             <p>
-                                We've noticed some things you'll need to take
-                                care of before you get started:
+                                Nice to have you! We've noticed some things you may want to take
+                                care of:
                             </p>
                             <ol>
                                 <?php foreach($errors as $error): ?>
