@@ -294,6 +294,24 @@ class Broadstreet_Utility
             add_post_meta($post_id, $name, $value);
         }
     }
+    
+    /**
+     * Check the meta and see if we should show the times on the listing
+     *  page.
+     * @param type $meta 
+     */
+    public static function shouldShowTimes($meta)
+    {
+        $days = array('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday');
+        $types= array('open', 'close');
+        
+        foreach($days as $day)
+            foreach($types as $type)
+                if($meta["bs_{$day}_{$type}"])
+                    return true;
+                
+        return false;
+    }
 
     /**
      * Gets a post meta value

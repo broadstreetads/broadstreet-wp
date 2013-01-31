@@ -31,7 +31,7 @@ class Broadstreet
      * @param string $host The API endpoint host. Optional. Defaults to
      *  my.broadstreetads.com
      */
-    public function __construct($access_token, $host = null)
+    public function __construct($access_token = null, $host = null)
     {
         if($host !== null)
         {
@@ -71,6 +71,75 @@ class Broadstreet
         $params = array('name' => $name, 'type' => $type) + $options;
         
         return $this->_post("/networks/$network_id/advertisers/$advertiser_id/advertisements", $params)->body->advertisement;
+    }
+    
+    /**
+     * Create a network
+     * @param string $name The name of the network
+     * @param array $options An array of options
+     */
+    public function createNetwork($name, $options = array())
+    {
+        $options['name'] = $name;
+        return $this->_post("/networks", $options)->body->network;
+    }
+    
+    /**
+     * Create a basic user
+     * @param string $email 
+     */
+    public function createUser($email)
+    {
+        return $this->_post($email, $data);
+    }
+    
+    /**
+     * Create a proof
+     * @param array $params 
+     */
+    public function createProof($params)
+    {
+        return $this->_post("/advertisements/proof", $params)->body->proof;
+    }
+    
+    /**
+     * Log in to the API, get an access token back
+     * @param string $username
+     * @param string $password 
+     */
+    public function login($email, $password)
+    {
+        $params   = array('email' => $email, 'password' => $password);
+        $response = $this->_post("/sessions", $params)->body->user;
+        
+        $this->accessToken = $response->access_token;
+        
+        # Store access token
+        return $response;
+    }
+    
+    /**
+     * Register a new user
+     * @param string $username
+     * @param string $password 
+     */
+    public function register($email)
+    {
+        $params   = array('email' => $email);
+        $response = $this->_post("/users", $params)->body->user;
+        
+        $this->accessToken = $response->access_token;
+        
+        # Store access token
+        return $response;
+    }
+    
+    /**
+     * Get a list of fonts supported by Broadstreet 
+     */
+    public function getFonts()
+    {
+        return $this->_get("/fonts")->body->fonts;
     }
     
     /**
@@ -256,8 +325,7 @@ class Broadstreet
                 . $uri
                 . (count($query_args) ? '?' . http_build_query($query_args) : '')
                 . (count($query_args) ? '&' : '?')
-                . 'access_token='
-                . $this->accessToken;      
+                . ($this->accessToken ? "access_token={$this->accessToken}" : '');
     }
 }
 

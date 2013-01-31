@@ -46,6 +46,7 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
     <div class="section-label"><strong>Our Review</strong></div>
     <div><a href="<?php echo $meta['bs_publisher_review'] ?>">Read a <?php bloginfo('name') ?> Review</a></div>
     <?php endif; ?>
+    <?php if(Broadstreet_Utility::shouldShowTimes($meta)): ?>
     <div class="section-label"><strong>Hours</strong></div>
     <div class="biz-data">
         <ul id="bs-hours-table">
@@ -108,6 +109,7 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
             
         </ul>
     </div>
+    <?php endif; ?>
         <?php if($meta['bs_twitter'] || $meta['bs_twitter'] || $meta['bs_twitter']): ?>
         <div class="section-label"><strong>Web</strong></div>
             <?php if($meta['bs_twitter']): ?>
