@@ -1,0 +1,3 @@
+[submodule "Broadstreet/Vendor/broadstreet-partner"]
+	path = Broadstreet/Vendor/broadstreet-partner
+	url = git@github.com:broadstreetads/broadstreet-partner-wp.git
