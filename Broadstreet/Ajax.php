@@ -72,4 +72,26 @@ class Broadstreet_Ajax
             die(json_encode(array('success' => false, 'message' => ($ex->error ? $ex->error->message : 'Server error. This issue has been reported to the folks at Broadstreet.'))));
         }
     }
+    
+    public static function register()
+    {
+        $api = new Broadstreet();
+        
+        try
+        {
+            # Register the user by email address
+            $resp = $api->register($_POST['email']);
+            Broadstreet_Utility::setOption(Broadstreet_Core::KEY_API_KEY, $resp->access_token);
+
+            # Create a network for the new user
+            $resp = $api->createNetwork(get_bloginfo('name'));
+            Broadstreet_Utility::setOption(Broadstreet_Core::KEY_NETWORK_ID, $resp->id);
+
+            die(json_encode(array('success' => true, 'network' => $resp)));
+        }
+        catch(Exception $ex)
+        {
+            die(json_encode(array('success' => false, 'error' => $ex->__toString())));
+        }
+    }
 }

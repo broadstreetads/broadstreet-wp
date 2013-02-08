@@ -11,7 +11,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
      */
      function __construct()
      {
-        $widget_ops = array('classname' => 'bs_zones', 'description' => 'A list of your Broadstreet zones');
+        $widget_ops = array('classname' => 'bs_zones', 'description' => 'Easily place a Broadstreet ad zone with this widget');
         $this->WP_Widget('bs_zones', 'Broadstreet Ad Zone', $widget_ops);
      }
 

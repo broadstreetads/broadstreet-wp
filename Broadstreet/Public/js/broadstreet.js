@@ -24,6 +24,24 @@ jQuery(function($){
         needRefresh = true;
     });
     
+    $('#one-click-signup').click(function(e) {
+        e.preventDefault();
+        var email = prompt('Please confirm your email address:', window.admin_email);
+        
+        if(!email) return false;
+        
+        $.post(ajaxurl, {action: 'register', email: email}, function(response) {
+            if(response.success)
+            {
+                location.reload();
+            }
+            else
+            {
+                alert('There was an error creating a an account! Do you already have an account? If not, try again.');
+            }
+        }, 'json');
+    });
+    
     $('#save').click(function() {
         
         var network_id = $('#network').val();

@@ -296,6 +296,19 @@ class Broadstreet_Utility
     }
     
     /**
+     * Get a link to the Broadstreet interface
+     * @param string $path
+     * @return string
+     */
+    public static function broadstreetLink($path)
+    {
+        $path = ltrim($path, '/');
+        $key = self::getOption(Broadstreet_Core::KEY_API_KEY);
+        $url = "https://my.broadstreetads.com/$path?access_token=$key";
+        return $url;
+    }
+    
+    /**
      * Check the meta and see if we should show the times on the listing
      *  page.
      * @param type $meta 

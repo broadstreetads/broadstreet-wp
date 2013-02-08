@@ -6,6 +6,7 @@
   js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=313569238757581";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
+<script>window.admin_email = '<?php bloginfo('admin_email'); ?>';</script>
 <div>
     <img src="<?php echo Broadstreet_Utility::getImageBaseURL(); ?>broadstreet-header.png" alt="" />
 </div>

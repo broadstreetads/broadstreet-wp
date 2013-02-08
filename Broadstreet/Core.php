@@ -145,6 +145,7 @@ class Broadstreet_Core
         add_action('wp_ajax_save_settings', array('Broadstreet_Ajax', 'saveSettings'));
         add_action('wp_ajax_create_advertiser', array('Broadstreet_Ajax', 'createAdvertiser'));
         add_action('wp_ajax_import_facebook', array('Broadstreet_Ajax', 'importFacebook'));
+        add_action('wp_ajax_register', array('Broadstreet_Ajax', 'register'));
     }
         
     /**
@@ -353,7 +354,7 @@ class Broadstreet_Core
         
         if(!$data['api_key']) 
         {
-            $data['errors'][] = '<strong>You dont have an API key set yet!</strong><ol><li>If you already have a Broadstreet adserving account, <a href="http://my.broadstreetads.com/access-token">get your key here</a>.</li><li>If you don\'t have an account with us, <a target="blank" href="http://my.broadstreetads.com/register">sign up here</a>, create a network for this site, then <a href="http://my.broadstreetads.com/access-token">get your key here</a>.</li></ol>';
+            $data['errors'][] = '<strong>You dont have an API key set yet!</strong><ol><li>If you already have a Broadstreet account, <a href="http://my.broadstreetads.com/access-token">get your key here</a>.</li><li>If you don\'t have an account with us, <a target="blank" id="one-click-signup" href="#">then use our one-click signup</a>.</li></ol>';
         } 
         else 
         {
@@ -366,7 +367,7 @@ class Broadstreet_Core
                 $data['network']   = Broadstreet_Utility::getNetwork(true);
                 
                 if(!$data['network']->cc_on_file)
-                    $data['errors'][] = 'Your account does not have a credit card on file for your selected network below. The premium "Magic Import" and "Updateable Message" features, <strong>although entirely optional</strong>, will not work until <a target="_blank" href="http://my.broadstreetads.com/networks/'. $data['network_id'] .'/accounts">you add a card here</a>. Your information is confidential, secure, and <em>never</em> shared.';
+                    $data['errors'][] = 'Your account does not have a credit card on file for your selected network below. The premium "Magic Import" and "Updateable Message" features, <strong>although entirely optional</strong>, will not work until <a target="_blank" href="'.Broadstreet_Utility::broadstreetLink('/networks/'. $data['network']->id .'/accounts').'">you add a card here</a>. Your information is confidential, secure, and <em>never</em> shared.';
             }
             catch(Exception $ex)
             {
