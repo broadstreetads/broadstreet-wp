@@ -534,3 +534,103 @@ class Broadstreet_Business_Categories_Widget extends WP_Widget
        <?php
      }
 }
+
+/**
+ * This is an optional widget to display a broadstreet zone
+ */
+class Broadstreet_Editable_Widget extends WP_Widget
+{
+    /**
+     * Set the widget options
+     */
+     function __construct()
+     {
+        $widget_ops = array('classname' => 'bs_editable', 'description' => 'Offer something to your advertisers that no one else can! Editable Ads&trade;');
+        $this->WP_Widget('bs_editable', 'Broadstreet Editable Ad&trade;', $widget_ops);
+     }
+
+     /**
+      * Display the widget on the sidebar
+      * @param array $args
+      * @param array $instance
+      */
+     function widget($args, $instance)
+     {
+        extract($args);
+         
+        $title  = $instance['w_title'];
+        $html   = $instance['w_html'];
+        
+        echo $before_widget;
+            
+        if($title)
+            echo $before_title . $title. $after_title;
+        
+        echo $html;
+
+        echo $after_widget;
+     }
+
+     /**
+      * Update the widget info from the admin panel
+      * @param array $new_instance
+      * @param array $old_instance
+      * @return array
+      */
+     function update($new_instance, $old_instance)
+     {
+        $instance = $old_instance;
+
+        $instance['w_title'] = $new_instance['w_title'];
+        $instance['w_html']  = $new_instance['w_html'];
+
+        return $instance;
+     }
+
+     /**
+      * Display the widget update form
+      * @param array $instance
+      */
+     function form($instance) 
+     {
+        # Include the partner plugin
+        require 'Vendor/broadstreet-partner/lib/Utility.php';
+        
+        $key     = rand(0, 1000000);
+        $html_id = $this->get_field_id('w_html');
+        
+        Broadstreet_Mini_Utility::editableJS(".tag$key", $key);
+        
+        $defaults = array('w_title' => 'Advertisement', 'w_html' => '');
+		$instance = wp_parse_args((array) $instance, $defaults);
+        
+        $html = $instance['w_html'];
+        
+        if(preg_match('#broadstreet:\s*([^\s]*)#', $html, $matches))
+        {
+            $data = Broadstreet_Mini_Utility::getOption($matches[1]);
+        }
+        
+       ?>
+<style type="text/css">
+    div.bs-proof img { width: 100% !important; }
+</style>
+        <div class="widget-content">
+        <p>
+            <label for="<?php echo $this->get_field_id('w_title'); ?>">Title:</label><br/>
+            <input class="widefat" type="text" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="<?php echo $instance['w_title']; ?>" />
+        </p>
+       <p style="text-align: center;" class="bs-proof">
+           <?php if($instance['w_html']): ?>
+                Your ad is ready. <?php Broadstreet_Mini_Utility::editableLink('Click here to edit', $key); ?>.
+                <br/><br/><strong>Scaled Visual (may require refresh):</strong><br/>
+                <div class="bs-proof"><?php echo $data['ad_html'] ?></div>
+           <?php else: ?>
+                <?php Broadstreet_Mini_Utility::editableLink(false, $key); ?>
+           <?php endif; ?>
+       </p>
+       <input class="widefat tag<?php echo $key ?>" placeholder="Click above. When complete, save." readonly="readonly" type="text" id="<?php echo $html_id; ?>" name="<?php echo $this->get_field_name('w_html'); ?>" value="<?php echo htmlentities($instance['w_html']); ?>" />
+        </div>
+       <?php
+     }
+}

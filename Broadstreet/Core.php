@@ -305,6 +305,13 @@ class Broadstreet_Core
             wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js?v='. BROADSTREET_VERSION);
             wp_enqueue_script('Broadstreet-vendorjs-time'  ,  Broadstreet_Utility::getVendorBaseURL().'timepicker/js/jquery.timePicker.min.js');
         }
+        
+        # Include thickbox on widgets page
+        if($GLOBALS['pagenow'] == 'widgets.php')
+        {
+            wp_enqueue_script('thickbox');
+            wp_enqueue_style( 'thickbox' );
+        }
     }
 
     /**
@@ -581,6 +588,7 @@ class Broadstreet_Core
         register_widget('Broadstreet_Business_Listing_Widget');
         register_widget('Broadstreet_Business_Profile_Widget');
         register_widget('Broadstreet_Business_Categories_Widget');
+        register_widget('Broadstreet_Editable_Widget');
     }
 
     /**

@@ -5,6 +5,8 @@
  * @author Broadstreet Ads <labs@broadstreetads.com>
  */
 
+if(!class_exists('Broadstreet')):
+
 /**
  * This is the PHP client and class for Broadstreet
  * It requires cURL 
@@ -46,6 +48,16 @@ class Broadstreet
         
         $this->accessToken = $access_token;
         $this->use_ssl     = $secure;
+        
+        /* Define cURL constants if needed */
+        if(!defined('CURLOPT_POST'))
+        {
+            define('CURLOPT_POST', 47);
+            define('CURLOPT_POSTFIELDS', 10015);
+            define('CURLOPT_RETURNTRANSFER', 19913);
+            define('CURLOPT_CUSTOMREQUEST', 10036);
+            define('CURLINFO_HTTP_CODE', 2097154);
+        }
     }
     
     /**
@@ -281,7 +293,7 @@ class Broadstreet
         
         if($status[0] != '2')
         {
-            throw new Broadstreet_ServerException("Server threw HTTP $status for call to $uri with cURL params " . print_r($options, true), @json_decode($body));
+            throw new Broadstreet_ServerException("Server threw HTTP $status for call to $uri with cURL params " . print_r($options, true) . "; Response: " . $body, @json_decode($body));
         }
 
         return (object)(array('url' => $url, 'body' => @json_decode($body), 'status' => $status));
@@ -413,9 +425,15 @@ class Broadstreet_GeneralException extends Exception {}
 class Broadstreet_DependencyException extends Broadstreet_GeneralException {}
 class Broadstreet_AuthException extends Broadstreet_GeneralException {}
 class Broadstreet_ServerException extends Broadstreet_GeneralException {
+    /**
+     * The error object
+     * @var object 
+     */
     public $error;
     public function __construct($message, $error = '') {
         $this->error = $error;
         parent::__construct($message);
     }
 }
+
+endif;
