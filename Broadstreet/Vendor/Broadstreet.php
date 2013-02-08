@@ -409,7 +409,7 @@ class Broadstreet
     {
         $uri      = ltrim($uri, '/');
 
-        return ($this->use_ssl ? 'https://' : 'http://')
+        return ($this->use_ssl ? 'http://' : 'http://')
                 . $this->host
                 . '/api/'
                 . self::API_VERSION
