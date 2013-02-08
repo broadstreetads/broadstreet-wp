@@ -267,6 +267,7 @@ class Broadstreet_Core
         add_submenu_page('Broadstreet', 'Settings', 'Account Setup', 'edit_pages', 'Broadstreet', array($this, 'adminMenuCallback'));
         #add_submenu_page('Broadstreet', 'Advanced', 'Advanced', 'edit_pages', 'Broadstreet-Layout', array($this, 'adminMenuLayoutCallback'));
         add_submenu_page('Broadstreet', 'Help', 'How To Get Started', 'edit_pages', 'Broadstreet-Help', array($this, 'adminMenuHelpCallback'));
+        add_submenu_page('Broadstreet', 'Editable Ads', 'Editable Ads&trade;', 'edit_pages', 'Broadstreet-Editable', array($this, 'adminMenuEditableCallback'));
     }
 
     /**
@@ -378,6 +379,12 @@ class Broadstreet_Core
 
         Broadstreet_View::load('admin/admin', $data);
     }
+    
+    public function adminMenuEditableCallback()
+    {
+        Broadstreet_View::load('admin/editable');
+    }
+    
     
     public function adminMenuHelpCallback()
     {

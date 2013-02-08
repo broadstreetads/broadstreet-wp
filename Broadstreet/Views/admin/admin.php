@@ -98,7 +98,7 @@
             </div>
         </div>
         <div>
-            <h3>Check out our new <a href="widgets.php">Editable Ads&trade; Widget</a> on the Widgets page!</h3>
+            <h3>Check out our new <a href="?page=Broadstreet-Editable">Editable Ads&trade; Widget</a> on the Widgets page!</h3>
         </div>
       </div>
       <div class="right_column">
