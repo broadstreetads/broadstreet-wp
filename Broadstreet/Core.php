@@ -279,8 +279,8 @@ class Broadstreet_Core
         {
             $info = Broadstreet_Utility::getNetwork();
 
-            if(!$info || !$info->cc_on_file)
-                echo '<div class="updated"><p>You\'re <strong>almost ready</strong> to start using Broadstreet! Check the <a href="admin.php?page=Broadstreet">plugin page</a> to take care of the last steps. When that\'s done, this message will clear shortly after.</p></div>';
+            //if(!$info || !$info->cc_on_file)
+            //    echo '<div class="updated"><p>You\'re <strong>almost ready</strong> to start using Broadstreet! Check the <a href="admin.php?page=Broadstreet">plugin page</a> to take care of the last steps. When that\'s done, this message will clear shortly after.</p></div>';
         }
     }
 
