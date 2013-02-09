@@ -593,6 +593,7 @@ class Broadstreet_Core
     public function registerWidget()
     {
         register_widget('Broadstreet_Zone_Widget');
+        register_widget('Broadstreet_SBSZone_Widget');
         register_widget('Broadstreet_Business_Listing_Widget');
         register_widget('Broadstreet_Business_Profile_Widget');
         register_widget('Broadstreet_Business_Categories_Widget');

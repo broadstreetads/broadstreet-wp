@@ -89,6 +89,110 @@ class Broadstreet_Zone_Widget extends WP_Widget
 /**
  * This is an optional widget to display a broadstreet zone
  */
+class Broadstreet_SBSZone_Widget extends WP_Widget
+{
+    /**
+     * Set the widget options
+     */
+     function __construct()
+     {
+        $widget_ops = array('classname' => 'bs_sbszones', 'description' => 'Place two ad zones (like button zones) side-by-side');
+        $this->WP_Widget('bs_sbszones', 'Broadstreet Side-by-Side Zones', $widget_ops);
+     }
+
+     /**
+      * Display the widget on the sidebar
+      * @param array $args
+      * @param array $instance
+      */
+     function widget($args, $instance)
+     {
+         extract($args);
+         
+         $zone_id_1 = $instance['w_zone1'];
+         $zone_id_2 = $instance['w_zone2'];
+         $zone_data = Broadstreet_Utility::getZoneCache();
+         
+         if($zone_data)
+         {
+            echo <<<ZONE
+            $before_widget
+            <table border="0" width="100%">
+                <tr>
+                    <td align="center">
+                        {$zone_data[$zone_id_1]->html}
+                    <td>
+                    <td align="center">
+                        {$zone_data[$zone_id_2]->html}
+                    <td>
+                </tr>
+            </table>
+            $before_widget
+ZONE;
+         }
+     }
+
+     /**
+      * Update the widget info from the admin panel
+      * @param array $new_instance
+      * @param array $old_instance
+      * @return array
+      */
+     function update($new_instance, $old_instance)
+     {
+        $instance = $old_instance;
+        
+        $instance['w_zone1'] = $new_instance['w_zone1'];
+        $instance['w_zone2'] = $new_instance['w_zone2'];
+
+        return $instance;
+     }
+
+     /**
+      * Display the widget update form
+      * @param array $instance
+      */
+     function form($instance) 
+     {
+
+        $defaults = array('w_title' => 'Broadstreet Ad Zones', 'w_info_string' => '', 'w_opener' => '', 'w_closer' => '');
+		$instance = wp_parse_args((array) $instance, $defaults);
+        
+        $zones = Broadstreet_Utility::refreshZoneCache();
+        
+       ?>
+        <div class="widget-content">
+       <?php if(count($zones) == 0): ?>
+            <p style="color: green; font-weight: bold;">You either have no zones or
+                Broadstreet isn't configured correctly. Go to 'Settings', then 'Broadstreet',
+            and make sure your access token is correct, and make sure you have zones set up.</p>
+        <?php else: ?>
+        <input class="widefat" type="hidden" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="" />
+       <p>
+            <label for="<?php echo $this->get_field_id('w_zone1'); ?>">Left Zone</label>
+            <select class="widefat" id="<?php echo $this->get_field_id( 'w_zone1' ); ?>" name="<?php echo $this->get_field_name('w_zone1'); ?>" >
+                <?php foreach($zones as $id => $zone): ?>
+                <option <?php if(isset($instance['w_zone1']) && $instance['w_zone1'] == $zone->id) echo "selected" ?> value="<?php echo $zone->id ?>"><?php echo $zone->name ?></option>
+                <?php endforeach; ?>
+            </select>
+       </p>
+       <p>
+            <label for="<?php echo $this->get_field_id('w_zone2'); ?>">Right Zone</label>
+            <select class="widefat" id="<?php echo $this->get_field_id( 'w_zone2' ); ?>" name="<?php echo $this->get_field_name('w_zone2'); ?>" >
+                <?php foreach($zones as $id => $zone): ?>
+                <option <?php if(isset($instance['w_zone2']) && $instance['w_zone2'] == $zone->id) echo "selected" ?> value="<?php echo $zone->id ?>"><?php echo $zone->name ?></option>
+                <?php endforeach; ?>
+            </select>
+       </p>
+        <?php endif; ?>
+        </div>
+       <?php
+     }
+}
+
+/**
+ * This is an optional widget to display a broadstreet zone
+ */
 class Broadstreet_Business_Listing_Widget extends WP_Widget
 {
     /**
