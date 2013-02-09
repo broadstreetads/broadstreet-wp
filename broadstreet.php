@@ -3,7 +3,7 @@
 Plugin Name: Broadstreet
 Plugin URI: http://broadstreetads.com
 Description: Integrate Broadstreet business directory and adserving power into your site
-Version: 1.5.2
+Version: 1.5.3
 Author: Broadstreet
 Author URI: http://broadstreetads.com
 */
