@@ -117,17 +117,17 @@ class Broadstreet_SBSZone_Widget extends WP_Widget
          {
             echo <<<ZONE
             $before_widget
-            <table border="0" width="100%">
+            <table border="0" width="100%" style="margin-bottom: 10px;">
                 <tr>
                     <td align="center">
                         {$zone_data[$zone_id_1]->html}
-                    <td>
+                    </td>
                     <td align="center">
                         {$zone_data[$zone_id_2]->html}
-                    <td>
+                    </td>
                 </tr>
             </table>
-            $before_widget
+            $after_widget
 ZONE;
          }
      }
