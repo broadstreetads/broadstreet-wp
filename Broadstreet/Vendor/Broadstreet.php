@@ -335,7 +335,8 @@ class Broadstreet
         $status   = false;
         $response = @wp_remote_post($url, $params);
         
-        if(isset($response['response'])
+        # If it's an object, it's a WPError object
+        if(!is_object($response) && isset($response['response'])
                 && isset($response['body'])
                 && isset($response['response']['code']))
         {
