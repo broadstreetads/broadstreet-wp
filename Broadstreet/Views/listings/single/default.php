@@ -110,7 +110,7 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
         </ul>
     </div>
     <?php endif; ?>
-        <?php if($meta['bs_twitter'] || $meta['bs_twitter'] || $meta['bs_twitter']): ?>
+        <?php if($meta['bs_twitter'] || $meta['bs_twitter'] || $meta['bs_yelp']): ?>
         <div class="section-label"><strong>Web</strong></div>
             <?php if($meta['bs_twitter']): ?>
             <a class="nodec" target="_blank" href="<?php echo $meta['bs_twitter'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'twitter.png' ?>" alt="Twitter" width="20" /></a>
