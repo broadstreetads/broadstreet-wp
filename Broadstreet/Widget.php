@@ -88,6 +88,120 @@ class Broadstreet_Zone_Widget extends WP_Widget
 /**
  * This is an optional widget to display a broadstreet zone
  */
+class Broadstreet_Multiple_Zone_Widget extends WP_Widget
+{
+    /**
+     * Set the widget options
+     */
+     function __construct()
+     {
+        $widget_ops = array('classname' => 'bs_multiple_zones', 'description' => 'Easily place a muliple Broadstreet ad zones inside a single widget');
+        $this->WP_Widget('bs_multiple_zones', 'Broadstreet Multiple Ad Zones', $widget_ops);
+     }
+
+     /**
+      * Display the widget on the sidebar
+      * @param array $args
+      * @param array $instance
+      */
+     function widget($args, $instance)
+     {
+         extract($args);
+         
+         $zone_ids  = $instance['w_zone'];
+         $num_zones = $instance['w_num_zones'];
+         
+         $zone_data = Broadstreet_Utility::getZoneCache();
+         
+         if($zone_data)
+         {
+            echo $before_widget;
+
+            for($i = 0; $i < intval($instance['w_num_zones']); $i++)
+            {
+                echo $zone_data[$zone_ids[$i]]->html;
+            }
+
+            echo $after_widget;
+         }
+     }
+
+     /**
+      * Update the widget info from the admin panel
+      * @param array $new_instance
+      * @param array $old_instance
+      * @return array
+      */
+     function update($new_instance, $old_instance)
+     {
+        $instance = $old_instance;
+        
+        $instance['w_num_zones'] = $new_instance['w_num_zones'];
+        $instance['w_zone']      = $new_instance['w_zone'];
+        $instance['w_linebreak'] = $new_instance['w_linebreak'];
+
+        return $instance;
+     }
+
+     /**
+      * Display the widget update form
+      * @param array $instance
+      */
+     function form($instance) 
+     {
+        $defaults = array('w_title' => 'Broadstreet Ad Zones', 'w_num_zones' => '1', 'w_zone' => array(''), 'w_linebreak' => array('no'));
+		$instance = wp_parse_args((array) $instance, $defaults);
+        
+        $zones = Broadstreet_Utility::refreshZoneCache();
+        
+        for($i = 0; $i < intval($instance['w_num_zones']); $i++)
+        {
+            if(!isset($instance['w_zone'][$i]))
+            {
+                $instance['w_zone'][$i] = '';
+                $instance['w_linebreak'][$i] = 'no';
+            }
+            
+            if(!isset($instance['w_linebreak'][$i]))
+            {
+                $instance['w_linebreak'][$i] = 'no';
+            }
+        }
+        
+       ?>
+        <div class="widget-content">
+       <?php if(count($zones) == 0): ?>
+            <p style="color: green; font-weight: bold;">You either have no zones or
+                Broadstreet isn't configured correctly. Go to 'Settings', then 'Broadstreet',
+            and make sure your access token is correct, and make sure you have zones set up.</p>
+        <?php else: ?>
+        <p>
+            <label for="<?php echo $this->get_field_id('w_num_zones'); ?>">Number of Zones:</label>
+            <input class="widefat" type="text" id="<?php echo $this->get_field_id('w_num_zones'); ?>" name="<?php echo $this->get_field_name('w_num_zones'); ?>" value="<?php echo $instance['w_num_zones']; ?>" />
+        </p>
+       <?php for($i = 0; $i < intval($instance['w_num_zones']); $i++): ?>
+       <p>
+            <label for="<?php echo $this->get_field_id('w_zone') . "_$i"; ?>">Zone</label>
+            <select class="widefat" id="<?php echo $this->get_field_id( 'w_zone' ). "_$i"; ?>" name="<?php echo $this->get_field_name('w_zone') . "[$i]"; ?>">
+                <?php foreach($zones as $id => $zone): ?>
+                <option <?php if(isset($instance['w_zone'][$i]) && $instance['w_zone'][$i] == $zone->id) echo "selected" ?> value="<?php echo $zone->id ?>"><?php echo $zone->name ?></option>
+                <?php endforeach; ?>
+            </select>
+       </p>
+       <p>
+           <label for="<?php echo $this->get_field_id('w_linebreak') . "_$i"; ?>">Line break after the above? </label>
+           <input type="checkbox" name="<?php echo $this->get_field_name('w_linebreak') . "[$i]"; ?>" value="yes"  <?php if($instance['w_linebreak'][$i] == 'yes') echo 'checked'; ?> />
+       </p>
+        <?php endfor; ?>
+        <?php endif; ?>
+        </div>
+       <?php
+     }
+}
+
+/**
+ * This is an optional widget to display a broadstreet zone
+ */
 class Broadstreet_SBSZone_Widget extends WP_Widget
 {
     /**

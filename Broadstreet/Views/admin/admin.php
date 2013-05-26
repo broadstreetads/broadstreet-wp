@@ -1,3 +1,4 @@
+<script src="https://broadstreet-common.s3.amazonaws.com/broadstreet-net/init.js"></script>
 <div id="main">
       <?php Broadstreet_View::load('admin/global/header') ?>
       <div class="left_column">

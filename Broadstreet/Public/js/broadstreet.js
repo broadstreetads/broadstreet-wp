@@ -271,5 +271,7 @@ jQuery(function($){
     });
     
     $('.bs-remove').click(window.remove_image);
-    $('#bs_image_list').sortable({update: window.rewrite_image_names });
+    try {
+        $('#bs_image_list').sortable({update: window.rewrite_image_names });
+    } catch(e) {}
 });

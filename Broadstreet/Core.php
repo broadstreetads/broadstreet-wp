@@ -594,6 +594,7 @@ class Broadstreet_Core
     {
         register_widget('Broadstreet_Zone_Widget');
         register_widget('Broadstreet_SBSZone_Widget');
+        register_widget('Broadstreet_Multiple_Zone_Widget');
         register_widget('Broadstreet_Business_Listing_Widget');
         register_widget('Broadstreet_Business_Profile_Widget');
         register_widget('Broadstreet_Business_Categories_Widget');

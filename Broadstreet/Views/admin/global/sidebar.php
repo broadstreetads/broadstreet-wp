@@ -33,6 +33,15 @@ echo $m[array_rand($m)]; ?></h3>
         Oh, and it's faster too.
     </p>
     
+    <h3>On Our Blog: The Streetlight</h3>
+    <div id="bs-blog"></div>
+    <script>
+        jQuery(function() {
+            var bs = new Broadstreet.Network();
+            bs.postList('#bs-blog');
+        });
+    </script>
+
     <h3>Have a bug report?</h3>
     <p>
         We like to crush bugs as soon as we hear about them!
