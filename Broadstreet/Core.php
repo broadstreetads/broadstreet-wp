@@ -585,6 +585,13 @@ class Broadstreet_Core
             $this->_excerptRan = true;
             return Broadstreet_View::load('listings/archive/excerpt', array('content' => $content, 'meta' => $meta), true);
         }
+        else 
+        {
+            # Special thanks to Justin
+            return get_the_excerpt();
+        }
+
+
     }
     
     /**
