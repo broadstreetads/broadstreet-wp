@@ -3,7 +3,7 @@ Contributors: Broadstreet
 Tags: broadstreet,local,publishers,hyperlocal,independent,news,business,directory
 Requires at least: 3.0
 Tested up to: 3.6.0
-Stable tag: 1.7.3
+Stable tag: 1.7.4
 
 Integrate Broadstreet business directory and adserving power into your site.
 
@@ -43,5 +43,5 @@ send an email to [kenny@broadstreetads.com](kenny@broadstreetads.com).
 == Fix Log ==
 
 * 1.2.3: Fixed image upload bug affecting minority of WP installations
-* 1.7.3: Fixed asset base URL making the settings page ugly
-* 1.7.3: Fixed excerpt filter (special thanks Justin)
+* 1.7.4: Fixed asset base URL making the settings page ugly
+* 1.7.4: Fixed excerpt filter (special thanks Justin)

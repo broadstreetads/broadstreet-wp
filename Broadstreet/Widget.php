@@ -77,7 +77,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
         <?php else: ?>
         <p>
             <label for="<?php echo $this->get_field_id('w_title'); ?>">Title (optional):</label>
-            <input class="widefat" type="input" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="" />
+            <input class="widefat" type="input" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="<?php echo $instance['w_title'] ?>" />
         </p>
         
         <p>
