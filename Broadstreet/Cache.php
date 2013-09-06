@@ -59,7 +59,7 @@ class Broadstreet_Cache
         if($expire === FALSE) return $value;
 
         # Expired?
-        if(time() < $expire)
+        if($force || (time() < $expire))
             return $value;
         else
             return $default;

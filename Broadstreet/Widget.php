@@ -24,12 +24,16 @@ class Broadstreet_Zone_Widget extends WP_Widget
      {
          extract($args);
          
+         $title     = apply_filters('widget_title', $instance['w_title']);
          $zone_id   = $instance['w_zone'];
          $zone_data = Broadstreet_Utility::getZoneCache();
          
          if($zone_data)
          {
             echo $before_widget;
+            
+            if(trim($title));
+                echo $before_title . $title. $after_title;
 
             echo $zone_data[$zone_id]->html;
 
@@ -48,6 +52,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
         $instance = $old_instance;
         
         $instance['w_zone'] = $new_instance['w_zone'];
+        $instance['w_title'] = $new_instance['w_title'];
 
         return $instance;
      }
@@ -58,7 +63,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
       */
      function form($instance) 
      {
-        $defaults = array('w_title' => 'Broadstreet Ad Zones', 'w_info_string' => '', 'w_opener' => '', 'w_closer' => '');
+        $defaults = array('w_title' => '', 'w_info_string' => '', 'w_opener' => '', 'w_closer' => '', 'w_zone' => '');
 		$instance = wp_parse_args((array) $instance, $defaults);
         
         $zones = Broadstreet_Utility::refreshZoneCache();
@@ -70,15 +75,19 @@ class Broadstreet_Zone_Widget extends WP_Widget
                 Broadstreet isn't configured correctly. Go to 'Settings', then 'Broadstreet',
             and make sure your access token is correct, and make sure you have zones set up.</p>
         <?php else: ?>
-        <input class="widefat" type="hidden" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="" />
-       <p>
+        <p>
+            <label for="<?php echo $this->get_field_id('w_title'); ?>">Title (optional):</label>
+            <input class="widefat" type="input" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="" />
+        </p>
+        
+        <p>
             <label for="<?php echo $this->get_field_id('w_info_string'); ?>">Zone</label>
             <select class="widefat" id="<?php echo $this->get_field_id( 'w_zone' ); ?>" name="<?php echo $this->get_field_name('w_zone'); ?>" >
                 <?php foreach($zones as $id => $zone): ?>
                 <option <?php if(isset($instance['w_zone']) && $instance['w_zone'] == $zone->id) echo "selected" ?> value="<?php echo $zone->id ?>"><?php echo $zone->name ?></option>
                 <?php endforeach; ?>
             </select>
-       </p>
+        </p>
         <?php endif; ?>
         </div>
        <?php
@@ -114,7 +123,7 @@ class Broadstreet_Multiple_Zone_Widget extends WP_Widget
          $zone_data = Broadstreet_Utility::getZoneCache();
          
          if($zone_data)
-         {
+         {      
             echo $before_widget;
 
             for($i = 0; $i < intval($instance['w_num_zones']); $i++)
