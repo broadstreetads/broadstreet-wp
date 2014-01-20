@@ -8,5 +8,5 @@
 }(document, 'script', 'facebook-jssdk'));</script>
 <script>window.admin_email = '<?php bloginfo('admin_email'); ?>';</script>
 <div>
-    <img src="<?php echo Broadstreet_Utility::getImageBaseURL(); ?>broadstreet-header.png" alt="" />
+    <a target="_blank" href="http://broadstreetads.com"><img style="width:380px;" src="http://broadstreet-common.s3.amazonaws.com/broadstreet-blargo/broadstreet-logo.png" alt="Broadstreet" /></a>
 </div>
