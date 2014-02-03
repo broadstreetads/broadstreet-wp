@@ -119,6 +119,7 @@ class Broadstreet_Core
         add_action('admin_menu', 	array($this, 'adminCallback'     ));
         add_action('admin_init', 	array($this, 'adminInitCallback' ));
         add_action('init',          array($this, 'addZoneTag' ));
+        add_action('init',          array($this, 'businessIndexSidebar' ));
         add_action('admin_notices',     array($this, 'adminWarningCallback'));
         add_action('widgets_init', array($this, 'registerWidget'));
         add_shortcode('broadstreet', array($this, 'shortcode'));
@@ -253,6 +254,22 @@ class Broadstreet_Core
         if(!is_admin()) 
         {
             wp_enqueue_script('Broadstreet-cdn', 'http://cdn.broadstreetads.com/init.js');
+        }
+    }
+    
+    public function businessIndexSidebar() 
+    {
+        if(Broadstreet_Utility::isBusinessEnabled())
+        {
+            register_sidebar(array(
+                'name' => __( 'Business Directory Listing Page' ),
+                'id' => 'businesses-right-sidebar',
+                'description' => __( 'The right rail displayed in the page when you use the [businesses] shortcode.' ),
+                'before_widget' => '<div style="padding-bottom: 10px;" id="%1$s" class="widget %2$s">',
+                'after_widget' => '</div>',
+                'before_title' => '<h3>',
+                'after_title' => '</h3>'
+              ));
         }
     }
     
