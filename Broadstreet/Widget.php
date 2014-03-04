@@ -32,7 +32,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
          {
             echo $before_widget;
             
-            if(trim($title));
+            if(trim($title))
                 echo $before_title . $title. $after_title;
 
             echo $zone_data[$zone_id]->html;
