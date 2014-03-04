@@ -105,6 +105,18 @@ class Broadstreet
     }
     
     /**
+     * Create a zone
+     * @param string $id The id of the network
+     * @param string $name The name of the zone
+     * @param string $options
+     */
+    public function createZone($network_id, $name, $options = array())
+    {
+        $options['name'] = $name;
+        return $this->_post("/networks/$network_id/zones", $options)->body->zone;        
+    }
+    
+    /**
      * Create a basic user
      * @param string $email 
      */
@@ -173,6 +185,15 @@ class Broadstreet
     }
     
     /**
+     * Get all zones for a network
+     * @param int $network_id 
+     */
+    public function getZones($network_id)
+    {
+        return $this->_get("/networks/$network_id/zones")->body->zones;
+    }
+    
+    /**
      * Update an advertisement
      * @param string $name The name of the advertisement
      * @param string $type The type of advertisement
@@ -224,6 +245,23 @@ class Broadstreet
     public function getNetworks()
     {
         return $this->_get('/networks')->body->networks;
+    }
+    
+    /**
+     * Get a report for a given advertisement for the last x days
+     * @param type $network_id
+     * @param type $advertiser_id
+     * @param type $advertisement_id
+     * @param type $start_date
+     * @param type $end_date
+     * @return type 
+     */
+    public function getAdvertisementReport($network_id, $advertiser_id, $advertisement_id, $start_date = false, $end_date = false)
+    {
+        return $this->_get("/networks/$network_id/advertisers/$advertiser_id/advertisements/$advertisement_id/records", array(), array (
+            'start_date' => $start_date,
+            'end_date'   => $end_date
+        ))->body->records;
     }
     
     /**
@@ -335,15 +373,18 @@ class Broadstreet
         $status   = false;
         $response = @wp_remote_post($url, $params);
         
-        # If it's an object, it's a WPError object
-        if(!is_object($response) && isset($response['response'])
+        if($response instanceof WP_Error)
+        {
+            $body   = print_r($response->errors, true);
+            $status = 500;
+        } elseif(isset($response['response'])
                 && isset($response['body'])
                 && isset($response['response']['code']))
         {
             $body   = $response['body'];
             $status = (string)$response['response']['code'];
         }
-        
+
         return array($body, $status);
     }
     

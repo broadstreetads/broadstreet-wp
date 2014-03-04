@@ -42,7 +42,7 @@ jQuery(function($){
         }, 'json');
     });
     
-    $('#save').click(function() {
+    $('#save-broadstreet').click(function() {
         
         var network_id = $('#network').val();
         

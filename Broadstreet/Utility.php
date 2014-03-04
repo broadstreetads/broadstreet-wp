@@ -108,7 +108,8 @@ class Broadstreet_Utility
 
             Broadstreet_Cache::set('network_info', $info, Broadstreet_Config::get('network_cache_ttl_seconds'));
         
-            self::setOption(self::KEY_NET_INFO, $info);
+            if($info)
+                self::setOption(self::KEY_NET_INFO, $info);
         }
         catch(Exception $ex)
         {
@@ -593,11 +594,14 @@ class Broadstreet_Utility
             if(is_array($zones))
                 Broadstreet_Cache::set(self::KEY_ZONE_CACHE, $zones, Broadstreet_Config::get('zone_cache_ttl_seconds'));
             else
-                Broadstreet_Cache::get(self::KEY_ZONE_CACHE, FALSE, TRUE);
+                $zones = Broadstreet_Cache::get(self::KEY_ZONE_CACHE, FALSE, TRUE);
         }
         catch(Exception $ex)
         {
-            $zones = array();
+            $zones = Broadstreet_Cache::get(self::KEY_ZONE_CACHE, FALSE, TRUE);
+
+            if(!is_array($zones))                
+                $zones = array();
         }
 
         $kzones = array();
