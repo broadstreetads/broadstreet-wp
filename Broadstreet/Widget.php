@@ -501,6 +501,7 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
         $title     = $instance['w_title'];
         $business  = $instance['w_business'];
         $category  = $instance['w_category'];
+        $is_random = $instance['w_random'];
          
         $args = array (
             'post_type' => Broadstreet_Core::BIZ_POST_TYPE,

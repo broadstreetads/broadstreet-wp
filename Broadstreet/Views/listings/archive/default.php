@@ -73,9 +73,17 @@
         </div>
         <?php echo get_the_term_list($GLOBALS['post']->ID, Broadstreet_Core::BIZ_TAXONOMY, 'Posted in: ', ', ', '') ?> 
     <?php endif; ?>
+    <?php if($meta['bs_twitter'] || $meta['bs_twitter'] || $meta['bs_yelp']): ?>
         <p class="bs-social">
+            <?php if($meta['bs_twitter']): ?>
             <a target="_blank" href="<?php echo $meta['bs_twitter'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'twitter.png' ?>" alt="twitter" width="20" /></a>
+            <?php endif; ?>
+            <?php if($meta['bs_facebook']): ?>
             <a target="_blank" href="<?php echo $meta['bs_facebook'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'facebook.png' ?>" alt="facebook" width="20" /></a>
+            <?php endif; ?>
+            <?php if($meta['bs_yelp']): ?>
             <a target="_blank" href="<?php echo $meta['bs_yelp'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'yelp.png' ?>" alt="yelp" width="20" /></a>
+            <?php endif; ?>
         </p>
+    <?php endif; ?>
 </div>
