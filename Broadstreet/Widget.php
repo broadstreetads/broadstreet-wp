@@ -500,8 +500,7 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
          
         $title     = $instance['w_title'];
         $business  = $instance['w_business'];
-        $category  = $instance['w_category'];
-        $is_random = $instance['w_random'];
+        $category  = $instance['w_category'];       
          
         $args = array (
             'post_type' => Broadstreet_Core::BIZ_POST_TYPE,
@@ -531,17 +530,9 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
         }
         
         $posts = get_posts($args);
-        
-        
-        if($is_random == 'yes' && count($posts) > $count) {
-            shuffle($posts);
-            $posts = array_slice($posts, 0, $count);
-        }
-        
+
         echo $before_widget;
-        
-        
-        
+                        
         if($posts)
         {
             $post = $posts[0];
