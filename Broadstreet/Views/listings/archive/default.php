@@ -81,6 +81,9 @@
             <?php if($meta['bs_facebook']): ?>
             <a target="_blank" href="<?php echo $meta['bs_facebook'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'facebook.png' ?>" alt="facebook" width="20" /></a>
             <?php endif; ?>
+            <?php if($meta['bs_gplus']): ?>
+            <a target="_blank" href="<?php echo $meta['bs_gplus'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'google.png' ?>" alt="Google Plus" width="20" /></a>
+            <?php endif; ?>
             <?php if($meta['bs_yelp']): ?>
             <a target="_blank" href="<?php echo $meta['bs_yelp'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'yelp.png' ?>" alt="yelp" width="20" /></a>
             <?php endif; ?>
