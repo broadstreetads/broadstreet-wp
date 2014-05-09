@@ -269,6 +269,15 @@
             <td class="label">Video Embed Code Snippet</td>
             <td><textarea name="bs_video"><?php echo htmlentities($meta['bs_video']) ?></textarea></td>
         </tr>
+        <tr>
+            <td class="label">Is This a Featured Business?</td>
+            <td>
+                <select name="bs_featured_business">
+                    <option <?php if($meta['bs_featured_business'] == "0") echo "selected" ?> value="0">No</option>
+                    <option <?php if($meta['bs_featured_business'] == "1") echo "selected" ?> value="1">Yes</option>
+                </select>
+            </td>
+        </tr>
     </tbody>
 </table>
 

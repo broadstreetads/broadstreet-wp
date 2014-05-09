@@ -79,6 +79,7 @@ class Broadstreet_Core
         'bs_friday_open' => '', 'bs_friday_close' => '',
         'bs_saturday_open' => '', 'bs_saturday_close' => '',
         'bs_sunday_open' => '', 'bs_sunday_close' => '',
+        'bs_featured_business' => '0'
     );
     
     public static $globals = null;
@@ -283,6 +284,8 @@ class Broadstreet_Core
                 
         add_menu_page('Broadstreet', 'Broadstreet', 'edit_pages', 'Broadstreet', array($this, 'adminMenuCallback'), $icon_url);
         add_submenu_page('Broadstreet', 'Settings', 'Account Setup', 'edit_pages', 'Broadstreet', array($this, 'adminMenuCallback'));
+        if(Broadstreet_Utility::isBusinessEnabled())
+            add_submenu_page('Broadstreet', 'Business Settings', 'Business Settings', 'edit_pages', 'Broadstreet-Business', array($this, 'adminMenuBusinessCallback'));
         #add_submenu_page('Broadstreet', 'Advanced', 'Advanced', 'edit_pages', 'Broadstreet-Layout', array($this, 'adminMenuLayoutCallback'));
         add_submenu_page('Broadstreet', 'Help', 'How To Get Started', 'edit_pages', 'Broadstreet-Help', array($this, 'adminMenuHelpCallback'));
         add_submenu_page('Broadstreet', 'Editable Ads', 'Editable Ads&trade;', 'edit_pages', 'Broadstreet-Editable', array($this, 'adminMenuEditableCallback'));
@@ -327,7 +330,8 @@ class Broadstreet_Core
         }
         
         # Include thickbox on widgets page
-        if($GLOBALS['pagenow'] == 'widgets.php')
+        if($GLOBALS['pagenow'] == 'widgets.php'
+                || strstr($_SERVER['QUERY_STRING'], 'Broadstreet-Business'))
         {
             wp_enqueue_script('thickbox');
             wp_enqueue_style( 'thickbox' );
@@ -396,6 +400,17 @@ class Broadstreet_Core
         }
 
         Broadstreet_View::load('admin/admin', $data);
+    }
+    
+    public function adminMenuBusinessCallback() {        
+        
+        if (isset($_POST['featured_business_image'])) {
+            $featured_image = Broadstreet_Utility::featuredBusinessImage($_POST['featured_business_image']);
+        } else {
+            $featured_image = Broadstreet_Utility::featuredBusinessImage();
+        }
+        
+        Broadstreet_View::load('admin/businesses', array('featured_image' => $featured_image));
     }
     
     public function adminMenuEditableCallback()

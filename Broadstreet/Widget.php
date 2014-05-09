@@ -575,7 +575,12 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
                 echo '</div>';
             }
             
-            echo '<p>'.wp_trim_words(strip_tags($post->post_content), 30).' <a href="'.$link.'">more.</a></p>';
+            echo '<p>';
+            
+            if($meta['bs_featured_business'])
+                echo '<img style="width: 20%; float: right; padding: 2px 0 4px 4px;" src="' . Broadstreet_Utility::featuredBusinessImage().'" />';
+            
+            echo wp_trim_words(strip_tags($post->post_content), 30).' <a href="'.$link.'">more.</a></p>';
             
             echo '</div>';
         }

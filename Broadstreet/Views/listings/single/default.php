@@ -128,6 +128,9 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
 
 </div>
 <div id="biz-column-2" class="boxed-sizing">
+    <?php if($meta['bs_featured_business']): ?>
+    <img style="float: right; padding: 2px 0 4px 4px;" src="<?php echo Broadstreet_Utility::featuredBusinessImage() ?>" />
+    <?php endif; ?>
     <?php echo $content; ?>
     
 <?php if($meta['bs_video']): ?>

@@ -80,6 +80,26 @@ class Broadstreet_Utility
     }
     
     /**
+     * Get or set the featured business image
+     * @param type $image_path
+     * @return string
+     */
+    public static function featuredBusinessImage($image_path = null) {
+        $default = Broadstreet_Utility::getImageBaseURL() . 'featured-biz.png';
+        
+        if($image_path !== null) {
+            self::setOption('featured_business_image', $image_path);
+            return $image_path;
+        }
+        
+        $img = self::getOption('featured_business_image');
+        
+        if($img) return $img;
+        
+        return $default;
+    }
+    
+    /**
      * Get this publication's network ID
      * @return boolean 
      */
