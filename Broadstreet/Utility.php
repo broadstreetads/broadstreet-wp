@@ -767,6 +767,75 @@ class Broadstreet_Utility
 
         return $content;
     }
+    
+    /**
+     * Get category slugs for use in keyword-dropping
+     * @return type
+     */
+    function getAllAdSlugs() {
+        global $post;
+
+        $slugs = array();
+
+        if(is_single() || is_page()) {
+
+            $id = get_the_ID();
+            $cats = wp_get_post_categories($id);  
+
+            if(!$cats) $cats = array();            
+
+            foreach($cats as $cat){
+                $c = get_category($cat);
+                $slugs[] = $c->slug;
+            }
+
+            $slugs[] = $post->post_name;
+        }   
+
+        if(is_category() || is_archive()) {
+            $cat = get_query_var('cat');
+            $cat = get_category ($cat);
+            $slugs[] = $cat->slug;
+        }
+
+        if(is_home()) {
+            // No categories
+            $slugs = array();
+        }
+
+        return $slugs;
+    }
+
+    /**
+     * Get all ad keyword slugs
+     * @return string
+     */
+    function getAllAdKeywordsString() {
+         $keywords = array();
+
+         /* Figure out which keywords are available */
+         if(is_single() || is_page()) {
+             $keywords = array('not_home_page', 'not_landing_page', 'is_article_page');            
+         }
+
+         if(is_archive() || is_category()) {
+             $keywords = array('not_home_page', 'not_landing_page', 'not_article_page');
+         }
+
+         if(is_home()) {
+             $keywords = array('is_home_page', 'is_landing_page', 'not_article_page');
+         }
+
+        $slugs = self::getAllAdSlugs();
+
+        foreach($slugs as $slug) {
+            $keywords[] = $slug;
+        }
+
+        $keywords_string = "'" . implode("','", $keywords) . "'";
+
+        return $keywords_string;
+    }
 
     /**
      * Return a unique identifier for the site for use with future help requests

@@ -28,17 +28,14 @@ class Broadstreet_Zone_Widget extends WP_Widget
          $zone_id   = $instance['w_zone'];
          $zone_data = Broadstreet_Utility::getZoneCache();
          
-         if($zone_data)
-         {
-            echo $before_widget;
-            
-            if(trim($title))
-                echo $before_title . $title. $after_title;
+         echo $before_widget;
 
-            echo $zone_data[$zone_id]->html;
+         if(trim($title))
+             echo $before_title . $title. $after_title;
 
-            echo $after_widget;
-         }
+         echo '<script type="text/javascript">broadstreet.zone('. $zone_id .', {responsive: true, softKeywords: true, keywords: [' . Broadstreet_Utility::getAllAdKeywordsString() . ']});</script>';
+
+         echo $after_widget;
      }
 
      /**
