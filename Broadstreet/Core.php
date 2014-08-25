@@ -620,8 +620,8 @@ class Broadstreet_Core
         }
         else 
         {
-            # Special thanks to Justin
-            return get_the_excerpt();
+            $post = get_post();
+            return $post->post_excerpt;
         }
 
 
