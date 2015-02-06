@@ -135,7 +135,6 @@ class Broadstreet_Core
             add_action('wp_enqueue_scripts', array($this, 'addPostStyles'));
             add_action('pre_get_posts', array($this, 'modifyPostListing'));
             add_filter('the_content', array($this, 'postTemplate'), 100);
-            add_filter('the_excerpt', array($this, 'postExcerpt'), 100);
             add_filter('the_posts', array($this, 'businessQuery'));
             add_filter('comment_form_defaults', array($this, 'commentForm'));
             add_action('save_post', array($this, 'savePostMeta'));
@@ -601,36 +600,13 @@ class Broadstreet_Core
             }
             else
             {   
-                return Broadstreet_View::load('listings/archive/default', array('content' => $content, 'meta' => $meta), true);
+                return $content;
             }
         }
         
         return $content;
     }
-    
-    /**
-     * Handler used for modifying the way business listings are displayed
-     *  in exceprts, for themes that use excerpts
-     * @param type $content
-     * @return type 
-     */
-    public function postExcerpt($content)
-    {
-        if(get_post_type() == self::BIZ_POST_TYPE)
-        {
-            $meta = $GLOBALS['post']->meta;
-            $this->_excerptRan = true;
-            return Broadstreet_View::load('listings/archive/excerpt', array('content' => $content, 'meta' => $meta), true);
-        }
-        else 
-        {
-            $post = get_post();
-            return $post->post_excerpt;
-        }
 
-
-    }
-    
     /**
      * The callback used to register the widget
      */
@@ -729,15 +705,16 @@ class Broadstreet_Core
      */
     public function shortcode($attrs)
     {
-        $zone_data = Broadstreet_Utility::getZoneCache();
+        if(isset($attrs['ad'])) {
+            return Broadstreet_Utility::getAdCode($attrs['ad']);
+        }    
         
-        if(isset($attrs['zone'])
-            && isset($zone_data[$attrs['zone']])) {
-            return $zone_data[$attrs['zone']]->html;
-        } else {
-            return '';
-        }   
-    } 
+        if(isset($attrs['zone'])) {
+            return Broadstreet_Utility::getZoneCode($attrs['zone']);
+        }
+        
+        return '';
+    }   
     
     public function businesses_shortcode($attrs)
     {

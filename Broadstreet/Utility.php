@@ -21,6 +21,23 @@ class Broadstreet_Utility
     protected static $_businessEnabled = NULL;
     
     /**
+     * Get ad code for a specific ad
+     * @param type $id
+     */
+    public static function getAdCode($id) {
+        return "<script type=\"text/javascript\" src=\"//ad.broadstreetads.com/display/$id.js\"></script>";
+    }
+    
+    /**
+     * Get code for a specific zone
+     * @param type $id
+     * @return type
+     */
+    public static function getZoneCode($id) {
+        return '<script type="text/javascript">broadstreet.zone('. $id .', {responsive: true, softKeywords: true, keywords: [' . Broadstreet_Utility::getAllAdKeywordsString() . ']});</script>';
+    }
+    
+    /**
      * Build an address from a meta array
      * @param type $meta The array of meta fields that come back for a business
      * @param type $single_line Whether the address should be on a single line
