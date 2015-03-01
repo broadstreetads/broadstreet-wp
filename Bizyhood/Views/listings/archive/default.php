@@ -71,7 +71,7 @@
                 <a href="<?php echo $meta['bs_menu'] ?>">View a menu</a>
             <?php endif; ?>        
         </div>
-        <?php echo get_the_term_list($GLOBALS['post']->ID, Broadstreet_Core::BIZ_TAXONOMY, 'Posted in: ', ', ', '') ?> 
+        <?php echo get_the_term_list($GLOBALS['post']->ID, Bizyhood_Core::BIZ_TAXONOMY, 'Posted in: ', ', ', '') ?> 
     <?php endif; ?>
     <?php if($meta['bs_twitter'] || $meta['bs_twitter'] || $meta['bs_yelp']): ?>
         <p class="bs-social">

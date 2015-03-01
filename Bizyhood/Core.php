@@ -20,14 +20,14 @@ require_once dirname(__FILE__) . '/Widget.php';
 require_once dirname(__FILE__) . '/Exception.php';
 require_once dirname(__FILE__) . '/Vendor/Broadstreet.php';
 
-if (! class_exists('Broadstreet_Core')):
+if (! class_exists('Bizyhood_Core')):
 
 /**
  * This class contains the core code and callback for the behavior of Wordpress.
  *  It is instantiated and executed directly by the Broadstreet plugin loader file
  *  (which is most likely at the root of the Broadstreet installation).
  */
-class Broadstreet_Core
+class Bizyhood_Core
 {
     CONST KEY_API_KEY             = 'Broadstreet_API_Key';
     CONST KEY_NETWORK_ID          = 'Broadstreet_Network_Key';
@@ -89,7 +89,46 @@ class Broadstreet_Core
      */
     public function __construct()
     {
-        Broadstreet_Log::add('debug', "Broadstreet initializing..");
+        Broadstreet_Log::add('debug', "Bizyhood initializing");
+    }
+
+    public function install() {
+        // TODO: prevent error from appearing on activation (The plugin generated 260 characters of unexpected output during activation. If you notice “headers already sent” messages, problems with syndication feeds or other issues, try deactivating or removing this plugin.)
+
+        Broadstreet_Log::add('debug', "Bizyhood installing");
+        
+        // Create the business list page
+        $business_list_page = get_page_by_title( "Bizyhood business list", "OBJECT", "page" );
+        Broadstreet_Log::add('debug', "Biz list page: " . $business_list_page);
+        if ( !$business_list_page )
+        {
+            $business_list_page = array(
+                'post_title'     => 'Bizyhood business list',
+                'post_type'      => 'page',
+                'post_name'      => 'bh-businesses',
+                'post_content'   => '[bh-businesses]',
+                'post_status'    => 'publish',
+                'comment_status' => 'closed',
+                'ping_status'    => 'closed',
+                'post_author'    => 1,
+                'menu_order'     => 0,
+                'guid'          => site_url() . "/bh-businesses"
+            );
+            wp_insert_post( $business_list_page );
+        }
+    }
+
+    public function uninstall()
+    {
+        Broadstreet_Log::add('debug', "Bizyhood uninstalling");
+
+        // Remove business list page
+        $business_list_page = get_page_by_title( "Bizyhood business list", "OBJECT", "page" );
+        if ($business_list_page)
+        {
+            Broadstreet_Log::add('info', "Removing business list page (post ID " . $business_list_page->ID . ")");
+            wp_trash_post($business_list_page->ID);
+        }
     }
 
     /**
@@ -127,7 +166,7 @@ class Broadstreet_Core
         add_shortcode('businesses', array($this, 'businesses_shortcode'));
         add_filter('image_size_names_choose', array($this, 'addImageSizes'));
         add_action('wp_footer', array($this, 'addPoweredBy'));
-        
+
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
         {
@@ -618,7 +657,6 @@ class Broadstreet_Core
         register_widget('Broadstreet_Business_Listing_Widget');
         register_widget('Broadstreet_Business_Profile_Widget');
         register_widget('Broadstreet_Business_Categories_Widget');
-        register_widget('Broadstreet_Editable_Widget');
     }
 
     /**
@@ -722,7 +760,7 @@ class Broadstreet_Core
         $category  = 'all'; #$instance['w_category'];
          
         $args = array (
-            'post_type' => Broadstreet_Core::BIZ_POST_TYPE,
+            'post_type' => Bizyhood_Core::BIZ_POST_TYPE,
             'post_status' => 'publish',
             'posts_per_page' => 10000, #($is_random == 'no' ? intval($count) : 100),
             'ignore_sticky_posts'=> 0
@@ -732,7 +770,7 @@ class Broadstreet_Core
         {
             $args['tax_query'] = array(
                 array(
-                    'taxonomy' => Broadstreet_Core::BIZ_TAXONOMY,
+                    'taxonomy' => Bizyhood_Core::BIZ_TAXONOMY,
                     'field' => 'id',
                     'terms' => $category
                 )
@@ -769,7 +807,7 @@ class Broadstreet_Core
             $id_to_posts[$post->ID] = $post;
         }
         
-        $terms = wp_get_object_terms($post_ids, Broadstreet_Core::BIZ_TAXONOMY, array('fields' => 'all_with_object_id', 'orderby' => 'name'));
+        $terms = wp_get_object_terms($post_ids, Bizyhood_Core::BIZ_TAXONOMY, array('fields' => 'all_with_object_id', 'orderby' => 'name'));
         
         foreach($terms as $term)
         {

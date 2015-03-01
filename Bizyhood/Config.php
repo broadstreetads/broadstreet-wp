@@ -25,7 +25,7 @@ class Broadstreet_Config
 
         $config['log'] = array (
 
-            'level'     => Broadstreet_Log::ERROR,
+            'level'     => Broadstreet_Log::DEBUG, //TODO: change this in prod
             'directory' => dirname(__FILE__) . '/Logs'
 
         );
