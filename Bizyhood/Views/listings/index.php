@@ -19,19 +19,10 @@
 </div>
 
 
-<?php $i = 0; foreach($cats_to_posts as $cat_id => $data): ?>
+<?php $i = 0; foreach($businesses as $business): ?>
 
 <div class="broadstreet-index" style="width: 60%; box-sizing: border-box; padding-right: 5px; float: left">
-
-    <h4><?php echo htmlentities($data['name']) ?></h4>
-    
-    <ul>
-        <?php foreach($data['posts'] as $post): ?>
-        <li><a href="<?php echo get_permalink($post->ID) ?>"><?php echo $post->post_title ?></a></li>
-        <?php endforeach; ?>
-    </ul>
-    
+    <h4><?php echo $business->name ?></h4>    
 </div>
 
 <?php $i++; endforeach; ?>
-
