@@ -20,14 +20,14 @@ require_once dirname(__FILE__) . '/Widget.php';
 require_once dirname(__FILE__) . '/Exception.php';
 require_once dirname(__FILE__) . '/Vendor/Broadstreet.php';
 
-if (! class_exists('Broadstreet_Core')):
+if (! class_exists('Bizyhood_Core')):
 
 /**
  * This class contains the core code and callback for the behavior of Wordpress.
  *  It is instantiated and executed directly by the Broadstreet plugin loader file
  *  (which is most likely at the root of the Broadstreet installation).
  */
-class Broadstreet_Core
+class Bizyhood_Core
 {
     CONST KEY_API_KEY             = 'Broadstreet_API_Key';
     CONST KEY_NETWORK_ID          = 'Broadstreet_Network_Key';
@@ -89,7 +89,44 @@ class Broadstreet_Core
      */
     public function __construct()
     {
-        Broadstreet_Log::add('debug', "Broadstreet initializing..");
+        Broadstreet_Log::add('debug', "Bizyhood initializing");
+    }
+
+    static function install()
+    {
+        Broadstreet_Log::add('debug', "Bizyhood installing");
+        
+        // Create the business list page
+        $business_list_page = get_page_by_title( "Bizyhood business list", "OBJECT", "page" );
+        if ( !$business_list_page )
+        {
+            $business_list_page = array(
+                'post_title'     => 'Bizyhood business list',
+                'post_type'      => 'page',
+                'post_name'      => 'bh-businesses',
+                'post_content'   => '[bh-businesses]',
+                'post_status'    => 'publish',
+                'comment_status' => 'closed',
+                'ping_status'    => 'closed',
+                'post_author'    => 1,
+                'menu_order'     => 0,
+                'guid'          => site_url() . "/bh-businesses"
+            );
+            wp_insert_post( $business_list_page );
+        }
+    }
+
+    public function uninstall()
+    {
+        Broadstreet_Log::add('debug', "Bizyhood uninstalling");
+
+        // Remove business list page
+        $business_list_page = get_page_by_title( "Bizyhood business list", "OBJECT", "page" );
+        if ($business_list_page)
+        {
+            Broadstreet_Log::add('info', "Removing business list page (post ID " . $business_list_page->ID . ")");
+            wp_trash_post($business_list_page->ID);
+        }
     }
 
     /**
@@ -124,10 +161,10 @@ class Broadstreet_Core
         add_action('admin_notices',     array($this, 'adminWarningCallback'));
         add_action('widgets_init', array($this, 'registerWidget'));
         add_shortcode('broadstreet', array($this, 'shortcode'));
-        add_shortcode('businesses', array($this, 'businesses_shortcode'));
+        add_shortcode('bh-businesses', array($this, 'businesses_shortcode'));
         add_filter('image_size_names_choose', array($this, 'addImageSizes'));
         add_action('wp_footer', array($this, 'addPoweredBy'));
-        
+
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
         {
@@ -618,7 +655,6 @@ class Broadstreet_Core
         register_widget('Broadstreet_Business_Listing_Widget');
         register_widget('Broadstreet_Business_Profile_Widget');
         register_widget('Broadstreet_Business_Categories_Widget');
-        register_widget('Broadstreet_Editable_Widget');
     }
 
     /**
@@ -718,81 +754,11 @@ class Broadstreet_Core
     
     public function businesses_shortcode($attrs)
     {
-        $ordering  = 'alpha'; #$instance['w_ordering'];
-        $category  = 'all'; #$instance['w_category'];
-         
-        $args = array (
-            'post_type' => Broadstreet_Core::BIZ_POST_TYPE,
-            'post_status' => 'publish',
-            'posts_per_page' => 10000, #($is_random == 'no' ? intval($count) : 100),
-            'ignore_sticky_posts'=> 0
-        );
-        
-        if($category != 'all')
-        {
-            $args['tax_query'] = array(
-                array(
-                    'taxonomy' => Broadstreet_Core::BIZ_TAXONOMY,
-                    'field' => 'id',
-                    'terms' => $category
-                )
-            );
-        }
-        
-        if($ordering == 'alpha')
-        {
-            $args['order'] = 'ASC';
-            $args['orderby'] = 'title';
-        }
-        
-        if($ordering == 'mrecent')
-        {
-            $args['order'] = 'DESC';
-            $args['orderby'] = 'ID';
-        }
-        
-        if($ordering == 'lrecent')
-        {
-            $args['order'] = 'ASC';
-            $args['orderby'] = 'ID';
-        }
+        $response = wp_remote_retrieve_body( wp_remote_get( "http://127.0.0.1:4567/businesses" ) );
+        $response_json = json_decode($response);
+        $businesses = $response_json->data;
 
-        $posts = get_posts($args);
-        
-        $cats_to_posts = array();
-        $post_ids      = array();
-        $id_to_posts   = array();
-        
-        foreach($posts as $post)
-        {
-            $post_ids[] = $post->ID;
-            $id_to_posts[$post->ID] = $post;
-        }
-        
-        $terms = wp_get_object_terms($post_ids, Broadstreet_Core::BIZ_TAXONOMY, array('fields' => 'all_with_object_id', 'orderby' => 'name'));
-        
-        foreach($terms as $term)
-        {
-            if(!isset($cats_to_posts[$term->term_id]))
-            {
-                $cats_to_posts[$term->term_id] = array();
-                $cats_to_posts[$term->term_id]['name'] = $term->name;
-                $cats_to_posts[$term->term_id]['slug'] = $term->slug;
-                $cats_to_posts[$term->term_id]['posts'] = array ();
-            }
-            
-            $cats_to_posts[$term->term_id]['posts'][] = 
-                $id_to_posts[$term->object_id];
-        }
-        
-        function broadstreet_compare($a, $b) {
-            return strtolower($a->post_title) > strtolower($b->post_title);
-        }
-        
-        foreach($cats_to_posts as $term_id => $data)
-            usort($cats_to_posts[$term_id]['posts'], 'broadstreet_compare');
-        
-        return Broadstreet_View::load('listings/index', array('cats_to_posts' => $cats_to_posts), true);
+        return Broadstreet_View::load('listings/index', array('businesses' => $businesses), true);
     }
 }
 

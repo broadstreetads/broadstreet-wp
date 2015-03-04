@@ -54,8 +54,8 @@
           
           <p>
               Businesses are listed by default at <strong>/businesses</strong>, or
-              <a target="_blank" href="<?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Broadstreet_Core::BIZ_SLUG ?>">
-                    <?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Broadstreet_Core::BIZ_SLUG ?>
+              <a target="_blank" href="<?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>">
+                    <?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>
               </a>.
           </p>
           
@@ -92,7 +92,7 @@
           <p>
               Once you're finished editing the profile, be sure to save your
               new post. It will now be available on the 
-              <a target="_blank" href="<?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Broadstreet_Core::BIZ_SLUG ?>">
+              <a target="_blank" href="<?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>">
                  business listing page.
               </a>
           </p>
@@ -173,8 +173,8 @@
               of the menu item on your site. This can be anything you'd like.
               Also, paste in the URL to your business directory. For you this
               URL is: <br/>
-              <a href="<?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Broadstreet_Core::BIZ_SLUG ?>">
-                  <?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Broadstreet_Core::BIZ_SLUG ?>
+              <a href="<?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>">
+                  <?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>
               </a>.<br/>
               Click "Add to Menu", and arrange it as yout would have done in
               the example above.

@@ -9,7 +9,7 @@
 /**
  * A class containing functions for the AJAX functionality in Broadstreet. These
  *  aren't executed directly by any Broadstreet code -- they are registered with
- *  the Wordpress hooks in Broadstreet_Core::_registerHooks(), and called as needed
+ *  the Wordpress hooks in Bizyhood_Core::_registerHooks(), and called as needed
  *  by the front-end and Wordpress. All of these methods output JSON.
  */
 class Broadstreet_Ajax
@@ -19,9 +19,9 @@ class Broadstreet_Ajax
      */
     public static function saveSettings()
     {
-        Broadstreet_Utility::setOption(Broadstreet_Core::KEY_API_KEY, $_POST['api_key']);
-        Broadstreet_Utility::setOption(Broadstreet_Core::KEY_NETWORK_ID, $_POST['network_id']);
-        Broadstreet_Utility::setOption(Broadstreet_Core::KEY_BIZ_ENABLED, $_POST['business_enabled'] === 'true');
+        Broadstreet_Utility::setOption(Bizyhood_Core::KEY_API_KEY, $_POST['api_key']);
+        Broadstreet_Utility::setOption(Bizyhood_Core::KEY_NETWORK_ID, $_POST['network_id']);
+        Broadstreet_Utility::setOption(Bizyhood_Core::KEY_BIZ_ENABLED, $_POST['business_enabled'] === 'true');
         
         $api = new Broadstreet($_POST['api_key']);
 
@@ -32,7 +32,7 @@ class Broadstreet_Ajax
             
             if($_POST['network_id'] == '-1')
             {
-                Broadstreet_Utility::setOption(Broadstreet_Core::KEY_NETWORK_ID, $networks[0]->id);
+                Broadstreet_Utility::setOption(Bizyhood_Core::KEY_NETWORK_ID, $networks[0]->id);
             }
             
             //Broadstreet_Utility::refreshZoneCache();
@@ -43,7 +43,7 @@ class Broadstreet_Ajax
             $key_valid = false;
             
             # Clear any options that aren't valid following the failed API key config
-            Broadstreet_Utility::setOption(Broadstreet_Core::KEY_BIZ_ENABLED, FALSE);
+            Broadstreet_Utility::setOption(Bizyhood_Core::KEY_BIZ_ENABLED, FALSE);
         }
         
         die(json_encode(array('success' => true, 'key_valid' => $key_valid, 'networks' => $networks)));
@@ -51,8 +51,8 @@ class Broadstreet_Ajax
     
     public static function createAdvertiser()
     {
-        $api_key    = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_API_KEY);
-        $network_id = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
+        $api_key    = Broadstreet_Utility::getOption(Bizyhood_Core::KEY_API_KEY);
+        $network_id = Broadstreet_Utility::getOption(Bizyhood_Core::KEY_NETWORK_ID);
         
         $api        = new Broadstreet($api_key);
         $advertiser = $api->createAdvertiser($network_id, stripslashes($_POST['name']));
@@ -81,11 +81,11 @@ class Broadstreet_Ajax
         {
             # Register the user by email address
             $resp = $api->register($_POST['email']);
-            Broadstreet_Utility::setOption(Broadstreet_Core::KEY_API_KEY, $resp->access_token);
+            Broadstreet_Utility::setOption(Bizyhood_Core::KEY_API_KEY, $resp->access_token);
 
             # Create a network for the new user
             $resp = $api->createNetwork(get_bloginfo('name'));
-            Broadstreet_Utility::setOption(Broadstreet_Core::KEY_NETWORK_ID, $resp->id);
+            Broadstreet_Utility::setOption(Bizyhood_Core::KEY_NETWORK_ID, $resp->id);
 
             die(json_encode(array('success' => true, 'network' => $resp)));
         }

@@ -88,7 +88,7 @@ class Broadstreet_Utility
      */
     public static function getApiKey()
     {
-        $api_key = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_API_KEY);
+        $api_key = Broadstreet_Utility::getOption(Bizyhood_Core::KEY_API_KEY);
         
         if(!$api_key) 
             return FALSE;
@@ -122,7 +122,7 @@ class Broadstreet_Utility
      */
     public static function getNetworkId()
     {
-        return Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
+        return Broadstreet_Utility::getOption(Bizyhood_Core::KEY_NETWORK_ID);
     }
     
     /**
@@ -204,7 +204,7 @@ class Broadstreet_Utility
         if(self::$_businessEnabled === FALSE) return FALSE;
         if(self::$_apiKeyValid === FALSE) return FALSE;
         
-        if(Broadstreet_Utility::getOption(Broadstreet_Core::KEY_BIZ_ENABLED))
+        if(Broadstreet_Utility::getOption(Bizyhood_Core::KEY_BIZ_ENABLED))
         {
             self::$_businessEnabled = TRUE;
             return true;
@@ -341,7 +341,7 @@ class Broadstreet_Utility
     public static function broadstreetLink($path)
     {
         $path = ltrim($path, '/');
-        $key = self::getOption(Broadstreet_Core::KEY_API_KEY);
+        $key = self::getOption(Bizyhood_Core::KEY_API_KEY);
         $url = "https://my.broadstreetads.com/$path?access_token=$key";
         return $url;
     }
@@ -452,7 +452,7 @@ class Broadstreet_Utility
         $meta['charged'] = (bool)$import->cost;
         $meta['cost']    = number_format($import->cost / 100, 2);
         
-        $defaults = Broadstreet_Core::$_businessDefaults;
+        $defaults = Bizyhood_Core::$_businessDefaults;
         
         foreach($defaults as $key => $value)
         {
@@ -619,8 +619,8 @@ class Broadstreet_Utility
      */
     public static function refreshZoneCache()
     {
-        $api_key     = self::getOption(Broadstreet_Core::KEY_API_KEY);
-        $network_id  = self::getOption(Broadstreet_Core::KEY_NETWORK_ID);
+        $api_key     = self::getOption(Bizyhood_Core::KEY_API_KEY);
+        $network_id  = self::getOption(Bizyhood_Core::KEY_NETWORK_ID);
         
         $api = new Broadstreet($api_key);
 
@@ -694,8 +694,8 @@ class Broadstreet_Utility
      */
     public static function sendInstallReportIfNew()
     {
-        $install_key = Broadstreet_Core::KEY_INSTALL_REPORT;
-        $upgrade_key = Broadstreet_Core::KEY_INSTALL_REPORT .'_'. BROADSTREET_VERSION;
+        $install_key = Bizyhood_Core::KEY_INSTALL_REPORT;
+        $upgrade_key = Bizyhood_Core::KEY_INSTALL_REPORT .'_'. BROADSTREET_VERSION;
         
         $installed = self::getOption($install_key);
         $upgraded  = self::getOption($upgrade_key);
@@ -764,11 +764,11 @@ class Broadstreet_Utility
     public static function getBroadstreetMessage()
     {
         return false;
-        //self::setOption(Broadstreet_Core::KEY_LAST_MESSAGE_DATE, time() - 60*60*13);
-        $date = self::getOption(Broadstreet_Core::KEY_LAST_MESSAGE_DATE);
+        //self::setOption(Bizyhood_Core::KEY_LAST_MESSAGE_DATE, time() - 60*60*13);
+        $date = self::getOption(Bizyhood_Core::KEY_LAST_MESSAGE_DATE);
 
         if($date !== FALSE && ($date + 12*60*60) > time())
-            return self::getOption(Broadstreet_Core::KEY_LAST_MESSAGE);
+            return self::getOption(Bizyhood_Core::KEY_LAST_MESSAGE);
 
         $driver = Broadstreet_Config::get('driver');
         $count  = Broadstreet_Model::getPublishedPostCount();
@@ -776,8 +776,8 @@ class Broadstreet_Utility
         $url     = "http://broadstreetads.com/messages?d=$driver&c=$count";
         $content = file_get_contents($url);
 
-        self::setOption(Broadstreet_Core::KEY_LAST_MESSAGE, $content);
-        self::setOption(Broadstreet_Core::KEY_LAST_MESSAGE_DATE, time());
+        self::setOption(Bizyhood_Core::KEY_LAST_MESSAGE, $content);
+        self::setOption(Bizyhood_Core::KEY_LAST_MESSAGE_DATE, time());
 
         if(strlen($content) == 0 || $content == "0")
             return FALSE;
