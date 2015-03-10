@@ -18,6 +18,7 @@
     <?php dynamic_sidebar('businesses-right-sidebar') ?>
 </div>
 
+<?php echo paginate_links($pagination_args); ?>
 
 <?php $i = 0; foreach($businesses as $business): ?>
 

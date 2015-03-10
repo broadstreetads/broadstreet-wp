@@ -756,9 +756,14 @@ class Bizyhood_Core
     {
         $response = wp_remote_retrieve_body( wp_remote_get( "http://127.0.0.1:4567/businesses" ) );
         $response_json = json_decode($response);
+        $pagination = $response_json->pagination;
         $businesses = $response_json->data;
+        $pagination_args = array(
+            'total'              => $pagination->total,
+            'current'            => $pagination->current,
+        );
 
-        return Broadstreet_View::load('listings/index', array('businesses' => $businesses), true);
+        return Broadstreet_View::load('listings/index', array('pagination_args' => $pagination_args, 'businesses' => $businesses), true);
     }
 }
 
