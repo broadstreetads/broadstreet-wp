@@ -508,7 +508,7 @@ class Broadstreet_Utility
      */
     public static function getBroadstreetBaseURL()
     {   
-        return (WP_PLUGIN_URL . '/broadstreet/Broadstreet/');
+        return (WP_PLUGIN_URL . '/bizyhood/Bizyhood/');
     }
 
     /**

@@ -19,6 +19,42 @@ jQuery(function($){
     {
         jQuery(span_id).show().delay(500).fadeOut();
     }
+
+    $('#zip_code_add').click(function() {
+        var zip_code = $('#zip_code').val();
+
+        // Validate ZIP code format
+        var re = new RegExp(/^[0-9]{5}$/);
+        if (!re.test(zip_code)) {
+            alert("ZIP code must be 5 digits");
+            $('#zip_code').select();
+            return;
+        }
+
+        // Make sure it's not already on the list
+        if ($("#zip_codes option[value='" + zip_code + "']").length > 0) {
+            alert("ZIP code is already entered");
+            $('#zip_code').select();
+            return;
+        }
+
+        // Enforce 10 ZIP code max
+        if ($('#zip_codes').children('option').length == 10) {
+            alert("You already reached the maximum of 10 ZIP codes");
+            return;
+        }
+
+
+        // Append to list of ZIP codes
+        $('#zip_codes')
+            .append($("<option></option>")
+            .attr("value",zip_code)
+            .attr('selected', true)
+            .text(zip_code));
+
+        // Clear ZIP code field, put focus on it
+        $('#zip_code').val('').focus();
+    });
     
     $('#business_enabled').click(function() {
         needRefresh = true;
@@ -45,10 +81,12 @@ jQuery(function($){
     $('#save-broadstreet').click(function() {
         
         var network_id = $('#network').val();
-        
+
+        // Submit AJAX request
         jQuery.post(ajaxurl, {
              action: 'save_settings', 
              api_key: $('#api_key').val(),
+             zip_codes: $('#zip_codes').val(),
              business_enabled: $('#business_enabled').is(':checked'),
              network_id: network_id
             }, 

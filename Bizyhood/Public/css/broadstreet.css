@@ -227,3 +227,13 @@ img.figure {
     clear: both;
     padding-top: 10px;
 }
+
+/* Admin */
+input#zip_code {
+    width:60px;
+}
+
+select#zip_codes {
+    width:80px;
+    height:100px;
+}

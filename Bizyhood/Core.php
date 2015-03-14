@@ -34,6 +34,7 @@ class Bizyhood_Core
     CONST KEY_BIZ_ENABLED         = 'Broadstreet_Biz_Enabled';
     CONST KEY_INSTALL_REPORT      = 'Broadstreet_Installed';
     CONST KEY_SHOW_OFFERS         = 'Broadstreet_Offers';
+    CONST KEY_ZIP_CODES           = 'Broadstreet_ZIP_Codes';
     CONST BIZ_POST_TYPE           = 'bs_business';
     CONST BIZ_TAXONOMY            = 'business_category';
     CONST BIZ_SLUG                = 'businesses';
@@ -395,11 +396,12 @@ class Bizyhood_Core
         $data['api_key']            = Broadstreet_Utility::getOption(self::KEY_API_KEY);
         $data['business_enabled']   = Broadstreet_Utility::getOption(self::KEY_BIZ_ENABLED);
         $data['network_id']         = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
+        $data['zip_codes']          = Broadstreet_Utility::getOption(self::KEY_ZIP_CODES);
         $data['errors']             = array();
         $data['networks']           = array();
         $data['key_valid']          = false;
         $data['has_cc']             = false;
-        
+
         if(!function_exists('curl_exec'))
         {
             $data['errors'][] = 'Broadstreet requires the PHP cURL module to be enabled. You may need to ask your web host or developer to enable this.';
@@ -754,7 +756,16 @@ class Bizyhood_Core
     
     public function businesses_shortcode($attrs)
     {
-        $response = wp_remote_retrieve_body( wp_remote_get( "http://127.0.0.1:4567/businesses" ) );
+        // Build string of ZIP codes from plugin settings
+        $zip_codes = Broadstreet_Utility::getOption(self::KEY_ZIP_CODES);
+        if ($zip_codes) {
+            $query_string = '?zip_codes=' . implode(',', $zip_codes);
+        }
+        else {
+            $query_string = '';
+        }
+
+        $response = wp_remote_retrieve_body( wp_remote_get( "http://127.0.0.1:4567/businesses" . $query_string ) );
         $response_json = json_decode($response);
         $pagination = $response_json->pagination;
         $businesses = $response_json->data;

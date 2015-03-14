@@ -49,6 +49,28 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
+                                Targeted ZIP codes
+                            </div>
+                            <div class="desc nomargin">
+                                These are the ZIP codes included in your local area<br />
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            ZIP Code: <input type="text" size="5" maxlength="5" id="zip_code"/>
+                            <input type="button" id="zip_code_add" value="Add"/>
+                            <br/>
+                            <select id="zip_codes" multiple="multiple">
+                                <?php foreach($zip_codes as $zip_code): ?>
+                                <option value="<?php echo $zip_code ?>" selected="selected"><?php echo $zip_code ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="break"></div>
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">
                                 Publisher Selection                                
                             </div>
                             <div class="desc nomargin">
@@ -98,13 +120,6 @@
                 </div>
             </div>
         </div>
-        <div>
-            <h3>Check out our new <a href="?page=Broadstreet-Editable">Editable Ads&trade; Widget</a> on the Widgets page!</h3>
-        </div>
-      </div>
-      <div class="right_column">
-          <?php Broadstreet_View::load('admin/global/sidebar') ?>
       </div>
     </div>
       <div class="clearfix"></div>
-      <!-- <img src="http://report.Broadstreet2.com/checkin/?s=<?php echo $service_tag.'&'.time(); ?>" alt="" /> -->
