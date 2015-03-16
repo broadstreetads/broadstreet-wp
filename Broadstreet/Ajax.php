@@ -48,6 +48,26 @@ class Broadstreet_Ajax
         
         die(json_encode(array('success' => true, 'key_valid' => $key_valid, 'networks' => $networks)));
     }
+
+    /**
+     * 
+     */
+    public static function saveZoneSettings()
+    {
+        $settings = json_decode(file_get_contents("php://input"));
+        
+        if($settings)
+        {
+            Broadstreet_Utility::setOption(Broadstreet_Core::KEY_PLACEMENTS, $settings);
+            $success = true;
+        } 
+        else 
+        {
+            $success = false;
+        }
+        
+        die(json_encode(array('success' => true)));
+    }
     
     public static function createAdvertiser()
     {

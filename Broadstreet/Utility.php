@@ -38,6 +38,38 @@ class Broadstreet_Utility
     }
     
     /**
+     * Get code for a specific zone, wrapped
+     * @param type $id
+     * @return type
+     */
+    public static function getWrappedZoneCode($config, $id) {
+
+        if(property_exists($config, 'avoid_categories') && count($config->avoid_categories)) {
+            $disabled = false;
+            for($i = 0; $i < count($config->avoid_categories); $i++) {
+                if(self::pageHasCategory($config->avoid_categories[$i]->id)) {
+                    $disabled = true;
+                }
+            }
+        }
+    
+        if($disabled) return '';        
+
+        return '<div style="margin:5px auto;">'
+                .(property_exists($config, 'show_label') && trim($config->show_label) 
+                    ? "<div style='font-size:11px; color:#ccc; margin-bottom: 5px;'>{$config->show_label}</div>"
+                    : '')
+                .self::getZoneCode($id).'</div>';
+    }
+
+    public static function getMaxWidthWrap($config, $content) {
+        if(!property_exists($config, 'max_width') || !$config->max_width)
+            $config->max_width = '100%';
+
+        return "<div class='bs-max-width-wrap' style='max-width:{$config->max_width}; margin: 0 auto;'>".$content.'</div>';
+    }
+
+    /**
      * Build an address from a meta array
      * @param type $meta The array of meta fields that come back for a business
      * @param type $single_line Whether the address should be on a single line
@@ -95,7 +127,7 @@ class Broadstreet_Utility
         else
             return $api_key;
     }
-    
+
     /**
      * Get or set the featured business image
      * @param type $image_path
@@ -247,6 +279,13 @@ class Broadstreet_Utility
         if( $value !== FALSE ) return $value;
         return $default;
     }
+
+
+    public static function getPlacementSettings()
+    {
+        return Broadstreet_Utility::getOption(Broadstreet_Core::KEY_PLACEMENTS, (object)array());
+    }
+
     
     /**
      * If rewrite rules haven't been flushed, flush them.
@@ -784,12 +823,28 @@ class Broadstreet_Utility
 
         return $content;
     }
+
+    public static function pageHasCategory($id) {
+        global $post;
+
+        if(is_single() || is_page()) {
+            return has_category($id, $post->ID);
+        }   
+
+        if(is_category() || is_archive()) {
+            $cat = get_query_var('cat');
+            $cat = get_category ($cat);
+            return ($cat->cat_ID == $id);
+        }
+
+        return false;
+    }
     
     /**
      * Get category slugs for use in keyword-dropping
      * @return type
      */
-    function getAllAdSlugs() {
+    public static function getAllAdSlugs() {
         global $post;
 
         $slugs = array();

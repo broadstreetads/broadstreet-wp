@@ -34,6 +34,7 @@ class Broadstreet_Core
     CONST KEY_BIZ_ENABLED         = 'Broadstreet_Biz_Enabled';
     CONST KEY_INSTALL_REPORT      = 'Broadstreet_Installed';
     CONST KEY_SHOW_OFFERS         = 'Broadstreet_Offers';
+    CONST KEY_PLACEMENTS          = 'Broadstreet_Placements';
     CONST BIZ_POST_TYPE           = 'bs_business';
     CONST BIZ_TAXONOMY            = 'business_category';
     CONST BIZ_SLUG                = 'businesses';
@@ -127,6 +128,12 @@ class Broadstreet_Core
         add_shortcode('businesses', array($this, 'businesses_shortcode'));
         add_filter('image_size_names_choose', array($this, 'addImageSizes'));
         add_action('wp_footer', array($this, 'addPoweredBy'));
+        # -- Ad injection
+        add_filter('the_content', array($this, 'addAdsContent'), 100);
+        add_action('loop_end', array($this, 'addAdsLoopEnd'), 100);
+        #add_action('comment_form_before', array($this, 'addAdsBeforeComments'), 1);
+        add_filter('comments_template', array($this, 'addAdsBeforeComments'), 100);
+
         
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
@@ -148,6 +155,43 @@ class Broadstreet_Core
         add_action('wp_ajax_create_advertiser', array('Broadstreet_Ajax', 'createAdvertiser'));
         add_action('wp_ajax_import_facebook', array('Broadstreet_Ajax', 'importFacebook'));
         add_action('wp_ajax_register', array('Broadstreet_Ajax', 'register'));
+        add_action('wp_ajax_save_zone_settings', array('Broadstreet_Ajax', 'saveZoneSettings'));
+    }
+
+    public function addAdsContent($content) {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+
+        if (is_single()) {
+            if (property_exists($placement_settings, 'above_content') && $placement_settings->above_content) {
+                $content = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->above_content) . $content;
+            }
+
+            if (property_exists($placement_settings, 'below_content') && $placement_settings->below_content) {
+                $content = $content . Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->below_content);
+            }
+        }
+        
+        return $content;
+    }    
+
+    public function addAdsBeforeComments($template) {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        if (is_single()) {
+            if (property_exists($placement_settings, 'before_comments') && $placement_settings->before_comments) {
+                echo Broadstreet_Utility::getMaxWidthWrap($placement_settings, Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->before_comments));
+            }
+        }
+
+        return $template;
+    }
+
+    public function addAdsLoopEnd() {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        if (is_archive() && in_the_loop()) {
+            if (property_exists($placement_settings, 'inbetween_archive') && $placement_settings->inbetween_archive) {
+                echo Broadstreet_Utility::getMaxWidthWrap($placement_settings, Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->inbetween_archive));
+            }
+        }
     }
         
     /**
@@ -237,15 +281,6 @@ class Broadstreet_Core
      */
     public function addPoweredBy()
     {
-        if(get_post_type() == self::BIZ_POST_TYPE && !is_admin())
-        {
-            echo '<style type="text/css">#bs-powered-by {display: none;}</style>';
-            echo '<span id="bs-powered-by">';
-            echo    'Powered by <a href="http://wordpress.org/extend/plugins/broadstreet/">Wordpress Business Directory</a>, ';
-            echo    '<a href="http://bealocalpublisher.com">Start A Local News Site</a>,';
-            echo    'and <a href="http://broadstreetads.com">The Adserver for Local Publishers</a>.';
-            echo '</span>';
-        }
     }
     
     public function addZoneTag()
@@ -287,10 +322,11 @@ class Broadstreet_Core
                 
         add_menu_page('Broadstreet', 'Broadstreet', 'edit_pages', 'Broadstreet', array($this, 'adminMenuCallback'), $icon_url);
         add_submenu_page('Broadstreet', 'Settings', 'Account Setup', 'edit_pages', 'Broadstreet', array($this, 'adminMenuCallback'));
+        add_submenu_page('Broadstreet', 'Zone Options', 'Zone Options', 'edit_pages', 'Broadstreet-Zone-Options', array($this, 'adminZonesMenuCallback'));
         if(Broadstreet_Utility::isBusinessEnabled())
             add_submenu_page('Broadstreet', 'Business Settings', 'Business Settings', 'edit_pages', 'Broadstreet-Business', array($this, 'adminMenuBusinessCallback'));
         #add_submenu_page('Broadstreet', 'Advanced', 'Advanced', 'edit_pages', 'Broadstreet-Layout', array($this, 'adminMenuLayoutCallback'));
-        add_submenu_page('Broadstreet', 'Help', 'How To Get Started', 'edit_pages', 'Broadstreet-Help', array($this, 'adminMenuHelpCallback'));
+        add_submenu_page('Broadstreet', 'Help', 'Business Directory Help', 'edit_pages', 'Broadstreet-Help', array($this, 'adminMenuHelpCallback'));
         add_submenu_page('Broadstreet', 'Editable Ads', 'Editable Ads&trade;', 'edit_pages', 'Broadstreet-Editable', array($this, 'adminMenuEditableCallback'));
     }
 
@@ -321,6 +357,9 @@ class Broadstreet_Core
         {
             wp_enqueue_style ('Broadstreet-styles',  Broadstreet_Utility::getCSSBaseURL() . 'broadstreet.css?v='. BROADSTREET_VERSION);
             wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js?v='. BROADSTREET_VERSION);
+            wp_enqueue_script('angular-js', '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js');
+            wp_enqueue_script('isteven-multi-js', Broadstreet_Utility::getJSBaseURL().'isteven-multi-select.js');
+            wp_enqueue_style ('isteven-multi-css',  Broadstreet_Utility::getCSSBaseURL() . 'isteven-multi-select.css');
         }
         
         # Only register on the post editing page
@@ -339,7 +378,7 @@ class Broadstreet_Core
             wp_enqueue_script('thickbox');
             wp_enqueue_style( 'thickbox' );
         }
-    }
+    }    
 
     /**
      * The callback that is executed when the user is loading the admin page.
@@ -404,6 +443,57 @@ class Broadstreet_Core
 
         Broadstreet_View::load('admin/admin', $data);
     }
+
+    /**
+     * The callback that is executed when the user is loading the admin page.
+     *  Basically, output the page content for the admin page. The function
+     *  acts just like a controller method for and MVC app. That is, it loads
+     *  a view.
+     */
+    public function adminZonesMenuCallback()
+    {
+        Broadstreet_Log::add('debug', "Admin page callback executed");        
+        $data = array();
+
+        $data['service_tag']        = Broadstreet_Utility::getServiceTag();
+        $data['api_key']            = Broadstreet_Utility::getOption(self::KEY_API_KEY);
+        $data['network_id']         = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
+        $data['errors']             = array();
+        $data['networks']           = array();
+        $data['zones']              = array();
+        $data['placements']              = array();
+        $data['key_valid']          = false;
+        $data['categories']         = get_categories(array('hide_empty' => false));
+        $data['tags']               = get_tags(array('hide_empty' => false));
+        
+        if(!function_exists('curl_exec'))
+        {
+            $data['errors'][] = 'Broadstreet requires the PHP cURL module to be enabled. You may need to ask your web host or developer to enable this.';
+        }
+        
+        if(!$data['api_key']) 
+        {
+            $data['errors'][] = '<strong>You dont have an API key set yet!</strong><ol><li>If you already have a Broadstreet account, <a href="http://my.broadstreetads.com/access-token">get your key here</a>.</li><li>If you don\'t have an account with us, <a target="blank" id="one-click-signup" href="#">then use our one-click signup</a>.</li></ol>';
+        }
+        else 
+        {
+            $api = new Broadstreet($data['api_key']);
+            
+            try
+            {
+                $data['key_valid'] = true;
+                $data['zones'] = Broadstreet_Utility::refreshZoneCache();
+                $data['placements'] = Broadstreet_Utility::getPlacementSettings();
+            }
+            catch(Exception $ex)
+            {
+                $data['networks'] = array();
+                $data['key_valid'] = false;
+            }
+        }
+
+        Broadstreet_View::load('admin/zones', $data);
+    }
     
     public function adminMenuBusinessCallback() {        
         
@@ -441,7 +531,7 @@ class Broadstreet_Core
         // Use nonce for verification
         wp_nonce_field(plugin_basename(__FILE__), 'broadstreetnoncename');
 
-        $zone_data = Broadstreet_Utility::getZoneCache();
+        $zone_data = Broadstreet_Utility::getZoneCache();        
         
         Broadstreet_View::load('admin/infoBox', array('zones' => $zone_data));
     }

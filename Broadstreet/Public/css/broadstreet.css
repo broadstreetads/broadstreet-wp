@@ -227,3 +227,21 @@ img.figure {
     clear: both;
     padding-top: 10px;
 }
+
+.selfie-loading-box {
+    position: fixed;
+    top: 45%;
+    left: 380px;
+    padding: 10px;
+    max-width: 300px;
+    background-color: rgba(255,255,255,.9);
+    border-radius: 10px;
+    border: 7px solid rgba(0,0,0,.1);
+}
+
+.selfie-loading-box span {
+    font-size: 12px;
+    display: block;
+    text-align: center;
+    color: #777;
+}

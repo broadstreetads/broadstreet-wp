@@ -1,6 +1,8 @@
 <?php if(count($zones) > 0): ?>
     <p>Here is a list of the zones you have registered in Broadstreet. If you
-    would like to embed a zone right into the post, paste in a shortcode:</p>
+    would like to embed a zone right into the post, paste in a shortcode. You
+    can also have zones auto-injected on the 
+    <a href="admin.php?page=Broadstreet-Zone-Options">zone settings page</a></p>
     <table>
         <thead>
             <tr>

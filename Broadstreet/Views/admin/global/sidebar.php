@@ -1,22 +1,4 @@
-    <a href="http://broadstreetads.com" target="_blank">
-        <img class="oconf_logo" src="<?php echo Broadstreet_Utility::getImageBaseURL(); ?>marty.png" alt="Say 'Hi' to Marty" title="Say 'Hi' to Marty" />
-    </a>
-    <?php
-        if($message = Broadstreet_Utility::getBroadstreetMessage())
-        {
-            echo $message;
-        }
-    ?>
-    
-    <h3>
-<?php 
-$m = array(
-'Baby Can You <a target="_blank" href="http://www.youtube.com/watch?v=wxVLHaHUI4E">Dig It?</a>', 
-'Baby I Need Your <a target="_blank" href="http://www.youtube.com/watch?v=joqjBAJx4ZA">Loving</a>', 
-'Do You .. <a target="_blank" href="http://www.youtube.com/watch?v=EwqhJyUyoHU">Love Me?</a>'
-); 
-    
-echo $m[array_rand($m)]; ?></h3>
+
 
     <div>
         <div class="fb-like" data-href="http://www.facebook.com/broadstreetads" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true"></div>
