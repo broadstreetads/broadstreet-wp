@@ -115,6 +115,25 @@ class Bizyhood_Core
             );
             wp_insert_post( $business_list_page );
         }
+
+        // Create the view business page
+        $business_view_page = get_page_by_title( "Bizyhood view business", "OBJECT", "page" );
+        if ( !$business_view_page )
+        {
+            $business_view_page = array(
+                'post_title'     => 'Bizyhood view business',
+                'post_type'      => 'page',
+                'post_name'      => 'bh-business',
+                'post_content'   => '',
+                'post_status'    => 'publish',
+                'comment_status' => 'closed',
+                'ping_status'    => 'closed',
+                'post_author'    => 1,
+                'menu_order'     => 0,
+                'guid'          => site_url() . "/bh-business"
+            );
+            wp_insert_post( $business_view_page );
+        }
     }
 
     public function uninstall()
@@ -127,6 +146,14 @@ class Bizyhood_Core
         {
             Broadstreet_Log::add('info', "Removing business list page (post ID " . $business_list_page->ID . ")");
             wp_trash_post($business_list_page->ID);
+        }
+
+        // Remove business list page
+        $business_view_page = get_page_by_title( "Bizyhood view business", "OBJECT", "page" );
+        if ($business_view_page)
+        {
+            Broadstreet_Log::add('info', "Removing view business page (post ID " . $business_view_page->ID . ")");
+            wp_trash_post($business_view_page->ID);
         }
     }
 
@@ -622,25 +649,13 @@ class Bizyhood_Core
      */
     public function postTemplate($content)
     {   
-        # Only do this for business posts, and don't do it
-        #  for excerpts
-        if(!Broadstreet_Utility::inExcerpt() 
-                && get_post_type() == self::BIZ_POST_TYPE)
-        {   
-            $meta = $GLOBALS['post']->meta;
-            
-            # Make sure the image meta is unserialized properly
-            if(isset($meta['bs_images']))
-                $meta['bs_images'] = maybe_unserialize($meta['bs_images']);
-            
-            if(is_single())
-            {
-                return Broadstreet_View::load('listings/single/default', array('content' => $content, 'meta' => $meta), true);
-            }
-            else
-            {   
-                return $content;
-            }
+        # Only do this for BH businesses
+        if (isset($_REQUEST['bizyhood_id']))
+        {
+            $bizyhood_id = $_REQUEST['bizyhood_id'];
+            $response = wp_remote_retrieve_body( wp_remote_get( "http://127.0.0.1:4567/business/" . $bizyhood_id ) );
+            $business = json_decode($response);
+            return Broadstreet_View::load('listings/single/default', array('content' => $content, 'business' => $business), true);
         }
         
         return $content;
@@ -774,7 +789,9 @@ class Bizyhood_Core
             'current'            => $pagination->current,
         );
 
-        return Broadstreet_View::load('listings/index', array('pagination_args' => $pagination_args, 'businesses' => $businesses), true);
+        $view_business_page_id = get_page_by_title( "Bizyhood view business", "OBJECT", "page" )->ID;
+
+        return Broadstreet_View::load('listings/index', array('pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id), true);
     }
 }
 

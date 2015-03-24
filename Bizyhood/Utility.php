@@ -45,35 +45,29 @@ class Broadstreet_Utility
      *  in html
      * @return string The address
      */
-    public static function buildAddressFromMeta($meta, $single_line = false, $multi_html = true)
+    public static function buildAddressFromMeta($business, $single_line = false, $multi_html = true)
     {
         $address = '';
         
         if($single_line)
         {
-            if($meta['bs_address_1'])
-                $address = "{$meta['bs_address_1']}"; 
+            if($business->address1)
+                $address = "{$business->address1}"; 
             
-            if($meta['bs_address_2'])
-                $address .= ", {$meta['bs_address_2']}";
+            if($business->address2)
+                $address .= ", {$business->address2}";
                 
-            $address .= ", {$meta['bs_city']}, {$meta['bs_state']}";
-            
-            if($meta['bs_postal'])
-                $address .= ", {$meta['bs_postal']}";
+            $address .= ", {$business->locality}, {$business->region} {$business->postal_code}";
         }
         else
         {
-            if($meta['bs_address_1'])
-                $address = "{$meta['bs_address_1']}"; 
+            if($business->address1)
+                $address = "{$business->address1}"; 
             
-            if($meta['bs_address_2'])
-                $address .= "\n{$meta['bs_address_2']}";
+            if($business->address2)
+                $address .= "\n{$business->address2}";
                 
-            $address .= "\n{$meta['bs_city']}, {$meta['bs_state']}";
-            
-            if($meta['bs_postal'])
-                $address .= " {$meta['bs_postal']}";
+            $address .= "\n{$business->locality}, {$business->region} {$business->postal_code}";
                 
             if($multi_html)
                 $address = nl2br($address);

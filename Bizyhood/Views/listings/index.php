@@ -23,7 +23,7 @@
 <?php $i = 0; foreach($businesses as $business): ?>
 
 <div class="broadstreet-index" style="width: 60%; box-sizing: border-box; padding-right: 5px; float: left">
-    <h4><?php echo $business->name ?></h4>    
+    <h4><a href="index.php?page_id=<?php echo $view_business_page_id ?>&bizyhood_id=<?php echo $business->bizyhood_id ?>"><?php echo $business->name ?></a></h4>
 </div>
 
 <?php $i++; endforeach; ?>
