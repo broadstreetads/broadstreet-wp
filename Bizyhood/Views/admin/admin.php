@@ -46,6 +46,21 @@
                         <div style="clear:both;"></div>
                     </div>
                     <div class="break"></div>
+
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">API URL</div>
+                            <div class="desc nomargin">
+                                The URL of the Bizyhood API. Shouldn't need to be changed except for testing purposes.<br />
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <input id="api_url" type="text" value="<?php echo $api_url ?>" />
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="break"></div>
+
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">

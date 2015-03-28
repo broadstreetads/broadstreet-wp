@@ -86,6 +86,7 @@ jQuery(function($){
         jQuery.post(ajaxurl, {
              action: 'save_settings', 
              api_key: $('#api_key').val(),
+             api_url: $('#api_url').val(),
              zip_codes: $('#zip_codes').val(),
              business_enabled: $('#business_enabled').is(':checked'),
              network_id: network_id

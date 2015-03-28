@@ -20,6 +20,7 @@ class Broadstreet_Ajax
     public static function saveSettings()
     {
         Broadstreet_Utility::setOption(Bizyhood_Core::KEY_API_KEY, $_POST['api_key']);
+        Broadstreet_Utility::setOption(Bizyhood_Core::KEY_API_URL, $_POST['api_url']);
         Broadstreet_Utility::setOption(Bizyhood_Core::KEY_NETWORK_ID, $_POST['network_id']);
         Broadstreet_Utility::setOption(Bizyhood_Core::KEY_BIZ_ENABLED, $_POST['business_enabled'] === 'true');
         Broadstreet_Utility::setOption(Bizyhood_Core::KEY_ZIP_CODES, $_POST['zip_codes']);

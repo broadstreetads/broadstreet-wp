@@ -30,6 +30,7 @@ if (! class_exists('Bizyhood_Core')):
 class Bizyhood_Core
 {
     CONST KEY_API_KEY             = 'Broadstreet_API_Key';
+    CONST KEY_API_URL             = 'Bizyhood_API_URL';
     CONST KEY_NETWORK_ID          = 'Broadstreet_Network_Key';
     CONST KEY_BIZ_ENABLED         = 'Broadstreet_Biz_Enabled';
     CONST KEY_INSTALL_REPORT      = 'Broadstreet_Installed';
@@ -421,6 +422,7 @@ class Bizyhood_Core
 
         $data['service_tag']        = Broadstreet_Utility::getServiceTag();
         $data['api_key']            = Broadstreet_Utility::getOption(self::KEY_API_KEY);
+        $data['api_url']            = Broadstreet_Utility::getApiUrl();
         $data['business_enabled']   = Broadstreet_Utility::getOption(self::KEY_BIZ_ENABLED);
         $data['network_id']         = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
         $data['zip_codes']          = Broadstreet_Utility::getOption(self::KEY_ZIP_CODES);
@@ -652,8 +654,9 @@ class Bizyhood_Core
         # Only do this for BH businesses
         if (isset($_REQUEST['bizyhood_id']))
         {
+            $api_url = Broadstreet_Utility::getApiUrl();
             $bizyhood_id = $_REQUEST['bizyhood_id'];
-            $response = wp_remote_retrieve_body( wp_remote_get( "http://127.0.0.1:4567/business/" . $bizyhood_id ) );
+            $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/" . $bizyhood_id ) );
             $business = json_decode($response);
             return Broadstreet_View::load('listings/single/default', array('content' => $content, 'business' => $business), true);
         }
@@ -771,6 +774,8 @@ class Bizyhood_Core
     
     public function businesses_shortcode($attrs)
     {
+        $api_url = Broadstreet_Utility::getApiUrl();
+
         // Build string of ZIP codes from plugin settings
         $zip_codes = Broadstreet_Utility::getOption(self::KEY_ZIP_CODES);
         if ($zip_codes) {
@@ -780,7 +785,7 @@ class Bizyhood_Core
             $query_string = '';
         }
 
-        $response = wp_remote_retrieve_body( wp_remote_get( "http://127.0.0.1:4567/businesses" . $query_string ) );
+        $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/businesses" . $query_string ) );
         $response_json = json_decode($response);
         $pagination = $response_json->pagination;
         $businesses = $response_json->data;

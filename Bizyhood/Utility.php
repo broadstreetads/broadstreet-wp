@@ -89,6 +89,20 @@ class Broadstreet_Utility
         else
             return $api_key;
     }
+
+    /**
+     * Get the Bizyhood API URL
+     * @return string 
+     */
+    public static function getApiUrl()
+    {
+        $api_url = Broadstreet_Utility::getOption(Bizyhood_Core::KEY_API_URL);
+        
+        if(!$api_url || strlen($api_url) == 0)
+            return "https://bizyhood.com/api";
+        else
+            return rtrim($api_url, "/");
+    }
     
     /**
      * Get or set the featured business image
