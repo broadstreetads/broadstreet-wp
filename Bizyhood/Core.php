@@ -135,6 +135,25 @@ class Bizyhood_Core
             );
             wp_insert_post( $business_view_page );
         }
+
+        // Create the category list page
+        $category_list_page = get_page_by_title( "Bizyhood category list", "OBJECT", "page" );
+        if ( !$category_list_page )
+        {
+            $category_list_page = array(
+                'post_title'     => 'Bizyhood category list',
+                'post_type'      => 'page',
+                'post_name'      => 'bh-categories',
+                'post_content'   => '',
+                'post_status'    => 'publish',
+                'comment_status' => 'closed',
+                'ping_status'    => 'closed',
+                'post_author'    => 1,
+                'menu_order'     => 0,
+                'guid'          => site_url() . "/bh-categories"
+            );
+            wp_insert_post( $category_list_page );
+        }
     }
 
     public function uninstall()
@@ -155,6 +174,14 @@ class Bizyhood_Core
         {
             Broadstreet_Log::add('info', "Removing view business page (post ID " . $business_view_page->ID . ")");
             wp_trash_post($business_view_page->ID);
+        }
+
+        // Remove category list page
+        $category_list_page = get_page_by_title( "Bizyhood category list", "OBJECT", "page" );
+        if ($category_list_page)
+        {
+            Broadstreet_Log::add('info', "Removing category list page (post ID " . $category_list_page->ID . ")");
+            wp_trash_post($category_list_page->ID);
         }
     }
 
@@ -651,14 +678,30 @@ class Bizyhood_Core
      */
     public function postTemplate($content)
     {   
-        # Only do this for BH businesses
-        if (isset($_REQUEST['bizyhood_id']))
+        global $post;
+        $api_url = Broadstreet_Utility::getApiUrl();
+
+        # Override content for the view business page
+        if ($post->post_name === 'bh-business')
         {
-            $api_url = Broadstreet_Utility::getApiUrl();
             $bizyhood_id = $_REQUEST['bizyhood_id'];
             $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/" . $bizyhood_id ) );
             $business = json_decode($response);
             return Broadstreet_View::load('listings/single/default', array('content' => $content, 'business' => $business), true);
+        }
+
+        # Override content for the list categories page
+        if ($post->post_name === 'bh-categories')
+        {
+            $zips_encoded = Broadstreet_Utility::getZipsEncoded();
+            if ($zips_encoded)
+            {
+                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/cuisine/?pc=" . $zips_encoded . "&rad=15000" ) );
+                $response_json = json_decode($response);
+                $cuisines = $response_json->cuisines;
+                # TODO: load a different template if the plugin is set to use custom categories
+                return Broadstreet_View::load('categories/cuisines', array('content' => $content, 'cuisines' => $cuisines), true);
+            }
         }
         
         return $content;

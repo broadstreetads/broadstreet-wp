@@ -103,6 +103,18 @@ class Broadstreet_Utility
         else
             return rtrim($api_url, "/");
     }
+
+    /**
+     * Get a comma separated, URI encoded string of ZIP codes currently entered in settings
+     */
+    public static function getZipsEncoded()
+    {
+        $zip_codes = Broadstreet_Utility::getOption(Bizyhood_Core::KEY_ZIP_CODES);
+        if ($zip_codes)
+            return urlencode( implode( ',', $zip_codes ) );
+        else
+            return;
+    }
     
     /**
      * Get or set the featured business image
