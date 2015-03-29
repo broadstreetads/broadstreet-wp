@@ -71,7 +71,7 @@
                             </div>
                         </div>
                         <div class="control-container">
-                            ZIP Code: <input type="text" size="5" maxlength="5" id="zip_code"/>
+                            ZIP Code: <input type="text" maxlength="5" id="zip_code"/>
                             <input type="button" id="zip_code_add" value="Add"/>
                             <br/>
                             <select id="zip_codes" multiple="multiple">
@@ -83,6 +83,31 @@
                         <div style="clear:both;"></div>
                     </div>
                     <div class="break"></div>
+
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">
+                                Targeted categories
+                            </div>
+                            <div class="desc nomargin">
+                                These categories will be shown when browsing by category<br />
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            Category name: <br/>
+                            <input type="text" id="category"/>
+                            <input type="button" id="category_add" value="Add"/>
+                            <br/>
+                            <select id="categories" multiple="multiple">
+                                <?php foreach($categories as $category): ?>
+                                <option value="<?php echo $category; ?>" selected="selected"><?php echo $category; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="break"></div>
+
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">

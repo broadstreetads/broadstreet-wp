@@ -36,6 +36,7 @@ class Bizyhood_Core
     CONST KEY_INSTALL_REPORT      = 'Broadstreet_Installed';
     CONST KEY_SHOW_OFFERS         = 'Broadstreet_Offers';
     CONST KEY_ZIP_CODES           = 'Broadstreet_ZIP_Codes';
+    CONST KEY_CATEGORIES          = 'Broadstreet_Categories';
     CONST BIZ_POST_TYPE           = 'bs_business';
     CONST BIZ_TAXONOMY            = 'business_category';
     CONST BIZ_SLUG                = 'businesses';
@@ -453,6 +454,7 @@ class Bizyhood_Core
         $data['business_enabled']   = Broadstreet_Utility::getOption(self::KEY_BIZ_ENABLED);
         $data['network_id']         = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
         $data['zip_codes']          = Broadstreet_Utility::getOption(self::KEY_ZIP_CODES);
+        $data['categories']         = Broadstreet_Utility::getOption(self::KEY_CATEGORIES);
         $data['errors']             = array();
         $data['networks']           = array();
         $data['key_valid']          = false;
@@ -820,13 +822,11 @@ class Bizyhood_Core
         $api_url = Broadstreet_Utility::getApiUrl();
 
         // Build string of ZIP codes from plugin settings
-        $zip_codes = Broadstreet_Utility::getOption(self::KEY_ZIP_CODES);
-        if ($zip_codes) {
-            $query_string = '?zip_codes=' . implode(',', $zip_codes);
-        }
-        else {
+        $zip_codes = Broadstreet_Utility::getZipsEncoded();
+        if ($zip_codes)
+            $query_string = '?zip_codes=' . $zip_codes;
+        else
             $query_string = '';
-        }
 
         $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/businesses" . $query_string ) );
         $response_json = json_decode($response);

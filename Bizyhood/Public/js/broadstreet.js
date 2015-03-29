@@ -55,6 +55,34 @@ jQuery(function($){
         // Clear ZIP code field, put focus on it
         $('#zip_code').val('').focus();
     });
+
+    $('#category_add').click(function() {
+        var category = $('#category').val();
+
+        // Validate non-blank value
+        if (category.length == 0) {
+            alert("Category must be entered");
+            $('#category').select();
+            return;
+        }
+
+        // Make sure it's not already on the list
+        if ($("#categories option[value='" + category + "']").length > 0) {
+            alert("Category is already entered");
+            $('#category').select();
+            return;
+        }
+
+        // Append to list of categories
+        $('#categories')
+            .append($("<option></option>")
+            .attr("value",category)
+            .attr('selected', true)
+            .text(category));
+
+        // Clear ZIP code field, put focus on it
+        $('#category').val('').focus();
+    });
     
     $('#business_enabled').click(function() {
         needRefresh = true;
@@ -88,6 +116,7 @@ jQuery(function($){
              api_key: $('#api_key').val(),
              api_url: $('#api_url').val(),
              zip_codes: $('#zip_codes').val(),
+             categories: $('#categories').val(),
              business_enabled: $('#business_enabled').is(':checked'),
              network_id: network_id
             }, 

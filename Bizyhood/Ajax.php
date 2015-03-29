@@ -24,6 +24,8 @@ class Broadstreet_Ajax
         Broadstreet_Utility::setOption(Bizyhood_Core::KEY_NETWORK_ID, $_POST['network_id']);
         Broadstreet_Utility::setOption(Bizyhood_Core::KEY_BIZ_ENABLED, $_POST['business_enabled'] === 'true');
         Broadstreet_Utility::setOption(Bizyhood_Core::KEY_ZIP_CODES, $_POST['zip_codes']);
+        Broadstreet_Utility::setOption(Bizyhood_Core::KEY_CATEGORIES, $_POST['categories']);
+
         
         $api = new Broadstreet($_POST['api_key']);
 

@@ -237,3 +237,12 @@ select#zip_codes {
     width:80px;
     height:100px;
 }
+
+input#category {
+    width:190px;
+}
+
+select#categories {
+    width:240px;
+    height:100px;
+}
