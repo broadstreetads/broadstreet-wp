@@ -87,7 +87,24 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
-                                Targeted categories
+                                Category types
+                            </div>
+                            <div class="desc nomargin">
+                                If this is a restaurant blog, enable this option to use cuisine types for the category list page. Otherwise, you can enter applicable categories.<br />
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <input type="checkbox" id="use_cuisine_types" value="TRUE" <?php if ($use_cuisine_types): ?>checked="checked"<?php endif; ?> />
+                            <label for="use_cuisine_types">Enable restaurant behavior</label>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="break"></div>
+
+                    <div class="option" id="custom-categories" <?php if ($use_cuisine_types): ?>style="display:none"<?php endif; ?> >
+                        <div class="control-label">
+                            <div class="name nomargin">
+                                Relevant categories
                             </div>
                             <div class="desc nomargin">
                                 These categories will be shown when browsing by category<br />

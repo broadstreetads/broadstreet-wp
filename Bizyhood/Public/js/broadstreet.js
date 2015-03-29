@@ -83,6 +83,13 @@ jQuery(function($){
         // Clear ZIP code field, put focus on it
         $('#category').val('').focus();
     });
+
+    $('#use_cuisine_types').click(function() {
+        if ($('#use_cuisine_types').is(':checked'))
+            $('#custom-categories').hide();
+        else
+            $('#custom-categories').show();
+    });
     
     $('#business_enabled').click(function() {
         needRefresh = true;
@@ -116,6 +123,7 @@ jQuery(function($){
              api_key: $('#api_key').val(),
              api_url: $('#api_url').val(),
              zip_codes: $('#zip_codes').val(),
+             use_cuisine_types: $('#use_cuisine_types').is(':checked'),
              categories: $('#categories').val(),
              business_enabled: $('#business_enabled').is(':checked'),
              network_id: network_id

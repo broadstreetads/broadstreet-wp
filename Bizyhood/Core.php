@@ -36,7 +36,8 @@ class Bizyhood_Core
     CONST KEY_INSTALL_REPORT      = 'Broadstreet_Installed';
     CONST KEY_SHOW_OFFERS         = 'Broadstreet_Offers';
     CONST KEY_ZIP_CODES           = 'Broadstreet_ZIP_Codes';
-    CONST KEY_CATEGORIES          = 'Broadstreet_Categories';
+    CONST KEY_USE_CUISINE_TYPES   = 'Bizyhood_Use_Cuisine_Types';
+    CONST KEY_CATEGORIES          = 'Bizyhood_Categories';
     CONST BIZ_POST_TYPE           = 'bs_business';
     CONST BIZ_TAXONOMY            = 'business_category';
     CONST BIZ_SLUG                = 'businesses';
@@ -454,6 +455,7 @@ class Bizyhood_Core
         $data['business_enabled']   = Broadstreet_Utility::getOption(self::KEY_BIZ_ENABLED);
         $data['network_id']         = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
         $data['zip_codes']          = Broadstreet_Utility::getOption(self::KEY_ZIP_CODES);
+        $data['use_cuisine_types']  = Broadstreet_Utility::getOption(self::KEY_USE_CUISINE_TYPES);
         $data['categories']         = Broadstreet_Utility::getOption(self::KEY_CATEGORIES);
         $data['errors']             = array();
         $data['networks']           = array();
