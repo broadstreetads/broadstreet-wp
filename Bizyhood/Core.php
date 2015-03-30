@@ -702,9 +702,15 @@ class Bizyhood_Core
             {
                 $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/cuisine/?pc=" . $zips_encoded . "&rad=15000" ) );
                 $response_json = json_decode($response);
-                $cuisines = $response_json->cuisines;
-                # TODO: load a different template if the plugin is set to use custom categories
-                return Broadstreet_View::load('categories/cuisines', array('content' => $content, 'cuisines' => $cuisines), true);
+                $use_cuisine_types = Broadstreet_Utility::getOption(self::KEY_USE_CUISINE_TYPES, false);
+                if ($use_cuisine_types) {
+                    $cuisines = $response_json->cuisines;
+                    return Broadstreet_View::load('categories/cuisines', array('content' => $content, 'cuisines' => $cuisines), true);
+                }
+                else {
+                    $categories = Broadstreet_Utility::getOption(self::KEY_CATEGORIES);
+                    return Broadstreet_View::load('categories/custom', array('content' => $content, 'categories' => $categories), true);
+                }
             }
         }
         
