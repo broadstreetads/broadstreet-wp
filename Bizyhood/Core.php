@@ -698,6 +698,7 @@ class Bizyhood_Core
         if ($post->post_name === 'bh-categories')
         {
             $zips_encoded = Broadstreet_Utility::getZipsEncoded();
+            $list_page_id = get_page_by_title( "Bizyhood business list", "OBJECT", "page" )->ID;
             if ($zips_encoded)
             {
                 $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/cuisine/?pc=" . $zips_encoded . "&rad=15000" ) );
@@ -705,11 +706,11 @@ class Bizyhood_Core
                 $use_cuisine_types = Broadstreet_Utility::getOption(self::KEY_USE_CUISINE_TYPES, false);
                 if ($use_cuisine_types) {
                     $cuisines = $response_json->cuisines;
-                    return Broadstreet_View::load('categories/cuisines', array('content' => $content, 'cuisines' => $cuisines), true);
+                    return Broadstreet_View::load('categories/cuisines', array('content' => $content, 'cuisines' => $cuisines, 'list_page_id' => $list_page_id), true);
                 }
                 else {
                     $categories = Broadstreet_Utility::getOption(self::KEY_CATEGORIES);
-                    return Broadstreet_View::load('categories/custom', array('content' => $content, 'categories' => $categories), true);
+                    return Broadstreet_View::load('categories/custom', array('content' => $content, 'categories' => $categories, 'list_page_id' => $list_page_id), true);
                 }
             }
         }
@@ -830,18 +831,19 @@ class Bizyhood_Core
         $remote_settings = Broadstreet_Utility::getRemoteSettings();
         $api_url = Broadstreet_Utility::getApiUrl();
         $zip_codes = Broadstreet_Utility::getZipsEncoded();
-        $page = isset($_GET['paged']) ? $_GET['paged'] : 1;
+        $page = isset( $_GET['paged'] ) ? $_GET['paged'] : 1;
+        $query = $_REQUEST['k'];
 
-        $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?pc=$zip_codes&ps=10&pn=$page&rad=15000", $remote_settings ) );
-        $response_json = json_decode($response);
+        $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?pc=$zip_codes&ps=10&pn=$page&rad=15000&k=" . urlencode($query), $remote_settings ) );
+        $response_json = json_decode( $response );
         $businesses = $response_json->businesses;
         $pagination_args = array(
-            'total'              => ($response_json->total_count / $response_json->page_size),
+            'total'              => ( $response_json->total_count / $response_json->page_size ),
             'current'            => $page,
         );
         $view_business_page_id = get_page_by_title( "Bizyhood view business", "OBJECT", "page" )->ID;
 
-        return Broadstreet_View::load('listings/index', array('pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id), true);
+        return Broadstreet_View::load( 'listings/index', array( 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
     }
 }
 

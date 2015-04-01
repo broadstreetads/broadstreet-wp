@@ -6,5 +6,5 @@
 <h2>Cuisine types</h2>
 
 <?php foreach($cuisines as $cuisine => $count): ?>
-	<p><?php echo $cuisine; ?> (<?php echo $count; ?>)</p>
+	<p><a href="<?php echo site_url(); ?>?page_id=<?php echo $list_page_id; ?>&k=<?php echo urlencode($cuisine); ?>"><?php echo $cuisine; ?></a> (<?php echo $count; ?>)</p>
 <?php endforeach; ?>
