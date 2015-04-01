@@ -87,7 +87,7 @@ class Bizyhood_Core
     );
     
     public static $globals = null;
-    
+
     /**
      * The constructor
      */
@@ -827,24 +827,16 @@ class Bizyhood_Core
     
     public function businesses_shortcode($attrs)
     {
+        $remote_settings = Broadstreet_Utility::getRemoteSettings();
         $api_url = Broadstreet_Utility::getApiUrl();
-
-        // Build string of ZIP codes from plugin settings
         $zip_codes = Broadstreet_Utility::getZipsEncoded();
-        if ($zip_codes)
-            $query_string = '?zip_codes=' . $zip_codes;
-        else
-            $query_string = '';
-
-        $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/businesses" . $query_string ) );
+        $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?pc=" . $zip_codes . "&ps=10&pn=1&rad=15000", $remote_settings ) );
         $response_json = json_decode($response);
-        $pagination = $response_json->pagination;
-        $businesses = $response_json->data;
+        $businesses = $response_json->businesses;
         $pagination_args = array(
-            'total'              => $pagination->total,
-            'current'            => $pagination->current,
+            'total'              => ($response_json->total_count / $response_json->page_size),
+            'current'            => $_GET['paged'] ? $_GET['paged'] : 0,
         );
-
         $view_business_page_id = get_page_by_title( "Bizyhood view business", "OBJECT", "page" )->ID;
 
         return Broadstreet_View::load('listings/index', array('pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id), true);

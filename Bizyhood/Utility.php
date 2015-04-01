@@ -105,6 +105,16 @@ class Broadstreet_Utility
     }
 
     /**
+     * Get the default WP Remote API settings
+     * @return array
+     */
+    public static function getRemoteSettings()
+    {
+        $settings = array('timeout' => 60);
+        return $settings;
+    }
+
+    /**
      * Get a comma separated, URI encoded string of ZIP codes currently entered in settings
      */
     public static function getZipsEncoded()
