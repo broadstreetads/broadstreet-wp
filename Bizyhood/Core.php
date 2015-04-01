@@ -830,12 +830,14 @@ class Bizyhood_Core
         $remote_settings = Broadstreet_Utility::getRemoteSettings();
         $api_url = Broadstreet_Utility::getApiUrl();
         $zip_codes = Broadstreet_Utility::getZipsEncoded();
-        $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?pc=" . $zip_codes . "&ps=10&pn=1&rad=15000", $remote_settings ) );
+        $page = isset($_GET['paged']) ? $_GET['paged'] : 1;
+
+        $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?pc=$zip_codes&ps=10&pn=$page&rad=15000", $remote_settings ) );
         $response_json = json_decode($response);
         $businesses = $response_json->businesses;
         $pagination_args = array(
             'total'              => ($response_json->total_count / $response_json->page_size),
-            'current'            => $_GET['paged'] ? $_GET['paged'] : 0,
+            'current'            => $page,
         );
         $view_business_page_id = get_page_by_title( "Bizyhood view business", "OBJECT", "page" )->ID;
 
