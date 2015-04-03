@@ -27,25 +27,6 @@
             <div class="box">
                 <div class="title">Setup</div>
                 <div class="content">
-                    <div class="option">
-                        <div class="control-label">
-                            <div class="name nomargin">
-                                Access Token
-                                
-                                <span class="error <?php if(!$key_valid) echo "visible"; ?>" id="key-invalid">Invalid</span>
-                                <span class="success <?php if($key_valid) echo "visible"; ?>" id="key-valid">Valid</span>
-                                
-                            </div>
-                            <div class="desc nomargin">
-                                This can be found <a target="_blank" href="http://my.bizyhoodads.com/access-token">here</a> when you're logged in to Bizyhood.<br />
-                            </div>
-                        </div>
-                        <div class="control-container">
-                            <input id="api_key" type="text" value="<?php echo $api_key ?>" />
-                        </div>
-                        <div style="clear:both;"></div>
-                    </div>
-                    <div class="break"></div>
 
                     <div class="option">
                         <div class="control-label">
@@ -123,51 +104,8 @@
                         </div>
                         <div style="clear:both;"></div>
                     </div>
-                    <div class="break"></div>
 
                     <div class="option">
-                        <div class="control-label">
-                            <div class="name nomargin">
-                                Publisher Selection                                
-                            </div>
-                            <div class="desc nomargin">
-                                Which publisher or network does this site fall under?
-                            </div>
-                        </div>
-                        <div class="control-container">
-                            <select id="network" type="text">
-                                <?php foreach($networks as $network): ?>
-                                <option <?php if($network_id == $network->id) echo "selected"; ?> value="<?php echo $network->id ?>"><?php echo htmlentities($network->name) ?></option>
-                                <?php endforeach; ?>
-                                <?php if(count($networks) == 0): ?>
-                                <option value="-1">Enter a valid token above</option>
-                                <?php endif; ?>
-                            </select>
-                        </div>
-                        <div style="clear:both;"></div>
-                    </div>
-                    <div class="break"></div>
-                    <div class="option">
-                        <div class="control-label">
-                            <div class="name nomargin">
-                                Enable Business Directory                                
-                            </div>
-                            <div class="desc nomargin">
-                                Would you like to enable the Bizyhood business directory? Requires an API Key.
-                            </div>
-                        </div>
-                        <div class="control-container">
-                            <input id="business_enabled" type="checkbox" value="TRUE" <?php if($key_valid && $business_enabled) echo 'checked="checked"'; ?> <?php if(!$key_valid) echo 'disabled="disabled"'; ?> />
-                        </div>
-                        <div style="clear:both;"></div>
-                    </div>
-                    <div class="break"></div>
-                    <div class="option">
-                        <div class="control-label">
-                            <div class="name nomargin">
-                                <a href="?page=Bizyhood-Help">How to Get Started</a>
-                            </div>
-                        </div>
                         <div class="save-container">
                             <span class="success" id="save-success">Saved!</span>
                             <input id="save-bizyhood" type="button" value="Save" name="" />
@@ -179,4 +117,3 @@
         </div>
       </div>
     </div>
-      <div class="clearfix"></div>
