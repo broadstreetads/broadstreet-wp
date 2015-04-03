@@ -689,7 +689,7 @@ class Bizyhood_Core
         if ($post->post_name === 'bh-business')
         {
             $bizyhood_id = $_REQUEST['bizyhood_id'];
-            $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/" . $bizyhood_id ) );
+            $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/" . $bizyhood_id . "?format=json" ) );
             $business = json_decode($response);
             return Broadstreet_View::load('listings/single/default', array('content' => $content, 'business' => $business), true);
         }
@@ -701,7 +701,7 @@ class Bizyhood_Core
             $list_page_id = get_page_by_title( "Bizyhood business list", "OBJECT", "page" )->ID;
             if ($zips_encoded)
             {
-                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/cuisine/?pc=" . $zips_encoded . "&rad=15000" ) );
+                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/cuisine/?pc=" . $zips_encoded . "&rad=15000&format=json" ) );
                 $response_json = json_decode($response);
                 $use_cuisine_types = Broadstreet_Utility::getOption(self::KEY_USE_CUISINE_TYPES, false);
                 if ($use_cuisine_types) {
@@ -832,9 +832,9 @@ class Bizyhood_Core
         $api_url = Broadstreet_Utility::getApiUrl();
         $zip_codes = Broadstreet_Utility::getZipsEncoded();
         $page = isset( $_GET['paged'] ) ? $_GET['paged'] : 1;
-        $query = $_REQUEST['k'];
+        $query = isset( $_GET['k'] ) ? '&k=' . urlencode( $_REQUEST['k'] ) : '';
 
-        $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?pc=$zip_codes&ps=10&pn=$page&rad=15000&k=" . urlencode($query), $remote_settings ) );
+        $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000$query", $remote_settings ) );
         $response_json = json_decode( $response );
         $businesses = $response_json->businesses;
         $pagination_args = array(
