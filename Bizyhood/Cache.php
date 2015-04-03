@@ -24,7 +24,7 @@
  * WPEasyCache - A class for quickly caching strings n' things (or any object)
  *  in Wordpress. Uses the Wordpress options functions as the backend.
  */
-class Broadstreet_Cache
+class Bizyhood_Cache
 {
     const CACHE_PREFIX          = 'WPEASYCACHE_';
     const MAX_KEY_LENGTH        = 32;

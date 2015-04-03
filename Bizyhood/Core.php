@@ -4,7 +4,7 @@
  *  that will load the required hooks, and the callback functions that those
  *  hooks execute.
  *
- * @author Broadstreet Ads <labs@broadstreetads.com>
+ * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 require_once dirname(__FILE__) . '/Ajax.php';
@@ -18,24 +18,24 @@ require_once dirname(__FILE__) . '/Utility.php';
 require_once dirname(__FILE__) . '/View.php';
 require_once dirname(__FILE__) . '/Widget.php';
 require_once dirname(__FILE__) . '/Exception.php';
-require_once dirname(__FILE__) . '/Vendor/Broadstreet.php';
+require_once dirname(__FILE__) . '/Vendor/Bizyhood.php';
 
 if (! class_exists('Bizyhood_Core')):
 
 /**
  * This class contains the core code and callback for the behavior of Wordpress.
- *  It is instantiated and executed directly by the Broadstreet plugin loader file
- *  (which is most likely at the root of the Broadstreet installation).
+ *  It is instantiated and executed directly by the Bizyhood plugin loader file
+ *  (which is most likely at the root of the Bizyhood installation).
  */
 class Bizyhood_Core
 {
-    CONST KEY_API_KEY             = 'Broadstreet_API_Key';
+    CONST KEY_API_KEY             = 'Bizyhood_API_Key';
     CONST KEY_API_URL             = 'Bizyhood_API_URL';
-    CONST KEY_NETWORK_ID          = 'Broadstreet_Network_Key';
-    CONST KEY_BIZ_ENABLED         = 'Broadstreet_Biz_Enabled';
-    CONST KEY_INSTALL_REPORT      = 'Broadstreet_Installed';
-    CONST KEY_SHOW_OFFERS         = 'Broadstreet_Offers';
-    CONST KEY_ZIP_CODES           = 'Broadstreet_ZIP_Codes';
+    CONST KEY_NETWORK_ID          = 'Bizyhood_Network_Key';
+    CONST KEY_BIZ_ENABLED         = 'Bizyhood_Biz_Enabled';
+    CONST KEY_INSTALL_REPORT      = 'Bizyhood_Installed';
+    CONST KEY_SHOW_OFFERS         = 'Bizyhood_Offers';
+    CONST KEY_ZIP_CODES           = 'Bizyhood_ZIP_Codes';
     CONST KEY_USE_CUISINE_TYPES   = 'Bizyhood_Use_Cuisine_Types';
     CONST KEY_CATEGORIES          = 'Bizyhood_Categories';
     CONST BIZ_POST_TYPE           = 'bs_business';
@@ -93,12 +93,12 @@ class Bizyhood_Core
      */
     public function __construct()
     {
-        Broadstreet_Log::add('debug', "Bizyhood initializing");
+        Bizyhood_Log::add('debug', "Bizyhood initializing");
     }
 
     static function install()
     {
-        Broadstreet_Log::add('debug', "Bizyhood installing");
+        Bizyhood_Log::add('debug', "Bizyhood installing");
         
         // Create the business list page
         $business_list_page = get_page_by_title( "Bizyhood business list", "OBJECT", "page" );
@@ -160,13 +160,13 @@ class Bizyhood_Core
 
     public function uninstall()
     {
-        Broadstreet_Log::add('debug', "Bizyhood uninstalling");
+        Bizyhood_Log::add('debug', "Bizyhood uninstalling");
 
         // Remove business list page
         $business_list_page = get_page_by_title( "Bizyhood business list", "OBJECT", "page" );
         if ($business_list_page)
         {
-            Broadstreet_Log::add('info', "Removing business list page (post ID " . $business_list_page->ID . ")");
+            Bizyhood_Log::add('info', "Removing business list page (post ID " . $business_list_page->ID . ")");
             wp_trash_post($business_list_page->ID);
         }
 
@@ -174,7 +174,7 @@ class Bizyhood_Core
         $business_view_page = get_page_by_title( "Bizyhood view business", "OBJECT", "page" );
         if ($business_view_page)
         {
-            Broadstreet_Log::add('info', "Removing view business page (post ID " . $business_view_page->ID . ")");
+            Bizyhood_Log::add('info', "Removing view business page (post ID " . $business_view_page->ID . ")");
             wp_trash_post($business_view_page->ID);
         }
 
@@ -182,13 +182,13 @@ class Bizyhood_Core
         $category_list_page = get_page_by_title( "Bizyhood category list", "OBJECT", "page" );
         if ($category_list_page)
         {
-            Broadstreet_Log::add('info', "Removing category list page (post ID " . $category_list_page->ID . ")");
+            Bizyhood_Log::add('info', "Removing category list page (post ID " . $category_list_page->ID . ")");
             wp_trash_post($category_list_page->ID);
         }
     }
 
     /**
-     * Get the Broadstreet environment loaded and register Wordpress hooks
+     * Get the Bizyhood environment loaded and register Wordpress hooks
      */
     public function execute()
     {
@@ -196,20 +196,20 @@ class Bizyhood_Core
     }
 
     /**
-     * Get a Broadstreet client 
+     * Get a Bizyhood client 
      */
-    public function getBroadstreetClient()
+    public function getBizyhoodClient()
     {
-        $key = Broadstreet_Utility::getOption(self::KEY_API_KEY);
-        return new Broadstreet($key);
+        $key = Bizyhood_Utility::getOption(self::KEY_API_KEY);
+        return new Bizyhood($key);
     }
     
     /**
-     * Register Wordpress hooks required for Broadstreet
+     * Register Wordpress hooks required for Bizyhood
      */
     private function _registerHooks()
     {
-        Broadstreet_Log::add('debug', "Registering hooks..");
+        Bizyhood_Log::add('debug', "Registering hooks..");
 
         # -- Below is core functionality --
         add_action('admin_menu', 	array($this, 'adminCallback'     ));
@@ -218,13 +218,13 @@ class Bizyhood_Core
         add_action('init',          array($this, 'businessIndexSidebar' ));
         add_action('admin_notices',     array($this, 'adminWarningCallback'));
         add_action('widgets_init', array($this, 'registerWidget'));
-        add_shortcode('broadstreet', array($this, 'shortcode'));
+        add_shortcode('bizyhood', array($this, 'shortcode'));
         add_shortcode('bh-businesses', array($this, 'businesses_shortcode'));
         add_filter('image_size_names_choose', array($this, 'addImageSizes'));
         add_action('wp_footer', array($this, 'addPoweredBy'));
 
         # -- Below are all business-related hooks
-        if(Broadstreet_Utility::isBusinessEnabled())
+        if(Bizyhood_Utility::isBusinessEnabled())
         {
             add_action('init', array($this, 'createPostTypes'));
             add_action('wp_enqueue_scripts', array($this, 'addPostStyles'));
@@ -239,10 +239,10 @@ class Bizyhood_Core
         add_action('add_meta_boxes', array($this, 'addMetaBoxes'));
         
         # -- Below is administration AJAX functionality
-        add_action('wp_ajax_save_settings', array('Broadstreet_Ajax', 'saveSettings'));
-        add_action('wp_ajax_create_advertiser', array('Broadstreet_Ajax', 'createAdvertiser'));
-        add_action('wp_ajax_import_facebook', array('Broadstreet_Ajax', 'importFacebook'));
-        add_action('wp_ajax_register', array('Broadstreet_Ajax', 'register'));
+        add_action('wp_ajax_save_settings', array('Bizyhood_Ajax', 'saveSettings'));
+        add_action('wp_ajax_create_advertiser', array('Bizyhood_Ajax', 'createAdvertiser'));
+        add_action('wp_ajax_import_facebook', array('Bizyhood_Ajax', 'importFacebook'));
+        add_action('wp_ajax_register', array('Bizyhood_Ajax', 'register'));
     }
         
     /**
@@ -277,41 +277,41 @@ class Bizyhood_Core
     }
     
     /**
-     * Callback for adding an extra broadstreet-friendly image size
+     * Callback for adding an extra bizyhood-friendly image size
      * @param array $sizes
      * @return array
      */
     public function addImageSizes($sizes)
     {
-        $sizes['bs-biz-size'] = __('Broadstreet Business');
+        $sizes['bs-biz-size'] = __('Bizyhood Business');
         return $sizes;
     }
     
     /**
-     * Handler for adding the Broadstreet business meta data boxes on the post
+     * Handler for adding the Bizyhood business meta data boxes on the post
      * create/edit page 
      */
     public function addMetaBoxes()
     {
         add_meta_box( 
-            'broadstreet_sectionid',
-            __( 'Broadstreet Zone Info', 'broadstreet_textdomain' ),
-            array($this, 'broadstreetInfoBox'),
+            'bizyhood_sectionid',
+            __( 'Bizyhood Zone Info', 'bizyhood_textdomain' ),
+            array($this, 'bizyhoodInfoBox'),
             'post' 
         );
         add_meta_box(
-            'broadstreet_sectionid',
-            __( 'Broadstreet Zone Info', 'broadstreet_textdomain'), 
-            array($this, 'broadstreetInfoBox'),
+            'bizyhood_sectionid',
+            __( 'Bizyhood Zone Info', 'bizyhood_textdomain'), 
+            array($this, 'bizyhoodInfoBox'),
             'page'
         );
         
-        if(Broadstreet_Utility::isBusinessEnabled())
+        if(Bizyhood_Utility::isBusinessEnabled())
         {
             add_meta_box(
-                'broadstreet_sectionid',
-                __( 'Business Details', 'broadstreet_textdomain'), 
-                array($this, 'broadstreetBusinessBox'),
+                'bizyhood_sectionid',
+                __( 'Business Details', 'bizyhood_textdomain'), 
+                array($this, 'bizyhoodBusinessBox'),
                 self::BIZ_POST_TYPE,
                 'normal',
                 'high'
@@ -323,7 +323,7 @@ class Bizyhood_Core
     {
         if(get_post_type() == self::BIZ_POST_TYPE && !is_admin())
         {
-            wp_enqueue_style ('Broadstreet-styles-listings', Broadstreet_Utility::getCSSBaseURL() . 'listings.css?v=' . BROADSTREET_VERSION);
+            wp_enqueue_style ('Bizyhood-styles-listings', Bizyhood_Utility::getCSSBaseURL() . 'listings.css?v=' . BROADSTREET_VERSION);
         }
     }
     
@@ -336,29 +336,29 @@ class Bizyhood_Core
         {
             echo '<style type="text/css">#bs-powered-by {display: none;}</style>';
             echo '<span id="bs-powered-by">';
-            echo    'Powered by <a href="http://wordpress.org/extend/plugins/broadstreet/">Wordpress Business Directory</a>, ';
+            echo    'Powered by <a href="http://wordpress.org/extend/plugins/bizyhood/">Wordpress Business Directory</a>, ';
             echo    '<a href="http://bealocalpublisher.com">Start A Local News Site</a>,';
-            echo    'and <a href="http://broadstreetads.com">The Adserver for Local Publishers</a>.';
+            echo    'and <a href="http://bizyhoodads.com">The Adserver for Local Publishers</a>.';
             echo '</span>';
         }
     }
     
     public function addZoneTag()
     {
-        # Add Broadstreet ad zone CDN
+        # Add Bizyhood ad zone CDN
         if(!is_admin()) 
         {
             if(is_ssl()) {
-                wp_enqueue_script('Broadstreet-cdn', 'https://s3.amazonaws.com/street-production/init.js');
+                wp_enqueue_script('Bizyhood-cdn', 'https://s3.amazonaws.com/street-production/init.js');
             } else {
-                wp_enqueue_script('Broadstreet-cdn', 'http://cdn.broadstreetads.com/init.js');
+                wp_enqueue_script('Bizyhood-cdn', 'http://cdn.bizyhoodads.com/init.js');
             }
         }
     }
     
     public function businessIndexSidebar() 
     {
-        if(Broadstreet_Utility::isBusinessEnabled())
+        if(Bizyhood_Utility::isBusinessEnabled())
         {
             register_sidebar(array(
                 'name' => __( 'Business Directory Listing Page' ),
@@ -374,19 +374,19 @@ class Bizyhood_Core
     
 
     /**
-     * A callback executed whenever the user tried to access the Broadstreet admin page
+     * A callback executed whenever the user tried to access the Bizyhood admin page
      */
     public function adminCallback()
     {
-        $icon_url = 'http://broadstreet-common.s3.amazonaws.com/broadstreet-blargo/broadstreet-icon.png';
+        $icon_url = 'http://bizyhood-common.s3.amazonaws.com/bizyhood-blargo/bizyhood-icon.png';
                 
-        add_menu_page('Broadstreet', 'Broadstreet', 'edit_pages', 'Broadstreet', array($this, 'adminMenuCallback'), $icon_url);
-        add_submenu_page('Broadstreet', 'Settings', 'Account Setup', 'edit_pages', 'Broadstreet', array($this, 'adminMenuCallback'));
-        if(Broadstreet_Utility::isBusinessEnabled())
-            add_submenu_page('Broadstreet', 'Business Settings', 'Business Settings', 'edit_pages', 'Broadstreet-Business', array($this, 'adminMenuBusinessCallback'));
-        #add_submenu_page('Broadstreet', 'Advanced', 'Advanced', 'edit_pages', 'Broadstreet-Layout', array($this, 'adminMenuLayoutCallback'));
-        add_submenu_page('Broadstreet', 'Help', 'How To Get Started', 'edit_pages', 'Broadstreet-Help', array($this, 'adminMenuHelpCallback'));
-        add_submenu_page('Broadstreet', 'Editable Ads', 'Editable Ads&trade;', 'edit_pages', 'Broadstreet-Editable', array($this, 'adminMenuEditableCallback'));
+        add_menu_page('Bizyhood', 'Bizyhood', 'edit_pages', 'Bizyhood', array($this, 'adminMenuCallback'), $icon_url);
+        add_submenu_page('Bizyhood', 'Settings', 'Account Setup', 'edit_pages', 'Bizyhood', array($this, 'adminMenuCallback'));
+        if(Bizyhood_Utility::isBusinessEnabled())
+            add_submenu_page('Bizyhood', 'Business Settings', 'Business Settings', 'edit_pages', 'Bizyhood-Business', array($this, 'adminMenuBusinessCallback'));
+        #add_submenu_page('Bizyhood', 'Advanced', 'Advanced', 'edit_pages', 'Bizyhood-Layout', array($this, 'adminMenuLayoutCallback'));
+        add_submenu_page('Bizyhood', 'Help', 'How To Get Started', 'edit_pages', 'Bizyhood-Help', array($this, 'adminMenuHelpCallback'));
+        add_submenu_page('Bizyhood', 'Editable Ads', 'Editable Ads&trade;', 'edit_pages', 'Bizyhood-Editable', array($this, 'adminMenuEditableCallback'));
     }
 
     /**
@@ -396,10 +396,10 @@ class Bizyhood_Core
     {
         if(in_array($GLOBALS['pagenow'], array('edit.php', 'post.php', 'post-new.php')))
         {
-            $info = Broadstreet_Utility::getNetwork();
+            $info = Bizyhood_Utility::getNetwork();
 
             //if(!$info || !$info->cc_on_file)
-            //    echo '<div class="updated"><p>You\'re <strong>almost ready</strong> to start using Broadstreet! Check the <a href="admin.php?page=Broadstreet">plugin page</a> to take care of the last steps. When that\'s done, this message will clear shortly after.</p></div>';
+            //    echo '<div class="updated"><p>You\'re <strong>almost ready</strong> to start using Bizyhood! Check the <a href="admin.php?page=Bizyhood">plugin page</a> to take care of the last steps. When that\'s done, this message will clear shortly after.</p></div>';
         }
     }
 
@@ -411,25 +411,25 @@ class Bizyhood_Core
     {
         add_image_size('bs-biz-size', 600, 450, true);
         
-        # Only register javascript and css if the Broadstreet admin page is loading
-        if(strstr($_SERVER['QUERY_STRING'], 'Broadstreet'))
+        # Only register javascript and css if the Bizyhood admin page is loading
+        if(strstr($_SERVER['QUERY_STRING'], 'Bizyhood'))
         {
-            wp_enqueue_style ('Broadstreet-styles',  Broadstreet_Utility::getCSSBaseURL() . 'broadstreet.css?v='. BROADSTREET_VERSION);
-            wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js?v='. BROADSTREET_VERSION);
+            wp_enqueue_style ('Bizyhood-styles',  Bizyhood_Utility::getCSSBaseURL() . 'bizyhood.css?v='. BROADSTREET_VERSION);
+            wp_enqueue_script('Bizyhood-main'  ,  Bizyhood_Utility::getJSBaseURL().'bizyhood.js?v='. BROADSTREET_VERSION);
         }
         
         # Only register on the post editing page
         if($GLOBALS['pagenow'] == 'post.php'
                 || $GLOBALS['pagenow'] == 'post-new.php')
         {
-            wp_enqueue_style ('Broadstreet-vendorcss-time', Broadstreet_Utility::getVendorBaseURL() . 'timepicker/css/timePicker.css');
-            wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js?v='. BROADSTREET_VERSION);
-            wp_enqueue_script('Broadstreet-vendorjs-time'  ,  Broadstreet_Utility::getVendorBaseURL().'timepicker/js/jquery.timePicker.min.js');
+            wp_enqueue_style ('Bizyhood-vendorcss-time', Bizyhood_Utility::getVendorBaseURL() . 'timepicker/css/timePicker.css');
+            wp_enqueue_script('Bizyhood-main'  ,  Bizyhood_Utility::getJSBaseURL().'bizyhood.js?v='. BROADSTREET_VERSION);
+            wp_enqueue_script('Bizyhood-vendorjs-time'  ,  Bizyhood_Utility::getVendorBaseURL().'timepicker/js/jquery.timePicker.min.js');
         }
         
         # Include thickbox on widgets page
         if($GLOBALS['pagenow'] == 'widgets.php'
-                || strstr($_SERVER['QUERY_STRING'], 'Broadstreet-Business'))
+                || strstr($_SERVER['QUERY_STRING'], 'Bizyhood-Business'))
         {
             wp_enqueue_script('thickbox');
             wp_enqueue_style( 'thickbox' );
@@ -444,19 +444,19 @@ class Bizyhood_Core
      */
     public function adminMenuCallback()
     {
-        Broadstreet_Log::add('debug', "Admin page callback executed");
-        Broadstreet_Utility::sendInstallReportIfNew();
+        Bizyhood_Log::add('debug', "Admin page callback executed");
+        Bizyhood_Utility::sendInstallReportIfNew();
         
         $data = array();
 
-        $data['service_tag']        = Broadstreet_Utility::getServiceTag();
-        $data['api_key']            = Broadstreet_Utility::getOption(self::KEY_API_KEY);
-        $data['api_url']            = Broadstreet_Utility::getApiUrl();
-        $data['business_enabled']   = Broadstreet_Utility::getOption(self::KEY_BIZ_ENABLED);
-        $data['network_id']         = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
-        $data['zip_codes']          = Broadstreet_Utility::getOption(self::KEY_ZIP_CODES);
-        $data['use_cuisine_types']  = Broadstreet_Utility::getOption(self::KEY_USE_CUISINE_TYPES);
-        $data['categories']         = Broadstreet_Utility::getOption(self::KEY_CATEGORIES);
+        $data['service_tag']        = Bizyhood_Utility::getServiceTag();
+        $data['api_key']            = Bizyhood_Utility::getOption(self::KEY_API_KEY);
+        $data['api_url']            = Bizyhood_Utility::getApiUrl();
+        $data['business_enabled']   = Bizyhood_Utility::getOption(self::KEY_BIZ_ENABLED);
+        $data['network_id']         = Bizyhood_Utility::getOption(self::KEY_NETWORK_ID);
+        $data['zip_codes']          = Bizyhood_Utility::getOption(self::KEY_ZIP_CODES);
+        $data['use_cuisine_types']  = Bizyhood_Utility::getOption(self::KEY_USE_CUISINE_TYPES);
+        $data['categories']         = Bizyhood_Utility::getOption(self::KEY_CATEGORIES);
         $data['errors']             = array();
         $data['networks']           = array();
         $data['key_valid']          = false;
@@ -464,7 +464,7 @@ class Bizyhood_Core
 
         if(!function_exists('curl_exec'))
         {
-            $data['errors'][] = 'Broadstreet requires the PHP cURL module to be enabled. You may need to ask your web host or developer to enable this.';
+            $data['errors'][] = 'Bizyhood requires the PHP cURL module to be enabled. You may need to ask your web host or developer to enable this.';
         }
         
         if(get_page_by_path('businesses'))
@@ -479,20 +479,20 @@ class Bizyhood_Core
         
         if(!$data['api_key']) 
         {
-            $data['errors'][] = '<strong>You dont have an API key set yet!</strong><ol><li>If you already have a Broadstreet account, <a href="http://my.broadstreetads.com/access-token">get your key here</a>.</li><li>If you don\'t have an account with us, <a target="blank" id="one-click-signup" href="#">then use our one-click signup</a>.</li></ol>';
+            $data['errors'][] = '<strong>You dont have an API key set yet!</strong><ol><li>If you already have a Bizyhood account, <a href="http://my.bizyhoodads.com/access-token">get your key here</a>.</li><li>If you don\'t have an account with us, <a target="blank" id="one-click-signup" href="#">then use our one-click signup</a>.</li></ol>';
         } 
         else 
         {
-            $api = new Broadstreet($data['api_key']);
+            $api = new Bizyhood($data['api_key']);
             
             try
             {
                 $data['networks']  = $api->getNetworks();
                 $data['key_valid'] = true;
-                $data['network']   = Broadstreet_Utility::getNetwork(true);
+                $data['network']   = Bizyhood_Utility::getNetwork(true);
                 
                 if(!$data['network']->cc_on_file)
-                    $data['errors'][] = 'Your account does not have a credit card on file for your selected network below. The premium "Magic Import" and "Updateable Message" features, <strong>although entirely optional</strong>, will not work until <a target="_blank" href="'.Broadstreet_Utility::broadstreetLink('/networks/'. $data['network']->id .'/accounts').'">you add a card here</a>. Your information is confidential, secure, and <em>never</em> shared.';
+                    $data['errors'][] = 'Your account does not have a credit card on file for your selected network below. The premium "Magic Import" and "Updateable Message" features, <strong>although entirely optional</strong>, will not work until <a target="_blank" href="'.Bizyhood_Utility::bizyhoodLink('/networks/'. $data['network']->id .'/accounts').'">you add a card here</a>. Your information is confidential, secure, and <em>never</em> shared.';
             }
             catch(Exception $ex)
             {
@@ -501,68 +501,68 @@ class Bizyhood_Core
             }
         }
 
-        Broadstreet_View::load('admin/admin', $data);
+        Bizyhood_View::load('admin/admin', $data);
     }
     
     public function adminMenuBusinessCallback() {        
         
         if (isset($_POST['featured_business_image'])) {
-            $featured_image = Broadstreet_Utility::featuredBusinessImage($_POST['featured_business_image']);
+            $featured_image = Bizyhood_Utility::featuredBusinessImage($_POST['featured_business_image']);
         } else {
-            $featured_image = Broadstreet_Utility::featuredBusinessImage();
+            $featured_image = Bizyhood_Utility::featuredBusinessImage();
         }
         
-        Broadstreet_View::load('admin/businesses', array('featured_image' => $featured_image));
+        Bizyhood_View::load('admin/businesses', array('featured_image' => $featured_image));
     }
     
     public function adminMenuEditableCallback()
     {
-        Broadstreet_View::load('admin/editable');
+        Bizyhood_View::load('admin/editable');
     }
     
     
     public function adminMenuHelpCallback()
     {
-        Broadstreet_View::load('admin/help');
+        Bizyhood_View::load('admin/help');
     }
     
     public function adminMenuLayoutCallback()
     {
-        Broadstreet_View::load('admin/layout');
+        Bizyhood_View::load('admin/layout');
     }
     
     /**
-     * Handler for the broadstreet info box below a post or page
+     * Handler for the bizyhood info box below a post or page
      * @param type $post 
      */
-    public function broadstreetInfoBox($post) 
+    public function bizyhoodInfoBox($post) 
     {
         // Use nonce for verification
-        wp_nonce_field(plugin_basename(__FILE__), 'broadstreetnoncename');
+        wp_nonce_field(plugin_basename(__FILE__), 'bizyhoodnoncename');
 
-        $zone_data = Broadstreet_Utility::getZoneCache();
+        $zone_data = Bizyhood_Utility::getZoneCache();
         
-        Broadstreet_View::load('admin/infoBox', array('zones' => $zone_data));
+        Bizyhood_View::load('admin/infoBox', array('zones' => $zone_data));
     }
     
     /**
-     * Handler for the broadstreet info box below a post or page
+     * Handler for the bizyhood info box below a post or page
      * @param type $post 
      */
-    public function broadstreetBusinessBox($post) 
+    public function bizyhoodBusinessBox($post) 
     {
         // Use nonce for verification
-        wp_nonce_field(plugin_basename(__FILE__), 'broadstreetnoncename');
+        wp_nonce_field(plugin_basename(__FILE__), 'bizyhoodnoncename');
         
-        $meta = Broadstreet_Utility::getAllPostMeta($post->ID, self::$_businessDefaults);
+        $meta = Bizyhood_Utility::getAllPostMeta($post->ID, self::$_businessDefaults);
         
-        $network_id       = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
-        $advertiser_id    = Broadstreet_Utility::getPostMeta($post->ID, 'bs_advertiser_id');
-        $advertisement_id = Broadstreet_Utility::getPostMeta($post->ID, 'bs_advertisement_id');
-        $network_info     = Broadstreet_Utility::getNetwork();
-        $show_offers      = (Broadstreet_Utility::getOption(self::KEY_SHOW_OFFERS) == 'true');
+        $network_id       = Bizyhood_Utility::getOption(self::KEY_NETWORK_ID);
+        $advertiser_id    = Bizyhood_Utility::getPostMeta($post->ID, 'bs_advertiser_id');
+        $advertisement_id = Bizyhood_Utility::getPostMeta($post->ID, 'bs_advertisement_id');
+        $network_info     = Bizyhood_Utility::getNetwork();
+        $show_offers      = (Bizyhood_Utility::getOption(self::KEY_SHOW_OFFERS) == 'true');
         
-        $api = $this->getBroadstreetClient();
+        $api = $this->getBizyhoodClient();
         
         if($network_id && $advertiser_id && $advertisement_id)
         {
@@ -579,7 +579,7 @@ class Bizyhood_Core
             $advertisers = array();
         }
         
-        Broadstreet_View::load('admin/businessMetaBox', array(
+        Bizyhood_View::load('admin/businessMetaBox', array(
             'meta'        => $meta, 
             'advertisers' => $advertisers, 
             'network'     => $network_info,
@@ -603,7 +603,7 @@ class Bizyhood_Core
             $ids = array();
             foreach($posts as $post) $ids[] = $post->ID;
 
-            $meta = Broadstreet_Model::getPostMeta($ids, self::$_businessDefaults);
+            $meta = Bizyhood_Model::getPostMeta($ids, self::$_businessDefaults);
 
             for($i = 0; $i < count($posts); $i++)
             {
@@ -647,7 +647,7 @@ class Bizyhood_Core
                     'parent_item_colon' => '',
                     'menu_name' => __('Businesses', 'your_text_domain')
                 ),
-            'description' => 'Businesses for inclusion in the Broadstreet business directory',
+            'description' => 'Businesses for inclusion in the Bizyhood business directory',
             'public' => true,
             'has_archive' => true,
             'menu_position' => 5,
@@ -658,7 +658,7 @@ class Bizyhood_Core
         );
         
         $this->addBusinessTaxonomy();
-        Broadstreet_Utility::flushRewrites();
+        Bizyhood_Utility::flushRewrites();
     }
     
     /**
@@ -683,7 +683,7 @@ class Bizyhood_Core
     public function postTemplate($content)
     {   
         global $post;
-        $api_url = Broadstreet_Utility::getApiUrl();
+        $api_url = Bizyhood_Utility::getApiUrl();
 
         # Override content for the view business page
         if ($post->post_name === 'bh-business')
@@ -691,26 +691,26 @@ class Bizyhood_Core
             $bizyhood_id = $_REQUEST['bizyhood_id'];
             $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/" . $bizyhood_id . "?format=json" ) );
             $business = json_decode($response);
-            return Broadstreet_View::load('listings/single/default', array('content' => $content, 'business' => $business), true);
+            return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business), true);
         }
 
         # Override content for the list categories page
         if ($post->post_name === 'bh-categories')
         {
-            $zips_encoded = Broadstreet_Utility::getZipsEncoded();
+            $zips_encoded = Bizyhood_Utility::getZipsEncoded();
             $list_page_id = get_page_by_title( "Bizyhood business list", "OBJECT", "page" )->ID;
             if ($zips_encoded)
             {
                 $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/cuisine/?pc=" . $zips_encoded . "&rad=15000&format=json" ) );
                 $response_json = json_decode($response);
-                $use_cuisine_types = Broadstreet_Utility::getOption(self::KEY_USE_CUISINE_TYPES, false);
+                $use_cuisine_types = Bizyhood_Utility::getOption(self::KEY_USE_CUISINE_TYPES, false);
                 if ($use_cuisine_types) {
                     $cuisines = $response_json->cuisines;
-                    return Broadstreet_View::load('categories/cuisines', array('content' => $content, 'cuisines' => $cuisines, 'list_page_id' => $list_page_id), true);
+                    return Bizyhood_View::load('categories/cuisines', array('content' => $content, 'cuisines' => $cuisines, 'list_page_id' => $list_page_id), true);
                 }
                 else {
-                    $categories = Broadstreet_Utility::getOption(self::KEY_CATEGORIES);
-                    return Broadstreet_View::load('categories/custom', array('content' => $content, 'categories' => $categories, 'list_page_id' => $list_page_id), true);
+                    $categories = Bizyhood_Utility::getOption(self::KEY_CATEGORIES);
+                    return Bizyhood_View::load('categories/custom', array('content' => $content, 'categories' => $categories, 'list_page_id' => $list_page_id), true);
                 }
             }
         }
@@ -723,12 +723,12 @@ class Bizyhood_Core
      */
     public function registerWidget()
     {
-        register_widget('Broadstreet_Zone_Widget');
-        register_widget('Broadstreet_SBSZone_Widget');
-        register_widget('Broadstreet_Multiple_Zone_Widget');
-        register_widget('Broadstreet_Business_Listing_Widget');
-        register_widget('Broadstreet_Business_Profile_Widget');
-        register_widget('Broadstreet_Business_Categories_Widget');
+        register_widget('Bizyhood_Zone_Widget');
+        register_widget('Bizyhood_SBSZone_Widget');
+        register_widget('Bizyhood_Multiple_Zone_Widget');
+        register_widget('Bizyhood_Business_Listing_Widget');
+        register_widget('Bizyhood_Business_Profile_Widget');
+        register_widget('Bizyhood_Business_Categories_Widget');
     }
 
     /**
@@ -743,22 +743,22 @@ class Bizyhood_Core
             foreach(self::$_businessDefaults as $key => $value)
             {
                 if(isset($_POST[$key]))
-                    Broadstreet_Utility::setPostMeta($post_id, $key, is_string($_POST[$key]) ? trim($_POST[$key]) : $_POST[$key]);
+                    Bizyhood_Utility::setPostMeta($post_id, $key, is_string($_POST[$key]) ? trim($_POST[$key]) : $_POST[$key]);
                 elseif($key == 'bs_images')
-                    Broadstreet_Utility::setPostMeta($post_id, $key, self::$_businessDefaults[$key]);
+                    Bizyhood_Utility::setPostMeta($post_id, $key, self::$_businessDefaults[$key]);
             }
             
             if($_POST['bs_gplus'] == 'enableoffer')
-                Broadstreet_Utility::setOption (self::KEY_SHOW_OFFERS, 'true');
+                Bizyhood_Utility::setOption (self::KEY_SHOW_OFFERS, 'true');
             
             # Has an ad been created/set?
             if($_POST['bs_update_source'] !== '')
             {
                 # Okay, one is being set, but does it already exist?
-                $ad_id = Broadstreet_Utility::getPostMeta($post_id, 'bs_advertisement_id');
-                $api   = $this->getBroadstreetClient();
+                $ad_id = Bizyhood_Utility::getPostMeta($post_id, 'bs_advertisement_id');
+                $api   = $this->getBizyhoodClient();
                 
-                $network_id    = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
+                $network_id    = Bizyhood_Utility::getOption(self::KEY_NETWORK_ID);
                 $advertiser_id = $_POST['bs_advertiser_id'];
 
                 if(!$ad_id)
@@ -770,8 +770,8 @@ class Bizyhood_Core
                         'default_text' => 'Check back for updates!'
                     ));
                     
-                    Broadstreet_Utility::setPostMeta($post_id, 'bs_advertisement_id', $ad->id);
-                    Broadstreet_Utility::setPostMeta($post_id, 'bs_advertisement_html', $ad->html);
+                    Bizyhood_Utility::setPostMeta($post_id, 'bs_advertisement_id', $ad->id);
+                    Bizyhood_Utility::setPostMeta($post_id, 'bs_advertisement_html', $ad->html);
                     
                     $ad_id = $ad->id;
                 }
@@ -816,11 +816,11 @@ class Bizyhood_Core
     public function shortcode($attrs)
     {
         if(isset($attrs['ad'])) {
-            return Broadstreet_Utility::getAdCode($attrs['ad']);
+            return Bizyhood_Utility::getAdCode($attrs['ad']);
         }    
         
         if(isset($attrs['zone'])) {
-            return Broadstreet_Utility::getZoneCode($attrs['zone']);
+            return Bizyhood_Utility::getZoneCode($attrs['zone']);
         }
         
         return '';
@@ -828,9 +828,9 @@ class Bizyhood_Core
     
     public function businesses_shortcode($attrs)
     {
-        $remote_settings = Broadstreet_Utility::getRemoteSettings();
-        $api_url = Broadstreet_Utility::getApiUrl();
-        $zip_codes = Broadstreet_Utility::getZipsEncoded();
+        $remote_settings = Bizyhood_Utility::getRemoteSettings();
+        $api_url = Bizyhood_Utility::getApiUrl();
+        $zip_codes = Bizyhood_Utility::getZipsEncoded();
         $page = isset( $_GET['paged'] ) ? $_GET['paged'] : 1;
         $query = isset( $_GET['k'] ) ? '&k=' . urlencode( $_REQUEST['k'] ) : '';
 
@@ -843,7 +843,7 @@ class Bizyhood_Core
         );
         $view_business_page_id = get_page_by_title( "Bizyhood view business", "OBJECT", "page" )->ID;
 
-        return Broadstreet_View::load( 'listings/index', array( 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
+        return Bizyhood_View::load( 'listings/index', array( 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
     }
 }
 

@@ -2,16 +2,16 @@
 /**
  * This file contains a class for loading the presentation layer/files
  *
- * @author Broadstreet Ads <labs@broadstreetads.com>
+ * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**
- * This class contains methods for loading Broadstreet views
+ * This class contains methods for loading Bizyhood views
  */
-class Broadstreet_View
+class Bizyhood_View
 {
     /**
-     * Load a view file. The file should be located in Broadstreet/Views.
+     * Load a view file. The file should be located in Bizyhood/Views.
      * @param string $file The filename of the view without the extenstion (assumed
      *  to be PHP)
      * @param array $data An associative array of data that be be extracted and
@@ -24,7 +24,7 @@ class Broadstreet_View
 
         if(!file_exists($file))
         {
-            Broadstreet_Log::add('fatal', "View '$file' was not found");
+            Bizyhood_Log::add('fatal', "View '$file' was not found");
             throw new Exception("View '$file' was not found");
         }
 

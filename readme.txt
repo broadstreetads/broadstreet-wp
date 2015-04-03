@@ -1,17 +1,17 @@
 === Plugin Name ===
-Contributors: Broadstreet
-Tags: broadstreet,local,publishers,hyperlocal,independent,news,business,directory
+Contributors: Bizyhood
+Tags: bizyhood,local,publishers,hyperlocal,independent,news,business,directory
 Requires at least: 3.0
 Tested up to: 4.1
 Stable tag: 1.13.0
 
-Integrate Broadstreet business directory and adserving power into your site.
+Integrate Bizyhood business directory and adserving power into your site.
 
 == Description ==
 
-For Broadstreet users. If you aren't a user, you can sign up after installing.
+For Bizyhood users. If you aren't a user, you can sign up after installing.
 
-Introducing first business directory of it's kind, this Broadstreet-powered
+Introducing first business directory of it's kind, this Bizyhood-powered
 plug-in is the first practical and portable business directory for Wordpress.
 
 This was built for local publishers.
@@ -22,23 +22,23 @@ This was built for local publishers.
 
 ... And everything else you would expect of a business directory.
 
-Broadstreet was build by the developers of a local, independent news blog in
+Bizyhood was build by the developers of a local, independent news blog in
 Red Bank, NJ. We built it to help monetize our much-loved community site.
-If you're a local publisher struggling to monetize your site, Broadstreet is
+If you're a local publisher struggling to monetize your site, Bizyhood is
 for you.
 
-PS: You can easily integrate your Broadstreet adserver zones with this
+PS: You can easily integrate your Bizyhood adserver zones with this
 plugin too.
 
 **How to:**
 
 1. Install the plugin
-2. Go to Settings->Broadstreet
+2. Go to Settings->Bizyhood
 3. Enter your Access Token and confirm that it's valid (we'll check automatically)
-4. Go to Appearance->Widgets, and use the new 'Broadstreet Ad Zone' widget
+4. Go to Appearance->Widgets, and use the new 'Bizyhood Ad Zone' widget
 
-To learn more about Broadstreet, and how it can help you as a local publisher,
-send an email to [kenny@broadstreetads.com](kenny@broadstreetads.com).
+To learn more about Bizyhood, and how it can help you as a local publisher,
+send an email to [kenny@bizyhoodads.com](kenny@bizyhoodads.com).
 
 == Fix Log ==
 

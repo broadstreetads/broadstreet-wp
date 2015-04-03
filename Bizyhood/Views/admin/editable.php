@@ -1,5 +1,5 @@
 <div id="main">
-      <?php Broadstreet_View::load('admin/global/header') ?>
+      <?php Bizyhood_View::load('admin/global/header') ?>
       <div class="help-section left_column">          
       <h2>And Now for Something Completely Different: Editable Ads&trade;</h2>
       <p>
@@ -10,7 +10,7 @@
           <iframe width="560" height="315" src="http://www.youtube.com/embed/BLUt6ImTfok" frameborder="0" allowfullscreen></iframe>
       </div>
       <div class="right_column">
-          <?php Broadstreet_View::load('admin/global/sidebar') ?>
+          <?php Bizyhood_View::load('admin/global/sidebar') ?>
       </div>
 </div>
 

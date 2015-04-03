@@ -1,16 +1,16 @@
 <?php
 /**
- * This file contains a custom Exception class for Broadstreet
+ * This file contains a custom Exception class for Bizyhood
  *
- * @author Broadstreet Ads <labs@broadstreetads.com>
+ * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**
- * Whenever an Exception needs to be thrown in Broadstreet, use this class or an
+ * Whenever an Exception needs to be thrown in Bizyhood, use this class or an
  *  Exception dervided form it. This helps separating Wordpress exceptions from
- *  Broadstreet exceptions
+ *  Bizyhood exceptions
  */
-class Broadstreet_Exception extends Exception
+class Bizyhood_Exception extends Exception
 {
     
 }

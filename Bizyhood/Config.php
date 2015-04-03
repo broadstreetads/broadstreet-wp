@@ -1,18 +1,18 @@
 <?php
 /**
- * This file contains a class which holds Broadstreet's configuration information
+ * This file contains a class which holds Bizyhood's configuration information
  *
- * @author Broadstreet Ads <labs@broadstreetads.com>
+ * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**
- * A class which acts as the source and accessor of all of Broadstreet's configuration
+ * A class which acts as the source and accessor of all of Bizyhood's configuration
  *  information.
  */
-class Broadstreet_Config
+class Bizyhood_Config
 {
     /**
-     * Load up all of Broadstreet's configuration values. This currently where
+     * Load up all of Bizyhood's configuration values. This currently where
      *  configuration otpions should be set too..
      */
     public function setConfig()
@@ -25,7 +25,7 @@ class Broadstreet_Config
 
         $config['log'] = array (
 
-            'level'     => Broadstreet_Log::DEBUG, //TODO: change this in prod
+            'level'     => Bizyhood_Log::DEBUG, //TODO: change this in prod
             'directory' => dirname(__FILE__) . '/Logs'
 
         );
@@ -36,7 +36,7 @@ class Broadstreet_Config
 
     /**
      * The instance of this config class
-     * @var Broadstreet_Config
+     * @var Bizyhood_Config
      */
     private static $_instance = NULL;
 
@@ -78,7 +78,7 @@ class Broadstreet_Config
      *      )
      *  )
      *
-     * I could use Broadstreet_Config::get('example-config.test.port') to get
+     * I could use Bizyhood_Config::get('example-config.test.port') to get
      *  the port.
      * @param string $default A value to return if the key wasn't found
      * @return string The configuration value
@@ -102,7 +102,7 @@ class Broadstreet_Config
 
     /**
      * The internal method for getting a config value. This method is not meant
-     *  to be accessed directly outside of this class, so use Broadstreet_Config::get()
+     *  to be accessed directly outside of this class, so use Bizyhood_Config::get()
      *  instead.
      * @param string $key The config value name
      * @param string $default A value to return if the key wasn't found
@@ -129,7 +129,7 @@ class Broadstreet_Config
 
     /**
      * Return the instance of this class
-     * @return Broadstreet_Config
+     * @return Bizyhood_Config
      */
     private static function _getInstance()
     {

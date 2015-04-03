@@ -2,13 +2,13 @@
 /**
  * This file contains a class for holding Wordpress post information
  *
- * @author Broadstreet Ads <labs@broadstreetads.com>
+ * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**
  * A class that pretends to be a Wordpress search result object
  */
-class Broadstreet_Document
+class Bizyhood_Document
 {
     // Example entries are in comments to the left.
     public $ID; 				// 1

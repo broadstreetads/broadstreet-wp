@@ -2,17 +2,17 @@
 
 
 /**
- * This is an optional widget to display a broadstreet zone
+ * This is an optional widget to display a bizyhood zone
  */
-class Broadstreet_Zone_Widget extends WP_Widget
+class Bizyhood_Zone_Widget extends WP_Widget
 {
     /**
      * Set the widget options
      */
      function __construct()
      {
-        $widget_ops = array('classname' => 'bs_zones', 'description' => 'Easily place a Broadstreet ad zone with this widget');
-        $this->WP_Widget('bs_zones', 'Broadstreet Ad Zone', $widget_ops);
+        $widget_ops = array('classname' => 'bs_zones', 'description' => 'Easily place a Bizyhood ad zone with this widget');
+        $this->WP_Widget('bs_zones', 'Bizyhood Ad Zone', $widget_ops);
      }
 
      /**
@@ -32,7 +32,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
          if(trim($title))
              echo $before_title . $title. $after_title;
 
-         echo '<div>' . Broadstreet_Utility::getZoneCode($zone_id) . '</div>';
+         echo '<div>' . Bizyhood_Utility::getZoneCode($zone_id) . '</div>';
 
          echo $after_widget;
      }
@@ -62,13 +62,13 @@ class Broadstreet_Zone_Widget extends WP_Widget
         $defaults = array('w_title' => '', 'w_info_string' => '', 'w_opener' => '', 'w_closer' => '', 'w_zone' => '');
 		$instance = wp_parse_args((array) $instance, $defaults);
         
-        $zones = Broadstreet_Utility::refreshZoneCache();
+        $zones = Bizyhood_Utility::refreshZoneCache();
         
        ?>
         <div class="widget-content">
        <?php if(count($zones) == 0): ?>
             <p style="color: green; font-weight: bold;">You either have no zones or
-                Broadstreet isn't configured correctly. Go to 'Settings', then 'Broadstreet',
+                Bizyhood isn't configured correctly. Go to 'Settings', then 'Bizyhood',
             and make sure your access token is correct, and make sure you have zones set up.</p>
         <?php else: ?>
         <p>
@@ -91,17 +91,17 @@ class Broadstreet_Zone_Widget extends WP_Widget
 }
 
 /**
- * This is an optional widget to display a broadstreet zone
+ * This is an optional widget to display a bizyhood zone
  */
-class Broadstreet_Multiple_Zone_Widget extends WP_Widget
+class Bizyhood_Multiple_Zone_Widget extends WP_Widget
 {
     /**
      * Set the widget options
      */
      function __construct()
      {
-        $widget_ops = array('classname' => 'bs_multiple_zones', 'description' => 'Easily place a muliple Broadstreet ad zones inside a single widget');
-        $this->WP_Widget('bs_multiple_zones', 'Broadstreet Multiple Ad Zones', $widget_ops);
+        $widget_ops = array('classname' => 'bs_multiple_zones', 'description' => 'Easily place a muliple Bizyhood ad zones inside a single widget');
+        $this->WP_Widget('bs_multiple_zones', 'Bizyhood Multiple Ad Zones', $widget_ops);
      }
 
      /**
@@ -116,7 +116,7 @@ class Broadstreet_Multiple_Zone_Widget extends WP_Widget
          $zone_ids  = $instance['w_zone'];
          $num_zones = $instance['w_num_zones'];
          
-         $zone_data = Broadstreet_Utility::getZoneCache();
+         $zone_data = Bizyhood_Utility::getZoneCache();
          
          if($zone_data)
          {      
@@ -154,10 +154,10 @@ class Broadstreet_Multiple_Zone_Widget extends WP_Widget
       */
      function form($instance) 
      {
-        $defaults = array('w_title' => 'Broadstreet Ad Zones', 'w_num_zones' => '1', 'w_zone' => array(''), 'w_linebreak' => array('no'));
+        $defaults = array('w_title' => 'Bizyhood Ad Zones', 'w_num_zones' => '1', 'w_zone' => array(''), 'w_linebreak' => array('no'));
 		$instance = wp_parse_args((array) $instance, $defaults);
         
-        $zones = Broadstreet_Utility::refreshZoneCache();
+        $zones = Bizyhood_Utility::refreshZoneCache();
         
         for($i = 0; $i < intval($instance['w_num_zones']); $i++)
         {
@@ -177,7 +177,7 @@ class Broadstreet_Multiple_Zone_Widget extends WP_Widget
         <div class="widget-content">
        <?php if(count($zones) == 0): ?>
             <p style="color: green; font-weight: bold;">You either have no zones or
-                Broadstreet isn't configured correctly. Go to 'Settings', then 'Broadstreet',
+                Bizyhood isn't configured correctly. Go to 'Settings', then 'Bizyhood',
             and make sure your access token is correct, and make sure you have zones set up.</p>
         <?php else: ?>
         <p>
@@ -205,9 +205,9 @@ class Broadstreet_Multiple_Zone_Widget extends WP_Widget
 }
 
 /**
- * This is an optional widget to display a broadstreet zone
+ * This is an optional widget to display a bizyhood zone
  */
-class Broadstreet_SBSZone_Widget extends WP_Widget
+class Bizyhood_SBSZone_Widget extends WP_Widget
 {
     /**
      * Set the widget options
@@ -215,7 +215,7 @@ class Broadstreet_SBSZone_Widget extends WP_Widget
      function __construct()
      {
         $widget_ops = array('classname' => 'bs_sbszones', 'description' => 'Place two ad zones (like button zones) side-by-side');
-        $this->WP_Widget('bs_sbszones', 'Broadstreet Side-by-Side Zones', $widget_ops);
+        $this->WP_Widget('bs_sbszones', 'Bizyhood Side-by-Side Zones', $widget_ops);
      }
 
      /**
@@ -229,7 +229,7 @@ class Broadstreet_SBSZone_Widget extends WP_Widget
          
          $zone_id_1 = $instance['w_zone1'];
          $zone_id_2 = $instance['w_zone2'];
-         $zone_data = Broadstreet_Utility::getZoneCache();
+         $zone_data = Bizyhood_Utility::getZoneCache();
          
          if($zone_data)
          {
@@ -273,16 +273,16 @@ ZONE;
      function form($instance) 
      {
 
-        $defaults = array('w_title' => 'Broadstreet Ad Zones', 'w_info_string' => '', 'w_opener' => '', 'w_closer' => '');
+        $defaults = array('w_title' => 'Bizyhood Ad Zones', 'w_info_string' => '', 'w_opener' => '', 'w_closer' => '');
 		$instance = wp_parse_args((array) $instance, $defaults);
         
-        $zones = Broadstreet_Utility::refreshZoneCache();
+        $zones = Bizyhood_Utility::refreshZoneCache();
         
        ?>
         <div class="widget-content">
        <?php if(count($zones) == 0): ?>
             <p style="color: green; font-weight: bold;">You either have no zones or
-                Broadstreet isn't configured correctly. Go to 'Settings', then 'Broadstreet',
+                Bizyhood isn't configured correctly. Go to 'Settings', then 'Bizyhood',
             and make sure your access token is correct, and make sure you have zones set up.</p>
         <?php else: ?>
         <input class="widefat" type="hidden" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="" />
@@ -309,9 +309,9 @@ ZONE;
 }
 
 /**
- * This is an optional widget to display a broadstreet zone
+ * This is an optional widget to display a bizyhood zone
  */
-class Broadstreet_Business_Listing_Widget extends WP_Widget
+class Bizyhood_Business_Listing_Widget extends WP_Widget
 {
     /**
      * Set the widget options
@@ -319,7 +319,7 @@ class Broadstreet_Business_Listing_Widget extends WP_Widget
      function __construct()
      {
         $widget_ops = array('classname' => 'bs_business_listings', 'description' => 'A list of entries in the business directory');
-        $this->WP_Widget('bs_business_listings', 'Broadstreet Business List', $widget_ops);
+        $this->WP_Widget('bs_business_listings', 'Bizyhood Business List', $widget_ops);
      }
 
      /**
@@ -472,9 +472,9 @@ class Broadstreet_Business_Listing_Widget extends WP_Widget
 }
 
 /**
- * This is an optional widget to display a broadstreet zone
+ * This is an optional widget to display a bizyhood zone
  */
-class Broadstreet_Business_Profile_Widget extends WP_Widget
+class Bizyhood_Business_Profile_Widget extends WP_Widget
 {
     /**
      * Set the widget options
@@ -482,7 +482,7 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
      function __construct()
      {
         $widget_ops = array('classname' => 'bs_business_profile', 'description' => 'A profile for a business in your sidebar');
-        $this->WP_Widget('bs_business_profile', 'Broadstreet Business Spotlight', $widget_ops);
+        $this->WP_Widget('bs_business_profile', 'Bizyhood Business Spotlight', $widget_ops);
      }
 
      /**
@@ -543,7 +543,7 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
             $has_thumbnail = has_post_thumbnail($post->ID); 
             $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID));
             $thumb_url     = @$thumb_url['url'];
-            $meta          = Broadstreet_Utility::getAllPostMeta($post->ID);
+            $meta          = Bizyhood_Utility::getAllPostMeta($post->ID);
             $link          = get_permalink($post->ID);
             
             if(!$thumb_url)
@@ -574,7 +574,7 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
             echo '<p>';
             
             if($meta['bs_featured_business'])
-                echo '<img style="width: 20%; float: right; padding: 2px 0 4px 4px;" src="' . Broadstreet_Utility::featuredBusinessImage().'" />';
+                echo '<img style="width: 20%; float: right; padding: 2px 0 4px 4px;" src="' . Bizyhood_Utility::featuredBusinessImage().'" />';
             
             echo wp_trim_words(strip_tags($post->post_content), 30).' <a href="'.$link.'">more.</a></p>';
             
@@ -659,9 +659,9 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
 }
 
 /**
- * This is an optional widget to display a broadstreet zone
+ * This is an optional widget to display a bizyhood zone
  */
-class Broadstreet_Business_Categories_Widget extends WP_Widget
+class Bizyhood_Business_Categories_Widget extends WP_Widget
 {
     /**
      * Set the widget options
@@ -669,7 +669,7 @@ class Broadstreet_Business_Categories_Widget extends WP_Widget
      function __construct()
      {
         $widget_ops = array('classname' => 'bs_business_categories', 'description' => 'A listing of all business categories');
-        $this->WP_Widget('bs_business_categories', 'Broadstreet Business Categories', $widget_ops);
+        $this->WP_Widget('bs_business_categories', 'Bizyhood Business Categories', $widget_ops);
      }
 
      /**

@@ -1,7 +1,7 @@
-<script src="https://broadstreet-common.s3.amazonaws.com/broadstreet-net/init.js"></script>
+<script src="https://bizyhood-common.s3.amazonaws.com/bizyhood-net/init.js"></script>
 <form method="post">
 <div id="main">
-      <?php Broadstreet_View::load('admin/global/header') ?>
+      <?php Bizyhood_View::load('admin/global/header') ?>
       <div class="left_column">
           <div id="controls">
             <div class="box">
@@ -37,7 +37,7 @@
         </div>
       </div>
       <div class="right_column">
-          <?php Broadstreet_View::load('admin/global/sidebar') ?>
+          <?php Bizyhood_View::load('admin/global/sidebar') ?>
       </div>
     </div>
       <div class="clearfix"></div>
@@ -61,4 +61,4 @@
         tb_remove();
     }
 </script>
-      <!-- <img src="http://report.Broadstreet2.com/checkin/?s=<?php echo $service_tag.'&'.time(); ?>" alt="" /> -->
+      <!-- <img src="http://report.Bizyhood2.com/checkin/?s=<?php echo $service_tag.'&'.time(); ?>" alt="" /> -->

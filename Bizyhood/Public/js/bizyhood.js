@@ -113,7 +113,7 @@ jQuery(function($){
         }, 'json');
     });
     
-    $('#save-broadstreet').click(function() {
+    $('#save-bizyhood').click(function() {
         
         var network_id = $('#network').val();
 

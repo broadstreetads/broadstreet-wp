@@ -14,9 +14,9 @@ OLD=`echo $1 | sed 's/\./\\\./g'`
 NEW=`echo $2 | sed 's/\./\\\./g'`
 
 sed -i.bak "s/$OLD/$NEW/g" 'readme.txt'
-sed -i.bak "s/$OLD/$NEW/g" 'broadstreet.php'
-sed -i.bak "s/$OLD/$NEW/g" 'Broadstreet/Config.php'
+sed -i.bak "s/$OLD/$NEW/g" 'bizyhood.php'
+sed -i.bak "s/$OLD/$NEW/g" 'Bizyhood/Config.php'
 
 rm readme.txt.bak
-rm broadstreet.php.bak
-rm Broadstreet/Config.php.bak
+rm bizyhood.php.bak
+rm Bizyhood/Config.php.bak

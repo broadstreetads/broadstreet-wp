@@ -2,14 +2,14 @@
 /* 
  * 
  *
- * @author Broadstreet Ads <labs@broadstreetads.com>
+ * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**
  * Description of Model
  *
  */
-class Broadstreet_Model
+class Bizyhood_Model
 {
     public static function getPublishedDocument($document_id)
     {

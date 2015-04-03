@@ -8,5 +8,5 @@
 }(document, 'script', 'facebook-jssdk'));</script>
 <script>window.admin_email = '<?php bloginfo('admin_email'); ?>';</script>
 <div>
-    <a target="_blank" href="http://broadstreetads.com"><img style="width:380px;" src="http://broadstreet-common.s3.amazonaws.com/broadstreet-blargo/broadstreet-logo.png" alt="Broadstreet" /></a>
+    <a target="_blank" href="http://bizyhoodads.com"><img style="width:380px;" src="http://bizyhood-common.s3.amazonaws.com/bizyhood-blargo/bizyhood-logo.png" alt="Bizyhood" /></a>
 </div>

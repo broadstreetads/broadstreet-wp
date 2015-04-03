@@ -3,14 +3,14 @@
  * This file contains a class for utility methods and/or wrappers for built-in
  *  Wordpress API calls
  *
- * @author Broadstreet Ads <labs@broadstreetads.com>
+ * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**
  * The class contains a number of utility methods that may be needed by various
- *  parts of Broadstreet
+ *  parts of Bizyhood
  */
-class Broadstreet_Utility
+class Bizyhood_Utility
 {
     const KEY_ZONE_CACHE = 'BROADSTREET_ZONE_CACHE';
     const KEY_RW_FLUSH   = 'BROADSTREET_RW_FLUSH';
@@ -25,7 +25,7 @@ class Broadstreet_Utility
      * @param type $id
      */
     public static function getAdCode($id) {
-        return "<script type=\"text/javascript\" src=\"//ad.broadstreetads.com/display/$id.js\"></script>";
+        return "<script type=\"text/javascript\" src=\"//ad.bizyhoodads.com/display/$id.js\"></script>";
     }
     
     /**
@@ -34,7 +34,7 @@ class Broadstreet_Utility
      * @return type
      */
     public static function getZoneCode($id) {
-        return '<script type="text/javascript">broadstreet.zone('. $id .', {responsive: true, softKeywords: true, keywords: [' . Broadstreet_Utility::getAllAdKeywordsString() . ']});</script>';
+        return '<script type="text/javascript">bizyhood.zone('. $id .', {responsive: true, softKeywords: true, keywords: [' . Bizyhood_Utility::getAllAdKeywordsString() . ']});</script>';
     }
     
     /**
@@ -77,12 +77,12 @@ class Broadstreet_Utility
     }
     
     /**
-     * Get the current user's Broadstreet API key
+     * Get the current user's Bizyhood API key
      * @return boolean 
      */
     public static function getApiKey()
     {
-        $api_key = Broadstreet_Utility::getOption(Bizyhood_Core::KEY_API_KEY);
+        $api_key = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_API_KEY);
         
         if(!$api_key) 
             return FALSE;
@@ -96,7 +96,7 @@ class Broadstreet_Utility
      */
     public static function getApiUrl()
     {
-        $api_url = Broadstreet_Utility::getOption(Bizyhood_Core::KEY_API_URL);
+        $api_url = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_API_URL);
         
         if(!$api_url || strlen($api_url) == 0)
             return "https://bizyhood.com/api";
@@ -119,7 +119,7 @@ class Broadstreet_Utility
      */
     public static function getZipsEncoded()
     {
-        $zip_codes = Broadstreet_Utility::getOption(Bizyhood_Core::KEY_ZIP_CODES);
+        $zip_codes = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_ZIP_CODES);
         if ($zip_codes)
             return urlencode( implode( ',', $zip_codes ) );
         else
@@ -132,7 +132,7 @@ class Broadstreet_Utility
      * @return string
      */
     public static function featuredBusinessImage($image_path = null) {
-        $default = Broadstreet_Utility::getImageBaseURL() . 'featured-biz.png';
+        $default = Bizyhood_Utility::getImageBaseURL() . 'featured-biz.png';
         
         if($image_path !== null) {
             self::setOption('featured_business_image', $image_path);
@@ -152,7 +152,7 @@ class Broadstreet_Utility
      */
     public static function getNetworkId()
     {
-        return Broadstreet_Utility::getOption(Bizyhood_Core::KEY_NETWORK_ID);
+        return Bizyhood_Utility::getOption(Bizyhood_Core::KEY_NETWORK_ID);
     }
     
     /**
@@ -164,16 +164,16 @@ class Broadstreet_Utility
         $info = false;
         
         if(!$force_refresh)
-            $info = Broadstreet_Cache::get('network_info');
+            $info = Bizyhood_Cache::get('network_info');
         
         if($info) return $info;
 
         try
         {
-            $broadstreet = new Broadstreet(self::getApiKey());
-            $info = $broadstreet->getNetwork(self::getNetworkId());
+            $bizyhood = new Bizyhood(self::getApiKey());
+            $info = $bizyhood->getNetwork(self::getNetworkId());
 
-            Broadstreet_Cache::set('network_info', $info, Broadstreet_Config::get('network_cache_ttl_seconds'));
+            Bizyhood_Cache::set('network_info', $info, Bizyhood_Config::get('network_cache_ttl_seconds'));
         
             if($info)
                 self::setOption(self::KEY_NET_INFO, $info);
@@ -204,7 +204,7 @@ class Broadstreet_Utility
         }
         else 
         {
-            $api = new Broadstreet($api_key);
+            $api = new Bizyhood($api_key);
             
             try
             {
@@ -234,7 +234,7 @@ class Broadstreet_Utility
         if(self::$_businessEnabled === FALSE) return FALSE;
         if(self::$_apiKeyValid === FALSE) return FALSE;
         
-        if(Broadstreet_Utility::getOption(Bizyhood_Core::KEY_BIZ_ENABLED))
+        if(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_BIZ_ENABLED))
         {
             self::$_businessEnabled = TRUE;
             return true;
@@ -364,15 +364,15 @@ class Broadstreet_Utility
     }
     
     /**
-     * Get a link to the Broadstreet interface
+     * Get a link to the Bizyhood interface
      * @param string $path
      * @return string
      */
-    public static function broadstreetLink($path)
+    public static function bizyhoodLink($path)
     {
         $path = ltrim($path, '/');
         $key = self::getOption(Bizyhood_Core::KEY_API_KEY);
-        $url = "https://my.broadstreetads.com/$path?access_token=$key";
+        $url = "https://my.bizyhoodads.com/$path?access_token=$key";
         return $url;
     }
     
@@ -465,7 +465,7 @@ class Broadstreet_Utility
     
     /**
      * Import data about a business based on a seed URL. Makes a call to the
-     *  broadstreet backend
+     *  bizyhood backend
      * @param string $url The seed URL to start from
      * @param int $attach_post_id
      * @return type 
@@ -474,9 +474,9 @@ class Broadstreet_Utility
     {
         $api_key    = self::getApiKey();
         $network_id = self::getNetworkId();
-        $broadstreet= new Broadstreet($api_key);
+        $bizyhood= new Bizyhood($api_key);
         
-        $import   = $broadstreet->magicImport($url, $network_id);
+        $import   = $bizyhood->magicImport($url, $network_id);
         
         $meta         = (array)$import->detail;
         $meta['charged'] = (bool)$import->cost;
@@ -496,7 +496,7 @@ class Broadstreet_Utility
         
         foreach($meta['images'] as $image)
         {
-            $img = Broadstreet_Utility::importImage($image, $attach_post_id, $meta['name'] . ' ' . ($count + 1));
+            $img = Bizyhood_Utility::importImage($image, $attach_post_id, $meta['name'] . ' ' . ($count + 1));
 
             if($img) $images[] = $img;
             $count++;
@@ -536,7 +536,7 @@ class Broadstreet_Utility
      * Get the base URL of the plugin installation
      * @return string the base URL
      */
-    public static function getBroadstreetBaseURL()
+    public static function getBizyhoodBaseURL()
     {   
         return (WP_PLUGIN_URL . '/bizyhood/Bizyhood/');
     }
@@ -547,7 +547,7 @@ class Broadstreet_Utility
      */
     public static function getImageBaseURL()
     {
-        return self::getBroadstreetBaseURL() . 'Public/img/';
+        return self::getBizyhoodBaseURL() . 'Public/img/';
     }
     
     /**
@@ -556,7 +556,7 @@ class Broadstreet_Utility
      */
     public static function getCSSBaseURL()
     {
-        return self::getBroadstreetBaseURL() . 'Public/css/';
+        return self::getBizyhoodBaseURL() . 'Public/css/';
     }
 
     /**
@@ -565,7 +565,7 @@ class Broadstreet_Utility
      */
     public static function getJSBaseURL()
     {
-        return self::getBroadstreetBaseURL() . 'Public/js/';
+        return self::getBizyhoodBaseURL() . 'Public/js/';
     }
     
     /**
@@ -574,7 +574,7 @@ class Broadstreet_Utility
      */
     public static function getVendorBaseURL()
     {
-        return self::getBroadstreetBaseURL() . 'Public/vendor/';
+        return self::getBizyhoodBaseURL() . 'Public/vendor/';
     }
 
     /**
@@ -616,14 +616,14 @@ class Broadstreet_Utility
     }
     
     /**
-     * Get the broadstreet zone cache
+     * Get the bizyhood zone cache
      * @return array
      */
     public static function getZoneCache()
     {
         if(self::$_zoneCache !== NULL) return self::$_zoneCache;
         
-        $zones = Broadstreet_Cache::get(self::KEY_ZONE_CACHE, FALSE, FALSE);
+        $zones = Bizyhood_Cache::get(self::KEY_ZONE_CACHE, FALSE, FALSE);
         
         if($zones === FALSE)
         {
@@ -652,20 +652,20 @@ class Broadstreet_Utility
         $api_key     = self::getOption(Bizyhood_Core::KEY_API_KEY);
         $network_id  = self::getOption(Bizyhood_Core::KEY_NETWORK_ID);
         
-        $api = new Broadstreet($api_key);
+        $api = new Bizyhood($api_key);
 
         try
         {
             $zones  = $api->getNetworkZones($network_id);
 
             if(is_array($zones))
-                Broadstreet_Cache::set(self::KEY_ZONE_CACHE, $zones, Broadstreet_Config::get('zone_cache_ttl_seconds'));
+                Bizyhood_Cache::set(self::KEY_ZONE_CACHE, $zones, Bizyhood_Config::get('zone_cache_ttl_seconds'));
             else
-                $zones = Broadstreet_Cache::get(self::KEY_ZONE_CACHE, FALSE, TRUE);
+                $zones = Bizyhood_Cache::get(self::KEY_ZONE_CACHE, FALSE, TRUE);
         }
         catch(Exception $ex)
         {
-            $zones = Broadstreet_Cache::get(self::KEY_ZONE_CACHE, FALSE, TRUE);
+            $zones = Bizyhood_Cache::get(self::KEY_ZONE_CACHE, FALSE, TRUE);
 
             if(!is_array($zones))                
                 $zones = array();
@@ -679,7 +679,7 @@ class Broadstreet_Utility
     }
 
     /**
-     * Set PHP to call Broadstreet's custom handlers for Exceptions and Erros.
+     * Set PHP to call Bizyhood's custom handlers for Exceptions and Erros.
      *  This is used mainly for when drivers will still be running in the
      *  background doing something like an index build
      */
@@ -691,16 +691,16 @@ class Broadstreet_Utility
 
     public static function handleError($errno, $errstr, $errfile, $errline)
     {
-        Broadstreet_Log::add('error', "Error [$errno]: '$errstr' in $errfile:$errline");
+        Bizyhood_Log::add('error', "Error [$errno]: '$errstr' in $errfile:$errline");
     }
 
     public static function handleException(Exception $ex)
     {
-        Broadstreet_Log::add('error', "Exception: ".$ex->__toString());
+        Bizyhood_Log::add('error', "Exception: ".$ex->__toString());
     }
 
     /**
-     * Makes a call to the Broadstreet service to collect information information
+     * Makes a call to the Bizyhood service to collect information information
      *  on the blog in case of errors and other needs.
      */
     public static function sendReport($message = 'General')
@@ -714,12 +714,12 @@ class Broadstreet_Utility
         $report .= 'Plugin Version: ' . BROADSTREET_VERSION . "\n";
         $report .= "$message\n";
 
-        @wp_mail('plugin@broadstreetads.com', "Report: $message", $report);
+        @wp_mail('plugin@bizyhoodads.com', "Report: $message", $report);
     }
 
     /**
      * If this is a new installation and we've never sent a report to the
-     * Broadstreet server, send a packet of basic info about this blog in case
+     * Bizyhood server, send a packet of basic info about this blog in case
      * issues should arise in the future.
      */
     public static function sendInstallReportIfNew()
@@ -788,10 +788,10 @@ class Broadstreet_Utility
     }
 
     /**
-     * Get any reports / warnings / messages from the Broadstreet server.
+     * Get any reports / warnings / messages from the Bizyhood server.
      * @return mized A string if a message was found, FALSE if not
      */
-    public static function getBroadstreetMessage()
+    public static function getBizyhoodMessage()
     {
         return false;
         //self::setOption(Bizyhood_Core::KEY_LAST_MESSAGE_DATE, time() - 60*60*13);
@@ -800,10 +800,10 @@ class Broadstreet_Utility
         if($date !== FALSE && ($date + 12*60*60) > time())
             return self::getOption(Bizyhood_Core::KEY_LAST_MESSAGE);
 
-        $driver = Broadstreet_Config::get('driver');
-        $count  = Broadstreet_Model::getPublishedPostCount();
+        $driver = Bizyhood_Config::get('driver');
+        $count  = Bizyhood_Model::getPublishedPostCount();
 
-        $url     = "http://broadstreetads.com/messages?d=$driver&c=$count";
+        $url     = "http://bizyhoodads.com/messages?d=$driver&c=$count";
         $content = file_get_contents($url);
 
         self::setOption(Bizyhood_Core::KEY_LAST_MESSAGE, $content);

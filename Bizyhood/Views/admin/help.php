@@ -1,15 +1,15 @@
 <div id="main">
-      <?php Broadstreet_View::load('admin/global/header') ?>
+      <?php Bizyhood_View::load('admin/global/header') ?>
       <div class="help-section left_column">
           <h2>Before You Get Started</h2>
           <p>
-              Before you get up and running, you'll need an account with Broadstreet.
+              Before you get up and running, you'll need an account with Bizyhood.
               This plugin uses special functionality that isn't typically
               available to Wordpress users, and an account with us provides
               that. To get set up, send a quick email to 
-              <a href="mailto:kenny@broadstreetads.com">kenny@broadstreetads.com</a>
+              <a href="mailto:kenny@bizyhoodads.com">kenny@bizyhoodads.com</a>
               and we'll get you set up. If you have more general questions on
-              who Broadstreet is or how to make money with this plugin, see the
+              who Bizyhood is or how to make money with this plugin, see the
               <a href="#faq">FAQ</a> section.
           </p>
           
@@ -27,14 +27,14 @@
           <p>
               First, we'll dicuss how to use the business directory. In order to
               anable the business directory, go to the 
-              <a href="?page=Broadstreet">Broadstreet settings page</a>,
+              <a href="?page=Bizyhood">Bizyhood settings page</a>,
               tick the "Enable Business Directory" checkbox, and click 'Save'.
           </p>
           
-          <img class="figure" alt="Enable the business directory" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/enable-business-directory.png" />
+          <img class="figure" alt="Enable the business directory" src="<?php echo Bizyhood_Utility::getImageBaseURL() ?>help/enable-business-directory.png" />
           
           <p>
-              <img class="figure" align="left" alt="Business menu item" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/business-menu-item.png" />
+              <img class="figure" align="left" alt="Business menu item" src="<?php echo Bizyhood_Utility::getImageBaseURL() ?>help/business-menu-item.png" />
               Once you enable the business directory, you will see a new sidebar
               menu item in the Wordpress admin panel. This is where you will add
               and edit new business profiles. You can visit it by
@@ -54,8 +54,8 @@
           
           <p>
               Businesses are listed by default at <strong>/businesses</strong>, or
-              <a target="_blank" href="<?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>">
-                    <?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>
+              <a target="_blank" href="<?php echo Bizyhood_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>">
+                    <?php echo Bizyhood_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>
               </a>.
           </p>
           
@@ -67,21 +67,21 @@
               and click "Add New". This will bring up a blank business editor.
           </p>
           
-          <img class="figure" alt="Add a new business" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/add-a-new-biz.png" />
+          <img class="figure" alt="Add a new business" src="<?php echo Bizyhood_Utility::getImageBaseURL() ?>help/add-a-new-biz.png" />
           
           <p>Then you'll see:</p>
           
-          <img class="figure" alt="Blank business editor" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/blank-business-editor.png" />
+          <img class="figure" alt="Blank business editor" src="<?php echo Bizyhood_Utility::getImageBaseURL() ?>help/blank-business-editor.png" />
           
           <p>
               Now it's time to fill out the business profile. If you're in a
-              rush or find the process time-consuming, Broadstreet offers the 
+              rush or find the process time-consuming, Bizyhood offers the 
               <strong>Magic Import</strong> feature. If a business that you're profiling has
               a Facebook page, there's a good shot we can use it to aid an
               automatic search for business information and images.
           </p>
           
-          <img class="figure" alt="Magic Import" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/magic-import.png" />
+          <img class="figure" alt="Magic Import" src="<?php echo Bizyhood_Utility::getImageBaseURL() ?>help/magic-import.png" />
           
           <p>
               The "Business Details" box below the post editor is where the
@@ -92,14 +92,14 @@
           <p>
               Once you're finished editing the profile, be sure to save your
               new post. It will now be available on the 
-              <a target="_blank" href="<?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>">
+              <a target="_blank" href="<?php echo Bizyhood_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>">
                  business listing page.
               </a>
           </p>
           
           <h3>How To Categorize Businesses</h3>
           
-          <img align="left" class="figure" alt="Business categories" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/business-categories.png" />
+          <img align="left" class="figure" alt="Business categories" src="<?php echo Bizyhood_Utility::getImageBaseURL() ?>help/business-categories.png" />
           
           <p>
               Categories are a very flexible but powerful way of organizing your
@@ -139,10 +139,10 @@
               is likely different from the one pictured:
           </p>
           
-          <img class="figure" alt="Select a menu" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/select-menu.png" />
+          <img class="figure" alt="Select a menu" src="<?php echo Bizyhood_Utility::getImageBaseURL() ?>help/select-menu.png" />
           
           <p>
-              <img align="left" class="figure" alt="Business categories" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/menu-business-cats.png" />
+              <img align="left" class="figure" alt="Business categories" src="<?php echo Bizyhood_Utility::getImageBaseURL() ?>help/menu-business-cats.png" />
               Now you should see the items in your menu. To add a business
               category, just scroll down the page on find the "Business Category"
               box on the left, and select "View All". Select the business category
@@ -157,7 +157,7 @@
               don't forget to click "Save Menu" on the upper-right.
           </p>
           
-          <img class="figure" alt="Complete menu" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/menu-done.png" />
+          <img class="figure" alt="Complete menu" src="<?php echo Bizyhood_Utility::getImageBaseURL() ?>help/menu-done.png" />
           
           <p>
               If you just want to link to your business directory as a whole, and
@@ -167,38 +167,38 @@
           </p>
           
           <p>
-              <img align="left" class="figure" alt="Custom menu item" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/menu-custom.png" />
+              <img align="left" class="figure" alt="Custom menu item" src="<?php echo Bizyhood_Utility::getImageBaseURL() ?>help/menu-custom.png" />
               
               Type in a name like 'Business Directory', which will be the name
               of the menu item on your site. This can be anything you'd like.
               Also, paste in the URL to your business directory. For you this
               URL is: <br/>
-              <a href="<?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>">
-                  <?php echo Broadstreet_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>
+              <a href="<?php echo Bizyhood_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>">
+                  <?php echo Bizyhood_Utility::getSiteBaseURL() . '/' . Bizyhood_Core::BIZ_SLUG ?>
               </a>.<br/>
               Click "Add to Menu", and arrange it as yout would have done in
               the example above.
           </p>
           
-          <h2>Placing Broadstreet Ads</h2>
+          <h2>Placing Bizyhood Ads</h2>
             
-          <p>You can place Broadstreet ad zone in one of two ways:</p>
+          <p>You can place Bizyhood ad zone in one of two ways:</p>
           
           <ol>
               <li>Within a post, with a special shortcode</li>
-              <li>In your sidebar, with the built-in Broadstreet ad zone widget</li>
+              <li>In your sidebar, with the built-in Bizyhood ad zone widget</li>
           </ol>
           
           <h3>Placing ad zones via a widget</h3>
           
           <p>
               On the <a href="#">widgets page</a>, drag and drop the
-              "Broadstreet Ad Zone" widget to a widget area you would like
+              "Bizyhood Ad Zone" widget to a widget area you would like
               the ad zone to appear in. From there, select an ad zone to show
               and click "Save".
           </p>
           
-          <img class="figure" alt="Sidebar widget" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/sidebar-widget.png" />
+          <img class="figure" alt="Sidebar widget" src="<?php echo Bizyhood_Utility::getImageBaseURL() ?>help/sidebar-widget.png" />
           
           <h3>Placing ad zones right in a post</h3>
           
@@ -216,29 +216,29 @@
               the ad to the left, middle, or right.
           </p>
           
-          <img class="figure" alt="Shortcode list" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>help/shortcode-list.png" />
+          <img class="figure" alt="Shortcode list" src="<?php echo Bizyhood_Utility::getImageBaseURL() ?>help/shortcode-list.png" />
           
           <a id="faq"></a>
           <h2>FAQs</h2>
           
           <p>Here are some answers to frequently asked questions regarding
               our plugin. If you don't see the answer you're looking for,
-              reach out to <a href="mailto:kenny@broadstreetads.com">kenny@broadstreetads.com</a>.
+              reach out to <a href="mailto:kenny@bizyhoodads.com">kenny@bizyhoodads.com</a>.
           </p>
           
-          <h3>Why do I need an account with Broadstreet to use this plugin?</h3>
+          <h3>Why do I need an account with Bizyhood to use this plugin?</h3>
           
           <p>
             This plugin uses special functionality that can't be accomplished
-            using Wordpress itself, so we use the Broadstreet ad server to
+            using Wordpress itself, so we use the Bizyhood ad server to
             do the heavy lifting required. We want to make sure only authorized
             users are using this functionality since it uses our resources.
           </p>
           
-          <h3>What exactly is this "Broadstreet"?</h3>
+          <h3>What exactly is this "Bizyhood"?</h3>
           
           <p>
-              <a href="http://broadstreetads.com/">Broadstreet</a> 
+              <a href="http://bizyhoodads.com/">Bizyhood</a> 
               is a company that was founded to help local publishers
               monetize their websites. Ad revenue for local news hasn't really
               kept pace with online ad revenue as a whole, and our mission is
@@ -251,7 +251,7 @@
               The core functionality of the plugin, like creating business profiles,
               is free to use. The extra 
               features such as the Magic Import and the Updateable Messages
-              have a cost associated with them since they use Broadstreet's
+              have a cost associated with them since they use Bizyhood's
               adserver and other resources.
           </p>
           
@@ -295,12 +295,12 @@
           <h3>Who can I talk to if I get stuck?</h3>
           
           <p>
-              <a href="mailto:kenny@broadstreetads.com">kenny@broadstreetads.com</a>
+              <a href="mailto:kenny@bizyhoodads.com">kenny@bizyhoodads.com</a>
           </p>
           
       </div>
       <div class="right_column">
-          <?php Broadstreet_View::load('admin/global/sidebar') ?>
+          <?php Bizyhood_View::load('admin/global/sidebar') ?>
       </div>
 </div>
 

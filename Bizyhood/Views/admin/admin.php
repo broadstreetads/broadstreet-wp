@@ -1,11 +1,11 @@
-<script src="https://broadstreet-common.s3.amazonaws.com/broadstreet-net/init.js"></script>
+<script src="https://bizyhood-common.s3.amazonaws.com/bizyhood-net/init.js"></script>
 <div id="main">
-      <?php Broadstreet_View::load('admin/global/header') ?>
+      <?php Bizyhood_View::load('admin/global/header') ?>
       <div class="left_column">
          <?php if($errors): ?>
              <div class="box">
                     <div class="shadow_column">
-                        <div class="title" style="padding-left: 27px; background: #F1F1F1 url('<?php echo Broadstreet_Utility::getImageBaseURL(); ?>info.png') no-repeat scroll 7px center;">
+                        <div class="title" style="padding-left: 27px; background: #F1F1F1 url('<?php echo Bizyhood_Utility::getImageBaseURL(); ?>info.png') no-repeat scroll 7px center;">
                             Alerts
                         </div>
                         <div class="content">
@@ -37,7 +37,7 @@
                                 
                             </div>
                             <div class="desc nomargin">
-                                This can be found <a target="_blank" href="http://my.broadstreetads.com/access-token">here</a> when you're logged in to Broadstreet.<br />
+                                This can be found <a target="_blank" href="http://my.bizyhoodads.com/access-token">here</a> when you're logged in to Bizyhood.<br />
                             </div>
                         </div>
                         <div class="control-container">
@@ -153,7 +153,7 @@
                                 Enable Business Directory                                
                             </div>
                             <div class="desc nomargin">
-                                Would you like to enable the Broadstreet business directory? Requires an API Key.
+                                Would you like to enable the Bizyhood business directory? Requires an API Key.
                             </div>
                         </div>
                         <div class="control-container">
@@ -165,12 +165,12 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
-                                <a href="?page=Broadstreet-Help">How to Get Started</a>
+                                <a href="?page=Bizyhood-Help">How to Get Started</a>
                             </div>
                         </div>
                         <div class="save-container">
                             <span class="success" id="save-success">Saved!</span>
-                            <input id="save-broadstreet" type="button" value="Save" name="" />
+                            <input id="save-bizyhood" type="button" value="Save" name="" />
                         </div>
                     </div>
                     <div class="clearfix"></div>

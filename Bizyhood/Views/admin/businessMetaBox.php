@@ -74,7 +74,7 @@
         width: 100px !important;
     }
     
-    .broadstreet-special {
+    .bizyhood-special {
         border: 1px solid #ccc;
         padding: 5px;
         border-radius:5px;
@@ -93,13 +93,13 @@
         display: none;
     }
 </style>
-<div id="broadstreet-updates" class="broadstreet-special">
+<div id="bizyhood-updates" class="bizyhood-special">
     <table width="100%" class="bs-meta-table">
         <tbody>
             <tr>
                 <td width="30%" class="label">
-                    Magic Import ($<?php echo number_format($network->import_cost/100, 2) ?>) <img id="import-progress" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>ajax-loader-rotate.gif" alt="Progress!" /><br />
-                    <img align="left" width="40" class="oconf_logo" src="<?php echo Broadstreet_Utility::getImageBaseURL(); ?>marty.png" alt="" />
+                    Magic Import ($<?php echo number_format($network->import_cost/100, 2) ?>) <img id="import-progress" src="<?php echo Bizyhood_Utility::getImageBaseURL() ?>ajax-loader-rotate.gif" alt="Progress!" /><br />
+                    <img align="left" width="40" class="oconf_logo" src="<?php echo Bizyhood_Utility::getImageBaseURL(); ?>marty.png" alt="" />
                     <em>If the business has a Facebook page, we can auto-fill some fields and crawl the web for images.</em>
                 </td>
                 <td>
@@ -114,7 +114,7 @@
 <table width="100%" id="bs-meta-table" class="bs-meta-table">
     <tbody>
         <tr>
-            <td width="30%" class="label">Broadstreet Advertiser
+            <td width="30%" class="label">Bizyhood Advertiser
             </td>
             <td>
                 <select id="bs_advertiser_id" name="bs_advertiser_id">
@@ -281,14 +281,14 @@
     </tbody>
 </table>
 
-<div id="broadstreet-updates" class="broadstreet-special">
+<div id="bizyhood-updates" class="bizyhood-special">
     <table width="100%" class="bs-meta-table">
         <tbody>
             <tr>
                 <td width="30%" class="label">
                     <div>Updatable Messages ($25 / month)</div>
-                    <img align="left" width="40" class="oconf_logo" src="<?php echo Broadstreet_Utility::getImageBaseURL(); ?>marty.png" alt="" />
-                    <em>Let businesses updates messages on their profile. This is a premium feature offered by Broadstreet.</em>
+                    <img align="left" width="40" class="oconf_logo" src="<?php echo Bizyhood_Utility::getImageBaseURL(); ?>marty.png" alt="" />
+                    <em>Let businesses updates messages on their profile. This is a premium feature offered by Bizyhood.</em>
                     <br/>
                     <br/>
                     <strong>How It Works</strong><br/>
@@ -340,5 +340,5 @@
 
 <input type="hidden" name="bs_submit" value="1" />
 
-<script src="<?php echo Broadstreet_Utility::getVendorBaseURL() ?>jquery/jquery-ui-1.9.1.sortable-custom.min.js"></script>
+<script src="<?php echo Bizyhood_Utility::getVendorBaseURL() ?>jquery/jquery-ui-1.9.1.sortable-custom.min.js"></script>
 <script>window.bs_post_id = '<?php echo $GLOBALS['post']->ID ?>';</script>

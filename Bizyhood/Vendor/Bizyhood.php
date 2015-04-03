@@ -1,17 +1,17 @@
 <?php
 /**
- * This is the PHP client for Broadstreet
- * @link http://broadstreetads.com
- * @author Broadstreet Ads <labs@broadstreetads.com>
+ * This is the PHP client for Bizyhood
+ * @link http://bizyhoodads.com
+ * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
-if(!class_exists('Broadstreet')):
+if(!class_exists('Bizyhood')):
 
 /**
- * This is the PHP client and class for Broadstreet
+ * This is the PHP client and class for Bizyhood
  * It requires cURL 
  */
-class Broadstreet
+class Bizyhood
 {
     const API_VERSION = '0';
     
@@ -25,7 +25,7 @@ class Broadstreet
      * The hostname to point at
      * @var string
      */
-    protected $host = 'api.broadstreetads.com';
+    protected $host = 'api.bizyhoodads.com';
     
     /**
      * Use SSL? You should.
@@ -37,7 +37,7 @@ class Broadstreet
      * The constructor
      * @param string $access_token A user's access token
      * @param string $host The API endpoint host. Optional. Defaults to
-     *  api.broadstreetads.com
+     *  api.bizyhoodads.com
      */
     public function __construct($access_token = null, $host = null, $secure = true)
     {
@@ -167,7 +167,7 @@ class Broadstreet
     }
     
     /**
-     * Get a list of fonts supported by Broadstreet 
+     * Get a list of fonts supported by Bizyhood 
      */
     public function getFonts()
     {
@@ -296,8 +296,8 @@ class Broadstreet
      * @param array $options
      * @param array $query_args
      * @return type
-     * @throws Broadstreet_DependencyException 
-     * @throws Broadstreet_AuthException 
+     * @throws Bizyhood_DependencyException 
+     * @throws Bizyhood_AuthException 
      */
     protected function _get($uri, $options = array(), $query_args = array())
     {
@@ -313,7 +313,7 @@ class Broadstreet
             # Fallback to cURL
             if(!function_exists('curl_exec'))
             {
-                throw new Broadstreet_DependencyException("The cURL module must be installed");
+                throw new Bizyhood_DependencyException("The cURL module must be installed");
             }
             
             list($body, $status) = $this->_curlGet($url, $options);
@@ -321,17 +321,17 @@ class Broadstreet
         
         if($status == '403')
         {
-            throw new Broadstreet_ServerException("Broadstreet API Auth Denied (HTTP 403)", @json_decode($body));
+            throw new Bizyhood_ServerException("Bizyhood API Auth Denied (HTTP 403)", @json_decode($body));
         }
         
         if($status == '500')
         {
-            throw new Broadstreet_ServerException("Broadstreet API had a 500 error");
+            throw new Bizyhood_ServerException("Bizyhood API had a 500 error");
         }
         
         if($status[0] != '2')
         {
-            throw new Broadstreet_ServerException("Server threw HTTP $status for call to $uri with cURL params " . print_r($options, true) . "; Response: " . $body, @json_decode($body));
+            throw new Bizyhood_ServerException("Server threw HTTP $status for call to $uri with cURL params " . print_r($options, true) . "; Response: " . $body, @json_decode($body));
         }
 
         return (object)(array('url' => $url, 'body' => @json_decode($body), 'status' => $status));
@@ -463,10 +463,10 @@ class Broadstreet
     }
 }
 
-class Broadstreet_GeneralException extends Exception {}
-class Broadstreet_DependencyException extends Broadstreet_GeneralException {}
-class Broadstreet_AuthException extends Broadstreet_GeneralException {}
-class Broadstreet_ServerException extends Broadstreet_GeneralException {
+class Bizyhood_GeneralException extends Exception {}
+class Bizyhood_DependencyException extends Bizyhood_GeneralException {}
+class Bizyhood_AuthException extends Bizyhood_GeneralException {}
+class Bizyhood_ServerException extends Bizyhood_GeneralException {
     /**
      * The error object
      * @var object 

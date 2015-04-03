@@ -1,8 +1,8 @@
-    <a href="http://broadstreetads.com" target="_blank">
-        <img class="oconf_logo" src="<?php echo Broadstreet_Utility::getImageBaseURL(); ?>marty.png" alt="Say 'Hi' to Marty" title="Say 'Hi' to Marty" />
+    <a href="http://bizyhoodads.com" target="_blank">
+        <img class="oconf_logo" src="<?php echo Bizyhood_Utility::getImageBaseURL(); ?>marty.png" alt="Say 'Hi' to Marty" title="Say 'Hi' to Marty" />
     </a>
     <?php
-        if($message = Broadstreet_Utility::getBroadstreetMessage())
+        if($message = Bizyhood_Utility::getBizyhoodMessage())
         {
             echo $message;
         }
@@ -19,14 +19,14 @@ $m = array(
 echo $m[array_rand($m)]; ?></h3>
 
     <div>
-        <div class="fb-like" data-href="http://www.facebook.com/broadstreetads" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true"></div>
-    <a href="https://twitter.com/broadstreetads" class="twitter-follow-button" data-show-count="false">Follow @broadstreetads</a>
+        <div class="fb-like" data-href="http://www.facebook.com/bizyhoodads" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true"></div>
+    <a href="https://twitter.com/bizyhoodads" class="twitter-follow-button" data-show-count="false">Follow @bizyhoodads</a>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>    
     </div>
 
     <h3>Looking for an adserver?</h3>
     <p>
-        Ask us about <a target="_blank" href="http://broadstreetads.com/ad-platform/adserving/">our landmark adserver</a>, 
+        Ask us about <a target="_blank" href="http://bizyhoodads.com/ad-platform/adserving/">our landmark adserver</a>, 
         built for independent publishers.
         It fixes all those little quirks that the makers of OpenX and DFP
         forgot about. You know, like slowness and "why isn't my ad serving?" troubles. 
@@ -37,7 +37,7 @@ echo $m[array_rand($m)]; ?></h3>
     <div id="bs-blog"></div>
     <script>
         jQuery(function() {
-            var bs = new Broadstreet.Network();
+            var bs = new Bizyhood.Network();
             bs.postList('#bs-blog');
         });
     </script>
@@ -50,6 +50,6 @@ echo $m[array_rand($m)]; ?></h3>
         were given, and any behavior you've observed.
     </p>
     <p>
-        Send any and all reports to <a href="mailto:ohcrap@broadstreetads.com">ohcrap@broadstreetads.com</a>. Thanks
-        for using Broadstreet!
+        Send any and all reports to <a href="mailto:ohcrap@bizyhoodads.com">ohcrap@bizyhoodads.com</a>. Thanks
+        for using Bizyhood!
     </p>

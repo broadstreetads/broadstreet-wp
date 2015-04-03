@@ -2,7 +2,7 @@
 /**
  * This file contains a class for logging messages to files on disk
  *
- * @author Broadstreet Ads <labs@broadstreetads.com>
+ * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**
@@ -11,7 +11,7 @@
  * 
  * @link http://github.com/katzgrau/KLogger
  */
-class Broadstreet_Log
+class Bizyhood_Log
 {
     const DEBUG     = 1;    // Most Verbose
     const INFO      = 2;    // ...
@@ -78,18 +78,18 @@ class Broadstreet_Log
     /**
      * Get a open and ready instance of the logging class.
      * @param string $logDirectory Optionally specify a directory to log to
-     * @return Broadstreet_Log
+     * @return Bizyhood_Log
      */
     public static function instance($logDirectory = FALSE, $priority = FALSE)
     {
         # Didn't set a priority? Well, I suppose you'll see everything
-        if($priority) $priority = Broadstreet_Config::get('log.level');
+        if($priority) $priority = Bizyhood_Config::get('log.level');
 
         # Directory doesn't exist? Created that directory (and all
         # directories on the way)
         if($logDirectory === FALSE)
         {
-            $logDirectory = Broadstreet_Config::get('log.directory');
+            $logDirectory = Bizyhood_Config::get('log.directory');
         }
 
         # Do we already have an instance of a logger for this directory?
@@ -118,9 +118,9 @@ class Broadstreet_Log
 
     /**
      * Convert a string of 'debug', 'info', 'warn', 'error', or 'fatal' to it's
-     *  corresponding internal Broadstreet_Log level
+     *  corresponding internal Bizyhood_Log level
      * @param string $string The level to convert to a usuable log level
-     * @return int the Broadstreet_Log logging level
+     * @return int the Bizyhood_Log logging level
      */
     private static function _stringToLevel($string)
     {

@@ -2,13 +2,13 @@
 /**
  * This file contains a class for making webservice calls
  *
- * @author Broadstreet Ads <labs@broadstreetads.com>
+ * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**
  * Facilitates HTTP GET, POST, PUT, and DELETE calls using cURL as a backend
  */
-class Broadstreet_Net
+class Bizyhood_Net
 {
     /**
      * Fetch a web resource by URL
@@ -20,8 +20,8 @@ class Broadstreet_Net
     {
         if(!function_exists('curl_exec'))
         {
-            Broadstreet_Log::add('error', "cURL is not installed! Throwing an exception..");
-            throw new Broadstreet_Exception("The cURL module must be installed");
+            Bizyhood_Log::add('error', "cURL is not installed! Throwing an exception..");
+            throw new Bizyhood_Exception("The cURL module must be installed");
         }
 
         $curl_handle = curl_init($url);
@@ -30,12 +30,12 @@ class Broadstreet_Net
         curl_setopt_array($curl_handle, $options);
 
         $timer = "Call to $url via HTTP";
-        Broadstreet_Benchmark::start($timer);
+        Bizyhood_Benchmark::start($timer);
 
         $body   = curl_exec($curl_handle);
         $status = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
 
-        Broadstreet_Benchmark::stop($timer);
+        Bizyhood_Benchmark::stop($timer);
 
         return (object)(array('url' => $url, 'body' => $body, 'status' => $status));
     }
