@@ -16,7 +16,6 @@ require_once dirname(__FILE__) . '/Model.php';
 require_once dirname(__FILE__) . '/Net.php';
 require_once dirname(__FILE__) . '/Utility.php';
 require_once dirname(__FILE__) . '/View.php';
-require_once dirname(__FILE__) . '/Widget.php';
 require_once dirname(__FILE__) . '/Exception.php';
 require_once dirname(__FILE__) . '/Vendor/Bizyhood.php';
 
@@ -217,7 +216,6 @@ class Bizyhood_Core
         add_action('init',          array($this, 'addZoneTag' ));
         add_action('init',          array($this, 'businessIndexSidebar' ));
         add_action('admin_notices',     array($this, 'adminWarningCallback'));
-        add_action('widgets_init', array($this, 'registerWidget'));
         add_shortcode('bizyhood', array($this, 'shortcode'));
         add_shortcode('bh-businesses', array($this, 'businesses_shortcode'));
         add_filter('image_size_names_choose', array($this, 'addImageSizes'));
@@ -716,19 +714,6 @@ class Bizyhood_Core
         }
         
         return $content;
-    }
-
-    /**
-     * The callback used to register the widget
-     */
-    public function registerWidget()
-    {
-        register_widget('Bizyhood_Zone_Widget');
-        register_widget('Bizyhood_SBSZone_Widget');
-        register_widget('Bizyhood_Multiple_Zone_Widget');
-        register_widget('Bizyhood_Business_Listing_Widget');
-        register_widget('Bizyhood_Business_Profile_Widget');
-        register_widget('Bizyhood_Business_Categories_Widget');
     }
 
     /**
