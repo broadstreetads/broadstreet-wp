@@ -1,55 +1,5 @@
-    <a href="http://bizyhoodads.com" target="_blank">
-        <img class="oconf_logo" src="<?php echo Bizyhood_Utility::getImageBaseURL(); ?>marty.png" alt="Say 'Hi' to Marty" title="Say 'Hi' to Marty" />
-    </a>
-    <?php
-        if($message = Bizyhood_Utility::getBizyhoodMessage())
-        {
-            echo $message;
-        }
-    ?>
-    
-    <h3>
-<?php 
-$m = array(
-'Baby Can You <a target="_blank" href="http://www.youtube.com/watch?v=wxVLHaHUI4E">Dig It?</a>', 
-'Baby I Need Your <a target="_blank" href="http://www.youtube.com/watch?v=joqjBAJx4ZA">Loving</a>', 
-'Do You .. <a target="_blank" href="http://www.youtube.com/watch?v=EwqhJyUyoHU">Love Me?</a>'
-); 
-    
-echo $m[array_rand($m)]; ?></h3>
-
-    <div>
-        <div class="fb-like" data-href="http://www.facebook.com/bizyhoodads" data-send="false" data-layout="box_count" data-width="450" data-show-faces="true"></div>
-    <a href="https://twitter.com/bizyhoodads" class="twitter-follow-button" data-show-count="false">Follow @bizyhoodads</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>    
-    </div>
-
-    <h3>Looking for an adserver?</h3>
-    <p>
-        Ask us about <a target="_blank" href="http://bizyhoodads.com/ad-platform/adserving/">our landmark adserver</a>, 
-        built for independent publishers.
-        It fixes all those little quirks that the makers of OpenX and DFP
-        forgot about. You know, like slowness and "why isn't my ad serving?" troubles. 
-        Oh, and it's faster too.
-    </p>
-    
-    <h3>On Our Blog: The Streetlight</h3>
-    <div id="bs-blog"></div>
-    <script>
-        jQuery(function() {
-            var bs = new Bizyhood.Network();
-            bs.postList('#bs-blog');
-        });
-    </script>
-
     <h3>Have a bug report?</h3>
     <p>
-        We like to crush bugs as soon as we hear about them!
-        Be sure to give us as much detail as possible,
-        such as the number of posts you have, any error messages that
-        were given, and any behavior you've observed.
-    </p>
-    <p>
-        Send any and all reports to <a href="mailto:ohcrap@bizyhoodads.com">ohcrap@bizyhoodads.com</a>. Thanks
+        Send any and all reports to <a href="mailto:support@bizyhood.com">support@bizyhood.com</a>. Thanks
         for using Bizyhood!
     </p>

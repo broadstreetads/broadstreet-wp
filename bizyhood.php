@@ -3,9 +3,9 @@
 Plugin Name: Bizyhood
 Plugin URI: https://bizyhood.com
 Description: Integrate Bizyhood business directory on your site
-Version: 0.1.1
+Version: 0.0.1
 Author: Bizyhood
-Author URI: https://bizyhood.com
+Author URI: http://bizyhood.com
 */
 
 require dirname(__FILE__) . '/Bizyhood/Core.php';
