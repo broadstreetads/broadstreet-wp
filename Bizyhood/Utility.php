@@ -12,9 +12,9 @@
  */
 class Bizyhood_Utility
 {
-    const KEY_ZONE_CACHE = 'BROADSTREET_ZONE_CACHE';
-    const KEY_RW_FLUSH   = 'BROADSTREET_RW_FLUSH';
-    const KEY_NET_INFO   = 'BROADSTREET_NET_INFO';
+    const KEY_ZONE_CACHE = 'BIZYHOOD_ZONE_CACHE';
+    const KEY_RW_FLUSH   = 'BIZYHOOD_RW_FLUSH';
+    const KEY_NET_INFO   = 'BIZYHOOD_NET_INFO';
     
     protected static $_zoneCache = NULL;
     protected static $_apiKeyValid = NULL;
@@ -711,7 +711,7 @@ class Bizyhood_Utility
         $report .= get_bloginfo('url'). "\n";
         $report .= get_bloginfo('admin_email'). "\n";
         $report .= 'WP Version: ' . get_bloginfo('version'). "\n";
-        $report .= 'Plugin Version: ' . BROADSTREET_VERSION . "\n";
+        $report .= 'Plugin Version: ' . BIZYHOOD_VERSION . "\n";
         $report .= "$message\n";
 
         @wp_mail('plugin@bizyhoodads.com', "Report: $message", $report);
@@ -725,7 +725,7 @@ class Bizyhood_Utility
     public static function sendInstallReportIfNew()
     {
         $install_key = Bizyhood_Core::KEY_INSTALL_REPORT;
-        $upgrade_key = Bizyhood_Core::KEY_INSTALL_REPORT .'_'. BROADSTREET_VERSION;
+        $upgrade_key = Bizyhood_Core::KEY_INSTALL_REPORT .'_'. BIZYHOOD_VERSION;
         
         $installed = self::getOption($install_key);
         $upgraded  = self::getOption($upgrade_key);

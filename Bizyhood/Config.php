@@ -140,4 +140,4 @@ class Bizyhood_Config
     }
 }
 
-define('BROADSTREET_VERSION', '1.13.0');
+define('BIZYHOOD_VERSION', '1.13.0');

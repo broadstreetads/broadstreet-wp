@@ -321,7 +321,7 @@ class Bizyhood_Core
     {
         if(get_post_type() == self::BIZ_POST_TYPE && !is_admin())
         {
-            wp_enqueue_style ('Bizyhood-styles-listings', Bizyhood_Utility::getCSSBaseURL() . 'listings.css?v=' . BROADSTREET_VERSION);
+            wp_enqueue_style ('Bizyhood-styles-listings', Bizyhood_Utility::getCSSBaseURL() . 'listings.css?v=' . BIZYHOOD_VERSION);
         }
     }
     
@@ -412,8 +412,8 @@ class Bizyhood_Core
         # Only register javascript and css if the Bizyhood admin page is loading
         if(strstr($_SERVER['QUERY_STRING'], 'Bizyhood'))
         {
-            wp_enqueue_style ('Bizyhood-styles',  Bizyhood_Utility::getCSSBaseURL() . 'bizyhood.css?v='. BROADSTREET_VERSION);
-            wp_enqueue_script('Bizyhood-main'  ,  Bizyhood_Utility::getJSBaseURL().'bizyhood.js?v='. BROADSTREET_VERSION);
+            wp_enqueue_style ('Bizyhood-styles',  Bizyhood_Utility::getCSSBaseURL() . 'bizyhood.css?v='. BIZYHOOD_VERSION);
+            wp_enqueue_script('Bizyhood-main'  ,  Bizyhood_Utility::getJSBaseURL().'bizyhood.js?v='. BIZYHOOD_VERSION);
         }
         
         # Only register on the post editing page
@@ -421,7 +421,7 @@ class Bizyhood_Core
                 || $GLOBALS['pagenow'] == 'post-new.php')
         {
             wp_enqueue_style ('Bizyhood-vendorcss-time', Bizyhood_Utility::getVendorBaseURL() . 'timepicker/css/timePicker.css');
-            wp_enqueue_script('Bizyhood-main'  ,  Bizyhood_Utility::getJSBaseURL().'bizyhood.js?v='. BROADSTREET_VERSION);
+            wp_enqueue_script('Bizyhood-main'  ,  Bizyhood_Utility::getJSBaseURL().'bizyhood.js?v='. BIZYHOOD_VERSION);
             wp_enqueue_script('Bizyhood-vendorjs-time'  ,  Bizyhood_Utility::getVendorBaseURL().'timepicker/js/jquery.timePicker.min.js');
         }
         
