@@ -157,7 +157,7 @@ class Bizyhood_Core
         // add_shortcode('bizyhood', array($this, 'shortcode'));
         add_shortcode('bh-businesses', array($this, 'businesses_shortcode'));
         // add_filter('image_size_names_choose', array($this, 'addImageSizes'));
-        add_action('wp_footer', array($this, 'addPoweredBy'));
+        // add_action('wp_footer', array($this, 'addPoweredBy'));
 
         // add_action('init', array($this, 'createPostTypes'));
         // add_action('wp_enqueue_scripts', array($this, 'addPostStyles'));
@@ -177,21 +177,6 @@ class Bizyhood_Core
         // add_action('wp_ajax_register', array('Bizyhood_Ajax', 'register'));
     }
      
-    /**
-     * Add powered-by notice 
-     */
-    public function addPoweredBy()
-    {
-        if(get_post_type() == self::BIZ_POST_TYPE && !is_admin())
-        {
-            echo '<style type="text/css">#bs-powered-by {display: none;}</style>';
-            echo '<span id="bs-powered-by">';
-            echo    'Powered by <a href="http://wordpress.org/extend/plugins/bizyhood/">Wordpress Business Directory</a>, ';
-            echo    '<a href="http://bealocalpublisher.com">Start A Local News Site</a>,';
-            echo    'and <a href="http://bizyhoodads.com">The Adserver for Local Publishers</a>.';
-            echo '</span>';
-        }
-    }
     
     /**
      * A callback executed whenever the user tried to access the Bizyhood admin page
