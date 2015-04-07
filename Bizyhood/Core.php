@@ -287,6 +287,7 @@ class Bizyhood_Core
         $remote_settings = Bizyhood_Utility::getRemoteSettings();
         $api_url = Bizyhood_Utility::getApiUrl();
         $zip_codes = Bizyhood_Utility::getZipsEncoded();
+        $use_cuisine_types = Bizyhood_Utility::getOption(self::KEY_USE_CUISINE_TYPES);
 
         // get current page
         if (get_query_var('paged'))
@@ -298,15 +299,30 @@ class Bizyhood_Core
 
         // get category filter
         if (get_query_var('k'))
-            $query = '&k=' . get_query_var('k');
+            $category = urlencode( get_query_var('k') );
         elseif (isset($_GET['k']))
-            $query = '&k=' . $_GET['k'];
-        else
-            $query = '';
+            $category = urlencode( $_GET['k'] );
 
-        $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000$query", $remote_settings ) );
+        if ($use_cuisine_types) {
+            if (isset($category)) {
+                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000&cu=$category", $remote_settings ) );
+            }
+            else {
+                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000", $remote_settings ) );
+            }
+        }
+        else {
+            if (isset($category)) {
+                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000&k=$category", $remote_settings ) );
+            }
+            else {
+                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000", $remote_settings ) );
+            }
+        }
+        Bizyhood_Log::add('debug','Biz list response:'.$response);
         $response_json = json_decode( $response );
         $businesses = $response_json->businesses;
+
         $pagination_args = array(
             'total'              => ( $response_json->total_count / $response_json->page_size ),
             'current'            => $page,
