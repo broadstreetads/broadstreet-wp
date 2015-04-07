@@ -55,7 +55,7 @@ class Bizyhood_Core
                 'post_title'     => 'Bizyhood business list',
                 'post_type'      => 'page',
                 'post_name'      => 'bh-businesses',
-                'post_content'   => '[bh-businesses]',
+                'post_content'   => '[bh-categories] [bh-businesses]',
                 'post_status'    => 'publish',
                 'comment_status' => 'closed',
                 'ping_status'    => 'closed',
@@ -85,24 +85,6 @@ class Bizyhood_Core
             wp_insert_post( $business_view_page );
         }
 
-        // Create the category list page
-        $category_list_page = get_page_by_title( "Bizyhood category list", "OBJECT", "page" );
-        if ( !$category_list_page )
-        {
-            $category_list_page = array(
-                'post_title'     => 'Bizyhood category list',
-                'post_type'      => 'page',
-                'post_name'      => 'bh-categories',
-                'post_content'   => '',
-                'post_status'    => 'publish',
-                'comment_status' => 'closed',
-                'ping_status'    => 'closed',
-                'post_author'    => 1,
-                'menu_order'     => 0,
-                'guid'          => site_url() . "/bh-categories"
-            );
-            wp_insert_post( $category_list_page );
-        }
     }
 
     public function uninstall()
@@ -114,7 +96,7 @@ class Bizyhood_Core
         if ($business_list_page)
         {
             Bizyhood_Log::add('info', "Removing business list page (post ID " . $business_list_page->ID . ")");
-            wp_trash_post($business_list_page->ID);
+            wp_delete_post($business_list_page->ID);
         }
 
         // Remove business list page
@@ -122,16 +104,9 @@ class Bizyhood_Core
         if ($business_view_page)
         {
             Bizyhood_Log::add('info', "Removing view business page (post ID " . $business_view_page->ID . ")");
-            wp_trash_post($business_view_page->ID);
+            wp_delete_post($business_view_page->ID);
         }
 
-        // Remove category list page
-        $category_list_page = get_page_by_title( "Bizyhood category list", "OBJECT", "page" );
-        if ($category_list_page)
-        {
-            Bizyhood_Log::add('info', "Removing category list page (post ID " . $category_list_page->ID . ")");
-            wp_trash_post($category_list_page->ID);
-        }
     }
 
     /**
@@ -157,6 +132,7 @@ class Bizyhood_Core
         // add_action('admin_notices',     array($this, 'adminWarningCallback'));
         // add_shortcode('bizyhood', array($this, 'shortcode'));
         add_shortcode('bh-businesses', array($this, 'businesses_shortcode'));
+        add_shortcode('bh-categories', array($this, 'categories_shortcode'));
         // add_filter('image_size_names_choose', array($this, 'addImageSizes'));
         // add_action('wp_footer', array($this, 'addPoweredBy'));
 
@@ -328,22 +304,7 @@ class Bizyhood_Core
         # Override content for the list categories page
         if ($post->post_name === 'bh-categories')
         {
-            $zips_encoded = Bizyhood_Utility::getZipsEncoded();
-            $list_page_id = get_page_by_title( "Bizyhood business list", "OBJECT", "page" )->ID;
-            if ($zips_encoded)
-            {
-                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/cuisine/?pc=" . $zips_encoded . "&rad=15000&format=json" ) );
-                $response_json = json_decode($response);
-                $use_cuisine_types = Bizyhood_Utility::getOption(self::KEY_USE_CUISINE_TYPES, false);
-                if ($use_cuisine_types) {
-                    $cuisines = $response_json->cuisines;
-                    return Bizyhood_View::load('categories/cuisines', array('content' => $content, 'cuisines' => $cuisines, 'list_page_id' => $list_page_id), true);
-                }
-                else {
-                    $categories = Bizyhood_Utility::getOption(self::KEY_CATEGORIES);
-                    return Bizyhood_View::load('categories/custom', array('content' => $content, 'categories' => $categories, 'list_page_id' => $list_page_id), true);
-                }
-            }
+
         }
         
         return $content;
@@ -381,6 +342,27 @@ class Bizyhood_Core
         $view_business_page_id = get_page_by_title( "Bizyhood view business", "OBJECT", "page" )->ID;
 
         return Bizyhood_View::load( 'listings/index', array( 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
+    }
+
+    public function categories_shortcode($attrs)
+    {
+        $api_url = Bizyhood_Utility::getApiUrl();
+        $zips_encoded = Bizyhood_Utility::getZipsEncoded();
+        $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
+        if ($zips_encoded && $list_page_id)
+        {
+            $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/cuisine/?pc=" . $zips_encoded . "&rad=15000&format=json" ) );
+            $response_json = json_decode($response);
+            $use_cuisine_types = Bizyhood_Utility::getOption(self::KEY_USE_CUISINE_TYPES, false);
+            if ($use_cuisine_types) {
+                $cuisines = $response_json->cuisines;
+                return Bizyhood_View::load('categories/cuisines', array('cuisines' => $cuisines, 'list_page_id' => $list_page_id), true);
+            }
+            else {
+                $categories = Bizyhood_Utility::getOption(self::KEY_CATEGORIES);
+                return Bizyhood_View::load('categories/custom', array('categories' => $categories, 'list_page_id' => $list_page_id), true);
+            }
+        }
     }
 }
 
