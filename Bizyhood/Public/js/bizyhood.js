@@ -49,11 +49,14 @@ jQuery(function($){
         $('#zip_codes')
             .append($("<option></option>")
             .attr("value",zip_code)
-            .attr('selected', true)
             .text(zip_code));
 
         // Clear ZIP code field, put focus on it
         $('#zip_code').val('').focus();
+    });
+
+    $('#zip_code_remove').click(function() {
+        $("#zip_codes option:selected").remove();
     });
 
     $('#category_add').click(function() {
@@ -77,11 +80,14 @@ jQuery(function($){
         $('#categories')
             .append($("<option></option>")
             .attr("value",category)
-            .attr('selected', true)
             .text(category));
 
         // Clear ZIP code field, put focus on it
         $('#category').val('').focus();
+    });
+
+    $('#category_remove').click(function() {
+        $("#categories option:selected").remove();
     });
 
     $('#use_cuisine_types').click(function() {
@@ -94,6 +100,10 @@ jQuery(function($){
     $('#save-bizyhood').click(function() {
         
         var network_id = $('#network').val();
+
+        // Mark all ZIPs and categories in <select> as selected
+        $('select#zip_codes option').prop('selected', true);
+        $('select#categories option').prop('selected', true);
 
         // Submit AJAX request
         jQuery.post(ajaxurl, {
@@ -110,6 +120,10 @@ jQuery(function($){
                 }
             },
         'json');
+
+        // Unselect all ZIPs and categories
+        $('select#zip_codes option').prop('selected', false);
+        $('select#categories option').prop('selected', false);
     });
     
 });

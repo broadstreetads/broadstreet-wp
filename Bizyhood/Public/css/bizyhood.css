@@ -239,7 +239,7 @@ select#zip_codes {
 }
 
 input#category {
-    width:190px;
+    width:140px;
 }
 
 select#categories {

@@ -68,10 +68,11 @@
                         <div class="control-container">
                             ZIP Code: <input type="text" maxlength="5" id="zip_code"/>
                             <input type="button" id="zip_code_add" value="Add"/>
+                            <input type="button" id="zip_code_remove" value="Remove"/>
                             <br/>
                             <select id="zip_codes" multiple="multiple">
                                 <?php foreach($zip_codes as $zip_code): ?>
-                                <option value="<?php echo $zip_code ?>" selected="selected"><?php echo $zip_code ?></option>
+                                <option value="<?php echo $zip_code ?>"><?php echo $zip_code ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -109,10 +110,12 @@
                             Category name: <br/>
                             <input type="text" id="category"/>
                             <input type="button" id="category_add" value="Add"/>
+                            <input type="button" id="category_remove" value="Remove"/>
+
                             <br/>
                             <select id="categories" multiple="multiple">
                                 <?php foreach($categories as $category): ?>
-                                <option value="<?php echo $category; ?>" selected="selected"><?php echo $category; ?></option>
+                                <option value="<?php echo $category; ?>"><?php echo $category; ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
