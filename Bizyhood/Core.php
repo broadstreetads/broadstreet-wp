@@ -324,7 +324,7 @@ class Bizyhood_Core
         $businesses = $response_json->businesses;
 
         $pagination_args = array(
-            'total'              => ( $response_json->total_count / $response_json->page_size ),
+            'total'              => ( $response_json->total_count / $response_json->page_size ) + ( ( $response_json->total_count % $response_json->page_size == 0 ) ? 0 : 1 ),
             'current'            => $page,
         );
         $view_business_page_id = get_page_by_title( "Bizyhood view business", "OBJECT", "page" )->ID;
