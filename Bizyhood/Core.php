@@ -352,8 +352,22 @@ class Bizyhood_Core
         $remote_settings = Bizyhood_Utility::getRemoteSettings();
         $api_url = Bizyhood_Utility::getApiUrl();
         $zip_codes = Bizyhood_Utility::getZipsEncoded();
-        $page = isset( $_GET['paged'] ) ? $_GET['paged'] : 1;
-        $query = isset( $_GET['k'] ) ? '&k=' . urlencode( $_REQUEST['k'] ) : '';
+
+        // get current page
+        if (get_query_var('paged'))
+            $page = get_query_var('paged');
+        elseif (isset($_GET['paged']))
+            $page = $_GET['paged'];
+        else
+            $page = 1;
+
+        // get category filter
+        if (get_query_var('k'))
+            $query = '&k=' . get_query_var('k');
+        elseif (isset($_GET['k']))
+            $query = '&k=' . $_GET['k'];
+        else
+            $query = '';
 
         $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000$query", $remote_settings ) );
         $response_json = json_decode( $response );
