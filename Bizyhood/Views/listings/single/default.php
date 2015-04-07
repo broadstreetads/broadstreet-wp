@@ -11,7 +11,7 @@
         <?php endif; ?>
         <br />
         <?php if($business->address1): ?>
-            <a target="_blank" href="https://maps.google.com/?q=<?php echo urlencode(Bizyhood_Utility::buildAddressFromMeta($business, true)) ?>">View map</a><br />
+            <a target="_blank" href="//maps.google.com/?q=<?php echo urlencode(Bizyhood_Utility::buildAddressFromMeta($business, true)) ?>">View map</a><br />
         <?php endif; ?>
         <?php if($business->telephone): ?>
             <?php echo $business->telephone ?><br />
