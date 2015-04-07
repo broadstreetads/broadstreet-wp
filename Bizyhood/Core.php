@@ -27,6 +27,7 @@ if (! class_exists('Bizyhood_Core')):
 class Bizyhood_Core
 {
     CONST KEY_API_URL             = 'Bizyhood_API_URL';
+    CONST KEY_MAIN_PAGE_ID        = 'Bizyhood_Main_page_ID';
     CONST KEY_INSTALL_REPORT      = 'Bizyhood_Installed';
     CONST KEY_ZIP_CODES           = 'Bizyhood_ZIP_Codes';
     CONST KEY_USE_CUISINE_TYPES   = 'Bizyhood_Use_Cuisine_Types';
@@ -254,6 +255,7 @@ class Bizyhood_Core
         $data = array();
 
         $data['api_url']            = Bizyhood_Utility::getApiUrl();
+        $data['main_page_id']       = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
         $data['zip_codes']          = Bizyhood_Utility::getOption(self::KEY_ZIP_CODES);
         $data['use_cuisine_types']  = Bizyhood_Utility::getOption(self::KEY_USE_CUISINE_TYPES);
         $data['categories']         = Bizyhood_Utility::getOption(self::KEY_CATEGORIES);

@@ -44,6 +44,20 @@
 
                     <div class="option">
                         <div class="control-label">
+                            <div class="name nomargin">Business directory page</div>
+                            <div class="desc nomargin">
+                                The page that will be used to show the categories and businesses. Must include the [bh-categories] and [bh-businesses] shortcodes.<br />
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <?php wp_dropdown_pages( array('name' => 'main_page_id', 'selected' => $main_page_id) ) ?>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="break"></div>
+
+                    <div class="option">
+                        <div class="control-label">
                             <div class="name nomargin">
                                 Targeted ZIP codes
                             </div>

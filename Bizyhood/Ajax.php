@@ -23,6 +23,7 @@ class Bizyhood_Ajax
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_ZIP_CODES, $_POST['zip_codes']);
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_USE_CUISINE_TYPES, $_POST['use_cuisine_types'] === 'true');
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_CATEGORIES, $_POST['categories']);
+        Bizyhood_Utility::setOption(Bizyhood_Core::KEY_MAIN_PAGE_ID, $_POST['main_page_id']);
         die(json_encode(array('success' => true)));
     }
     
