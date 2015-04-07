@@ -2,8 +2,6 @@
 /**
  * This file contains a class for utility methods and/or wrappers for built-in
  *  Wordpress API calls
- *
- * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**

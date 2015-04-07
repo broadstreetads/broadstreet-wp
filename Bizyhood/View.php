@@ -1,8 +1,6 @@
 <?php
 /**
  * This file contains a class for loading the presentation layer/files
- *
- * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**

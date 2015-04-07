@@ -2,8 +2,6 @@
 /**
  * This file contains a class for measuring performance of the search requests
  *  and internal functionality.
- *
- * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**

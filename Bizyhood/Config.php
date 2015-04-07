@@ -1,8 +1,6 @@
 <?php
 /**
  * This file contains a class which holds Bizyhood's configuration information
- *
- * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**

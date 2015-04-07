@@ -1,8 +1,6 @@
 <?php
 /**
  * This file contains a class for logging messages to files on disk
- *
- * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**

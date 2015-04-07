@@ -15,9 +15,6 @@
  *  }
  *
  *  # Do some stuff with $bigthing
- *
- * @author Kenny Katzgrau, Katzgrau LLC <kenny@katgrau.com> www.katzgau.com
- * @link https://github.com/katzgrau/WP-Easy-Cache
  */
 
 /**

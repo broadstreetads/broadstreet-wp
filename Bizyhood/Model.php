@@ -1,8 +1,6 @@
 <?php
 /* 
  * 
- *
- * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**

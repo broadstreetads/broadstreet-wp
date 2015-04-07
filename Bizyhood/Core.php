@@ -3,8 +3,6 @@
  * This file acts as the 'Controller' of the application. It contains a class
  *  that will load the required hooks, and the callback functions that those
  *  hooks execute.
- *
- * @author Bizyhood <support@bizyhood.com>
  */
 
 require_once dirname(__FILE__) . '/Ajax.php';

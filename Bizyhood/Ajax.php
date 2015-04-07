@@ -2,8 +2,6 @@
 /**
  * This file contains a class which provides the AJAX callback functions required
  *  for Bizyhood.
- *
- * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**

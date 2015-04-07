@@ -1,8 +1,6 @@
 <?php
 /**
  * This file contains a custom Exception class for Bizyhood
- *
- * @author Bizyhood Ads <labs@bizyhoodads.com>
  */
 
 /**
