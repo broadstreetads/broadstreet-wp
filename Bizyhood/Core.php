@@ -125,33 +125,11 @@ class Bizyhood_Core
         # -- Below is core functionality --
         add_action('admin_menu', 	array($this, 'adminCallback'     ));
         add_action('admin_init', 	array($this, 'adminInitCallback' ));
-        // add_action('init',          array($this, 'addZoneTag' ));
-        // add_action('init',          array($this, 'businessIndexSidebar' ));
-        // add_action('admin_notices',     array($this, 'adminWarningCallback'));
-        // add_shortcode('bizyhood', array($this, 'shortcode'));
         add_shortcode('bh-businesses', array($this, 'businesses_shortcode'));
         add_shortcode('bh-categories', array($this, 'categories_shortcode'));
-        // add_filter('image_size_names_choose', array($this, 'addImageSizes'));
-        // add_action('wp_footer', array($this, 'addPoweredBy'));
-
-        // add_action('init', array($this, 'createPostTypes'));
-        // add_action('wp_enqueue_scripts', array($this, 'addPostStyles'));
-        // add_action('pre_get_posts', array($this, 'modifyPostListing'));
         add_filter('the_content', array($this, 'postTemplate'), 100);
-        // add_filter('the_posts', array($this, 'businessQuery'));
-        // add_filter('comment_form_defaults', array($this, 'commentForm'));
-        // add_action('save_post', array($this, 'savePostMeta'));
-        
-        # - Below are partly business-related
-        // add_action('add_meta_boxes', array($this, 'addMetaBoxes'));
-        
-        # -- Below is administration AJAX functionality
         add_action('wp_ajax_save_settings', array('Bizyhood_Ajax', 'saveSettings'));
-        // add_action('wp_ajax_create_advertiser', array('Bizyhood_Ajax', 'createAdvertiser'));
-        // add_action('wp_ajax_import_facebook', array('Bizyhood_Ajax', 'importFacebook'));
-        // add_action('wp_ajax_register', array('Bizyhood_Ajax', 'register'));
     }
-     
     
     /**
      * A callback executed whenever the user tried to access the Bizyhood admin page
@@ -162,10 +140,6 @@ class Bizyhood_Core
                 
         add_menu_page('Bizyhood', 'Bizyhood', 'edit_pages', 'Bizyhood', array($this, 'adminMenuCallback'), $icon_url);
         add_submenu_page('Bizyhood', 'Settings', 'Account Setup', 'edit_pages', 'Bizyhood', array($this, 'adminMenuCallback'));
-        // add_submenu_page('Bizyhood', 'Business Settings', 'Business Settings', 'edit_pages', 'Bizyhood-Business', array($this, 'adminMenuBusinessCallback'));
-        // add_submenu_page('Bizyhood', 'Advanced', 'Advanced', 'edit_pages', 'Bizyhood-Layout', array($this, 'adminMenuLayoutCallback'));
-        // add_submenu_page('Bizyhood', 'Help', 'How To Get Started', 'edit_pages', 'Bizyhood-Help', array($this, 'adminMenuHelpCallback'));
-        // add_submenu_page('Bizyhood', 'Editable Ads', 'Editable Ads&trade;', 'edit_pages', 'Bizyhood-Editable', array($this, 'adminMenuEditableCallback'));
     }
 
     /**
@@ -176,9 +150,6 @@ class Bizyhood_Core
         if(in_array($GLOBALS['pagenow'], array('edit.php', 'post.php', 'post-new.php')))
         {
             $info = Bizyhood_Utility::getNetwork();
-
-            //if(!$info || !$info->cc_on_file)
-            //    echo '<div class="updated"><p>You\'re <strong>almost ready</strong> to start using Bizyhood! Check the <a href="admin.php?page=Bizyhood">plugin page</a> to take care of the last steps. When that\'s done, this message will clear shortly after.</p></div>';
         }
     }
 
