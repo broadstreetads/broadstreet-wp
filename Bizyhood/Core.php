@@ -139,7 +139,7 @@ class Bizyhood_Core
         // add_action('init', array($this, 'createPostTypes'));
         // add_action('wp_enqueue_scripts', array($this, 'addPostStyles'));
         // add_action('pre_get_posts', array($this, 'modifyPostListing'));
-        // add_filter('the_content', array($this, 'postTemplate'), 100);
+        add_filter('the_content', array($this, 'postTemplate'), 100);
         // add_filter('the_posts', array($this, 'businessQuery'));
         // add_filter('comment_form_defaults', array($this, 'commentForm'));
         // add_action('save_post', array($this, 'savePostMeta'));
@@ -351,6 +351,29 @@ class Bizyhood_Core
                 return Bizyhood_View::load('categories/custom', array('categories' => $categories, 'list_page_id' => $list_page_id), true);
             }
         }
+    }
+
+
+    /**
+     * Handler used for modifying the way business listings are displayed
+     * @param string $content The post content
+     * @return string Content
+     */
+    public function postTemplate($content)
+    {   
+        global $post;
+        $api_url = Bizyhood_Utility::getApiUrl();
+
+        # Override content for the view business page
+        if ($post->post_name === 'bh-business')
+        {
+            $bizyhood_id = $_REQUEST['bizyhood_id'];
+            $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/" . $bizyhood_id ) );
+            $business = json_decode($response);
+            return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business), true);
+        }
+
+        return $content;
     }
 }
 
