@@ -289,47 +289,47 @@ class Bizyhood_Core
         $zip_codes = Bizyhood_Utility::getZipsEncoded();
         $use_cuisine_types = Bizyhood_Utility::getOption(self::KEY_USE_CUISINE_TYPES);
 
-        // get current page
-        if (get_query_var('paged'))
-            $page = get_query_var('paged');
-        elseif (isset($_GET['paged']))
-            $page = $_GET['paged'];
-        else
-            $page = 1;
+        if ($zip_codes) {
+            // get current page
+            if (get_query_var('paged'))
+                $page = get_query_var('paged');
+            elseif (isset($_GET['paged']))
+                $page = $_GET['paged'];
+            else
+                $page = 1;
 
-        // get category filter
-        if (get_query_var('k'))
-            $category = urlencode( get_query_var('k') );
-        elseif (isset($_GET['k']))
-            $category = urlencode( $_GET['k'] );
+            // get category filter
+            if (get_query_var('k'))
+                $category = urlencode( get_query_var('k') );
+            elseif (isset($_GET['k']))
+                $category = urlencode( $_GET['k'] );
 
-        if ($use_cuisine_types) {
-            if (isset($category)) {
-                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000&cu=$category", $remote_settings ) );
+            if ($use_cuisine_types) {
+                if (isset($category)) {
+                    $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000&cu=$category", $remote_settings ) );
+                }
+                else {
+                    $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000", $remote_settings ) );
+                }
             }
             else {
-                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000", $remote_settings ) );
+                if (isset($category)) {
+                    $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000&k=$category", $remote_settings ) );
+                }
+                else {
+                    $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000", $remote_settings ) );
+                }
             }
-        }
-        else {
-            if (isset($category)) {
-                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000&k=$category", $remote_settings ) );
-            }
-            else {
-                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000", $remote_settings ) );
-            }
-        }
-        Bizyhood_Log::add('debug','Biz list response:'.$response);
-        $response_json = json_decode( $response );
-        $businesses = $response_json->businesses;
+            $response_json = json_decode( $response );
+            $businesses = $response_json->businesses;
+            $pagination_args = array(
+                'total'              => ( $response_json->total_count / $response_json->page_size ) + ( ( $response_json->total_count % $response_json->page_size == 0 ) ? 0 : 1 ),
+                'current'            => $page,
+            );
+            $view_business_page_id = get_page_by_title( "Bizyhood view business", "OBJECT", "page" )->ID;
 
-        $pagination_args = array(
-            'total'              => ( $response_json->total_count / $response_json->page_size ) + ( ( $response_json->total_count % $response_json->page_size == 0 ) ? 0 : 1 ),
-            'current'            => $page,
-        );
-        $view_business_page_id = get_page_by_title( "Bizyhood view business", "OBJECT", "page" )->ID;
-
-        return Bizyhood_View::load( 'listings/index', array( 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
+            return Bizyhood_View::load( 'listings/index', array( 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
+        }
     }
 
     public function categories_shortcode($attrs)
