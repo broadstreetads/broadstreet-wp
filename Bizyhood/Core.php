@@ -451,7 +451,7 @@ class Bizyhood_Core
 
         $data['service_tag']        = Broadstreet_Utility::getServiceTag();
         $data['api_key']            = Broadstreet_Utility::getOption(self::KEY_API_KEY);
-        $data['api_url']            = Broadstreet_Utility::getApiUrl();
+        $data['api_url']            = Broadstreet_Utility::getOption(self::KEY_API_URL);
         $data['business_enabled']   = Broadstreet_Utility::getOption(self::KEY_BIZ_ENABLED);
         $data['network_id']         = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
         $data['zip_codes']          = Broadstreet_Utility::getOption(self::KEY_ZIP_CODES);
@@ -683,7 +683,7 @@ class Bizyhood_Core
     public function postTemplate($content)
     {   
         global $post;
-        $api_url = Broadstreet_Utility::getApiUrl();
+        $api_url = Broadstreet_Utility::getOption(self::KEY_API_URL);
 
         # Override content for the view business page
         if ($post->post_name === 'bh-business')
@@ -829,7 +829,7 @@ class Bizyhood_Core
     public function businesses_shortcode($attrs)
     {
         $remote_settings = Broadstreet_Utility::getRemoteSettings();
-        $api_url = Broadstreet_Utility::getApiUrl();
+        $api_url = Broadstreet_Utility::getOption(self::KEY_API_URL);
         $zip_codes = Broadstreet_Utility::getZipsEncoded();
         $page = isset( $_GET['paged'] ) ? $_GET['paged'] : 1;
         $query = isset( $_GET['k'] ) ? '&k=' . urlencode( $_REQUEST['k'] ) : '';
