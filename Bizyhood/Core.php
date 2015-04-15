@@ -136,7 +136,7 @@ class Bizyhood_Core
      */
     public function adminCallback()
     {
-        $icon_url = 'http://bizyhood-common.s3.amazonaws.com/bizyhood-blargo/bizyhood-icon.png';
+        $icon_url = null;
                 
         add_menu_page('Bizyhood', 'Bizyhood', 'edit_pages', 'Bizyhood', array($this, 'adminMenuCallback'), $icon_url);
         add_submenu_page('Bizyhood', 'Settings', 'Account Setup', 'edit_pages', 'Bizyhood', array($this, 'adminMenuCallback'));
