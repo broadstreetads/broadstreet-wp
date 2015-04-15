@@ -331,7 +331,7 @@ class Bizyhood_Core
     public function postTemplate($content)
     {   
         global $post;
-        $api_url = Bizyhood_Utility::getApiUrl();
+        $api_url = Broadstreet_Utility::getOption(self::KEY_API_URL);
 
         # Override content for the view business page
         if ($post->post_name === 'bh-business')

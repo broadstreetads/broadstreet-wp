@@ -56,6 +56,7 @@ class Bizyhood_Utility
     }
     
     /**
+<<<<<<< HEAD
      * Get the Bizyhood API URL
      * @return string 
      */
@@ -72,6 +73,24 @@ class Bizyhood_Utility
     /**
      * Get the default settings for the WP remote API
      * @return array 
+=======
+     * Get the current user's Broadstreet API key
+     * @return boolean 
+     */
+    public static function getApiKey()
+    {
+        $api_key = Broadstreet_Utility::getOption(Bizyhood_Core::KEY_API_KEY);
+        
+        if(!$api_key) 
+            return FALSE;
+        else
+            return $api_key;
+    }
+
+    /**
+     * Get the default WP Remote API settings
+     * @return array
+>>>>>>> BW-582-use-real-API
      */
     public static function getRemoteSettings()
     {
