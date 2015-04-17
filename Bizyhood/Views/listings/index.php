@@ -14,10 +14,17 @@
     
 </style>
 
-<div class="bizyhood-index-right" style="width: 40%; box-sizing: border-box; padding-right: 5px; float: right">
-    <?php dynamic_sidebar('businesses-right-sidebar') ?>
-</div>
+<?php if ( $cuisines ) : ?>
+<?php foreach($cuisines as $cuisine => $count): ?>
+	<a href="<?php echo site_url(); ?>?page_id=<?php echo $list_page_id; ?>&k=<?php echo urlencode($cuisine); ?>"><?php echo $cuisine; ?></a> (<?php echo $count; ?>) 
+<?php endforeach; ?>
+<?php else : ?>
+<?php foreach($categories as $category): ?>
+	<a href="<?php echo site_url(); ?>?page_id=<?php echo $list_page_id; ?>&k=<?php echo urlencode($category); ?>"><?php echo $category; ?></a> 
+<?php endforeach; ?>
+<?php endif ?>
 
+<hr/>
 <?php echo paginate_links($pagination_args); ?>
 
 <?php $i = 0; foreach($businesses as $business): ?>
