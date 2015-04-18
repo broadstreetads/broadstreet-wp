@@ -127,7 +127,6 @@ class Bizyhood_Core
         add_action('admin_init', 	array($this, 'adminInitCallback'));
         add_action('wp_print_styles', 	array($this, 'load_plugin_styles'));
         add_shortcode('bh-businesses', array($this, 'businesses_shortcode'));
-        add_shortcode('bh-categories', array($this, 'categories_shortcode'));
         add_filter('the_content', array($this, 'postTemplate'), 100);
         add_action('wp_ajax_save_settings', array('Bizyhood_Ajax', 'saveSettings'));
     }
@@ -316,28 +315,6 @@ class Bizyhood_Core
        
         return Bizyhood_View::load( 'listings/index', array( 'cuisines' => $cuisines, 'categories' => $categories, 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
     }
-
-    public function categories_shortcode($attrs)
-    {
-        $api_url = Bizyhood_Utility::getApiUrl();
-        $zips_encoded = Bizyhood_Utility::getZipsEncoded();
-        $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
-        if ($zips_encoded && $list_page_id)
-        {
-            $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/cuisine/?pc=" . $zips_encoded . "&rad=15000&format=json" ) );
-            $response_json = json_decode($response);
-            $use_cuisine_types = Bizyhood_Utility::getOption(self::KEY_USE_CUISINE_TYPES, false);
-            if ($use_cuisine_types) {
-                $cuisines = $response_json->cuisines;
-                return Bizyhood_View::load('categories/cuisines', array('cuisines' => $cuisines, 'list_page_id' => $list_page_id), true);
-            }
-            else {
-                $categories = Bizyhood_Utility::getOption(self::KEY_CATEGORIES);
-                return Bizyhood_View::load('categories/custom', array('categories' => $categories, 'list_page_id' => $list_page_id), true);
-            }
-        }
-    }
-
 
     /**
      * Handler used for modifying the way business listings are displayed
