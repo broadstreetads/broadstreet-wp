@@ -1,90 +1,76 @@
-<!-- Hide the placeholder title of this page -->
-<style type="text/css">
-.entry-title { display:none; }
-</style>
-
-<h2><?php echo $business->name ?></h2>
-<div id="biz-column-1">
-    <div class="basic-info">
-        <?php if($business->address1): ?>
-            <?php echo Bizyhood_Utility::buildAddressFromMeta($business); ?>
-        <?php endif; ?>
-        <br />
-        <?php if($business->address1): ?>
-            <a target="_blank" href="//maps.google.com/?q=<?php echo urlencode(Bizyhood_Utility::buildAddressFromMeta($business, true)) ?>">View map</a><br />
-        <?php endif; ?>
-        <?php if($business->telephone): ?>
-            <?php echo $business->telephone ?><br />
-        <?php endif; ?>
-        <?php if($business->website): ?>
-            <a target="_blank"  href="<?php echo $business->website ?>">View website</a>
-        <?php endif; ?>
+<div class="bh_row bh_business-header">
+    <div class="bh_col-md-2">
+        <a href="<?php echo wp_get_referer(); ?>" class="bh_button"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back</a>
     </div>
-    <?php # TODO:Implement hours display ?>
+</div><!-- /.row -->
+<div class="bh_row">
+    <div class="bh_col-md-2 bh_business-avatar">
     <?php if(false): ?>
-        <div class="section-label"><strong>Hours</strong></div>
-        <div class="biz-data">
-            <ul id="bs-hours-table">
-                <li>
-                    <div class="day">Monday</div>
-                    <?php if($meta['bs_monday_open'] && $meta['bs_monday_close']): ?>
-                    <div class="hours"><?php echo $meta['bs_monday_open'] ?></td><td> - </td><td><?php echo $meta['bs_monday_close'] ?></div>
-                    <?php else: ?>
-                        <div class="hours">Closed</div>
-                    <?php endif; ?>
-                </li>
-                <li>
-                    <div class="day">Tuesday</div>
-                    <?php if($meta['bs_tuesday_open'] && $meta['bs_tuesday_close']): ?>
-                        <div class="hours"><?php echo $meta['bs_tuesday_open'] ?></td><td> - </td><td><?php echo $meta['bs_tuesday_close'] ?></div>
-                    <?php else: ?>
-                        <div class="hours">Closed</div>
-                    <?php endif; ?>
-                </li>
-                <li>
-                    <div class="day">Wednesday</div>
-                    <?php if($meta['bs_wednesday_open'] && $meta['bs_wednesday_close']): ?>
-                        <div class="hours"><?php echo $meta['bs_wednesday_open'] ?></td><td> - </td><td><?php echo $meta['bs_wednesday_close'] ?></div>
-                    <?php else: ?>
-                        <div class="hours">Closed</div>
-                    <?php endif; ?>
-                </li>
-                <li>
-                    <div class="day">Thursday</div>
-                    <?php if($meta['bs_thursday_open'] && $meta['bs_thursday_close']): ?>
-                        <div class="hours"><?php echo $meta['bs_thursday_open'] ?></td><td> - </td><td><?php echo $meta['bs_thursday_close'] ?></div>
-                    <?php else: ?>
-                        <div class="hours">Closed</div>
-                    <?php endif; ?>
-                </li>
-                <li>
-                    <div class="day">Friday</div>
-                    <?php if($meta['bs_friday_open'] && $meta['bs_friday_close']): ?>
-                        <div class="hours"><?php echo $meta['bs_friday_open'] ?></td><td> - </td><td><?php echo $meta['bs_friday_close'] ?></div>
-                    <?php else: ?>
-                        <div class="hours">Closed</div>
-                    <?php endif; ?>
-                </li>
-                <li>
-                    <div class="day">Saturday</div>
-                    <?php if($meta['bs_saturday_open'] && $meta['bs_saturday_close']): ?>
-                        <div class="hours"><?php echo $meta['bs_saturday_open'] ?></td><td> - </td><td><?php echo $meta['bs_saturday_close'] ?></div>
-                    <?php else: ?>
-                        <div class="hours">Closed</div>
-                    <?php endif; ?>
-                </li>
-                <li>
-                    <div class="day">Sunday</div>
-                    <?php if($meta['bs_sunday_open'] && $meta['bs_sunday_close']): ?>
-                        <div class="hours"><?php echo $meta['bs_sunday_open'] ?></td><td> - </td><td><?php echo $meta['bs_sunday_close'] ?></div>
-                    <?php else: ?>
-                        <div class="hours">Closed</div>
-                    <?php endif; ?>
-                </li>
-                
-            </ul>
+        <img src="http://placehold.it/400x320"/>
+        <div class="bh_list-group">
+            <a href="feedback.html" class="bh_list-group-item"><span class="glyphicon glyphicon-comment"></span> Customer Feedback</a>
+            <a href="#" class="bh_list-group-item"><span class="glyphicon glyphicon-calendar"></span> Upcoming Events</a>
+            <a href="#" class="bh_list-group-item"><span class="glyphicon glyphicon-tag"></span> Our Promotions</a>	
         </div>
     <?php endif; ?>
-</div>
-
-<div class="clearfix"></div>
+    </div><!-- /.col-md-2 -->
+    <div class="bh_col-md-10 bh_business-details">
+            <div class="bh_row">
+                    <div class="bh_main-content bh_col-md-9">
+                        <h2><?php echo $business->name ?></h2>
+                        <?php if(false): ?>
+                        <ol class="bh_breadcrumb">
+                            <li>Services and Supplies</li>
+                            <li>Personal Care</li>
+                            <li>Spas</li>
+                        </ol>
+                        <?php endif; ?>
+                        <?php if ( $business->description ) : ?>
+                        <?php echo wpautop($business->description); ?>
+                        <?php else : ?>
+                        <p>No description available</p>
+                        <?php endif ?>
+                    </div><!-- /.col-md-9 -->
+                    <div class="bh_details bh_col-md-3">
+                            <div class="bh_section">
+                                <h5>Location</h5>
+                                <p><?php echo $business->address1 ?><br>
+                                <?php echo $business->locality ?>, <?php echo $business->region ?> <?php echo $business->postal_code ?><br>
+                                <a href="https://maps.google.com?daddr=<?php echo urlencode($business->address1) ?>+<?php echo urlencode($business->locality) ?>+<?php echo urlencode($business->region) ?>+<?php echo urlencode($business->postal_code) ?>" target="_blank">Get directions &rarr;</a></p>
+                            </div>
+                            <?php if(false): ?>
+                            <div class="bh_section">
+                                    <h5>Hours</h5>
+                                    <dl class="bh_dl-horizontal">
+                                            <dt>Sun:</dt>
+                                            <dd>Closed</dd>
+                                            <dt>Mon:</dt>
+                                            <dd>Closed</dd>
+                                            <dt>Tue:</dt>
+                                            <dd>9am - 6pm</dd>
+                                            <dt>Wed:</dt>
+                                            <dd>9am - 6pm</dd>
+                                            <dt>Thu:</dt>
+                                            <dd>10am - 9pm</dd>
+                                            <dt>Fri:</dt>
+                                            <dd>9am - 6pm</dd>
+                                            <dt>Sat:</dt>
+                                            <dd>8am - 5pm</dd>
+                                    </dl>
+                            </div>
+                            <?php endif; ?>
+                            <?php if(false): ?>
+                            <div class="bh_section">
+                                    <h5>Contact Us</h5>
+                                    <div class="bh_list-group">
+                                        <a class="bh_list-group-item">Phone: (732) 536-8500</a>
+                                        <a class="bh_list-group-item" href="#">Visit our Website &rarr;</a>
+                                        <a class="bh_list-group-item" href="#">Like us on Facebook &rarr;</a>
+                                        <a class="bh_list-group-item" href="#">Follow us on Twitter &rarr;</a>     
+                                    </div>
+                            </div>
+                            <?php endif; ?>
+                    </div><!-- /.col-md-3 -->
+            </div><!-- /.row -->
+    </div><!-- /.col-md-10 -->
+</div><!-- /.row -->

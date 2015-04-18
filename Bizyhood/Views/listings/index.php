@@ -1,36 +1,68 @@
-<style>
-    .bizyhood-index ul li {
-        margin-bottom: 3px;
-    }
-    
-    .bizyhood-index ul {
-        margin-bottom: 12px;
-    }
-    
-    .bizyhood-index h4 {
-        margin-bottom: 4px;
-        margin-bottom: 8px;
-    }
-    
-</style>
-
-<?php if ( $cuisines ) : ?>
-<?php foreach($cuisines as $cuisine => $count): ?>
-	<a href="<?php echo site_url(); ?>?page_id=<?php echo $list_page_id; ?>&k=<?php echo urlencode($cuisine); ?>"><?php echo $cuisine; ?></a> (<?php echo $count; ?>) 
-<?php endforeach; ?>
-<?php else : ?>
-<?php foreach($categories as $category): ?>
-	<a href="<?php echo site_url(); ?>?page_id=<?php echo $list_page_id; ?>&k=<?php echo urlencode($category); ?>"><?php echo $category; ?></a> 
-<?php endforeach; ?>
-<?php endif ?>
-
-<hr/>
-<?php echo paginate_links($pagination_args); ?>
-
-<?php $i = 0; foreach($businesses as $business): ?>
-
-<div class="bizyhood-index" style="width: 60%; box-sizing: border-box; padding-right: 5px; float: left">
-    <h4><a href="index.php?page_id=<?php echo $view_business_page_id ?>&bizyhood_id=<?php echo $business->bizyhood_id ?>"><?php echo $business->name ?></a></h4>
+<div class="bh_row bh_business-header">
+	<div class="bh_col-md-8 bh_business-header-title">	
+		<h3>Businesses</h3>
+	</div>
+    <!--
+	<div class="bh_col-md-4 bh_business-search">
+		<input type="search" class="bh_search-field" placeholder="Search businesses..." value="" name="s" title="Search for:">
+	</div>	
+    -->
 </div>
-
-<?php $i++; endforeach; ?>
+<div class="bh_row">			
+    <div class="bh_col-md-2 bh_local-nav">
+            <h5><?php if ( $cuisines ) : ?>Cuisines<?php else : ?>Categories<?php endif ?></h5>
+            <div class="bh_list-group">
+            <?php if ( $cuisines ) : ?>
+            <?php foreach($cuisines as $cuisine => $count): ?>
+                <a class="bh_list-group-item" href="<?php echo site_url(); ?>?page_id=<?php echo $list_page_id; ?>&k=<?php echo urlencode($cuisine); ?>">
+                    <span class="bh_list-title"><?php echo $cuisine; ?></span>
+                    <span class="bh_badge"><?php echo $count; ?></span>
+                </a> 
+            <?php endforeach; ?>
+            <?php else : ?>
+            <?php foreach($categories as $category): ?>
+                <a class="bh_list-group-item" href="<?php echo site_url(); ?>?page_id=<?php echo $list_page_id; ?>&k=<?php echo urlencode($category); ?>">
+                    <span class="bh_list-title"><?php echo $category; ?></span>
+                </a> 
+            <?php endforeach; ?>
+            <?php endif ?>
+            </div>
+    </div>
+    <div class="bh_col-md-10 bh_results">
+        <div class="bh_row">
+            <?php $i = 0; foreach($businesses as $business): ?>
+            <div class="bh_col-md-4">
+                <div class="bh_panel">
+                    <a href="index.php?page_id=<?php echo $view_business_page_id ?>&bizyhood_id=<?php echo $business->bizyhood_id ?>" class="bh_block-link">
+                        <h5><?php echo $business->name ?> <span class="glyphicon glyphicon-share"></span></h5>
+                        <div class="bh_address">
+                            <p><?php echo $business->address1 ?></p>
+                            <p><?php echo $business->locality ?>, <?php echo $business->region ?> <?php echo $business->postal_code ?></p>
+                            <p><?php echo $business->telephone ?></p>
+                        </div>
+                    </a>
+                </div>
+            </div><!-- /.col-md-4 -->
+            <?php $i++; endforeach; ?>
+        </div><!-- /.row -->
+        <div class="bh_row">
+            <div class="bh_col-md-12">
+                <!--
+                <ul class="bh_pagination">
+                    <li class="bh_disabled"><a href="#">&laquo;</a></li>
+                    <li class="bh_disabled"><a href="#">&lsaquo;</a></li>
+                    <li class="bh_active"><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li><a href="#">&rsaquo;</a></li>
+                    <li><a href="#">&raquo;</a></li>
+                </ul>
+                -->
+                <?php echo paginate_links($pagination_args); ?>
+            </div><!-- /.col-md-12 -->
+        </div><!-- /.row -->
+        
+    </div>
+</div>

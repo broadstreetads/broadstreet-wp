@@ -123,12 +123,18 @@ class Bizyhood_Core
         Bizyhood_Log::add('debug', "Registering hooks..");
 
         # -- Below is core functionality --
-        add_action('admin_menu', 	array($this, 'adminCallback'     ));
-        add_action('admin_init', 	array($this, 'adminInitCallback' ));
+        add_action('admin_menu', 	array($this, 'adminCallback'));
+        add_action('admin_init', 	array($this, 'adminInitCallback'));
+        add_action('wp_print_styles', 	array($this, 'load_plugin_styles'));
         add_shortcode('bh-businesses', array($this, 'businesses_shortcode'));
         add_shortcode('bh-categories', array($this, 'categories_shortcode'));
         add_filter('the_content', array($this, 'postTemplate'), 100);
         add_action('wp_ajax_save_settings', array('Bizyhood_Ajax', 'saveSettings'));
+    }
+    
+    function load_plugin_styles()
+    {
+        wp_enqueue_style ('bizyhood-plugin-styles',  Bizyhood_Utility::getCSSBaseURL() . 'plugin.css?v='. BIZYHOOD_VERSION);
     }
     
     /**
@@ -304,6 +310,7 @@ class Bizyhood_Core
         $pagination_args = array(
             'total'              => ( $response_json->total_count / $response_json->page_size ) + ( ( $response_json->total_count % $response_json->page_size == 0 ) ? 0 : 1 ),
             'current'            => $page,
+            'type'               => 'list',
         );
         $view_business_page_id = get_page_by_title( "Bizyhood view business", "OBJECT", "page" )->ID;
        
