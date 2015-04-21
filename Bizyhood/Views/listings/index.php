@@ -1,7 +1,7 @@
 <div class="bh_row bh_business-header">
-	<div class="bh_col-md-8 bh_business-header-title">	
-		<h3>Businesses</h3>
-	</div>
+    <div class="bh_col-md-8 bh_business-header-title">	
+            <h3>Businesses</h3>
+    </div>
     <!--
 	<div class="bh_col-md-4 bh_business-search">
 		<input type="search" class="bh_search-field" placeholder="Search businesses..." value="" name="s" title="Search for:">
@@ -10,23 +10,23 @@
 </div>
 <div class="bh_row">			
     <div class="bh_col-md-2 bh_local-nav">
-            <h5><?php if ( $cuisines ) : ?>Cuisines<?php else : ?>Categories<?php endif ?></h5>
-            <div class="bh_list-group">
-            <?php if ( $cuisines ) : ?>
-            <?php foreach($cuisines as $cuisine => $count): ?>
-                <a class="bh_list-group-item" href="<?php echo site_url(); ?>?page_id=<?php echo $list_page_id; ?>&k=<?php echo urlencode($cuisine); ?>">
-                    <span class="bh_list-title"><?php echo $cuisine; ?></span>
-                    <span class="bh_badge"><?php echo $count; ?></span>
-                </a> 
-            <?php endforeach; ?>
-            <?php else : ?>
-            <?php foreach($categories as $category): ?>
-                <a class="bh_list-group-item" href="<?php echo site_url(); ?>?page_id=<?php echo $list_page_id; ?>&k=<?php echo urlencode($category); ?>">
-                    <span class="bh_list-title"><?php echo $category; ?></span>
-                </a> 
-            <?php endforeach; ?>
-            <?php endif ?>
-            </div>
+        <h5><?php if ( $cuisines ) : ?>Cuisines<?php else : ?>Categories<?php endif ?></h5>
+        <div class="bh_list-group">
+        <?php if ( $cuisines ) : ?>
+        <?php foreach($cuisines as $cuisine => $count): ?>
+            <a class="bh_list-group-item" href="<?php echo site_url(); ?>?page_id=<?php echo $list_page_id; ?>&k=<?php echo urlencode($cuisine); ?>">
+                <span class="bh_list-title"><?php echo $cuisine; ?></span>
+                <span class="bh_badge"><?php echo $count; ?></span>
+            </a> 
+        <?php endforeach; ?>
+        <?php else : ?>
+        <?php foreach($categories as $category): ?>
+            <a class="bh_list-group-item" href="<?php echo site_url(); ?>?page_id=<?php echo $list_page_id; ?>&k=<?php echo urlencode($category); ?>">
+                <span class="bh_list-title"><?php echo $category; ?></span>
+            </a> 
+        <?php endforeach; ?>
+        <?php endif ?>
+        </div>
     </div>
     <div class="bh_col-md-10 bh_results">
         <div class="bh_row">
@@ -47,22 +47,8 @@
         </div><!-- /.row -->
         <div class="bh_row">
             <div class="bh_col-md-12">
-                <!--
-                <ul class="bh_pagination">
-                    <li class="bh_disabled"><a href="#">&laquo;</a></li>
-                    <li class="bh_disabled"><a href="#">&lsaquo;</a></li>
-                    <li class="bh_active"><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li><a href="#">&rsaquo;</a></li>
-                    <li><a href="#">&raquo;</a></li>
-                </ul>
-                -->
                 <?php echo paginate_links($pagination_args); ?>
             </div><!-- /.col-md-12 -->
         </div><!-- /.row -->
-        
     </div>
 </div>
