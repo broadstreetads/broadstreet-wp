@@ -107,7 +107,7 @@ line-height: 1;
 }
 
 .bh_dl-horizontal {word-break: break-word;word-wrap: break-word;}
-.bh_dl-horizontal dd {margin:0 0 0 40px;}
+.bh_dl-horizontal dd {margin:0 0 0 75px;}
 .bh_dl-horizontal dt {
   float: left;
   clear: left;
