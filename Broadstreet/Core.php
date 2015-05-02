@@ -482,7 +482,7 @@ class Broadstreet_Core
             try
             {
                 $data['key_valid'] = true;
-                $data['zones'] = Broadstreet_Utility::refreshZoneCache();
+                $data['zones'] = Broadstreet_Utility::getZoneCache();
                 $data['placements'] = Broadstreet_Utility::getPlacementSettings();
             }
             catch(Exception $ex)

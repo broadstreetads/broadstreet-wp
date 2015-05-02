@@ -62,7 +62,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
         $defaults = array('w_title' => '', 'w_info_string' => '', 'w_opener' => '', 'w_closer' => '', 'w_zone' => '');
 		$instance = wp_parse_args((array) $instance, $defaults);
         
-        $zones = Broadstreet_Utility::refreshZoneCache();
+        $zones = Broadstreet_Utility::getZoneCache();
         
        ?>
         <div class="widget-content">
@@ -157,7 +157,7 @@ class Broadstreet_Multiple_Zone_Widget extends WP_Widget
         $defaults = array('w_title' => 'Broadstreet Ad Zones', 'w_num_zones' => '1', 'w_zone' => array(''), 'w_linebreak' => array('no'));
 		$instance = wp_parse_args((array) $instance, $defaults);
         
-        $zones = Broadstreet_Utility::refreshZoneCache();
+        $zones = Broadstreet_Utility::getZoneCache();
         
         for($i = 0; $i < intval($instance['w_num_zones']); $i++)
         {
@@ -276,7 +276,7 @@ ZONE;
         $defaults = array('w_title' => 'Broadstreet Ad Zones', 'w_info_string' => '', 'w_opener' => '', 'w_closer' => '');
 		$instance = wp_parse_args((array) $instance, $defaults);
         
-        $zones = Broadstreet_Utility::refreshZoneCache();
+        $zones = Broadstreet_Utility::getZoneCache();
         
        ?>
         <div class="widget-content">
