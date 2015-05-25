@@ -7,12 +7,16 @@
     <div class="bh_col-md-2 bh_business-avatar">
     <?php if(false): ?>
         <img src="http://placehold.it/400x320"/>
-        <div class="bh_list-group">
-            <a href="feedback.html" class="bh_list-group-item"><span class="glyphicon glyphicon-comment"></span> Customer Feedback</a>
-            <a href="#" class="bh_list-group-item"><span class="glyphicon glyphicon-calendar"></span> Upcoming Events</a>
-            <a href="#" class="bh_list-group-item"><span class="glyphicon glyphicon-tag"></span> Our Promotions</a>	
-        </div>
     <?php endif; ?>
+        <div class="bh_list-group">
+            <a href="<?php echo $business->feedback_url ?>" class="bh_list-group-item"><span class="glyphicon glyphicon-comment"></span> Customer Feedback</a>
+            <?php if($business->events_url): ?>
+            <a href="<?php echo $business->events_url ?>" class="bh_list-group-item"><span class="glyphicon glyphicon-calendar"></span> Upcoming Events</a>
+            <?php endif; ?>
+            <?php if($business->promotions_url): ?>
+            <a href="<?php echo $business->promotions_url ?>" class="bh_list-group-item"><span class="glyphicon glyphicon-tag"></span> Our Promotions</a>
+            <?php endif; ?>
+        </div>
     </div><!-- /.col-md-2 -->
     <div class="bh_col-md-10 bh_business-details">
         <div class="bh_row">
@@ -57,9 +61,10 @@
                         <?php if($business->website): ?>
                         <a class="bh_list-group-item" href="<?php echo $business->website; ?>" target="_blank">Visit our Website &rarr;</a>
                         <?php endif; ?>
-                        <?php if(false): ?>
-                        <a class="bh_list-group-item" href="#">Like us on Facebook &rarr;</a>
-                        <a class="bh_list-group-item" href="#">Follow us on Twitter &rarr;</a>
+                        <?php if($business->social_networks): ?>
+                        <?php foreach($business->social_networks as $social_network): ?>
+                        <a class="bh_list-group-item" href="<?php echo $social_network->url; ?>"  target="_blank"><?php echo $social_network->cta; ?> &rarr;</a>
+                        <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
                 </div>
