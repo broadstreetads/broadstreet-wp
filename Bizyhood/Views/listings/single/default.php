@@ -22,13 +22,6 @@
         <div class="bh_row">
             <div class="bh_main-content bh_col-md-9">
                 <h2><?php echo $business->name ?></h2>
-                <?php if($business->categories): ?>
-                <ol class="bh_breadcrumb">
-                    <?php foreach($business->categories as $category): ?>
-                    <li><?php echo $category ?></li>
-                    <?php endforeach; ?>
-                </ol>
-                <?php endif; ?>
                 <?php if ( $business->description ) : ?>
                 <?php echo wpautop($business->description); ?>
                 <?php else : ?>
