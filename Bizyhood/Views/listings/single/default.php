@@ -25,7 +25,7 @@
                 <?php if ( $business->description ) : ?>
                 <?php echo wpautop($business->description); ?>
                 <?php else : ?>
-                <p>No description available</p>
+                <p>This business has not yet joined our local community. Give them <a href="<?php echo $business->feedback_url ?>">feedback</a> and let them know you'd like to join!</p>
                 <?php endif ?>
             </div><!-- /.col-md-9 -->
             <div class="bh_details bh_col-md-3">
