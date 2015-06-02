@@ -289,18 +289,18 @@ class Bizyhood_Core
 
         if ($use_cuisine_types) {
             if (isset($category)) {
-                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000&cu=$category", $remote_settings ) );
+                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=12&pn=$page&rad=15000&cu=$category", $remote_settings ) );
             }
             else {
-                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000", $remote_settings ) );
+                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=12&pn=$page&rad=15000", $remote_settings ) );
             }
         }
         else {
             if (isset($category)) {
-                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000&k=$category", $remote_settings ) );
+                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=12&pn=$page&rad=15000&k=$category", $remote_settings ) );
             }
             else {
-                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=10&pn=$page&rad=15000", $remote_settings ) );
+                $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=12&pn=$page&rad=15000", $remote_settings ) );
             }
         }
         $response_json = json_decode( $response );
