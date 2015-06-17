@@ -1,8 +1,6 @@
-@import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
 @import url(http://weloveiconfonts.com/api/?family=entypo);
 /* entypo */
 [class*="entypo-"]:before { font-family: 'entypo', sans-serif;}
-.glyphicon-calendar:before {content: "\e109";}
 
 div[class^="bh_"], 
 div[class^="bh_"]:before, 
@@ -35,10 +33,6 @@ div[class^="bh_"]:after {
 
 @media (min-width:992px){.bh_col-md-1,.bh_col-md-10,.bh_col-md-11,.bh_col-md-12,.bh_col-md-2,.bh_col-md-3,.bh_col-md-4,.bh_col-md-5,.bh_col-md-6,.bh_col-md-7,.bh_col-md-8,.bh_col-md-9{float:left}.bh_col-md-12{width:100%}.bh_col-md-11{width:91.66666667%}.bh_col-md-10{width:83.33333333%}.bh_col-md-9{width:75%}.bh_col-md-8{width:66.66666667%}.bh_col-md-7{width:58.33333333%}.bh_col-md-6{width:50%}.bh_col-md-5{width:41.66666667%}.bh_col-md-4{width:33.33333333%}.bh_col-md-3{width:25%}.bh_col-md-2{width:16.66666667%}.bh_col-md-1{width:8.33333333%}.bh_col-md-offset-12{margin-left:100%}.bh_col-md-offset-11{margin-left:91.66666667%}.bh_col-md-offset-10{margin-left:83.33333333%}.bh_col-md-offset-9{margin-left:75%}.bh_col-md-offset-8{margin-left:66.66666667%}.bh_col-md-offset-7{margin-left:58.33333333%}.bh_col-md-offset-6{margin-left:50%}.bh_col-md-offset-5{margin-left:41.66666667%}.bh_col-md-offset-4{margin-left:33.33333333%}.bh_col-md-offset-3{margin-left:25%}.bh_col-md-offset-2{margin-left:16.66666667%}.bh_col-md-offset-1{margin-left:8.33333333%}.bh_col-md-offset-0{margin-left:0}}
 
-.bh_list-group .glyphicon {
-    float: left; 
-    margin: 0 10px 10px 0px;
-}
 .bh_list-group-item {
 	position: relative;
 	display: block;
@@ -79,7 +73,6 @@ div[class^="bh_"]:after {
 .bh_panel p {color:inherit;line-height:1.5;margin:0;}
 .bh_panel a {display:block;padding:10px 10px 15px;}
 .bh_panel a.bh_inactive {color:inherit;pointer-events:none;}
-.bh_panel a.bh_inactive .glyphicon {display:none;}
 .bh_panel a:hover {text-decoration:none;background:rgba(0,0,0,.05);}
 
 /* Pagination styles */

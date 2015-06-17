@@ -1,6 +1,6 @@
 <div class="bh_row bh_business-header">
     <div class="bh_col-md-2">
-        <a href="<?php echo wp_get_referer(); ?>" class="bh_button"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back</a>
+        <a href="<?php echo wp_get_referer(); ?>" class="bh_button"><span class="entypo-left" aria-hidden="true"></span> Back</a>
     </div>
 </div><!-- /.row -->
 <div class="bh_row" itemscope itemtype="http://schema.org/LocalBusiness">
@@ -9,12 +9,12 @@
         <img src="http://placehold.it/400x320"/>
     <?php endif; ?>
         <div class="bh_list-group">
-            <a href="<?php echo $business->feedback_url ?>" class="bh_list-group-item" target="_blank"><span class="glyphicon glyphicon-comment"></span> Customer Feedback</a>
+            <a href="<?php echo $business->feedback_url ?>" class="bh_list-group-item" target="_blank"><span class="entypo-comment"></span> Customer Feedback</a>
             <?php if($business->events_url): ?>
-            <a href="<?php echo $business->events_url ?>" class="bh_list-group-item" target="_blank"><span class="glyphicon glyphicon-calendar"></span> Upcoming Events</a>
+            <a href="<?php echo $business->events_url ?>" class="bh_list-group-item" target="_blank"><span class="entypo-calendar"></span> Upcoming Events</a>
             <?php endif; ?>
             <?php if($business->promotions_url): ?>
-            <a href="<?php echo $business->promotions_url ?>" class="bh_list-group-item" target="_blank"><span class="glyphicon glyphicon-tag"></span> Our Promotions</a>
+            <a href="<?php echo $business->promotions_url ?>" class="bh_list-group-item" target="_blank"><span class="entypo-tag"></span> Our Promotions</a>
             <?php endif; ?>
         </div>
     </div><!-- /.col-md-2 -->
