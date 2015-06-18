@@ -1,12 +1,12 @@
 <div class="bh_row bh_business-header">
     <div class="bh_col-md-8 bh_business-header-title">	
-            <h3>Businesses</h3>
+        <h3>Businesses</h3>
     </div>
-    <!--
-	<div class="bh_col-md-4 bh_business-search">
-		<input type="search" class="bh_search-field" placeholder="Search businesses..." value="" name="s" title="Search for:">
-	</div>	
-    -->
+    <div class="bh_col-md-4 bh_business-search">
+    <form action="<?php echo site_url(); ?>?page_id=<?php echo $list_page_id; ?>" method="post">
+        <input type="search" class="bh_search-field" placeholder="Search businesses..." value="" name="keywords" title="Search for:">
+    </form>
+    </div>
 </div>
 <div class="bh_row">			
     <div class="bh_col-md-2 bh_local-nav">
