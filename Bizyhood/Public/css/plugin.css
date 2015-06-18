@@ -1,5 +1,4 @@
 @import url(http://weloveiconfonts.com/api/?family=entypo);
-/* entypo */
 [class*="entypo-"]:before { font-family: 'entypo', sans-serif;}
 
 div[class^="bh_"], 
@@ -105,19 +104,15 @@ div[class^="bh_"]:after {
   cursor: not-allowed;
 }
 
-.bh_business-search input {width:100%;line-height:2;padding:0 .5em;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
-.bh_business-search {position:relative;}
-.bh_business-search:before {font-family: 'Glyphicons Halflings';content: "\e003";position:absolute;right:1em;top:.25em;opacity:.5;font-size:20px;
-font-style: normal;
-font-weight: 400;
-line-height: 1;
--webkit-font-smoothing: antialiased;}
+.bh_business-search input[type="search"] {width:100%;max-width: 100%;line-height:2;padding:.5em;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
+.bh_business-search {position:relative;float: right;}
+.bh_business-search:before {font-family: 'entypo';content: "\1f50d";position:absolute;right:1.25em;top:.5em;opacity:.5;font-size:20px;font-style: normal;font-weight: 400;line-height: 1;-webkit-font-smoothing: antialiased;}
 
 .bh_section {margin-bottom:30px;}
 .bh_business-avatar img {width:100%;}
 
 .bh_breadcrumb {
-    padding: 0 0 10px;
+  padding: 0 0 10px;
   margin-bottom: 20px;
   list-style: none;
 }
@@ -165,8 +160,6 @@ line-height: 1;
 
 .bh_local-nav h5 {padding:10px;background:#000;color:#fff;margin:0;}
 .bh_business-header-title h3 {font-size:24px;  margin:0 0 20px;}
-.bh_business-search input {padding:.5em;margin:-10px 0 10px;}
-.bh_business-search:before {  top: .1em;right:1.25em;}
 .bh_business-header {border-bottom:0;margin-bottom:15px;}
 .bh_panel {border-top:1px solid #ccc;}
 .bh_section h5 {margin-bottom:10px;}
