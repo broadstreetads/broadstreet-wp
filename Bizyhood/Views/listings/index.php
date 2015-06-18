@@ -3,7 +3,8 @@
         <h3>Businesses</h3>
     </div>
     <div class="bh_col-md-4 bh_business-search">
-    <form action="<?php echo site_url(); ?>?page_id=<?php echo $list_page_id; ?>" method="post">
+    <form action="<?php echo site_url(); ?>/index.php" method="get">
+        <input type="hidden" name="page_id" value="<?php echo $list_page_id; ?>">
         <input type="search" class="bh_search-field" placeholder="Search businesses..." value="" name="keywords" title="Search for:">
     </form>
     </div>
