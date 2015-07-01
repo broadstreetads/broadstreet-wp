@@ -163,7 +163,6 @@ div[class^="bh_"]:after {
 .bh_business-header {border-bottom:0;margin-bottom:15px;}
 .bh_panel {border-top:1px solid #ccc;}
 .bh_section h5 {margin-bottom:10px;}
-.bh_button {color:#fff;}
 .bh_button:hover {color:#fff;transform:scale(1.1);text-decoration:none;}
 .bh_breadcrumb {margin:-15px 0 0;font-size:1.25em;}
 .bh_list-group-item {padding:10px;}
