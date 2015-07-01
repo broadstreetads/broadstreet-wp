@@ -34,7 +34,7 @@
             <?php $i = 0; foreach($businesses as $business): ?>
             <div class="bh_col-md-4">
                 <div class="bh_panel">
-                    <a href="index.php?page_id=<?php echo $view_business_page_id ?>&bizyhood_id=<?php echo $business->bizyhood_id ?>" class="bh_block-link">
+                    <a href="<?php echo get_permalink( $view_business_page_id ) ?>?bizyhood_id=<?php echo $business->bizyhood_id ?>" class="bh_block-link">
                         <h5><?php echo $business->name ?></h5>
                         <div class="bh_address">
                             <p><?php echo $business->address1 ?></p>

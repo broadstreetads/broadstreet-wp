@@ -46,39 +46,37 @@ class Bizyhood_Core
         Bizyhood_Log::add('debug', "Bizyhood installing");
         
         // Create the business list page
-        $business_list_page = get_page_by_title( "Bizyhood business list", "OBJECT", "page" );
+        $business_list_page = get_page_by_path( "business-directory" );
         if ( !$business_list_page )
         {
             $business_list_page = array(
-                'post_title'     => 'Bizyhood business list',
+                'post_title'     => 'Business Directory',
                 'post_type'      => 'page',
-                'post_name'      => 'bh-businesses',
+                'post_name'      => 'business-directory',
                 'post_content'   => '[bh-businesses]',
                 'post_status'    => 'publish',
                 'comment_status' => 'closed',
                 'ping_status'    => 'closed',
                 'post_author'    => 1,
                 'menu_order'     => 0,
-                'guid'          => site_url() . "/bh-businesses"
             );
             wp_insert_post( $business_list_page );
         }
 
         // Create the view business page
-        $business_view_page = get_page_by_title( "Bizyhood view business", "OBJECT", "page" );
+        $business_view_page = get_page_by_path( "business-overview" );
         if ( !$business_view_page )
         {
             $business_view_page = array(
-                'post_title'     => 'Bizyhood view business',
+                'post_title'     => 'Business Overview',
                 'post_type'      => 'page',
-                'post_name'      => 'bh-business',
+                'post_name'      => 'business-overview',
                 'post_content'   => '',
                 'post_status'    => 'publish',
                 'comment_status' => 'closed',
                 'ping_status'    => 'closed',
                 'post_author'    => 1,
                 'menu_order'     => 0,
-                'guid'          => site_url() . "/bh-business"
             );
             wp_insert_post( $business_view_page );
         }
@@ -90,7 +88,7 @@ class Bizyhood_Core
         Bizyhood_Log::add('debug', "Bizyhood uninstalling");
 
         // Remove business list page
-        $business_list_page = get_page_by_title( "Bizyhood business list", "OBJECT", "page" );
+        $business_list_page = get_page_by_path( "business-directory" );
         if ($business_list_page)
         {
             Bizyhood_Log::add('info', "Removing business list page (post ID " . $business_list_page->ID . ")");
@@ -98,7 +96,7 @@ class Bizyhood_Core
         }
 
         // Remove business list page
-        $business_view_page = get_page_by_title( "Bizyhood view business", "OBJECT", "page" );
+        $business_view_page = get_page_by_path( "business-overview" );
         if ($business_view_page)
         {
             Bizyhood_Log::add('info', "Removing view business page (post ID " . $business_view_page->ID . ")");
@@ -319,7 +317,7 @@ class Bizyhood_Core
             'current'            => $page,
             'type'               => 'list',
         );
-        $view_business_page_id = get_page_by_title( "Bizyhood view business", "OBJECT", "page" )->ID;
+        $view_business_page_id = get_page_by_path( "business-overview" )->ID;
        
         return Bizyhood_View::load( 'listings/index', array( 'cuisines' => $cuisines, 'categories' => $categories, 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
     }
@@ -335,7 +333,8 @@ class Bizyhood_Core
         $api_url = Bizyhood_Utility::getApiUrl();
 
         # Override content for the view business page
-        if ($post->post_name === 'bh-business')
+        $post_name = $post->post_name;
+        if ($post_name === 'business-overview')
         {
             $bizyhood_id = $_REQUEST['bizyhood_id'];
             $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/" . $bizyhood_id ) );

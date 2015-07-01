@@ -46,7 +46,7 @@
                         <div class="control-label">
                             <div class="name nomargin">Business directory page</div>
                             <div class="desc nomargin">
-                                The page that will be used to show the categories and businesses. Must include the [bh-categories] and [bh-businesses] shortcodes.<br />
+                                The page that will be used to show the categories and businesses. Must include the [bh-businesses] shortcode.<br />
                             </div>
                         </div>
                         <div class="control-container">

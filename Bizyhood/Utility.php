@@ -64,7 +64,7 @@ class Bizyhood_Utility
         $api_url = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_API_URL);
         
         if(!$api_url || strlen($api_url) == 0)
-            return "https://bizyhood.com/api";
+            return "https://sapi.bizyhood.com";
         else
             return rtrim($api_url, "/");
     }
