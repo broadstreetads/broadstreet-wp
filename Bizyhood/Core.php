@@ -290,7 +290,7 @@ class Bizyhood_Core
                 $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=12&pn=$page&rad=15000&cu=$category", $remote_settings ) );
             }
             elseif(isset($_GET['keywords'])) {
-                $keywords = $_GET['keywords'];
+                $keywords = urlencode($_GET['keywords']);
                 $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=12&pn=$page&rad=15000&k=$keywords", $remote_settings ) );
             }
             else {
@@ -302,7 +302,7 @@ class Bizyhood_Core
                 $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=12&pn=$page&rad=15000&k=$category", $remote_settings ) );
             }
             elseif(isset($_GET['keywords'])) {
-                $keywords = $_GET['keywords'];
+                $keywords = urlencode($_GET['keywords']);
                 $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=12&pn=$page&rad=15000&k=$keywords", $remote_settings ) );
             }
             else {
@@ -312,8 +312,14 @@ class Bizyhood_Core
         $response_json = json_decode( $response );
         
         $businesses = $response_json->businesses;
+        $total_count = $response_json->total_count;
+        $page_size = $response_json->page_size;
+        $page_count = 0;
+        if ($page_size > 0) {
+            $page_count = ( $total_count / $page_size ) + ( ( $total_count % $page_size == 0 ) ? 0 : 1 );
+        }
         $pagination_args = array(
-            'total'              => ( $response_json->total_count / $response_json->page_size ) + ( ( $response_json->total_count % $response_json->page_size == 0 ) ? 0 : 1 ),
+            'total'              => $page_count,
             'current'            => $page,
             'type'               => 'list',
         );

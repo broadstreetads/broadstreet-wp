@@ -31,6 +31,7 @@
     </div>
     <div class="bh_col-md-10 bh_results">
         <div class="bh_row">
+            <?php if ( !empty($businesses) ) : ?>
             <?php $i = 0; foreach($businesses as $business): ?>
             <div class="bh_col-md-4">
                 <div class="bh_panel">
@@ -45,6 +46,9 @@
                 </div>
             </div><!-- /.col-md-4 -->
             <?php $i++; endforeach; ?>
+            <?php else : ?>
+            <p>There were no results for your search.</p>
+            <?php endif ?>
         </div><!-- /.row -->
         <div class="bh_row">
             <div class="bh_col-md-12">
