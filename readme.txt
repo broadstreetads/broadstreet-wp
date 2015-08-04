@@ -3,7 +3,7 @@ Contributors: Bizyhood
 Tags: bizyhood,local,publishers,hyperlocal,independent,news,business,directory
 Requires at least: 3.0
 Tested up to: 4.1
-Stable tag: 1.13.0
+Stable tag: 0.1.0
 
 Integrate Bizyhood business directory and adserving power into your site.
 
