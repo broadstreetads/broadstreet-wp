@@ -44,13 +44,27 @@
 
                     <div class="option">
                         <div class="control-label">
-                            <div class="name nomargin">Business directory page</div>
+                            <div class="name nomargin">Business Directory Page</div>
                             <div class="desc nomargin">
                                 The page that will be used to show the categories and businesses. Must include the [bh-businesses] shortcode.<br />
                             </div>
                         </div>
                         <div class="control-container">
                             <?php wp_dropdown_pages( array('name' => 'main_page_id', 'selected' => $main_page_id) ) ?>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="break"></div>
+                    
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">Business Signup Page</div>
+                            <div class="desc nomargin">
+                                The landing/marketing page that will be used to allow businesses to signup for a Bizyhood account.<br />
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <?php wp_dropdown_pages( array('name' => 'signup_page_id', 'selected' => $signup_page_id) ) ?>
                         </div>
                         <div style="clear:both;"></div>
                     </div>

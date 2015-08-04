@@ -26,6 +26,7 @@ class Bizyhood_Core
 {
     CONST KEY_API_URL             = 'Bizyhood_API_URL';
     CONST KEY_MAIN_PAGE_ID        = 'Bizyhood_Main_page_ID';
+    CONST KEY_SIGNUP_PAGE_ID      = 'Bizyhood_Signup_page_ID';
     CONST KEY_INSTALL_REPORT      = 'Bizyhood_Installed';
     CONST KEY_ZIP_CODES           = 'Bizyhood_ZIP_Codes';
     CONST KEY_USE_CUISINE_TYPES   = 'Bizyhood_Use_Cuisine_Types';
@@ -123,7 +124,8 @@ class Bizyhood_Core
         # -- Below is core functionality --
         add_action('admin_menu', 	array($this, 'adminCallback'));
         add_action('admin_init', 	array($this, 'adminInitCallback'));
-        add_action('wp_print_styles', 	array($this, 'load_plugin_styles'));
+        add_action('wp_enqueue_scripts', 	array($this, 'load_plugin_styles'));
+        add_action('wp_enqueue_scripts', 	array($this, 'load_plugin_gallery'));
         add_shortcode('bh-businesses', array($this, 'businesses_shortcode'));
         add_filter('the_content', array($this, 'postTemplate'), 100);
         add_action('wp_ajax_save_settings', array('Bizyhood_Ajax', 'saveSettings'));
@@ -131,7 +133,16 @@ class Bizyhood_Core
     
     function load_plugin_styles()
     {
-        wp_enqueue_style ('bizyhood-plugin-styles',  Bizyhood_Utility::getCSSBaseURL() . 'plugin.css?v='. BIZYHOOD_VERSION);
+        wp_enqueue_style ('bizyhood-plugin-styles',  Bizyhood_Utility::getCSSBaseURL() . 'plugin.css', array(), BIZYHOOD_VERSION);
+    }
+    
+    function load_plugin_gallery()
+    {
+        wp_enqueue_style ('photoswipe-css',  Bizyhood_Utility::getVendorBaseURL() . 'photoswipe/css/photoswipe.css', array(), BIZYHOOD_VERSION);
+        wp_enqueue_style ('photoswipe-css-default-skin',  Bizyhood_Utility::getVendorBaseURL() . 'photoswipe/css/default-skin/default-skin.css', array('photoswipe-css'), BIZYHOOD_VERSION);
+        wp_enqueue_script('photoswipe-js', Bizyhood_Utility::getVendorBaseURL() . 'photoswipe/js/photoswipe.min.js', array(), BIZYHOOD_VERSION, true);
+        wp_enqueue_script('photoswipe-ui-js', Bizyhood_Utility::getVendorBaseURL() . 'photoswipe/js/photoswipe-ui-default.js', array('photoswipe-js'), BIZYHOOD_VERSION, true);
+        wp_enqueue_script('bizyhood-gallery-js', Bizyhood_Utility::getJSBaseURL() . 'bizyhood-plugin-gallery.js', array(), BIZYHOOD_VERSION, true);
     }
     
     /**
@@ -204,6 +215,7 @@ class Bizyhood_Core
 
         $data['api_url']            = Bizyhood_Utility::getApiUrl();
         $data['main_page_id']       = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
+        $data['signup_page_id']     = Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID);
         $data['zip_codes']          = Bizyhood_Utility::getOption(self::KEY_ZIP_CODES);
         $data['use_cuisine_types']  = Bizyhood_Utility::getOption(self::KEY_USE_CUISINE_TYPES);
         $data['categories']         = Bizyhood_Utility::getOption(self::KEY_CATEGORIES);
@@ -342,10 +354,11 @@ class Bizyhood_Core
         $post_name = $post->post_name;
         if ($post_name === 'business-overview')
         {
+            $signup_page_id = Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID);
             $bizyhood_id = $_REQUEST['bizyhood_id'];
             $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/" . $bizyhood_id ) );
             $business = json_decode($response);
-            return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business), true);
+            return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id), true);
         }
 
         return $content;

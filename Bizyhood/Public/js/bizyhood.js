@@ -110,6 +110,7 @@ jQuery(function($){
              action: 'save_settings', 
              api_url: $('#api_url').val(),
              main_page_id: $('#main_page_id').val(),
+             signup_page_id: $('#signup_page_id').val(),
              zip_codes: $('#zip_codes').val(),
              use_cuisine_types: $('#use_cuisine_types').is(':checked'),
              categories: $('#categories').val()

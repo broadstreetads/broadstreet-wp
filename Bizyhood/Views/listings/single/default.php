@@ -4,10 +4,18 @@
     </div>
 </div><!-- /.row -->
 <div class="bh_row" itemscope itemtype="http://schema.org/LocalBusiness">
-    <div class="bh_col-md-2 bh_business-avatar">
-    <?php if(false): ?>
-        <img src="http://placehold.it/400x320"/>
-    <?php endif; ?>
+    <div class="bh_col-md-2">
+        <?php if($business->business_logo): ?>
+        <div class="bh_business-avatar">
+            <img src="<?php echo $business->business_logo->image->url ?>"/>
+        </div>
+        <?php endif; ?>
+        <?php if(!$business->claimed): ?>
+        <div class="bh_claim">
+            <h6>Is this your business?</h6>
+            <a href="<?php echo get_permalink( $signup_page_id ); ?>" class="bh_button">Claim it now</a>
+        </div>
+        <?php endif; ?>
         <div class="bh_list-group">
             <a href="<?php echo $business->feedback_url ?>" class="bh_list-group-item" target="_blank"><span class="entypo-comment"></span> Customer Feedback</a>
             <?php if($business->events_url): ?>
@@ -22,10 +30,32 @@
         <div class="bh_row">
             <div class="bh_main-content bh_col-md-9">
                 <h2 itemprop="name"><?php echo $business->name ?></h2>
+                <?php if ( $business->business_images ) : ?>
+                <div class="bh_image-gallery">
+                    <div itemscope itemtype="http://schema.org/ImageGallery" class="bh_gallery-list clearfix">
+                        <?php foreach($business->business_images as $business_image): ?>
+                        <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" class="bh_gallery-thumb">
+                            <a href="<?php echo $business_image->image->url; ?>" itemprop="contentUrl" data-size="<?php echo $business_image->image->width; ?>x<?php echo $business_image->image->height; ?>">
+                                <img src="<?php echo $business_image->image->url; ?>" itemprop="thumbnail" alt="<?php echo $business_image->title; ?>" />
+                            </a>
+                            <figcaption><?php echo $business_image->title; ?></figcaption>
+                        </figure>
+                        <?php endforeach; ?>
+                    </div>
+	      	</div>
+                <?php endif ?>
+                <div class="bh_alert">
+                    <div class="bh_row">
+			<div class="bh_col-md-8">
+		            <p>Support your local businesses by giving them feedback.</p>
+		        </div>
+		        <div class="bh_col-md-4">
+		            <a href="<?php echo $business->bizyhood_url ?>" class="bh_button" target="_blank">Give Feedback</a>
+		        </div>
+                    </div>
+                </div>
                 <?php if ( $business->description ) : ?>
                 <p itemprop="description"><?php echo wpautop($business->description); ?></p>
-                <?php else : ?>
-                <p>This business has not yet joined our local community. Give them <a href="<?php echo $business->feedback_url ?>" target="_blank">feedback</a> and let them know you'd like to join!</p>
                 <?php endif ?>
             </div><!-- /.col-md-9 -->
             <div class="bh_details bh_col-md-3">
@@ -66,3 +96,49 @@
         </div><!-- /.row -->
     </div><!-- /.col-md-10 -->
 </div><!-- /.row -->
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswppreloaderactive when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
