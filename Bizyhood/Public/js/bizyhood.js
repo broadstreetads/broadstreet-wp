@@ -38,13 +38,6 @@ jQuery(function($){
             return;
         }
 
-        // Enforce 10 ZIP code max
-        if ($('#zip_codes').children('option').length == 10) {
-            alert("You already reached the maximum of 10 ZIP codes");
-            return;
-        }
-
-
         // Append to list of ZIP codes
         $('#zip_codes')
             .append($("<option></option>")
