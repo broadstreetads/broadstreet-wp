@@ -21,11 +21,16 @@
             </a> 
         <?php endforeach; ?>
         <?php else : ?>
-        <?php foreach($categories as $category): ?>
-            <a class="bh_list-group-item" href="<?php echo get_permalink( $list_page_id ); ?>?k=<?php echo urlencode($category); ?>">
-                <span class="bh_list-title"><?php echo $category; ?></span>
-            </a> 
-        <?php endforeach; ?>
+        <?php 
+          if (is_array($categories) && !empty($categories)) {
+            foreach($categories as $category) { ?>
+                <a class="bh_list-group-item" href="<?php echo get_permalink( $list_page_id ); ?>?k=<?php echo urlencode($category); ?>">
+                    <span class="bh_list-title"><?php echo $category; ?></span>
+                </a> 
+          <?php 
+            }
+          } 
+          ?>
         <?php endif ?>
         </div>
     </div>
@@ -34,8 +39,8 @@
             <?php if ( !empty($businesses) ) : ?>
             <?php $i = 0; foreach($businesses as $business): ?>
             <div class="bh_col-md-4">
-                <div class="bh_panel">
-                    <a href="<?php echo get_permalink( $view_business_page_id ); ?>?bizyhood_id=<?php echo $business->bizyhood_id ?>" class="bh_block-link">
+                <div class="bh_panel">                
+                    <a href="<?php echo get_permalink( $view_business_page_id ); ?><?php echo sanitize_title($business->name).'-'.sanitize_title($business->locality).'-'.sanitize_title($business->region).'-'.sanitize_title($business->postal_code) .'/'.$business->bizyhood_id ?>/" class="bh_block-link">
                         <h5><?php echo $business->name ?></h5>
                         <div class="bh_address">
                             <p><?php echo $business->address1 ?></p>
