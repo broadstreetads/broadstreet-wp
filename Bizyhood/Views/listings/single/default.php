@@ -1,3 +1,14 @@
+<?php
+  if (isset($business->total_count) && $business->total_count == 0) {
+    global $wp_query;
+    $wp_query->set_404();
+    status_header( 404 );
+    get_header();
+    get_template_part( 404 ); 
+    get_footer();
+    exit();
+  }
+?>
 <div class="bh_row bh_business-header">
     <div class="bh_col-md-2">
         <a href="<?php echo wp_get_referer(); ?>" class="bh_button"><span class="entypo-left" aria-hidden="true"></span> Back</a>
