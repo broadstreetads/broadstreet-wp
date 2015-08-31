@@ -129,6 +129,45 @@ class Bizyhood_Core
         add_shortcode('bh-businesses', array($this, 'businesses_shortcode'));
         add_filter('the_content', array($this, 'postTemplate'), 100);
         add_action('wp_ajax_save_settings', array('Bizyhood_Ajax', 'saveSettings'));
+        
+        
+        // create rewrite rule for single business
+        add_filter('rewrite_rules_array', array($this, 'bizyhood_add_rewrite_rules'));
+        // hook add_query_vars function into query_vars
+        add_filter('query_vars', array($this, 'bizyhood_add_query_vars'));
+        // check if a flush is needed
+        add_action( 'wp_loaded', array($this, 'bizyhood_flush_rules') );
+        
+    }
+    
+    
+    function bizyhood_add_query_vars($aVars) 
+    {
+      $aVars[] = "bizyhood_id"; // represents the id of the business
+      $aVars[] = "bizyhood_name"; // represents the name of the business
+      return $aVars;
+    }
+     
+    function bizyhood_add_rewrite_rules($wr_rules)
+    {
+      
+      
+      $bizy_rules = array('business-overview/([^/]+)/([^/]+)/?$' => 'index.php?pagename=business-overview&bizyhood_name=$matches[1]&bizyhood_id=$matches[2]');
+      $wr_rules = $bizy_rules + $wr_rules;
+      
+      return $wr_rules;
+    }
+
+    // flush_rules() if our rules are not yet included
+    function bizyhood_flush_rules(){
+      
+      $rules = get_option( 'rewrite_rules' );
+      
+      // check if the rule already exits and if not then flush the rewrite rules
+      if ( ! isset( $wr_rules['business-overview/([^/]+)/([^/]+)/?$'] ) ) {
+        global $wp_rewrite;
+        $wp_rewrite->flush_rules();
+      }
     }
     
     function load_plugin_styles()
@@ -337,7 +376,7 @@ class Bizyhood_Core
         );
         $view_business_page_id = get_page_by_path( "business-overview" )->ID;
        
-        return Bizyhood_View::load( 'listings/index', array( 'cuisines' => $cuisines, 'categories' => $categories, 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
+        return Bizyhood_View::load( 'listings/index', array( 'cuisines' => (isset($cuisines) ? $cuisines : ''), 'categories' => (isset($categories) ? $categories : ''), 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
     }
 
     /**
@@ -347,22 +386,34 @@ class Bizyhood_Core
      */
     public function postTemplate($content)
     {   
-        global $post;
+        global $post, $wp_query;
         $api_url = Bizyhood_Utility::getApiUrl();
 
-        # Override content for the view business page
+        # Override content for the view business page        
         $post_name = $post->post_name;
         if ($post_name === 'business-overview')
         {
             $signup_page_id = Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID);
-            $bizyhood_id = $_REQUEST['bizyhood_id'];
+            
+            // get the bizyhood_id
+            if(isset($wp_query->query_vars['bizyhood_id'])) {
+              
+              $bizyhood_id = urldecode($wp_query->query_vars['bizyhood_id']);
+            } else {
+              $bizyhood_id = (isset($_REQUEST['bizyhood_id']) ? $_REQUEST['bizyhood_id'] : '');
+            }
+            
+            
             $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/" . $bizyhood_id ) );
             $business = json_decode($response);
+            
+            
             return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id), true);
         }
 
         return $content;
     }
+    
 }
 
 endif;
