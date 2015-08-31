@@ -130,10 +130,14 @@ class Bizyhood_Core
         add_filter('the_content', array($this, 'postTemplate'), 100);
         add_action('wp_ajax_save_settings', array('Bizyhood_Ajax', 'saveSettings'));
         
-        // hook add_query_vars function into query_vars
-        add_filter('query_vars', array($this, 'bizyhood_add_query_vars'));
+        
         // create rewrite rule for single business
         add_filter('rewrite_rules_array', array($this, 'bizyhood_add_rewrite_rules'));
+        // hook add_query_vars function into query_vars
+        add_filter('query_vars', array($this, 'bizyhood_add_query_vars'));
+        // check if a flush is needed
+        add_action( 'wp_loaded', array($this, 'bizyhood_flush_rules') );
+        
     }
     
     
@@ -151,14 +155,19 @@ class Bizyhood_Core
       $bizy_rules = array('business-overview/([^/]+)/([^/]+)/?$' => 'index.php?pagename=business-overview&bizyhood_name=$matches[1]&bizyhood_id=$matches[2]');
       $wr_rules = $bizy_rules + $wr_rules;
       
+      return $wr_rules;
+    }
+
+    // flush_rules() if our rules are not yet included
+    function bizyhood_flush_rules(){
+      
+      $rules = get_option( 'rewrite_rules' );
       
       // check if the rule already exits and if not then flush the rewrite rules
-      if ( ! isset( $wr_rules['business-overview/([^/]+)/([^/]+)/?$'] ) ) { 
-          global $wp_rewrite; 
-          $wp_rewrite->flush_rules();
+      if ( ! isset( $wr_rules['business-overview/([^/]+)/([^/]+)/?$'] ) ) {
+        global $wp_rewrite;
+        $wp_rewrite->flush_rules();
       }
-
-      return $wr_rules;
     }
     
     function load_plugin_styles()
