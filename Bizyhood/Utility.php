@@ -167,7 +167,7 @@ class Bizyhood_Utility
      */
     public static function getBizyhoodBaseURL()
     {   
-        return (WP_PLUGIN_URL . '/bizyhood/Bizyhood/');
+        return (plugin_dir_url( __FILE__ ));
     }
 
     /**
