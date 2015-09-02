@@ -160,14 +160,50 @@ class Broadstreet_Core
 
     public function addAdsContent($content) {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        $above_content = property_exists($placement_settings, 'above_content') && $placement_settings->above_content;
+        $below_content = property_exists($placement_settings, 'below_content') && $placement_settings->below_content;
+        $in_content = property_exists($placement_settings, 'in_content') && $placement_settings->in_content;
 
         if (is_single()) {
-            if (property_exists($placement_settings, 'above_content') && $placement_settings->above_content) {
+            if ($above_content) {
                 $content = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->above_content) . $content;
             }
 
-            if (property_exists($placement_settings, 'below_content') && $placement_settings->below_content) {
+            if ($below_content) {
                 $content = $content . Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->below_content);
+            }
+
+            if ($in_content) {
+                /* Now handle in-content */
+                if (stristr($content, '[broadstreet zone'))
+                    return $content;
+
+                $in_story_zone = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->in_content);
+
+                /* Split the content into paragraphs, clear out anything that is only whitespace */
+                $pieces = preg_split('/(\r\n|\n|\r)+/', trim($content));
+                $real_pieces = array();
+
+                foreach($pieces as $piece) {
+                    $piece = str_replace('&nbsp;', '', $piece);
+                    $piece = str_replace('<p></p>', '', $piece);
+                    if (strlen($piece)) $real_pieces[] = $piece;
+                }
+
+                $pieces = $real_pieces;
+
+                if (count($pieces) <= 1 && ($above_content || $below_content)) {
+                    # One paragraph
+                    #return "$content\n\n" . $in_story_zone;
+                }
+
+                if (count($pieces) >= 4) {
+                    array_splice($pieces, 4, 0, $in_story_zone);
+                }
+
+                /* It's magic, :snort: :snort:
+                   - Mr. Bean: https://www.youtube.com/watch?v=x0yQg8kHVcI */
+                $content = implode("\n\n", $pieces);
             }
         }
         
@@ -481,6 +517,7 @@ class Broadstreet_Core
             
             try
             {
+                Broadstreet_Utility::refreshZoneCache();
                 $data['key_valid'] = true;
                 $data['zones'] = Broadstreet_Utility::getZoneCache();
                 $data['placements'] = Broadstreet_Utility::getPlacementSettings();

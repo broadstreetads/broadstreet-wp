@@ -55,7 +55,7 @@ class Broadstreet_Utility
     
         if($disabled) return '';        
 
-        return '<div style="margin:5px auto;">'
+        return '<div style="margin:5px auto; margin-bottom: 15px;">'
                 .(property_exists($config, 'show_label') && trim($config->show_label) 
                     ? "<div style='font-size:11px; color:#ccc; margin-bottom: 5px;'>{$config->show_label}</div>"
                     : '')

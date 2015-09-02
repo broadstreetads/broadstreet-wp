@@ -149,6 +149,11 @@
                     description: 'Which zone should appear below the story?' 
                 },
                 {
+                    id: 'in_content',
+                    name: 'Inside Content',
+                    description: 'Which zone should appear in the middle of the story? (After 4th paragraph, if it exists)'
+                },
+                {
                     id: 'before_comments',
                     name: 'Before Comments',
                     description: 'Which zone should appear right before the comments?' 
