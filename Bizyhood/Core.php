@@ -165,8 +165,19 @@ class Bizyhood_Core
         // editor bizybutton END
         
         
+        // load widgets START
+        
+        Bizyhood_View::load( 'widgets/search', array(), false, true);
+        add_action( 'widgets_init', array( $this, 'register_search_widget' ));
+        // load widgets END
+        
+        
     }
     
+    
+    function register_search_widget() {
+      register_widget( 'bizy_search_widget' );
+    }
     
     function bizylink_business_results() {
 
@@ -414,13 +425,13 @@ class Bizyhood_Core
       $urls = array();
       
       // get first 12 urls
-      $a = 0; // help me index
+      $urlindex = 0; // help me index
       if ($start == 1) {
-        foreach($queryapi['businesses'] as $b) {
-          $urlarr = array_slice(explode('/', $b->bizyhood_url), -3);
-          $urls[$a]['url'] = $urlbase.$urlarr[0].'/'.$urlarr[1].'/';
-          $urls[$a]['date'] = $date; // this needs to be changed to the last modified when added to the API // TODO
-          $a++;
+        foreach($queryapi['businesses'] as $business) {
+          $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
+          $urls[$urlindex]['url'] = $urlbase.$urlarr[0].'/'.$urlarr[1].'/';
+          $urls[$urlindex]['date'] = $date; // this needs to be changed to the last modified when added to the API // TODO
+          $urlindex++;
         }
       }
       
@@ -428,11 +439,11 @@ class Bizyhood_Core
       $i = $start + 1; // start  to query the API from the second batch
       while($i <= $numofpages && $end >= $i) {
         $queryapi = $this->businesses_information(array('paged' => $i));
-        foreach($queryapi['businesses'] as $b) {
-          $urlarr = array_slice(explode('/', $b->bizyhood_url), -3);
-          $urls[$a]['url'] = $urlbase.$urlarr[0].'/'.$urlarr[1].'/';
-          $urls[$a]['date'] = $date; // this needs to be changed to the last modified when added to the API // TODO
-          $a++;
+        foreach($queryapi['businesses'] as $business) {
+          $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
+          $urls[$urlindex]['url'] = $urlbase.$urlarr[0].'/'.$urlarr[1].'/';
+          $urls[$urlindex]['date'] = $date; // this needs to be changed to the last modified when added to the API // TODO
+          $urlindex++;
         }
         $i++;
       }
