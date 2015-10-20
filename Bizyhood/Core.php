@@ -190,11 +190,11 @@ class Bizyhood_Core
       if (count($queryapi['businesses']) > 0) {
         $out .= '<ul class="bizyres">';
         $i = 0;
-        foreach ($queryapi['businesses'] as $b) {
+        foreach ($queryapi['businesses'] as $business) {
           
-          $urlarr = array_slice(explode('/', $b->bizyhood_url), -3);
+          $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
           
-          $out .= '<li class="'. ($i%2 == false ? 'alternate' : '') .'"><a href="'. $urlbase.$urlarr[0].'/'.$urlarr[1].'/' .'" title="'. $b->name .'">'. $b->name .' - '. $b->address1 .', '. $b->region.', '. $b->postal_code .'</li>';
+          $out .= '<li class="'. ($i%2 == false ? 'alternate' : '') .'"><a href="'. $urlbase.$urlarr[0].'/'.$urlarr[1].'/' .'" title="'. $business->name .'">'. $business->name .' - '. $business->address1 .', '. $business->region.', '. $business->postal_code .'</li>';
           $i++;
         }
         $out .= '</ul>';
@@ -307,8 +307,8 @@ class Bizyhood_Core
       
       // get first 12 urls to save an API request
       if ($start == 1) {
-        foreach($queryapi['businesses'] as $b) {
-          $urlarr = array_slice(explode('/', $b->bizyhood_url), -3);
+        foreach($queryapi['businesses'] as $business) {
+          $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
           $pages[] = Array( "loc" => $urlbase.$urlarr[0].'/'.$urlarr[1].'/', "lastmod" => $date, "changefreq" => "weekly", "priority" => "0.6" );
         }
       }
@@ -317,8 +317,8 @@ class Bizyhood_Core
       $i = $start + 1; // start  to query the API from the second batch
       while($i <= $numofpages) {
         $queryapi = $this->businesses_information(array('paged' => $i));
-        foreach($queryapi['businesses'] as $b) {
-          $urlarr = array_slice(explode('/', $b->bizyhood_url), -3);
+        foreach($queryapi['businesses'] as $business) {
+          $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
           $pages[] = Array( "loc" => $urlbase.$urlarr[0].'/'.$urlarr[1].'/', "lastmod" => $date, "changefreq" => "weekly", "priority" => "0.6" );
         }
         $i++;
@@ -416,8 +416,8 @@ class Bizyhood_Core
       // get first 12 urls
       $urlindex = 0; // help me index
       if ($start == 1) {
-        foreach($queryapi['businesses'] as $b) {
-          $urlarr = array_slice(explode('/', $b->bizyhood_url), -3);
+        foreach($queryapi['businesses'] as $business) {
+          $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
           $urls[$urlindex]['url'] = $urlbase.$urlarr[0].'/'.$urlarr[1].'/';
           $urls[$urlindex]['date'] = $date; // this needs to be changed to the last modified when added to the API // TODO
           $urlindex++;
