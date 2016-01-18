@@ -393,7 +393,7 @@ class Broadstreet_Core
         {
             wp_enqueue_style ('Broadstreet-styles',  Broadstreet_Utility::getCSSBaseURL() . 'broadstreet.css?v='. BROADSTREET_VERSION);
             wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js?v='. BROADSTREET_VERSION);
-            wp_enqueue_script('angular-js', '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js');
+            wp_enqueue_script('angular-js', Broadstreet_Utility::getJSBaseURL().'angular.min.js');
             wp_enqueue_script('isteven-multi-js', Broadstreet_Utility::getJSBaseURL().'isteven-multi-select.js');
             wp_enqueue_style ('isteven-multi-css',  Broadstreet_Utility::getCSSBaseURL() . 'isteven-multi-select.css');
         }
