@@ -14,6 +14,10 @@ require_once dirname(__FILE__) . '/Model.php';
 require_once dirname(__FILE__) . '/Utility.php';
 require_once dirname(__FILE__) . '/View.php';
 require_once dirname(__FILE__) . '/Exception.php';
+require_once dirname(__FILE__) . '/Public/vendor/OAuth2/Client.php';
+require_once dirname(__FILE__) . '/Public/vendor/OAuth2/GrantType/IGrantType.php';
+require_once dirname(__FILE__) . '/Public/vendor/OAuth2/GrantType/ClientCredentials.php';
+
 
 if (! class_exists('Bizyhood_Core')):
 
@@ -25,12 +29,13 @@ if (! class_exists('Bizyhood_Core')):
 class Bizyhood_Core
 {
     CONST KEY_API_URL             = 'Bizyhood_API_URL';
+    CONST KEY_API_PRODUCTION      = 'Bizyhood_API_Production';
+    CONST KEY_API_ID              = 'Bizyhood_API_ID';
+    CONST KEY_API_SECRET          = 'Bizyhood_API_Secret';
+    CONST KEY_OAUTH_DATA          = 'bizyhood_oauth_data';
     CONST KEY_MAIN_PAGE_ID        = 'Bizyhood_Main_page_ID';
     CONST KEY_SIGNUP_PAGE_ID      = 'Bizyhood_Signup_page_ID';
     CONST KEY_INSTALL_REPORT      = 'Bizyhood_Installed';
-    CONST KEY_ZIP_CODES           = 'Bizyhood_ZIP_Codes';
-    CONST KEY_USE_CUISINE_TYPES   = 'Bizyhood_Use_Cuisine_Types';
-    CONST KEY_CATEGORIES          = 'Bizyhood_Categories';
     
     public static $globals = null;
 
@@ -163,6 +168,13 @@ class Bizyhood_Core
         add_action( 'wp_ajax_bizylink_business_results', array( $this, 'bizylink_business_results' ));
 
         // editor bizybutton END
+        
+        
+        // add oAuth Data START
+
+        add_action( 'init', array( $this, 'set_oauth_temp_data' ));
+        
+        // add oAuth Data END
         
         
     }
@@ -338,6 +350,7 @@ class Bizyhood_Core
       return $extra;
     }
     
+        
     
     function bizyhood_add_query_vars($aVars) 
     {
@@ -503,6 +516,42 @@ class Bizyhood_Core
       return $sitemap;
     }
     
+    
+    // add oAuth Data
+    // we use transient because it autoexpires
+    public function set_oauth_temp_data() {
+      
+      $provider = array (
+        'clientId'                =>  Bizyhood_Utility::getApiID(),
+        'clientSecret'            =>  Bizyhood_Utility::getApiSecret(),
+        'redirectUri'             =>  '', // no need for 2-legged auth
+        'urlAuthorize'            =>  Bizyhood_Utility::getApiUrl().'/o/authorize/',
+        'urlAccessToken'          =>  Bizyhood_Utility::getApiUrl().'/o/token/',
+        'urlResourceOwnerDetails' =>  Bizyhood_Utility::getApiUrl().'/o/resource'
+      );
+     
+     // if the oAuth data does nto exist
+     if (get_transient('bizyhood_oauth_data') === false ) {
+        $params = array();
+        $client = new OAuth2\Client($provider['clientId'], $provider['clientSecret']);
+        $response = $client->getAccessToken($provider['urlAccessToken'], 'client_credentials', $params);
+        
+        $client->setAccessToken($response['result']['access_token']);
+        
+        if ( !is_admin() && strlen($response['result']['access_token']) > 0 && $response['code'] == 200) {
+          
+          set_transient('bizyhood_oauth_data', $response['result']['access_token'], $response['result']['expires_in']);
+          
+        } else {
+          delete_transient('bizyhood_oauth_data');
+        }
+      }
+      
+      
+    }
+    
+    
+    
     function load_plugin_styles()
     {
         wp_enqueue_style ('bizyhood-plugin-styles',  Bizyhood_Utility::getCSSBaseURL() . 'plugin.css', array(), BIZYHOOD_VERSION);
@@ -515,6 +564,7 @@ class Bizyhood_Core
         wp_enqueue_script('photoswipe-js', Bizyhood_Utility::getVendorBaseURL() . 'photoswipe/js/photoswipe.min.js', array(), BIZYHOOD_VERSION, true);
         wp_enqueue_script('photoswipe-ui-js', Bizyhood_Utility::getVendorBaseURL() . 'photoswipe/js/photoswipe-ui-default.js', array('photoswipe-js'), BIZYHOOD_VERSION, true);
         wp_enqueue_script('bizyhood-gallery-js', Bizyhood_Utility::getJSBaseURL() . 'bizyhood-plugin-gallery.js', array(), BIZYHOOD_VERSION, true);
+        wp_enqueue_script('bizyhood-custom-js', Bizyhood_Utility::getJSBaseURL() . 'bizyhood-custom.js', array(), BIZYHOOD_VERSION, true);
     }
     
     /**
@@ -586,11 +636,11 @@ class Bizyhood_Core
         $data = array();
 
         $data['api_url']            = Bizyhood_Utility::getApiUrl();
+        $data['api_production']     = Bizyhood_Utility::getApiProduction();
+        $data['api_id']             = Bizyhood_Utility::getApiID();
+        $data['api_secret']         = Bizyhood_Utility::getApiSecret();
         $data['main_page_id']       = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
         $data['signup_page_id']     = Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID);
-        $data['zip_codes']          = Bizyhood_Utility::getOption(self::KEY_ZIP_CODES);
-        $data['use_cuisine_types']  = Bizyhood_Utility::getOption(self::KEY_USE_CUISINE_TYPES);
-        $data['categories']         = Bizyhood_Utility::getOption(self::KEY_CATEGORIES);
         $data['errors']             = array();
 
         if(!function_exists('curl_exec'))
@@ -638,7 +688,121 @@ class Bizyhood_Core
         Bizyhood_View::load('admin/layout');
     }
     
+    
+    /***************************/
+    /***** API Calls START *****/
+    
     public function businesses_information($atts)
+    {
+      
+      // no reason to continue if we do not have oAuth token
+      if (get_transient('bizyhood_oauth_data') === false) {
+        return;
+      }
+      
+      $a = shortcode_atts( array(
+        'paged' => null,
+      ), $atts );
+
+      
+      $remote_settings = Bizyhood_Utility::getRemoteSettings();
+      $api_url = Bizyhood_Utility::getApiUrl();
+      $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
+
+
+      // get current page
+      if (isset($a['paged']))
+          $page = $a['paged'];
+      elseif (get_query_var('paged'))
+          $page = get_query_var('paged');
+      elseif (isset($_GET['paged']))
+          $page = $_GET['paged'];
+      else
+          $page = 1;
+        
+      // get category filter
+      $category = false;
+      if (get_query_var('cf')) {
+        $category = urldecode( get_query_var('cf') );
+      } elseif (isset($_GET['cf'])) {
+        $category = urldecode( $_GET['cf'] );
+      }
+      
+      $keywords = false;
+      if(isset($_GET['keywords'])) {
+        $keywords = urlencode($_GET['keywords']);
+      }
+
+      // set oAuth parameters
+      $provider = array (
+        'clientId'                =>  Bizyhood_Utility::getApiID(),
+        'clientSecret'            =>  Bizyhood_Utility::getApiSecret(),
+        'redirectUri'             =>  '', // no need for 2-legged auth
+        'urlAuthorize'            =>  Bizyhood_Utility::getApiUrl().'/o/authorize/',
+        'urlAccessToken'          =>  Bizyhood_Utility::getApiUrl().'/o/token/',
+        'urlResourceOwnerDetails' =>  Bizyhood_Utility::getApiUrl().'/o/resource'
+      );
+      
+      
+      $params = array();
+      $client = new OAuth2\Client($provider['clientId'], $provider['clientSecret']);
+    
+      $client->setAccessTokenType($client::ACCESS_TOKEN_BEARER);
+      $client->setAccessToken(get_transient('bizyhood_oauth_data'));
+      
+      
+      $params = array(
+        'format' =>'json',
+        'ps'  => 12,
+        'pn'  => $page
+      );
+      
+      if ($keywords !== false) {
+        $params['k'] = $keywords;
+      }
+      
+      if ($category != false) {
+        $params['cf'] = $category;
+      }
+      
+      $response = $client->fetch($api_url.'/business/', $params);
+      $response_json = $response['result'];
+      
+      // avoid throwing an error
+      if ($response_json === null) { return; }
+      
+      $businesses = json_decode(json_encode($response_json['businesses']), FALSE);
+      $total_count = $response_json['total_count'];
+      $page_size = $response_json['page_size'];
+      $facets = $response_json['search_facets'];
+      $categories = $response_json['search_facets']['categories_facet'];
+      
+            
+      $return = array(
+        'remote_settings'   => $remote_settings,
+        'api_url'           => $api_url,
+        'list_page_id'      => $list_page_id,
+        'keywords'          => (isset($keywords) && $keywords != '' ? $keywords : ''),
+        'categories'        => (isset($categories) ? $categories : ''),
+        'category'          => (isset($category) ? $category : ''),
+        'page'              => $page,
+        'businesses'        => $businesses,
+        'total_count'       => $total_count,
+        'page_size'         => $page_size,
+        'response'          => json_encode($response['result']),
+        'response_json'     => $response_json,
+        'facets'            => $facets
+      );
+      
+      return $return;
+    }
+    
+    /***** API Calls END *****/
+    /***************************/
+    
+    
+    
+    public function businesses_informationOLD($atts)
     {
       
       $a = shortcode_atts( array(
@@ -648,7 +812,6 @@ class Bizyhood_Core
       
       $remote_settings = Bizyhood_Utility::getRemoteSettings();
       $api_url = Bizyhood_Utility::getApiUrl();
-      $zip_codes = Bizyhood_Utility::getZipsEncoded();
       $use_cuisine_types = Bizyhood_Utility::getOption(self::KEY_USE_CUISINE_TYPES);
       $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
 
@@ -735,18 +898,24 @@ class Bizyhood_Core
     
     public function businesses_shortcode($attrs)
     {
+      
+        if (Bizyhood_Utility::checkoAuthData() == false) {
+          return Bizyhood_View::load( 'listings/index', array( 'cuisines' => '', 'categories' => '', 'list_page_id' => 1, 'pagination_args' => '', 'businesses' => '', 'view_business_page_id' => '' ), true );
+        }
         
         $q = $this->businesses_information($attrs);
-        
         $list_page_id = $q['list_page_id'];
         $page = $q['page'];
        
-        $businesses = $q['businesses'];
-        $cuisines = $q['cuisines'];
-        $categories = $q['categories'];
-        $total_count = $q['total_count'];
-        $page_size = $q['page_size'];
-        $page_count = 0;
+        $businesses     = $q['businesses'];
+        $keywords       = $q['keywords'];
+        $facets         = $q['cf'];
+        $categories     = $q['categories'];
+        $cf             = $q['category'];
+        $total_count    = $q['total_count'];
+        $page_size      = $q['page_size'];
+        $page_count     = 0;
+        
         if ($page_size > 0) {
             $page_count = ( $total_count / $page_size ) + ( ( $total_count % $page_size == 0 ) ? 0 : 1 );
         }
@@ -756,8 +925,8 @@ class Bizyhood_Core
             'type'               => 'list',
         );
         $view_business_page_id = get_page_by_path( "business-overview" )->ID;
-       
-        return Bizyhood_View::load( 'listings/index', array( 'cuisines' => (isset($cuisines) ? $cuisines : ''), 'categories' => (isset($categories) ? $categories : ''), 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
+        
+        return Bizyhood_View::load( 'listings/index', array( 'facets' => (isset($facets) ? $facets : ''), 'keywords' => (isset($keywords) ? $keywords : ''), 'categories' => (isset($categories) ? $categories : ''), 'cf' => (isset($cf) ? $cf : ''), 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
     }
 
     /**
@@ -768,6 +937,14 @@ class Bizyhood_Core
     public function postTemplate($content)
     {   
         global $post, $wp_query;
+        
+        
+        // no reason to continue if we do not have oAuth token
+        if (get_transient('bizyhood_oauth_data') === false) {
+          return $content;
+        }
+        
+        
         $api_url = Bizyhood_Utility::getApiUrl();
 
         # Override content for the view business page        
@@ -785,10 +962,26 @@ class Bizyhood_Core
             }
             
             
-            $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/" . $bizyhood_id ) );
-            $business = json_decode($response);
+            // set oAuth parameters
+            $provider = array (
+              'clientId'                =>  Bizyhood_Utility::getApiID(),
+              'clientSecret'            =>  Bizyhood_Utility::getApiSecret(),
+              'redirectUri'             =>  '', // no need for 2-legged auth
+              'urlAuthorize'            =>  Bizyhood_Utility::getApiUrl().'/o/authorize/',
+              'urlAccessToken'          =>  Bizyhood_Utility::getApiUrl().'/o/token/',
+              'urlResourceOwnerDetails' =>  Bizyhood_Utility::getApiUrl().'/o/resource'
+            );
             
             
+            $params = array();
+            $client = new OAuth2\Client($provider['clientId'], $provider['clientSecret']);
+          
+            $client->setAccessTokenType($client::ACCESS_TOKEN_BEARER);
+            $client->setAccessToken(get_transient('bizyhood_oauth_data'));
+                                   
+            $response = $client->fetch($api_url . "/business/" . $bizyhood_id.'/', $params);
+            $business = json_decode(json_encode($response['result']), FALSE);
+                        
             return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id), true);
         }
 

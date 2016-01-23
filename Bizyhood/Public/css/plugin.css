@@ -8,8 +8,19 @@ div[class^="bh_"]:after {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-
-
+#less_categories {
+  display: none;
+}
+.more_list_wrap {
+  height: 0;
+  overflow: hidden;
+}
+.facet_helper_wrap {
+  padding: 10px;
+}
+a.facet_helper {
+  font-weight: normal;
+}
 .bizybox {
     background-color: #f5f5f5;
     border: 1px solid;

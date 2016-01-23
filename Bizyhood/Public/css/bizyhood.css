@@ -229,20 +229,4 @@ img.figure {
 }
 
 /* Admin */
-input#zip_code {
-    width:60px;
-}
 
-select#zip_codes {
-    width:80px;
-    height:100px;
-}
-
-input#category {
-    width:140px;
-}
-
-select#categories {
-    width:240px;
-    height:100px;
-}

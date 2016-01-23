@@ -17,10 +17,10 @@ class Bizyhood_Ajax
      */
     public static function saveSettings()
     {
-        Bizyhood_Utility::setOption(Bizyhood_Core::KEY_API_URL, $_POST['api_url']);
-        Bizyhood_Utility::setOption(Bizyhood_Core::KEY_ZIP_CODES, $_POST['zip_codes']);
-        Bizyhood_Utility::setOption(Bizyhood_Core::KEY_USE_CUISINE_TYPES, $_POST['use_cuisine_types'] === 'true');
-        Bizyhood_Utility::setOption(Bizyhood_Core::KEY_CATEGORIES, $_POST['categories']);
+      
+        Bizyhood_Utility::setOption(Bizyhood_Core::KEY_API_PRODUCTION, $_POST['api_production'] === 'true');
+        Bizyhood_Utility::setOption(Bizyhood_Core::KEY_API_ID, $_POST['api_id']);
+        Bizyhood_Utility::setOption(Bizyhood_Core::KEY_API_SECRET, $_POST['api_secret']);
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_MAIN_PAGE_ID, $_POST['main_page_id']);
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_SIGNUP_PAGE_ID, $_POST['signup_page_id']);
         die(json_encode(array('success' => true)));

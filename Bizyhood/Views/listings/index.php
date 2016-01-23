@@ -5,41 +5,60 @@
     <div class="bh_col-md-4 bh_business-search">
     <form action="<?php echo site_url(); ?>/index.php" method="get">
         <input type="hidden" name="page_id" value="<?php echo $list_page_id; ?>">
-        <input type="search" class="bh_search-field" placeholder="Search businesses..." value="" name="keywords" title="Search for:">
+        <?php if (isset($_GET['cf'])) { ?>
+        <input type="hidden" name="cf" value="<?php echo urlencode($_GET['cf']); ?>">
+        <?php } ?>
+        <input type="search" class="bh_search-field" placeholder="Search businesses..." name="keywords" title="Search for:" value="<?php echo $keywords; ?>">
     </form>
     </div>
 </div>
 <div class="bh_row">			
-    <div class="bh_col-md-2 bh_local-nav">
-        <h5><?php if ( $cuisines ) : ?>Cuisines<?php else : ?>Categories<?php endif ?></h5>
+    <div class="bh_col-md-3 bh_local-nav">
+        <h5>Categories</h5>
         <div class="bh_list-group">
-        <?php if ( $cuisines ) : ?>
-        <?php foreach($cuisines as $cuisine => $count): ?>
-            <a class="bh_list-group-item" href="<?php echo get_permalink( $list_page_id ); ?>?k=<?php echo urlencode($cuisine); ?>">
-                <span class="bh_list-title"><?php echo $cuisine; ?></span>
-                <span class="bh_badge"><?php echo $count; ?></span>
-            </a> 
-        <?php endforeach; ?>
-        <?php else : ?>
         <?php 
-          if (is_array($categories) && !empty($categories)) {
-            foreach($categories as $category) { ?>
-                <a class="bh_list-group-item" href="<?php echo get_permalink( $list_page_id ); ?>?k=<?php echo urlencode($category); ?>">
-                    <span class="bh_list-title"><?php echo $category; ?></span>
-                </a> 
-          <?php 
-            }
-          } 
+          $category_count = 0;
+          if (!empty($categories)) {
+            foreach($categories as $category) {
+            
+              if ($category_count == 19) {
+                echo '
+                </div>
+                <div class="bh_list-group more_list_wrap">
+                  <div class="more_list_inner">
+                ';
+              }
           ?>
-        <?php endif ?>
-        </div>
+              <a class="bh_list-group-item" href="<?php echo get_permalink( $list_page_id ); ?>?cf=<?php echo urlencode($category['term']).($keywords != '' ? '&amp;keywords='.$keywords : ''); ?>" title="<?php echo $category['term']; ?> (<?php echo $category['count']; ?>)">
+                  <span class="bh_list-title"><?php echo $category['term']; ?> (<?php echo $category['count']; ?>)</span>
+              </a> 
+          <?php 
+              $category_count++;
+            }
+          ?>
+          </div>
+          
+          <?php
+            if ( $category_count >= 19 ) {
+              echo '
+              </div>
+              <p class="facet_helper_wrap">
+                <a href="" title="more categories" class="facet_helper" id="more_categories">more categories</a>
+                <a href="" title="less categories" class="facet_helper" id="less_categories">less categories</a>            
+              </p>';
+            }
+            if ( $cf != '' ) {
+              echo '<p class="facet_helper_wrap"><a href="'. get_permalink($list_page_id).( $keywords != '' ? '?keywords='.$keywords : '') .'" title="show all" class="facet_helper">show all</a></p>';
+            }
+          }
+        ?>
     </div>
-    <div class="bh_col-md-10 bh_results">
+    <div class="bh_col-md-9 bh_results">
         <div class="bh_row">
-            <?php if ( !empty($businesses) ) : ?>
+            <?php if ( !empty($businesses) ) { ?>
             <?php $i = 0; foreach($businesses as $business): ?>
             <div class="bh_col-md-4">
-                <div class="bh_panel">                
+                <div class="bh_panel">        
                     <a href="<?php echo get_permalink( $view_business_page_id ); ?><?php echo sanitize_title($business->name).'-'.sanitize_title($business->locality).'-'.sanitize_title($business->region).'-'.sanitize_title($business->postal_code) .'/'.$business->bizyhood_id ?>/" class="bh_block-link">
                         <h5><?php echo $business->name ?></h5>
                         <div class="bh_address">
@@ -51,9 +70,9 @@
                 </div>
             </div><!-- /.col-md-4 -->
             <?php $i++; endforeach; ?>
-            <?php else : ?>
+            <?php } else { ?>
             <p>There were no results for your search.</p>
-            <?php endif ?>
+            <?php } ?>
         </div><!-- /.row -->
         <div class="bh_row">
             <div class="bh_col-md-12">

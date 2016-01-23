@@ -61,12 +61,56 @@ class Bizyhood_Utility
      */
     public static function getApiUrl()
     {
-        $api_url = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_API_URL);
+        $api_production = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_API_PRODUCTION);
         
-        if(!$api_url || strlen($api_url) == 0)
-            return "https://sapi.bizyhood.com";
-        else
-            return rtrim($api_url, "/");
+        if ($api_production == false) {
+          return "https://dapi.bizyhood.com";
+        }
+
+        return "https://sapi.bizyhood.com";
+
+    }
+    
+    /**
+     * Get the Bizyhood API Production mode
+     * @return boolean 
+     */
+    public static function getApiProduction()
+    {
+        return Bizyhood_Utility::getOption(Bizyhood_Core::KEY_API_PRODUCTION);
+        
+    }
+    
+    /**
+     * Get the Bizyhood API ID
+     * @return string 
+     */
+    public static function getApiID()
+    {
+        return Bizyhood_Utility::getOption(Bizyhood_Core::KEY_API_ID);
+    }
+    
+    /**
+     * Get the Bizyhood API ID
+     * @return string 
+     */
+    public static function getApiSecret()
+    {
+        return Bizyhood_Utility::getOption(Bizyhood_Core::KEY_API_SECRET);
+    }
+    
+    /**
+     * Check the Bizyhood oAuth Data
+     * @return boolean 
+     */
+    public static function checkoAuthData()
+    {
+      
+      if ( get_transient(Bizyhood_Core::KEY_OAUTH_DATA) !== false ) {
+        return true;
+      }
+      
+      return false;
     }
 
     /**
@@ -77,18 +121,6 @@ class Bizyhood_Utility
     {
         $settings = array('timeout' => 60);
         return $settings;
-    }
-
-    /**
-     * Get a comma separated, URI encoded string of ZIP codes currently entered in settings
-     */
-    public static function getZipsEncoded()
-    {
-        $zip_codes = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_ZIP_CODES);
-        if ($zip_codes)
-            return urlencode( implode( ',', $zip_codes ) );
-        else
-            return;
     }
     
     /**
