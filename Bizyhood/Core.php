@@ -801,106 +801,11 @@ class Bizyhood_Core
     /***************************/
     
     
-    
-    public function businesses_informationOLD($atts)
-    {
-      
-      $a = shortcode_atts( array(
-        'paged' => null,
-      ), $atts );
-
-      
-      $remote_settings = Bizyhood_Utility::getRemoteSettings();
-      $api_url = Bizyhood_Utility::getApiUrl();
-      $use_cuisine_types = Bizyhood_Utility::getOption(self::KEY_USE_CUISINE_TYPES);
-      $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
-
-      if ($use_cuisine_types) {
-          $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/cuisine/?pc=" . $zip_codes . "&rad=15000&format=json" ) );
-          $response_json = json_decode($response);
-          $cuisines = $response_json->cuisines;
-      }
-      else {
-          $categories = Bizyhood_Utility::getOption(self::KEY_CATEGORIES);
-      }
-
-      // get current page
-      if (isset($a['paged']))
-          $page = $a['paged'];
-      elseif (get_query_var('paged'))
-          $page = get_query_var('paged');
-      elseif (isset($_GET['paged']))
-          $page = $_GET['paged'];
-      else
-          $page = 1;
-
-      // get category filter
-      if (get_query_var('k'))
-          $category = urlencode( get_query_var('k') );
-      elseif (isset($_GET['k']))
-          $category = urlencode( $_GET['k'] );
-
-      if ($use_cuisine_types) {
-          if (isset($category)) {
-              $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=12&pn=$page&rad=15000&cu=$category", $remote_settings ) );
-          }
-          elseif(isset($_GET['keywords'])) {
-              $keywords = urlencode($_GET['keywords']);
-              $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=12&pn=$page&rad=15000&k=$keywords", $remote_settings ) );
-          }
-          else {
-              $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/restaurant/?format=json&pc=$zip_codes&ps=12&pn=$page&rad=15000", $remote_settings ) );
-          }
-      }
-      else {
-          if (isset($category)) {
-              $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=12&pn=$page&rad=15000&k=$category", $remote_settings ) );
-          }
-          elseif(isset($_GET['keywords'])) {
-              $keywords = urlencode($_GET['keywords']);
-              $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=12&pn=$page&rad=15000&k=$keywords", $remote_settings ) );
-          }
-          else {
-              $response = wp_remote_retrieve_body( wp_remote_get( $api_url . "/business/?format=json&pc=$zip_codes&ps=12&pn=$page&rad=15000", $remote_settings ) );
-          }
-      }
-      $response_json = json_decode( $response );
-      
-      // avoid throwing an error
-      if ($response_json === null) { return; }
-      
-      $businesses = $response_json->businesses;
-      $total_count = $response_json->total_count;
-      $page_size = $response_json->page_size;
-      
-      $return = array(
-        'remote_settings'   => $remote_settings,
-        'api_url'           => $api_url,
-        'zip_codes'         => $zip_codes,
-        'use_cuisine_types' => $use_cuisine_types,
-        'list_page_id'      => $list_page_id,
-        'keywords'          => (isset($keywords) ? $keywords : ''),
-        'cuisines'          => (isset($cuisines) ? $cuisines : ''),
-        'categories'        => (isset($categories) ? $categories : ''),
-        'category'          => (isset($category) ? $category : ''),
-        'page'              => $page,
-        'businesses'        => $businesses,
-        'total_count'       => $total_count,
-        'page_size'         => $page_size,
-        'response'          => $response,
-        'response_json'     => $response_json
-      );
-      
-      return $return;
-    }
-    
-    
-    
     public function businesses_shortcode($attrs)
     {
       
         if (Bizyhood_Utility::checkoAuthData() == false) {
-          return Bizyhood_View::load( 'listings/index', array( 'cuisines' => '', 'categories' => '', 'list_page_id' => 1, 'pagination_args' => '', 'businesses' => '', 'view_business_page_id' => '' ), true );
+          return Bizyhood_View::load( 'listings/index', array( 'categories' => '', 'list_page_id' => 1, 'pagination_args' => '', 'businesses' => '', 'view_business_page_id' => '' ), true );
         }
         
         $q = $this->businesses_information($attrs);
