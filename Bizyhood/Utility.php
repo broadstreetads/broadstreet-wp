@@ -64,10 +64,10 @@ class Bizyhood_Utility
         $api_production = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_API_PRODUCTION);
         
         if ($api_production == false) {
-          return "https://dapi.bizyhood.com";
+          return "https://sapi.bizyhood.com";
         }
 
-        return "https://sapi.bizyhood.com";
+        return "https://api.bizyhood.com";
 
     }
     
