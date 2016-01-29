@@ -7,11 +7,18 @@
     get_template_part( 404 ); 
     get_footer();
     exit();
+    
+  }
+  
+  // check and create the backlink
+  $backlink = wp_get_referer();
+  if (wp_get_referer() == get_site_url() . $_SERVER["REQUEST_URI"] || wp_get_referer() == false) {
+    $backlink = get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_MAIN_PAGE_ID));
   }
 ?>
 <div class="bh_row bh_business-header">
     <div class="bh_col-md-2">
-        <a href="<?php echo wp_get_referer(); ?>" class="bh_button"><span class="entypo-left" aria-hidden="true"></span> Back</a>
+        <a href="<?php echo $backlink; ?>" class="bh_button"><span class="entypo-left" aria-hidden="true"></span> Back</a>
     </div>
 </div><!-- /.row -->
 <div class="bh_row" itemscope itemtype="http://schema.org/LocalBusiness">
