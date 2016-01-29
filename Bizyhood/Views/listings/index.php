@@ -39,7 +39,7 @@
           </div>
           
           <?php
-            if ( $category_count >= 19 ) {
+            if ( $category_count >= 20 ) {
               echo '
               </div>
               <p class="facet_helper_wrap">

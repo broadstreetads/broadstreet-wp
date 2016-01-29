@@ -782,7 +782,7 @@ class Bizyhood_Core
         'remote_settings'   => $remote_settings,
         'api_url'           => $api_url,
         'list_page_id'      => $list_page_id,
-        'keywords'          => (isset($keywords) && $keywords != '' ? $keywords : ''),
+        'keywords'          => (isset($keywords) && $keywords != '' ? urldecode($keywords) : ''),
         'categories'        => (isset($categories) ? $categories : ''),
         'category'          => (isset($category) ? $category : ''),
         'page'              => $page,
