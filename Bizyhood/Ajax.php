@@ -17,7 +17,7 @@ class Bizyhood_Ajax
      */
     public static function saveSettings()
     {
-      
+        delete_transient('bizyhood_oauth_data');
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_API_PRODUCTION, $_POST['api_production'] === 'true');
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_API_ID, $_POST['api_id']);
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_API_SECRET, $_POST['api_secret']);
