@@ -61,7 +61,7 @@ class Bizyhood_Utility
      */
     public static function getApiUrl()
     {
-        $api_production = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_API_PRODUCTION);
+        $api_production = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_API_PRODUCTION, TRUE);
         
         if ($api_production == false) {
           return "https://sapi.bizyhood.com";
@@ -77,7 +77,7 @@ class Bizyhood_Utility
      */
     public static function getApiProduction()
     {
-        return Bizyhood_Utility::getOption(Bizyhood_Core::KEY_API_PRODUCTION);
+        return Bizyhood_Utility::getOption(Bizyhood_Core::KEY_API_PRODUCTION, TRUE);
         
     }
     
