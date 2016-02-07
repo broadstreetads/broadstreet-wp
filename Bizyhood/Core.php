@@ -536,14 +536,14 @@ class Bizyhood_Core
         $client = new OAuth2\Client($provider['clientId'], $provider['clientSecret']);
         $response = $client->getAccessToken($provider['urlAccessToken'], 'client_credentials', $params);
         
-        $client->setAccessToken($response['result']['access_token']);
-        
-        if ( !is_admin() && strlen($response['result']['access_token']) > 0 && $response['code'] == 200) {
+        if ( !is_admin() && is_array($response) && !empty($response) && isset($response['code']) && strlen($response['result']['access_token']) > 0 && $response['code'] == 200) {
           
+          $client->setAccessToken($response['result']['access_token']);
           set_transient('bizyhood_oauth_data', $response['result']['access_token'], $response['result']['expires_in']);
           
         } else {
           delete_transient('bizyhood_oauth_data');
+          return new WP_Error( 'bizyhood_error', __( 'Service is currently unavailable! Error code: '. $response['code'] .'; '.$response['result']['error'], 'bizyhood' ) );
         }
       }
       
@@ -745,10 +745,20 @@ class Bizyhood_Core
       
       
       $params = array();
-      $client = new OAuth2\Client($provider['clientId'], $provider['clientSecret']);
+      try {
+        $client = new OAuth2\Client($provider['clientId'], $provider['clientSecret']);
+      } catch (Exception $e) {
+        $error = new WP_Error( 'bizyhood_error', __( 'Service is currently unavailable! Request timed out.', 'bizyhood' ) );
+        return array('error' => $error);
+      }
     
       $client->setAccessTokenType($client::ACCESS_TOKEN_BEARER);
       $client->setAccessToken(get_transient('bizyhood_oauth_data'));
+      $curl_timeout = array(
+        CURLOPT_CONNECTTIMEOUT => 10,
+        CURLOPT_TIMEOUT => 10
+      );
+      $client->setCurlOptions($curl_timeout);
       
       
       $params = array(
@@ -765,7 +775,16 @@ class Bizyhood_Core
         $params['cf'] = $category;
       }
       
-      $response = $client->fetch($api_url.'/business/', $params);
+      try {
+        $response = $client->fetch($api_url.'/business/', $params);
+      } catch (Exception $e) {
+        $error = new WP_Error( 'bizyhood_error', __( 'Service is currently unavailable! Request timed out.', 'bizyhood' ) );
+        return array('error' => $error);
+      }  
+      
+      // avoid throwing an error
+      if (!is_array($response) || empty($response)) { return; }
+      
       $response_json = $response['result'];
       
       // avoid throwing an error
@@ -804,11 +823,20 @@ class Bizyhood_Core
     public function businesses_shortcode($attrs)
     {
       
-        if (Bizyhood_Utility::checkoAuthData() == false) {
-          return Bizyhood_View::load( 'listings/index', array( 'categories' => '', 'list_page_id' => 1, 'pagination_args' => '', 'businesses' => '', 'view_business_page_id' => '' ), true );
+        
+        $authetication = $this->set_oauth_temp_data();
+        if (is_wp_error($authetication) || Bizyhood_Utility::checkoAuthData() == false) {
+          return Bizyhood_View::load( 'listings/error', array( 'error' => $authetication->get_error_message()), true );
         }
         
+        
         $q = $this->businesses_information($attrs);
+        
+        if (isset($q['error'])) {
+          $error = $q['error'];
+          return Bizyhood_View::load( 'listings/error', array( 'error' => $error->get_error_message()), true );
+        }
+        
         $list_page_id = $q['list_page_id'];
         $page = $q['page'];
        
@@ -846,7 +874,10 @@ class Bizyhood_Core
         
         // no reason to continue if we do not have oAuth token
         if (get_transient('bizyhood_oauth_data') === false) {
-          return $content;
+          $authetication = $this->set_oauth_temp_data();
+          if (is_wp_error($authetication)) {
+            return Bizyhood_View::load( 'listings/error', array( 'error' => $authetication->get_error_message()), true );
+          }
         }
         
         
@@ -879,12 +910,26 @@ class Bizyhood_Core
             
             
             $params = array();
-            $client = new OAuth2\Client($provider['clientId'], $provider['clientSecret']);
+            try {
+              $client = new OAuth2\Client($provider['clientId'], $provider['clientSecret']);
+            } catch (Exception $e) {
+              return Bizyhood_View::load( 'listings/error', array( 'error' => __( 'Service is currently unavailable! Request timed out.', 'bizyhood' )), true );
+            }
+
           
             $client->setAccessTokenType($client::ACCESS_TOKEN_BEARER);
             $client->setAccessToken(get_transient('bizyhood_oauth_data'));
-                                   
-            $response = $client->fetch($api_url . "/business/" . $bizyhood_id.'/', $params);
+            $curl_timeout = array(
+              CURLOPT_CONNECTTIMEOUT => 10,
+              CURLOPT_TIMEOUT => 10
+            );
+            $client->setCurlOptions($curl_timeout);
+
+            try {
+              $response = $client->fetch($api_url . "/business/" . $bizyhood_id.'/', $params);
+            } catch (Exception $e) {
+              return Bizyhood_View::load( 'listings/error', array( 'error' => __( 'Service is currently unavailable! Request timed out.', 'bizyhood' )), true );
+            }  
             $business = json_decode(json_encode($response['result']), FALSE);
                         
             return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id), true);
