@@ -128,6 +128,7 @@ class Broadstreet_Core
         add_shortcode('businesses', array($this, 'businesses_shortcode'));
         add_filter('image_size_names_choose', array($this, 'addImageSizes'));
         add_action('wp_footer', array($this, 'addPoweredBy'));
+        add_action('wp_head', array($this, 'setWhitelabel'));
         # -- Ad injection
         add_filter('the_content', array($this, 'addAdsContent'), 100);
         add_action('loop_end', array($this, 'addAdsLoopEnd'), 100);
@@ -318,6 +319,14 @@ class Broadstreet_Core
     public function addPoweredBy()
     {
     }
+
+    public function setWhitelabel()
+    {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        if (property_exists($placement_settings, 'cdn_whitelabel')) {
+            echo "<script>broadstreet.setWhitelabel('{$placement_settings->adserver_whitelabel}')</script>";
+        }
+    }
     
     public function addZoneTag()
     {
@@ -327,7 +336,12 @@ class Broadstreet_Core
             if(is_ssl()) {
                 wp_enqueue_script('Broadstreet-cdn', 'https://s3.amazonaws.com/street-production/init.js');
             } else {
-                wp_enqueue_script('Broadstreet-cdn', 'http://cdn.broadstreetads.com/init.js');
+                $placement_settings = Broadstreet_Utility::getPlacementSettings();
+                $host = 'cdn.broadstreetads.com';
+                if (property_exists($placement_settings, 'cdn_whitelabel')) {
+                    $host = $placement_settings->cdn_whitelabel;
+                }
+                wp_enqueue_script('Broadstreet-cdn', "http://$host/init.js");
             }
         }
     }
@@ -456,7 +470,7 @@ class Broadstreet_Core
         if(!$data['api_key']) 
         {
             $data['errors'][] = '<strong>You dont have an API key set yet!</strong><ol><li>If you already have a Broadstreet account, <a href="http://my.broadstreetads.com/access-token">get your key here</a>.</li><li>If you don\'t have an account with us, <a target="blank" id="one-click-signup" href="#">then use our one-click signup</a>.</li></ol>';
-        } 
+        }
         else 
         {
             $api = new Broadstreet($data['api_key']);

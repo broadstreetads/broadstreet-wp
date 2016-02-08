@@ -101,8 +101,40 @@
                                 tick-property="ticked">
                             </div>
                         </div>
-                    </div>                    
-                    <div class="clearfix"></div>                    
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="break"></div>
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">
+                                Adserver Whitelabel
+                            </div>
+                            <div class="desc nomargin">
+                                <strong>DO NOT</strong> set this if you are unfamiliar with what it does.
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <input ng-model="data.positions_zones.adserver_whitelabel" type="text" placeholder="content.yourdomain.com" />
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="break"></div>
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">
+                                CDN Whitelabel
+                            </div>
+                            <div class="desc nomargin">
+                                <strong>DO NOT</strong> set this if you are unfamiliar with what it does.
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <input ng-model="data.positions_zones.cdn_whitelabel" type="text" placeholder="assets.yourdomain.com" />
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="break"></div>
+                    <div class="clearfix"></div>
                     <div class="break"></div>
                     <div class="option">
                         <div class="control-label">
@@ -167,7 +199,7 @@
 
             $scope.data = {
                 zones: bootstrap.zones,
-                positions_zones: bootstrap.placements,
+                positions_zones: bootstrap.placements
             };
 
             var catList = [], found = false;
