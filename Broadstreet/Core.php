@@ -323,8 +323,8 @@ class Broadstreet_Core
     public function setWhitelabel()
     {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
-        if (property_exists($placement_settings, 'cdn_whitelabel')) {
-            echo "<script>broadstreet.setWhitelabel('{$placement_settings->adserver_whitelabel}')</script>";
+        if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->adserver_whitelabel) > 0) {
+            echo "<script>broadstreet.setWhitelabel('//{$placement_settings->adserver_whitelabel}/')</script>";
         }
     }
     
@@ -338,7 +338,7 @@ class Broadstreet_Core
             } else {
                 $placement_settings = Broadstreet_Utility::getPlacementSettings();
                 $host = 'cdn.broadstreetads.com';
-                if (property_exists($placement_settings, 'cdn_whitelabel')) {
+                if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->cdn_whitelabel) > 0) {
                     $host = $placement_settings->cdn_whitelabel;
                 }
                 wp_enqueue_script('Broadstreet-cdn', "http://$host/init.js");
