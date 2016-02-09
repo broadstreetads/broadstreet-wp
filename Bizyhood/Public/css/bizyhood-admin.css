@@ -1,0 +1,40 @@
+#bizylink-insert-dialog .query-notice {
+  padding: 0;
+  border-bottom: 1px solid #dfdfdf;
+  background-color: #f7fcfe;
+  color: #000;
+}
+#bizylink-insert-dialog .query-notice .query-notice-default {
+  display: block;
+  padding: 6px;
+  border-left: 4px solid #00a0d2;
+}
+#bizylink-insert-dialog li {
+  clear: both;
+  margin-bottom: 0;
+  border-bottom: 1px solid #f1f1f1;
+  color: #32373c;
+  padding: 4px 6px 4px 10px;
+  cursor: pointer;
+  position: relative;
+}
+.alternate, .striped>tbody>:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+#bizylink_results {
+  height: 133px; 
+  margin: 0 20px; 
+  overflow: auto;
+  padding: 5px;
+  border: 1px solid #dedede;
+}
+#bizylink_results a { 
+  display: block; 
+  width: 100%; 
+}
+
+input.bizyradio {
+  min-width: 14px;
+  width: 14px;
+  height: 14px;
+}

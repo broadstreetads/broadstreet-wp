@@ -211,7 +211,7 @@ class Bizyhood_Core
         }
         $out .= '</ul>';
       } else {
-        $out = 'No results';
+        $out = 'No results found for <em>'.$_GET['keywords'] .'</em>';
       }
       
       
@@ -223,13 +223,40 @@ class Bizyhood_Core
     function bizylink_insert_dialog() {
       
       $out ='
+          <div id="mceu_53" class="mce-container mce-first mce-formitem" hidefocus="1" tabindex="-1" style="margin: 20px; width: 458px; height: auto; oveflow: auto;">
+            <div id="mceu_53-body" class="mce-container-body mce-abs-layout" style="width: 458px; height: 30px;">
+              <div id="mceu_53-absend" class="mce-abs-end"></div>
+                <label id="bizylink_type-l" class="mce-widget mce-label mce-first mce-abs-layout-item" for="bizylink_type" aria-disabled="false" style="line-height: 19px; left: 0px; top: 6px; width: 147px; height: 19px;">Link Type</label>
+                <div class="mce-abs-layout-item" style="left: 147px; top: 0px; width: 301px; height: 28px;">
+                
+                <input type="radio" id="bizylink_type_box" name="bizylink_type" value="bizybox" class="bizyradio" checked /> 
+                Call to Action Link<br>
+
+                <input type="radio" id="bizylink_type_normal" name="bizylink_type" value="bizylink" class="bizyradio" /> 
+                Normal Link
+              </div>
+              
+            </div>
+          </div>
+          
           <div id="mceu_54" class="mce-container mce-first mce-formitem" hidefocus="1" tabindex="-1" style="margin: 20px; width: 458px; height: auto; oveflow: auto;">
             <div id="mceu_54-body" class="mce-container-body mce-abs-layout" style="width: 458px; height: 30px;">
               <div id="mceu_54-absend" class="mce-abs-end"></div>
-              <label id="bizylink_title-l" class="mce-widget mce-label mce-first mce-abs-layout-item" for="bizylink_title" aria-disabled="false" style="line-height: 19px; left: 0px; top: 6px; width: 147px; height: 19px;">Call to Action Text</label>
+              <label id="bizylink_title-l" class="mce-widget mce-label mce-first mce-abs-layout-item" for="bizylink_title" aria-disabled="false" style="line-height: 19px; left: 0px; top: 6px; width: 147px; height: 19px;">Link Text</label>
               <input  placeholder="your bizybox text" id="bizylink_title" class="mce-textbox mce-last mce-abs-layout-item" value="" hidefocus="1" aria-labelledby="bizylink_title-l" style="left: 147px; top: 0px; width: 301px; height: 28px;">
             </div>
           </div>
+          
+          <div id="mceu_56" class="mce-container mce-last mce-formitem" hidefocus="1" tabindex="-1" style="margin: 20px; width: 458px; height: auto; oveflow: auto;">
+            <div id="mceu_55-body" class="mce-container-body mce-abs-layout" style="width: 458px; height: 30px;">
+              <div id="mceu_56-absend" class="mce-abs-end"></div>
+              <label id="bizylink_search-l" class="mce-widget mce-label mce-first mce-abs-layout-item" for="bizylink_search" aria-disabled="false" style="line-height: 19px; left: 0px; top: 6px; width: 147px; height: 19px;">Search Business</label>
+              <input placeholder="type keyword" id="bizylink_search" class="mce-textbox mce-last mce-abs-layout-item form-initialized" value="" hidefocus="1" aria-labelledby="bizylink_search-l" style="left: 147px; top: 0px; width: 301px; height: 28px;">
+            </div>
+          </div>
+          
+          <div id="bizylink_results">Type a keyword on the field above to search the Bizyhood directory.</div>
+          
           <div id="mceu_55" class="mce-container mce-last mce-formitem" hidefocus="1" tabindex="-1" style="margin: 20px; width: 458px; height: auto; oveflow: auto;">
             <div id="mceu_55-body" class="mce-container-body mce-abs-layout" style="width: 458px; height: 30px;">
               <div id="mceu_55-absend" class="mce-abs-end"></div>
@@ -237,42 +264,15 @@ class Bizyhood_Core
               <input placeholder="business overview link" id="bizylink_link" class="mce-textbox mce-last mce-abs-layout-item form-initialized" value="" hidefocus="1" aria-labelledby="bizylink_link-l" style="left: 147px; top: 0px; width: 301px; height: 28px;">
             </div>
           </div>
-          <div id="mceu_56" class="mce-container mce-last mce-formitem" hidefocus="1" tabindex="-1" style="margin: 20px; width: 458px; height: auto; oveflow: auto;">
-            <div id="mceu_55-body" class="mce-container-body mce-abs-layout" style="width: 458px; height: 30px;">
-              <div id="mceu_56-absend" class="mce-abs-end"></div>
-              <label id="bizylink_search-l" class="mce-widget mce-label mce-first mce-abs-layout-item" for="bizylink_search" aria-disabled="false" style="line-height: 19px; left: 0px; top: 6px; width: 147px; height: 19px;">Search Business</label>
-              <input placeholder="search for business" id="bizylink_search" class="mce-textbox mce-last mce-abs-layout-item form-initialized" value="" hidefocus="1" aria-labelledby="bizylink_search-l" style="left: 147px; top: 0px; width: 301px; height: 28px;">
+          
+          <div id="mceu_57" class="mce-container mce-last mce-formitem" hidefocus="1" tabindex="-1" style="margin: 20px; width: 458px; height: auto; oveflow: auto;">
+            <div id="mceu_57-body" class="mce-container-body mce-abs-layout" style="width: 458px; height: 30px;">
+              <div id="mceu_57-absend" class="mce-abs-end"></div>
+              <label id="bizylink_target-l" class="mce-widget mce-label mce-first mce-abs-layout-item" for="bizylink_target" aria-disabled="false" style="line-height: 19px; left: 0px; top: -5px; width: 147px; height: 19px;">Open in new window</label>
+              <input type="checkbox" placeholder="business overview link" id="bizylink_target" class="mce-last mce-abs-layout-item form-initialized" value="yes" hidefocus="1" aria-labelledby="bizylink_target-l" style="left: 147px; top: 0px;">
             </div>
           </div>
-          <div id="bizylink_results" style="margin: 0 20px; height: 133px; overflow: auto;" >No results</div>
-          
-          
-          <style>
-            #bizylink-insert-dialog .query-notice {
-                padding: 0;
-                border-bottom: 1px solid #dfdfdf;
-                background-color: #f7fcfe;
-                color: #000;
-            }
-            #bizylink-insert-dialog .query-notice .query-notice-default {
-                display: block;
-                padding: 6px;
-                border-left: 4px solid #00a0d2;
-            }
-            #bizylink-insert-dialog li {
-                clear: both;
-                margin-bottom: 0;
-                border-bottom: 1px solid #f1f1f1;
-                color: #32373c;
-                padding: 4px 6px 4px 10px;
-                cursor: pointer;
-                position: relative;
-            }
-            .alternate, .striped>tbody>:nth-child(odd) {
-                background-color: #f9f9f9;
-            }
-            #bizylink_results a { display: block; width: 100%; }
-          </style>
+
       ';
     
     
@@ -608,6 +608,7 @@ class Bizyhood_Core
         if($GLOBALS['pagenow'] == 'post.php'
                 || $GLOBALS['pagenow'] == 'post-new.php')
         {
+            wp_enqueue_style ('Bizyhood-custom-post-css', Bizyhood_Utility::getCSSBaseURL() . 'bizyhood-admin.css');
             wp_enqueue_style ('Bizyhood-vendorcss-time', Bizyhood_Utility::getVendorBaseURL() . 'timepicker/css/timePicker.css');
             wp_enqueue_script('Bizyhood-main'  ,  Bizyhood_Utility::getJSBaseURL().'bizyhood.js?v='. BIZYHOOD_VERSION);
             wp_enqueue_script('Bizyhood-vendorjs-time'  ,  Bizyhood_Utility::getVendorBaseURL().'timepicker/js/jquery.timePicker.min.js');

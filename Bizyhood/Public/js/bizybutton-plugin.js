@@ -19,7 +19,7 @@
             
             title: 'Insert BizyBox',
             width: 500,
-            height: 300,
+            height: 400,
             inline: 1,
             id: 'bizylink-insert-dialog',
             
@@ -56,6 +56,13 @@
     
     var title = jQuery('#bizylink_title').val();
     var link = jQuery('#bizylink_link').val();
+    var type = jQuery('input[name="bizylink_type"]:checked').val();
+    
+    if (document.getElementById('bizylink_target').checked) {
+      var target = '_blank';
+    } else {
+      var target = '_self';
+    }
     
     
     if(link === '' || title === '') {
@@ -75,7 +82,7 @@
     
 
     
-    editor.insertContent( '<a href="' + link + '" class="bizybox">' + title + '</a>');
+    editor.insertContent( '<a href="' + link + '" class="' + type + '" target="' + target + '">' + title + '</a>');
     editor.windowManager.close();
   }
   
@@ -96,6 +103,13 @@
 
 			dialogBody.children( '.loading' ).remove();
 			dialogBody.append( template );
+      
+      
+      if (tinyMCE.activeEditor.selection.getContent() != '') {
+        jQuery('#bizylink_title').val(tinyMCE.activeEditor.selection.getContent());
+        jQuery('#bizylink_search').val(tinyMCE.activeEditor.selection.getContent());
+        doneTyping ();
+      }
       
       jQuery('#bizylink_link').on('click', function() {
         jQuery(this).css('border-color', '');
@@ -139,8 +153,12 @@
           jQuery('#bizylink_results').append(response);
           jQuery('#bizylink_results a').on('click', function(e) {
             e.preventDefault();
+            
+              jQuery('#bizylink_results ul li').removeClass('clicked');
+              jQuery(this).closest('li').addClass('clicked');
+            
+              jQuery('#mceu_55').slideDown();
               jQuery('#bizylink_link').val(jQuery(this).attr('href')).css('border-color', '');
-              jQuery('#bizylink_link').attr('readonly', 'readonly');
             return false;
           });
         });
