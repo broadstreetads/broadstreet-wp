@@ -22,11 +22,14 @@
   background-color: #f9f9f9;
 }
 #bizylink_results {
-  height: 133px; 
-  margin: 0 20px; 
+  height: 140px; 
+  margin: 0; 
   overflow: auto;
   padding: 5px;
   border: 1px solid #dedede;
+  white-space: normal;
+  width: 97%;
+
 }
 #bizylink_results a { 
   display: block; 
@@ -37,4 +40,26 @@ input.bizyradio {
   min-width: 14px;
   width: 14px;
   height: 14px;
+}
+
+em.query-notice-default {
+  display: block;
+}
+table.options_table {
+  width: 100%;
+  border: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+table.options_table td {
+  vertical-align: middle;
+}
+table.options_table td.first_column {
+  width: 35%;
+}
+table.options_table td input[type="text"] {
+  width: 96%;
+}
+span.faded {
+  opacity: 0.7;
 }

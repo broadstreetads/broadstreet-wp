@@ -193,7 +193,7 @@ class Bizyhood_Core
       
       $out = '
         <div class="query-notice" id="query-notice-message">
-          <em class="query-notice-default" style="display: block;">Results for: <b>'. $_GET['keywords'].'</b> ('. count($queryapi['businesses']) .')</em>
+          <em class="query-notice-default">Results for: <b>'. $_GET['keywords'].'</b> ('. count($queryapi['businesses']) .')</em>
         </div>';
       
       
@@ -211,7 +211,7 @@ class Bizyhood_Core
         }
         $out .= '</ul>';
       } else {
-        $out = 'No results found for <em>'.$_GET['keywords'] .'</em>';
+        $out = '<span class="faded">No results found for <em>'.$_GET['keywords'] .'</em></span>';
       }
       
       
@@ -223,56 +223,57 @@ class Bizyhood_Core
     function bizylink_insert_dialog() {
       
       $out ='
-          <div id="mceu_53" class="mce-container mce-first mce-formitem" hidefocus="1" tabindex="-1" style="margin: 20px; width: 458px; height: auto; oveflow: auto;">
-            <div id="mceu_53-body" class="mce-container-body mce-abs-layout" style="width: 458px; height: 30px;">
-              <div id="mceu_53-absend" class="mce-abs-end"></div>
-                <label id="bizylink_type-l" class="mce-widget mce-label mce-first mce-abs-layout-item" for="bizylink_type" aria-disabled="false" style="line-height: 19px; left: 0px; top: 6px; width: 147px; height: 19px;">Link Type</label>
-                <div class="mce-abs-layout-item" style="left: 147px; top: 0px; width: 301px; height: 28px;">
-                
-                <input type="radio" id="bizylink_type_box" name="bizylink_type" value="bizybox" class="bizyradio" checked /> 
-                Call to Action Link<br>
+        <table class="wp-list-table widefat fixed striped table options_table">
+          <tr>
+            <td class="first_column">
+              <label id="bizylink_type-l" class="mce-widget mce-label mce-first" for="bizylink_type" aria-disabled="false">Link Type</label>
+            </td>
+            <td>
+              <input type="radio" id="bizylink_type_box" name="bizylink_type" value="bizybox" class="bizyradio" checked /> 
+              Call to Action Link<br>
 
-                <input type="radio" id="bizylink_type_normal" name="bizylink_type" value="bizylink" class="bizyradio" /> 
-                Normal Link
-              </div>
-              
-            </div>
-          </div>
-          
-          <div id="mceu_54" class="mce-container mce-first mce-formitem" hidefocus="1" tabindex="-1" style="margin: 20px; width: 458px; height: auto; oveflow: auto;">
-            <div id="mceu_54-body" class="mce-container-body mce-abs-layout" style="width: 458px; height: 30px;">
-              <div id="mceu_54-absend" class="mce-abs-end"></div>
-              <label id="bizylink_title-l" class="mce-widget mce-label mce-first mce-abs-layout-item" for="bizylink_title" aria-disabled="false" style="line-height: 19px; left: 0px; top: 6px; width: 147px; height: 19px;">Link Text</label>
-              <input  placeholder="your bizybox text" id="bizylink_title" class="mce-textbox mce-last mce-abs-layout-item" value="" hidefocus="1" aria-labelledby="bizylink_title-l" style="left: 147px; top: 0px; width: 301px; height: 28px;">
-            </div>
-          </div>
-          
-          <div id="mceu_56" class="mce-container mce-last mce-formitem" hidefocus="1" tabindex="-1" style="margin: 20px; width: 458px; height: auto; oveflow: auto;">
-            <div id="mceu_55-body" class="mce-container-body mce-abs-layout" style="width: 458px; height: 30px;">
-              <div id="mceu_56-absend" class="mce-abs-end"></div>
-              <label id="bizylink_search-l" class="mce-widget mce-label mce-first mce-abs-layout-item" for="bizylink_search" aria-disabled="false" style="line-height: 19px; left: 0px; top: 6px; width: 147px; height: 19px;">Search Business</label>
-              <input placeholder="type keyword" id="bizylink_search" class="mce-textbox mce-last mce-abs-layout-item form-initialized" value="" hidefocus="1" aria-labelledby="bizylink_search-l" style="left: 147px; top: 0px; width: 301px; height: 28px;">
-            </div>
-          </div>
-          
-          <div id="bizylink_results">Type a keyword on the field above to search the Bizyhood directory.</div>
-          
-          <div id="mceu_55" class="mce-container mce-last mce-formitem" hidefocus="1" tabindex="-1" style="margin: 20px; width: 458px; height: auto; oveflow: auto;">
-            <div id="mceu_55-body" class="mce-container-body mce-abs-layout" style="width: 458px; height: 30px;">
-              <div id="mceu_55-absend" class="mce-abs-end"></div>
-              <label id="bizylink_link-l" class="mce-widget mce-label mce-first mce-abs-layout-item" for="bizylink_link" aria-disabled="false" style="line-height: 19px; left: 0px; top: 6px; width: 147px; height: 19px;">Business Link</label>
-              <input placeholder="business overview link" id="bizylink_link" class="mce-textbox mce-last mce-abs-layout-item form-initialized" value="" hidefocus="1" aria-labelledby="bizylink_link-l" style="left: 147px; top: 0px; width: 301px; height: 28px;">
-            </div>
-          </div>
-          
-          <div id="mceu_57" class="mce-container mce-last mce-formitem" hidefocus="1" tabindex="-1" style="margin: 20px; width: 458px; height: auto; oveflow: auto;">
-            <div id="mceu_57-body" class="mce-container-body mce-abs-layout" style="width: 458px; height: 30px;">
-              <div id="mceu_57-absend" class="mce-abs-end"></div>
-              <label id="bizylink_target-l" class="mce-widget mce-label mce-first mce-abs-layout-item" for="bizylink_target" aria-disabled="false" style="line-height: 19px; left: 0px; top: -5px; width: 147px; height: 19px;">Open in new window</label>
-              <input type="checkbox" placeholder="business overview link" id="bizylink_target" class="mce-last mce-abs-layout-item form-initialized" value="yes" hidefocus="1" aria-labelledby="bizylink_target-l" style="left: 147px; top: 0px;">
-            </div>
-          </div>
-
+              <input type="radio" id="bizylink_type_normal" name="bizylink_type" value="bizylink" class="bizyradio" /> 
+              Normal Link
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label id="bizylink_title-l" class="mce-widget mce-label mce-first" for="bizylink_title" aria-disabled="false">Link Text</label>
+            </td>
+            <td>
+              <input type="text" placeholder="your bizybox text" id="bizylink_title" class="mce-textbox mce-last" value="" hidefocus="1" aria-labelledby="bizylink_title-l">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label id="bizylink_search-l" class="mce-widget mce-label mce-first" for="bizylink_search" aria-disabled="false">Search Business</label>
+            </td>
+            <td>
+              <input type="text" placeholder="type keyword" id="bizylink_search" class="mce-textbox mce-last form-initialized" value="" hidefocus="1" aria-labelledby="bizylink_search-l">
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <div id="bizylink_results"><span class="faded">Type a keyword on the field above to search the Bizyhood directory.</span></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label id="bizylink_link-l" class="mce-widget mce-label mce-first" for="bizylink_link" aria-disabled="false">Business Link</label>
+            </td>
+            <td>
+              <input type="text" placeholder="business overview link" id="bizylink_link" class="mce-textbox mce-last form-initialized" value="" hidefocus="1" aria-labelledby="bizylink_link-l">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label id="bizylink_target-l" class="mce-widget mce-label mce-first" for="bizylink_target" aria-disabled="false">Open in new window</label>
+            </td>
+            <td>
+              <input type="checkbox" placeholder="business overview link" id="bizylink_target" class="mce-last form-initialized" value="yes" hidefocus="1" aria-labelledby="bizylink_target-l">
+            </td>
+          </tr>
+        </table>
       ';
     
     

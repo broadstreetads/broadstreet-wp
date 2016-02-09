@@ -6,7 +6,7 @@
       init: function( editor, url )  {
 
         editor.addButton( 'bizylink', {
-            title: 'Bizylink',
+            title: 'Bizybox / Bizylink',
             image : url+ '/../img/bizylink.png',
             cmd: 'bizylink_command'
         });
