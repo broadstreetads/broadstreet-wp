@@ -206,7 +206,7 @@ class Bizyhood_Core
           
           $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
           
-          $out .= '<li class="'. ($i%2 == false ? 'alternate' : '') .'"><a href="'. $urlbase.$urlarr[0].'/'.$urlarr[1].'/' .'" title="'. $business->name .'">'. $business->name .' - '. $business->address1 .', '. $business->region.', '. $business->postal_code .'</li>';
+          $out .= '<li class="'. ($i%2 == false ? 'alternate' : '') .'"><a href="'. $urlbase.$urlarr[0].'/'.$urlarr[1].'/' .'" title="'. $business->name .'">'. $business->name .' - '. $business->address1 .', '. $business->locality .', '. $business->region.', '. $business->postal_code .'</li>';
           $i++;
         }
         $out .= '</ul>';
