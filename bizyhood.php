@@ -3,7 +3,7 @@
 Plugin Name: Bizyhood
 Plugin URI: https://bizyhood.com
 Description: Integrate Bizyhood business directory on your site
-Version: 1.0.0
+Version: 1.0.1
 Author: Bizyhood
 Author URI: http://bizyhood.com
 */
