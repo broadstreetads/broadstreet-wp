@@ -650,14 +650,14 @@ class Bizyhood_Core
             $data['errors'][] = 'Bizyhood requires the PHP cURL module to be enabled. You may need to ask your web host or developer to enable this.';
         }
         
-        if(get_page_by_path('businesses'))
+        if(get_category_by_slug('businesses-overview'))
         {
-            $data['errors'][] = 'You have a page named "businesses", which will interfere with the business directory if you plan to use it. You must delete that page.';
+            $data['errors'][] = 'You have a category named "businesses-overview", which will interfere with the business directory if you plan to use it. You must delete that page.';
         }
         
-        if(get_category_by_slug('businesses'))
+        if(get_category_by_slug('business-directory'))
         {
-            $data['errors'][] = 'You have a category named "businesses", which will interfere with the business directory if you plan to use it. You must delete that category.';
+            $data['errors'][] = 'You have a category named "business-directory", which will interfere with the business directory if you plan to use it. You must delete that category.';
         }
 
         Bizyhood_View::load('admin/admin', $data);
