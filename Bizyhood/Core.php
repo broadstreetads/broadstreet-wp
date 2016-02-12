@@ -555,6 +555,7 @@ class Bizyhood_Core
     
     function load_plugin_styles()
     {
+        wp_enqueue_style ('bizyhood-icons-styles',  'https://d17bale0hcbyzh.cloudfront.net/bizyhood/styles/entypo/entypo-icon-fonts.css?family=entypoplugin.css', array(), BIZYHOOD_VERSION);
         wp_enqueue_style ('bizyhood-plugin-styles',  Bizyhood_Utility::getCSSBaseURL() . 'plugin.css', array(), BIZYHOOD_VERSION);
     }
     
