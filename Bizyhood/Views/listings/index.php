@@ -29,7 +29,7 @@
                 ';
               }
           ?>
-              <a class="bh_list-group-item" href="<?php echo get_permalink( $list_page_id ); ?>?cf=<?php echo urlencode($category['term']).($keywords != '' ? '&amp;keywords='.$keywords : ''); ?>" title="<?php echo $category['term']; ?> (<?php echo $category['count']; ?>)">
+              <a class="bh_list-group-item" href="<?php echo get_permalink( $list_page_id ); ?>?cf=<?php echo rawurlencode($category['term']).($keywords != '' ? '&amp;keywords='.$keywords : ''); ?>" title="<?php echo $category['term']; ?> (<?php echo $category['count']; ?>)">
                   <span class="bh_list-title"><?php echo $category['term']; ?> (<?php echo $category['count']; ?>)</span>
               </a> 
           <?php 
