@@ -310,7 +310,7 @@ class Bizyhood_Core
       // initialize array
       if ( empty( $pages ) ) $pages = Array();
       
-      $queryapi = $this->businesses_information(array('paged' => 1));
+      $queryapi = $this->businesses_information(array('paged' => 1, 'verified' => 'y'));
       $numofpages = floor($queryapi['total_count'] / $queryapi['page_size']);
       $urlbase = get_permalink( get_page_by_path( 'business-overview' ) );
       $date = date("Y-m-d H:i");
@@ -329,7 +329,7 @@ class Bizyhood_Core
       // get the rest of the urls if they exist
       $i = $start + 1; // start  to query the API from the second batch
       while($i <= $numofpages) {
-        $queryapi = $this->businesses_information(array('paged' => $i));
+        $queryapi = $this->businesses_information(array('paged' => $i, 'verified' => 'y'));
         foreach($queryapi['businesses'] as $business) {
           $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
           $pages[] = Array( "loc" => $urlbase.$urlarr[0].'/'.$urlarr[1].'/', "lastmod" => $date, "changefreq" => "weekly", "priority" => "0.6" );
@@ -393,13 +393,18 @@ class Bizyhood_Core
     
     
     public function sitemap_build() {
+      
+      if (!$this->bizyhood_create_sitemap()) {
+        return false;
+      }
+      
       $GLOBALS['wpseo_sitemaps']->set_stylesheet( '<?xml-stylesheet type="text/xsl" href="' . preg_replace( '/(^http[s]?:)/', '', esc_url( home_url( 'main-sitemap.xsl' ) ) ) . ' "?>' );
       $GLOBALS['wpseo_sitemaps']->set_sitemap( $this->bizyhood_create_sitemap() );
     }
     
     
-    public function bizyhood_create_all_urls() {
-      $queryapi = $this->businesses_information(array('paged' => 1));
+    public function bizyhood_create_all_urls($verified = false) {
+      $queryapi = $this->businesses_information(array('paged' => 1, 'verified' => $verified));
       $numofpages = floor($queryapi['total_count'] / $queryapi['page_size']);
       $urlbase = get_permalink( get_page_by_path( 'business-overview' ) );
       $date = date("Y-m-d H:i");
@@ -422,14 +427,12 @@ class Bizyhood_Core
       $end    = ceil($sitemapnum * $max_entries / 12);
       
       // split sitemaps pages  END
-      
-      
       // initialize array
       $urls = array();
       
       // get first 12 urls
       $urlindex = 0; // help me index
-      if ($start == 1) {
+      if ($start <= 1) {
         foreach($queryapi['businesses'] as $business) {
           $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
           $urls[$urlindex]['url'] = $urlbase.$urlarr[0].'/'.$urlarr[1].'/';
@@ -441,7 +444,7 @@ class Bizyhood_Core
       // get the rest of the urls if they exist
       $i = $start + 1; // start  to query the API from the second batch
       while($i <= $numofpages && $end >= $i) {
-        $queryapi = $this->businesses_information(array('paged' => $i));
+        $queryapi = $this->businesses_information(array('paged' => $i, 'verified' => $verified));
         foreach($queryapi['businesses'] as $business) {
           $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
           $urls[$urlindex]['url'] = $urlbase.$urlarr[0].'/'.$urlarr[1].'/';
@@ -458,7 +461,13 @@ class Bizyhood_Core
     public function bizyhood_create_sitemap() {
       
       $api_url = Bizyhood_Utility::getApiUrl();
-      $urls = $this->bizyhood_create_all_urls();
+      // get only verified businesses
+      $urls = $this->bizyhood_create_all_urls(true);
+      
+      if (empty($urls)) {
+        return false;
+      }
+      
       $WPSEO_Sitemaps = new WPSEO_Sitemaps();
       
       
@@ -487,7 +496,7 @@ class Bizyhood_Core
     // add sitemap to index
     function bizyhood_addtoindex_sitemap() {
       
-      $getfirstpage = $this->businesses_information(array('paged' => 1));
+      $getfirstpage = $this->businesses_information(array('paged' => 1, 'verified' => 'y'));
       $count  = $getfirstpage['total_count'];
       $yoastoptions = WPSEO_Options::get_all();
       $max_entries  = $yoastoptions['entries-per-page'];
@@ -705,6 +714,7 @@ class Bizyhood_Core
       
       $a = shortcode_atts( array(
         'paged' => null,
+        'verified' => null
       ), $atts );
 
       
@@ -735,6 +745,23 @@ class Bizyhood_Core
       if(isset($_GET['keywords'])) {
         $keywords = urlencode($_GET['keywords']);
       }
+      
+      // get verified
+      if (isset($a['verified'])) {
+          $verified = $a['verified'];
+      } elseif (get_query_var('verified')) {
+          $verified = get_query_var('verified');
+      } elseif (isset($_GET['verified'])) {
+          $verified = $_GET['verified'];
+      }
+      
+      // check if $verified has a valid value
+      if ($verified == true || $verified == True || $verified == 1 || $verified == 'y' || $verified == 'Y') {
+        $verified = 'y';
+      } else {
+        $verified = false;
+      }
+      
 
       // set oAuth parameters
       $provider = array (
@@ -776,6 +803,10 @@ class Bizyhood_Core
       
       if ($category != false) {
         $params['cf'] = $category;
+      }
+      
+      if ($verified == 'y') {
+        $params['verified'] = $verified;
       }
       
       try {
