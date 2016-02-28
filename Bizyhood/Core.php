@@ -177,6 +177,45 @@ class Bizyhood_Core
         // add oAuth Data END
         
         
+        // admin notices START
+        
+        add_action( 'admin_notices', array( $this, 'set_bizyhood_admin_notices' ));
+        
+        // admin notices END
+        
+        
+    }
+    
+    
+    function set_bizyhood_admin_notices() {
+      
+      $errors = array();
+      if (Bizyhood_Utility::getApiID() == '') {
+        $errors[] = __('Your Bizyhood API Client ID is missing. %s', 'bizyhood');
+      }
+      if (Bizyhood_Utility::getApiSecret() == '') {
+        $errors[] = __('Your Bizyhood API Client Secret Key is missing. %s', 'bizyhood');
+      }
+      if (Bizyhood_Utility::getApiProduction() != true) {
+        $errors[] = __('WARNING: you are using the Bizyhood TEST server. Are you sure you want to do that?. %s', 'bizyhood');
+      }
+      
+      if (Bizyhood_Utility::getApiID() != '' && Bizyhood_Utility::getApiSecret() != '') {
+        $authetication = $this->set_oauth_temp_data();
+        if (is_wp_error($authetication) || Bizyhood_Utility::checkoAuthData() == false) {
+          $errors[] = __('Can not authenticate to the Bizyhood API. Check your Client ID and Secret Key. %s', 'bizyhood');
+        }
+      }
+      
+      if (!empty($errors)) {
+        foreach ($errors as $error) {
+          echo '
+            <div class="notice notice-error">
+              <p>'. sprintf($error, '<a href="admin.php?page=Bizyhood">'.__('Click here to fix', 'bizyhiid').'</a>') .'</p>
+            </div>';
+        }
+      }
+      
     }
     
     
@@ -540,13 +579,13 @@ class Bizyhood_Core
         'urlResourceOwnerDetails' =>  Bizyhood_Utility::getApiUrl().'/o/resource'
       );
      
-     // if the oAuth data does nto exist
+     // if the oAuth data does not exist
      if (get_transient('bizyhood_oauth_data') === false ) {
         $params = array();
         $client = new OAuth2\Client($provider['clientId'], $provider['clientSecret']);
         $response = $client->getAccessToken($provider['urlAccessToken'], 'client_credentials', $params);
         
-        if ( !is_admin() && is_array($response) && !empty($response) && isset($response['code']) && strlen($response['result']['access_token']) > 0 && $response['code'] == 200) {
+        if ( is_array($response) && !empty($response) && isset($response['code']) && strlen($response['result']['access_token']) > 0 && $response['code'] == 200) {
           
           $client->setAccessToken($response['result']['access_token']);
           set_transient('bizyhood_oauth_data', $response['result']['access_token'], $response['result']['expires_in']);
