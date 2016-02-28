@@ -15,7 +15,7 @@ class Bizyhood_Ajax
     /**
      * Save a boolean value of whether to index comments on the next rebuild
      */
-    public static function saveSettings()
+    public static function Bizyhood_saveSettings()
     {
         delete_transient('bizyhood_oauth_data');
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_API_PRODUCTION, $_POST['api_production'] === 'true');

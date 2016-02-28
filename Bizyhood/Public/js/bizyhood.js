@@ -26,7 +26,7 @@ jQuery(function($){
         
         // Submit AJAX request
         jQuery.post(ajaxurl, {
-             action: 'save_settings', 
+             action: 'bizyhood_save_settings', 
              api_production: $('#api_production').is(':checked'),
              api_id: $('#api_id').val(),
              api_secret: $('#api_secret').val(),
