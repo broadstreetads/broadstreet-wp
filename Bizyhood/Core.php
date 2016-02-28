@@ -133,7 +133,7 @@ class Bizyhood_Core
         add_action('wp_enqueue_scripts', 	array($this, 'load_plugin_gallery'));
         add_shortcode('bh-businesses', array($this, 'businesses_shortcode'));
         add_filter('the_content', array($this, 'postTemplate'), 100);
-        add_action('wp_ajax_save_settings', array('Bizyhood_Ajax', 'saveSettings'));
+        add_action('wp_ajax_bizyhood_save_settings', array('Bizyhood_Ajax', 'Bizyhood_saveSettings'));
         
         
         // create rewrite rule for single business
