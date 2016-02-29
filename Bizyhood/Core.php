@@ -782,7 +782,7 @@ class Bizyhood_Core
       
       $keywords = false;
       if(isset($_GET['keywords'])) {
-        $keywords = urlencode($_GET['keywords']);
+        $keywords = esc_attr(strip_tags($_GET['keywords']));
       }
       
       // get verified
