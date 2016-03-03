@@ -184,6 +184,43 @@ class Bizyhood_Core
         // admin notices END
         
         
+        // remove empty paragraphs START
+
+        add_action( 'template_redirect', array( $this, 'remove_empty_paragraphs' ));
+        
+        // remove empty paragraphs END
+        
+        
+    }
+    
+    
+    function remove_empty_paragraphs() {
+      
+      // if it is not a bizyhood page there is nothign to do
+      if ( !( is_page(Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID)) || is_page(Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID)) ) ) {
+        return;
+      }
+      
+      // get all filters
+      global $wp_filter;
+  
+      // loop through filters
+      foreach ($wp_filter['the_content'] as $priority => $filter_array) {
+        
+        foreach  ($filter_array as $filter_function => $filter) {
+          
+          if ($filter_function == 'wpautop') {
+            
+            remove_filter('the_content', 'wpautop', $priority);
+            
+            // no need to keep looping
+            return;
+          }
+          
+        }
+        
+      }
+      
     }
     
     
