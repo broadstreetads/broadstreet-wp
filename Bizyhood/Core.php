@@ -469,13 +469,14 @@ class Bizyhood_Core
     
     
     public function sitemap_build() {
+      global $wpseo_sitemaps;
       
       if (!$this->bizyhood_create_sitemap()) {
         return false;
       }
       
-      $GLOBALS['wpseo_sitemaps']->set_stylesheet( '<?xml-stylesheet type="text/xsl" href="' . preg_replace( '/(^http[s]?:)/', '', esc_url( home_url( 'main-sitemap.xsl' ) ) ) . ' "?>' );
-      $GLOBALS['wpseo_sitemaps']->set_sitemap( $this->bizyhood_create_sitemap() );
+      $wpseo_sitemaps->set_sitemap( $this->bizyhood_create_sitemap() );
+      $wpseo_sitemaps->set_stylesheet( '<?xml-stylesheet type="text/xsl" href="' . preg_replace( '/(^http[s]?:)/', '', esc_url( home_url( 'main-sitemap.xsl' ) ) ) . ' "?>' );
     }
     
     
