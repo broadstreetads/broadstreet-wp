@@ -36,6 +36,7 @@ class Bizyhood_Core
     CONST KEY_MAIN_PAGE_ID        = 'Bizyhood_Main_page_ID';
     CONST KEY_SIGNUP_PAGE_ID      = 'Bizyhood_Signup_page_ID';
     CONST KEY_INSTALL_REPORT      = 'Bizyhood_Installed';
+    CONST API_MAX_LIMIT           = 250;
     
     public static $globals = null;
 
@@ -386,7 +387,7 @@ class Bizyhood_Core
       // initialize array
       if ( empty( $pages ) ) $pages = Array();
       
-      $queryapi = $this->businesses_information(array('paged' => 1, 'verified' => 'y', 'ps' => 250));
+      $queryapi = $this->businesses_information(array('paged' => 1, 'verified' => 'y', 'ps' => self::API_MAX_LIMIT));
       $numofpages = floor($queryapi['total_count'] / $queryapi['page_size']);
       $urlbase = get_permalink( get_page_by_path( 'business-overview' ) );
       $date = date("Y-m-d H:i");
@@ -405,7 +406,7 @@ class Bizyhood_Core
       // get the rest of the urls if they exist
       $i = $start + 1; // start  to query the API from the second batch
       while($i <= $numofpages) {
-        $queryapi = $this->businesses_information(array('paged' => $i, 'verified' => 'y', 'ps' => 250));
+        $queryapi = $this->businesses_information(array('paged' => $i, 'verified' => 'y', 'ps' => self::API_MAX_LIMIT));
         foreach($queryapi['businesses'] as $business) {
           $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
           $pages[] = Array( "loc" => $urlbase.$urlarr[0].'/'.$urlarr[1].'/', "lastmod" => $date, "changefreq" => "weekly", "priority" => "0.6" );
@@ -449,7 +450,7 @@ class Bizyhood_Core
     // flush_rules() if our rules are not yet included
     function bizyhood_flush_rules(){
       
-      $rules = get_option( 'rewrite_rules' );
+      $wr_rules = get_option( 'rewrite_rules' );
       
       // check if the rule already exits and if not then flush the rewrite rules
       if ( ! isset( $wr_rules['business-overview/([^/]+)/([^/]+)/?$'] ) ) {
@@ -489,10 +490,10 @@ class Bizyhood_Core
       $date         = date("Y-m-d H:i");
 
       $urls         = array(); // initialize URLs array
-      $apimax       = 250; // set the max we can get from the API in one fetch
+      $apimax       = self::API_MAX_LIMIT; // set the max we can get from the API in one fetch
       $urlindex     = 0; // help index the urls array
            
-      // if yoast is set to grab per sitemap more than $apimax (250) results
+      // if yoast is set to grab per sitemap more than $apimax (self::API_MAX_LIMIT) results
       if ($max_entries > $apimax) {
         $ps = $apimax;
         $query_params = array('paged' => 1, 'verified' => $verified, 'ps' => $ps);
@@ -506,7 +507,7 @@ class Bizyhood_Core
         // get bizyhod page to end
         $end  = ceil($sitemapnum * $max_entries / $apimax);
                 
-        // we only have LESS than $apimax (250) then get only the first query results
+        // we only have LESS than $apimax (self::API_MAX_LIMIT) then get only the first query results
         if ($queryapi['total_count'] <= $apimax && $sitemapnum == 1) {
           
           if (!empty($queryapi['businesses'])) {
@@ -526,7 +527,7 @@ class Bizyhood_Core
           
         }
         
-        // we have MORE than $apimax (250) results than we can get at once from the API
+        // we have MORE than $apimax (self::API_MAX_LIMIT) results than we can get at once from the API
         if ($queryapi['total_count'] > $apimax) {
           
           $bizyresults = 0; // results that we have already fetch
@@ -573,7 +574,7 @@ class Bizyhood_Core
           
         }
         
-      // if yoast is set to grab per sitemap less than $apimax (250) results, then we just follow the yoast pagination
+      // if yoast is set to grab per sitemap less than $apimax (self::API_MAX_LIMIT) results, then we just follow the yoast pagination
       } else {
         
         $ps = $max_entries;
@@ -640,7 +641,7 @@ class Bizyhood_Core
     // add sitemap to index
     function bizyhood_addtoindex_sitemap() {
       
-      $getfirstpage = $this->businesses_information(array('paged' => 1, 'verified' => 'y', 'ps' => 250));
+      $getfirstpage = $this->businesses_information(array('paged' => 1, 'verified' => 'y', 'ps' => self::API_MAX_LIMIT));
       $count  = $getfirstpage['total_count'];
       $yoastoptions = WPSEO_Options::get_all();
       $max_entries  = $yoastoptions['entries-per-page'];
@@ -886,7 +887,7 @@ class Bizyhood_Core
       } elseif (isset($_GET['ps'])) {
         $ps = $_GET['ps'];
       } else {
-        $ps = 250;
+        $ps = self::API_MAX_LIMIT;
       }
         
       // get category filter
