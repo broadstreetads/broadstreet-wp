@@ -36,6 +36,7 @@ class Bizyhood_Core
     CONST KEY_MAIN_PAGE_ID        = 'Bizyhood_Main_page_ID';
     CONST KEY_SIGNUP_PAGE_ID      = 'Bizyhood_Signup_page_ID';
     CONST KEY_INSTALL_REPORT      = 'Bizyhood_Installed';
+    CONST API_MAX_LIMIT           = 250;
     
     public static $globals = null;
 
@@ -197,7 +198,7 @@ class Bizyhood_Core
     function remove_empty_paragraphs() {
       
       // if it is not a bizyhood page there is nothign to do
-      if ( is_admin() || !( is_page(Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID)) || is_page(Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID)) ) ) {
+      if ( !( is_page(Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID)) || is_page(Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID)) ) ) {
         return;
       }
       
@@ -209,9 +210,9 @@ class Bizyhood_Core
         
         foreach  ($filter_array as $filter_function => $filter) {
           
-          if ($filter_function == 'wpautop' || $filter_function == 'aw_formatter') {
+          if ($filter_function == 'wpautop') {
             
-            remove_filter('the_content', $filter_function, $priority);
+            remove_filter('the_content', 'wpautop', $priority);
             
             // no need to keep looping
             return;
@@ -386,7 +387,7 @@ class Bizyhood_Core
       // initialize array
       if ( empty( $pages ) ) $pages = Array();
       
-      $queryapi = $this->businesses_information(array('paged' => 1, 'verified' => 'y'));
+      $queryapi = $this->businesses_information(array('paged' => 1, 'verified' => 'y', 'ps' => self::API_MAX_LIMIT));
       $numofpages = floor($queryapi['total_count'] / $queryapi['page_size']);
       $urlbase = get_permalink( get_page_by_path( 'business-overview' ) );
       $date = date("Y-m-d H:i");
@@ -405,7 +406,7 @@ class Bizyhood_Core
       // get the rest of the urls if they exist
       $i = $start + 1; // start  to query the API from the second batch
       while($i <= $numofpages) {
-        $queryapi = $this->businesses_information(array('paged' => $i, 'verified' => 'y'));
+        $queryapi = $this->businesses_information(array('paged' => $i, 'verified' => 'y', 'ps' => self::API_MAX_LIMIT));
         foreach($queryapi['businesses'] as $business) {
           $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
           $pages[] = Array( "loc" => $urlbase.$urlarr[0].'/'.$urlarr[1].'/', "lastmod" => $date, "changefreq" => "weekly", "priority" => "0.6" );
@@ -449,7 +450,7 @@ class Bizyhood_Core
     // flush_rules() if our rules are not yet included
     function bizyhood_flush_rules(){
       
-      $rules = get_option( 'rewrite_rules' );
+      $wr_rules = get_option( 'rewrite_rules' );
       
       // check if the rule already exits and if not then flush the rewrite rules
       if ( ! isset( $wr_rules['business-overview/([^/]+)/([^/]+)/?$'] ) ) {
@@ -481,57 +482,124 @@ class Bizyhood_Core
     
     
     public function bizyhood_create_all_urls($verified = false) {
-      $queryapi = $this->businesses_information(array('paged' => 1, 'verified' => $verified));
-      $numofpages = floor($queryapi['total_count'] / $queryapi['page_size']);
-      $urlbase = get_permalink( get_page_by_path( 'business-overview' ) );
-      $date = date("Y-m-d H:i");
       
-      
-      
-      // split sitemaps pages START
-      
-      $count  = $queryapi['total_count']; // get the number of results // 492
       $yoastoptions = WPSEO_Options::get_all();
       $max_entries  = $yoastoptions['entries-per-page']; // get the limit of urls per sitemap page
-      $sitemapnum = get_query_var( 'sitemap_n' ); // get the sitemap number / page
-      
-      $maxsitemapnum = (int) ceil( $count / $max_entries ); // max number of pages
-      
-      if ($sitemapnum > $maxsitemapnum) { return; } // do not return any results if the sitemap query_var is bigger than the results we have to display
-      
-      
-      $start  = (($sitemapnum - 1) * $max_entries / 12 == 0 ? 1 : ceil(($sitemapnum - 1) * $max_entries / 12));
-      $end    = ceil($sitemapnum * $max_entries / 12);
-      
-      // split sitemaps pages  END
-      // initialize array
-      $urls = array();
-      
-      // get first 12 urls
-      $urlindex = 0; // help me index
-      if ($start <= 1) {
-        foreach($queryapi['businesses'] as $business) {
-          $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
-          $urls[$urlindex]['url'] = $urlbase.$urlarr[0].'/'.$urlarr[1].'/';
-          $urls[$urlindex]['date'] = $date; // this needs to be changed to the last modified when added to the API // TODO
-          $urlindex++;
+      $sitemapnum   = (get_query_var( 'sitemap_n' ) ? get_query_var( 'sitemap_n' ) : 1); // get the sitemap number / page
+      $urlbase      = get_permalink( get_page_by_path( 'business-overview' ) );
+      $date         = date("Y-m-d H:i");
+
+      $urls         = array(); // initialize URLs array
+      $apimax       = self::API_MAX_LIMIT; // set the max we can get from the API in one fetch
+      $urlindex     = 0; // help index the urls array
+           
+      // if yoast is set to grab per sitemap more than $apimax (self::API_MAX_LIMIT) results
+      if ($max_entries > $apimax) {
+        $ps = $apimax;
+        $query_params = array('paged' => 1, 'verified' => $verified, 'ps' => $ps);
+        $queryapi = $this->businesses_information($query_params);
+        
+        
+        // max number of pages
+        $maxsitemapnum = (int) ceil( $count / $max_entries );
+        // get bizyhod page to start
+        $start  = (($sitemapnum - 1) * $max_entries / $apimax == 0 ? 1 : ceil(($sitemapnum - 1) * $max_entries / $apimax));
+        // get bizyhod page to end
+        $end  = ceil($sitemapnum * $max_entries / $apimax);
+                
+        // we only have LESS than $apimax (self::API_MAX_LIMIT) then get only the first query results
+        if ($queryapi['total_count'] <= $apimax && $sitemapnum == 1) {
+          
+          if (!empty($queryapi['businesses'])) {
+            foreach($queryapi['businesses'] as $business) {
+              $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
+              $urls[$urlindex]['url'] = $urlbase.$urlarr[0].'/'.$urlarr[1].'/';
+              $urls[$urlindex]['date'] = $date;
+              $urlindex++;
+            }
+          
+            return $urls;
+          } else {
+            
+            // nothing to return, no urls found
+            return;
+          }
+          
         }
-      }
-      
-      // get the rest of the urls if they exist
-      $i = $start + 1; // start  to query the API from the second batch
-      while($i <= $numofpages && $end >= $i) {
-        $queryapi = $this->businesses_information(array('paged' => $i, 'verified' => $verified));
-        foreach($queryapi['businesses'] as $business) {
-          $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
-          $urls[$urlindex]['url'] = $urlbase.$urlarr[0].'/'.$urlarr[1].'/';
-          $urls[$urlindex]['date'] = $date; // this needs to be changed to the last modified when added to the API // TODO
-          $urlindex++;
+        
+        // we have MORE than $apimax (self::API_MAX_LIMIT) results than we can get at once from the API
+        if ($queryapi['total_count'] > $apimax) {
+          
+          $bizyresults = 0; // results that we have already fetch
+          $bizypaged = $start;
+          while ($bizyresults < $max_entries && $queryapi['total_count'] > $bizyresults && $bizypaged <= $end) {
+                        
+            $query_params = array('paged' => $bizypaged, 'verified' => $verified, 'ps' => $ps);
+            $queryapi = $this->businesses_information($query_params);
+
+            
+            if (!empty($queryapi['businesses'])) {
+              
+              // remove the first n from the array if we have it already on the previous xml page
+              // only on the first loop and not on the first page
+              $remove_from_start = ($max_entries % $apimax) * ($sitemapnum - 1);
+              
+              
+              if ($remove_from_start >= 0 && $bizyresults == 0 && $sitemapnum > 1) {
+                
+                $queryapi['businesses'] = array_slice($queryapi['businesses'], $remove_from_start);
+                
+              }
+              
+              foreach($queryapi['businesses'] as $business) {
+                
+                if ($urlindex == $max_entries) { break 2; }
+                
+                $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
+                $urls[$urlindex]['url'] = $urlbase.$urlarr[0].'/'.$urlarr[1].'/';
+                $urls[$urlindex]['date'] = $date;
+                $urlindex++;
+              }
+            } else {
+              // there are no more results, so break the while
+              break;
+            }
+            
+            $bizyresults = $bizyresults + $apimax; // count the number of results we have added
+            $bizypaged++; // increase the page number by one
+            
+          }
+          
+          return $urls;
+          
         }
-        $i++;
+        
+      // if yoast is set to grab per sitemap less than $apimax (self::API_MAX_LIMIT) results, then we just follow the yoast pagination
+      } else {
+        
+        $ps = $max_entries;
+        $query_params = array('paged' => $sitemapnum, 'verified' => $verified, 'ps' => $ps);
+        $queryapi = $this->businesses_information($query_params);        
+        
+        if (!empty($queryapi['businesses'])) {
+          foreach($queryapi['businesses'] as $business) {
+            $urlarr = array_slice(explode('/', $business->bizyhood_url), -3);
+            $urls[$urlindex]['url'] = $urlbase.$urlarr[0].'/'.$urlarr[1].'/';
+            $urls[$urlindex]['date'] = $date; // this needs to be changed to the last modified when added to the API // TODO
+            $urlindex++;
+          }
+        } else {
+            
+          // nothing to return, no urls found
+          return;
+        }
+        
+        return $urls;
+        
       }
-      
-      return $urls;
+            
+            
+      return;
     }
     
     
@@ -573,7 +641,7 @@ class Bizyhood_Core
     // add sitemap to index
     function bizyhood_addtoindex_sitemap() {
       
-      $getfirstpage = $this->businesses_information(array('paged' => 1, 'verified' => 'y'));
+      $getfirstpage = $this->businesses_information(array('paged' => 1, 'verified' => 'y', 'ps' => self::API_MAX_LIMIT));
       $count  = $getfirstpage['total_count'];
       $yoastoptions = WPSEO_Options::get_all();
       $max_entries  = $yoastoptions['entries-per-page'];
@@ -790,8 +858,9 @@ class Bizyhood_Core
       }
       
       $a = shortcode_atts( array(
-        'paged' => null,
-        'verified' => null
+        'paged'     => null,
+        'verified'  => null,
+        'ps'        => null
       ), $atts );
 
       
@@ -809,6 +878,17 @@ class Bizyhood_Core
           $page = $_GET['paged'];
       else
           $page = 1;
+
+      // get current ps
+      if (isset($a['ps'])) {
+        $ps = $a['ps'];
+      } elseif (get_query_var('ps')) {
+        $ps = get_query_var('ps');
+      } elseif (isset($_GET['ps'])) {
+        $ps = $_GET['ps'];
+      } else {
+        $ps = self::API_MAX_LIMIT;
+      }
         
       // get category filter
       $category = false;
@@ -837,6 +917,7 @@ class Bizyhood_Core
         $verified = 'y';
       } else {
         $verified = false;
+        $ps = 12;
       }
       
 
@@ -870,7 +951,7 @@ class Bizyhood_Core
       
       $params = array(
         'format' =>'json',
-        'ps'  => 12,
+        'ps'  => $ps,
         'pn'  => $page
       );
       
@@ -906,7 +987,6 @@ class Bizyhood_Core
       $page_size = $response_json['page_size'];
       $facets = $response_json['search_facets'];
       $categories = $response_json['search_facets']['categories_facet'];
-      
             
       $return = array(
         'remote_settings'   => $remote_settings,
