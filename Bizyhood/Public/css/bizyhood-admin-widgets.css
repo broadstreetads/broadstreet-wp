@@ -1,0 +1,5 @@
+.color_wrap label {
+  display: inline-block;
+  min-width: 200px;
+  margin-top: -12px;
+}

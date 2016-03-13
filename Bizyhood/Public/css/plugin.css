@@ -41,6 +41,72 @@ a.facet_helper {
 	padding-right: 15px;
 }
 
+
+/* Search Widget */
+
+.bizyhood_search.full .form_wrap { overflow: auto; clear: both; width: 100%; }
+.bizyhood_search label, .bizyhood_search input { display: inline-block; }
+.bizyhood_search { font-size: 13px; }
+.bizyhood_search label { text-transform: uppercase; }
+.bizyhood_search .list_your_business { background-color: #45AAE8; padding: 0; width: 100%; }
+.bizyhood_search .list_your_business a { display: block; width: 100%; padding: 5px 10px; text-transform: uppercase; font-weight: bold; }
+.bizyhood_search .list_your_business a span { display: block; font-weight: bold; }
+.bizyhood_search .list_your_business a span.row1 { color: #ffffff; font-size: 18px; }
+.bizyhood_search .list_your_business a span.row2 { color: #333333; font-size: 12px; }
+.bizyhood_search.side .bizy_search_submit, .bizyhood_search.side .search_keywords { width: 100%; margin-bottom: 10px; }
+
+.bizyhood_search .search_keywords {  background-color: #ffffff; color: #333333; border: 2px solid #aaaaaa; padding: 2px; }
+.bizyhood_search .bizy_search_submit { background-color: #000000; color: #FFFFFF; text-transform: uppercase;  }
+
+.bizyhood_search.full .search_fields { padding: 15px 0 15px 15px; border: 1px solid #e2e2e2; border-bottom: 0; background-color: #e2e2e2;  }
+.bizyhood_search.full label { color: #6E7273; }
+.bizyhood_search.full .search_keywords { width: 100%; min-width: 200px; }
+
+.bizyhood_search.full .arrow_box {
+	position: relative;
+	background: #45AAE8;
+	border: 1px solid #45AAE8;
+}
+.bizyhood_search.full .arrow_box:after, .arrow_box:before {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.bizyhood_search.full .arrow_box:after {
+	border-color: rgba(69, 170, 232, 0);
+	border-right-color: inherit;
+	border-width: 10px;
+	margin-top: -10px;
+}
+.bizyhood_search.full .arrow_box:before {
+	border-color: rgba(69, 170, 232, 0);
+	border-right-color: inherit;
+	border-width: 11px;
+	margin-top: -11px;
+}
+
+
+.search_layout_full.table_div { display: table; width:auto; position:relative;  }
+.search_layout_full .tr_div { display: table-row; width:auto;  position:relative; }
+.search_layout_full .td_div { display:table-cell; vertical-align: middle; }
+
+.search_layout_full .search_fields_label {
+  width: 115px;
+  text-align: right;
+}
+.bizyhood_search.full  .search_layout_full .search_fields_submit {
+  width: 130px;
+  padding-right: 35px;
+}
+
+.bizyhood_search.full .list_your_business { width: 30%; vertical-align: middle; }
+
 @media (min-width:992px){.bh_col-md-1,.bh_col-md-10,.bh_col-md-11,.bh_col-md-12,.bh_col-md-2,.bh_col-md-3,.bh_col-md-4,.bh_col-md-5,.bh_col-md-6,.bh_col-md-7,.bh_col-md-8,.bh_col-md-9{float:left}.bh_col-md-12{width:100%}.bh_col-md-11{width:91.66666667%}.bh_col-md-10{width:83.33333333%}.bh_col-md-9{width:75%}.bh_col-md-8{width:66.66666667%}.bh_col-md-7{width:58.33333333%}.bh_col-md-6{width:50%}.bh_col-md-5{width:41.66666667%}.bh_col-md-4{width:33.33333333%}.bh_col-md-3{width:25%}.bh_col-md-2{width:16.66666667%}.bh_col-md-1{width:8.33333333%}.bh_col-md-offset-12{margin-left:100%}.bh_col-md-offset-11{margin-left:91.66666667%}.bh_col-md-offset-10{margin-left:83.33333333%}.bh_col-md-offset-9{margin-left:75%}.bh_col-md-offset-8{margin-left:66.66666667%}.bh_col-md-offset-7{margin-left:58.33333333%}.bh_col-md-offset-6{margin-left:50%}.bh_col-md-offset-5{margin-left:41.66666667%}.bh_col-md-offset-4{margin-left:33.33333333%}.bh_col-md-offset-3{margin-left:25%}.bh_col-md-offset-2{margin-left:16.66666667%}.bh_col-md-offset-1{margin-left:8.33333333%}.bh_col-md-offset-0{margin-left:0}}
 
 .bh_list-group-item {
@@ -211,4 +277,20 @@ span.entypo-star {position:relative;top:-1px;}
 }
 @media (max-width: 768px) {
     .bh_gallery-list .bh_gallery-thumb {width:50%;}
+    
+  .bizyhood_search.full .search_fields {
+    display: block;
+    width: auto;
+    padding: 15px 35px 0 15px;
+  }
+  .search_layout_full .search_fields_label {
+    text-align: left;
+  }
+  .bizyhood_search.full  .search_layout_full .search_fields_submit {
+    padding-bottom: 15px;
+    width: 100%;
+  }
+  .bizyhood_search.full  .search_layout_full .search_fields_submit input {
+    width: 100%;
+  }
 }
