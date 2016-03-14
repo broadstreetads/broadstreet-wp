@@ -170,6 +170,13 @@ class Bizyhood_Core
 
         // editor bizybutton END
         
+        // load widgets START
+        
+        Bizyhood_View::load( 'widgets/search', array(), false, true);
+        add_action( 'widgets_init', array( $this, 'register_search_widget' ));
+      
+        // load widgets END
+
         
         // add oAuth Data START
 
@@ -195,6 +202,11 @@ class Bizyhood_Core
     }
     
     
+    function register_search_widget() {
+      register_widget( 'bizy_search_widget' );
+    }
+
+
     function remove_empty_paragraphs() {
       
       // if it is not a bizyhood page there is nothign to do
@@ -768,6 +780,15 @@ class Bizyhood_Core
             wp_enqueue_style ('Bizyhood-vendorcss-time', Bizyhood_Utility::getVendorBaseURL() . 'timepicker/css/timePicker.css');
             wp_enqueue_script('Bizyhood-main'  ,  Bizyhood_Utility::getJSBaseURL().'bizyhood.js?v='. BIZYHOOD_VERSION);
             wp_enqueue_script('Bizyhood-vendorjs-time'  ,  Bizyhood_Utility::getVendorBaseURL().'timepicker/js/jquery.timePicker.min.js');
+        }
+        
+        // include color picker for widgets
+        if($GLOBALS['pagenow'] == 'widgets.php'
+                || strstr($_SERVER['QUERY_STRING'], 'Bizyhood-Business'))
+        {
+          wp_enqueue_style ('Bizyhood-custom-post-css', Bizyhood_Utility::getCSSBaseURL() . 'bizyhood-admin-widgets.css');
+          wp_enqueue_style( 'wp-color-picker' );        
+          wp_enqueue_script( 'wp-color-picker' );
         }
         
         # Include thickbox on widgets page
