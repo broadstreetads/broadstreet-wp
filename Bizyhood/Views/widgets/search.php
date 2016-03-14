@@ -17,7 +17,7 @@ class bizy_search_widget extends WP_Widget {
 		parent::__construct(
 			'bizy_search_widget', // Base ID
 			__( 'Bizyhood Search Widget', 'bizy' ), // Name
-			array( 'description' => __( 'A WIdget to search in the Bizyhood directory', 'bizyhood' ), ) // Args
+			array( 'description' => __( 'A Widget to search in the Bizyhood directory', 'bizyhood' ), ) // Args
 		);
 	}
 
