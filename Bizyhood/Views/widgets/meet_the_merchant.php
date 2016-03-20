@@ -19,7 +19,7 @@ class bizy_mtm_widget extends WP_Widget {
 		parent::__construct(
 			'bizy_mtm_widget', // Base ID
 			__( 'Bizyhood Meet the Merchant', 'bizy' ), // Name
-			array( 'description' => __( 'A Widget to display mechants slider', 'bizyhood' ), ) // Args
+			array( 'description' => __( 'A Widget to display bizyhood merchants', 'bizyhood' ), ) // Args
 		);
 	}
 
