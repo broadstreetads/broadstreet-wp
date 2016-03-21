@@ -11,7 +11,7 @@
 class bizy_mtm_widget extends WP_Widget {
   
   var $limitchars = 30;
-  var $limitchars_intro = 40;
+  var $limitchars_header = 40;
 
 	/**
 	 * Register widget with WordPress.
@@ -99,7 +99,7 @@ class bizy_mtm_widget extends WP_Widget {
       ?>
         <div class="mtm_fields mtm_intro td_div" <?php echo $widget_backcolor; ?>>
           <div <?php echo ($color_label_font != '' ? 'style="color: '. $color_label_font .'"' : ''); ?>>
-            <?php echo substr($instance['intro'], 0, $this->limitchars_intro); ?>
+            <?php echo substr($instance['intro'], 0, $this->limitchars); ?>
           </div>
         </div>
       <?php }
@@ -126,7 +126,7 @@ class bizy_mtm_widget extends WP_Widget {
           
             <a href="'. get_permalink(get_option('Bizyhood_Main_page_ID')) .'" title="'. __('All businesses', 'bizyhood') .'" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .' >
               <span class="link_row row1" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .'>
-                '. __(esc_attr(substr($instance['row1'], 0, $this->limitchars)), 'bizyhood') .'
+                '. __(esc_attr(substr($instance['row1'], 0, $this->limitchars_header)), 'bizyhood') .'
               </span>
             </a>
             <a href="'. get_permalink(get_option('Bizyhood_Main_page_ID')) .'" title="'. __('All businesses', 'bizyhood') .'" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .' >
@@ -179,13 +179,13 @@ class bizy_mtm_widget extends WP_Widget {
 		</p>
 		<p>
       <label for="<?php echo $this->get_field_id( 'intro' ); ?>"><?php _e( 'Intro text:' ); ?></label> 
-      <input class="widefat" maxlength="<?php echo $this->limitchars_intro; ?>" id="<?php echo $this->get_field_id( 'intro' ); ?>" name="<?php echo $this->get_field_name( 'intro' ); ?>" type="text" value="<?php echo esc_attr( $intro ); ?>">
-      <small><?php echo $this->limitchars_intro .' '. __('characters max', 'bizyhood' ); ?></small>
+      <input class="widefat" maxlength="<?php echo $this->limitchars; ?>" id="<?php echo $this->get_field_id( 'intro' ); ?>" name="<?php echo $this->get_field_name( 'intro' ); ?>" type="text" value="<?php echo esc_attr( $intro ); ?>">
+      <small><?php echo $this->limitchars .' '. __('characters max', 'bizyhood' ); ?></small>
 		</p>
 		<p>
       <label for="<?php echo $this->get_field_id( 'row1' ); ?>"><?php _e( 'Link text header:' ); ?></label> 
-      <input class="widefat" maxlength="<?php echo $this->limitchars; ?>" id="<?php echo $this->get_field_id( 'row1' ); ?>" name="<?php echo $this->get_field_name( 'row1' ); ?>" type="text" value="<?php echo esc_attr( $row1 ); ?>">
-      <small><?php echo $this->limitchars .' '. __('characters max', 'bizyhood' ); ?></small>
+      <input class="widefat" maxlength="<?php echo $this->limitchars_header; ?>" id="<?php echo $this->get_field_id( 'row1' ); ?>" name="<?php echo $this->get_field_name( 'row1' ); ?>" type="text" value="<?php echo esc_attr( $row1 ); ?>">
+      <small><?php echo $this->limitchars_header .' '. __('characters max', 'bizyhood' ); ?></small>
     </p>
 		<p>
       <label for="<?php echo $this->get_field_id( 'row2' ); ?>"><?php _e( 'Link text subheader:' ); ?></label> 
