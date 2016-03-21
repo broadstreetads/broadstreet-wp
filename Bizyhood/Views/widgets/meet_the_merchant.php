@@ -11,6 +11,7 @@
 class bizy_mtm_widget extends WP_Widget {
   
   var $limitchars = 30;
+  var $limitchars_intro = 40;
 
 	/**
 	 * Register widget with WordPress.
@@ -69,9 +70,13 @@ class bizy_mtm_widget extends WP_Widget {
     $view_business_page_id = get_page_by_path( "business-overview" )->ID;
     
     if (empty($business->business_logo)) {
-      $business->business_logo->image->url = Bizyhood_Utility::getImageBaseURL().'placeholder-logo.jpg';
-      $business->business_logo->image_width = 307;
-      $business->business_logo->image_height = 304;
+      $business_logo_url = Bizyhood_Utility::getImageBaseURL().'placeholder-logo.jpg';
+      $business_logo_width = 307;
+      $business_logo_height = 304;
+    } else {
+      $business_logo_url = $business->business_logo->image->url;
+      $business_logo_width = $business->business_logo->image_width;
+      $business_logo_height = $business->business_logo->image_height;
     }
     
     $intro = ! empty( $instance['intro'] ) ? $instance['intro'] : '';
@@ -84,7 +89,7 @@ class bizy_mtm_widget extends WP_Widget {
 		
     $widget_backcolor = ($color_widget_back != '' ? 'style="background-color: '. $color_widget_back .'; border-color: '. $color_widget_back .';"' : '');
     
-    echo '<div id="bizyhood_mtm_'. $widget_id .'" class="bizyhood_widget bizyhood_mtm '. (!empty($business->business_logo) ? 'has_logo' : '') .' '. $instance['layout'] .'">';
+    echo '<div id="bizyhood_mtm_'. $widget_id .'" class="bizyhood_widget bizyhood_mtm  has_logo '. $instance['layout'] .'">';
     
     echo '
     <div class="wrap widget_layout_'. $instance['layout'] .' table_div">
@@ -94,7 +99,7 @@ class bizy_mtm_widget extends WP_Widget {
       ?>
         <div class="mtm_fields mtm_intro td_div" <?php echo $widget_backcolor; ?>>
           <div <?php echo ($color_label_font != '' ? 'style="color: '. $color_label_font .'"' : ''); ?>>
-            <?php echo substr($instance['intro'], 0, $this->limitchars); ?>
+            <?php echo substr($instance['intro'], 0, $this->limitchars_intro); ?>
           </div>
         </div>
       <?php }
@@ -103,7 +108,7 @@ class bizy_mtm_widget extends WP_Widget {
       ?>
       <div class="mtm_fields  mtm_logo td_div" <?php echo $widget_backcolor; ?>>
         <a href="<?php echo get_permalink( $view_business_page_id ); ?><?php echo sanitize_title($business->name).'-'.sanitize_title($business->locality).'-'.sanitize_title($business->region).'-'.sanitize_title($business->postal_code) .'/'.$business->bizyhood_id ?>/" title="<?php echo $business->name; ?>">
-          <img alt="<?php echo $business->name; ?>" src="<?php echo $business->business_logo->image->url; ?>" width="<?php echo $business->business_logo->image_width; ?>" height="<?php echo $business->business_logo->image_height; ?>" />
+          <img alt="<?php echo $business->name; ?>" src="<?php echo $business_logo_url; ?>" width="<?php echo $business_logo_width; ?>" height="<?php echo $business_logo_height; ?>" />
         </a>
       </div>
 
@@ -119,12 +124,12 @@ class bizy_mtm_widget extends WP_Widget {
       echo '
         <div class="mtm_fields list_your_business arrow_box td_div" '. ($color_cta_back != '' ? 'style="background-color: '. $color_cta_back .'; border-color: '. $color_cta_back .';"' : '') .'>
           
-            <a href="'. get_permalink(get_option('Bizyhood_Signup_page_ID')) .'" title="'. __('All businesses', 'bizyhood') .'" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .' >
+            <a href="'. get_permalink(get_option('Bizyhood_Main_page_ID')) .'" title="'. __('All businesses', 'bizyhood') .'" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .' >
               <span class="link_row row1" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .'>
                 '. __(esc_attr(substr($instance['row1'], 0, $this->limitchars)), 'bizyhood') .'
               </span>
             </a>
-            <a href="'. get_permalink(get_option('Bizyhood_Signup_page_ID')) .'" title="'. __('All businesses', 'bizyhood') .'" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .' >
+            <a href="'. get_permalink(get_option('Bizyhood_Main_page_ID')) .'" title="'. __('All businesses', 'bizyhood') .'" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .' >
               <span class="link_row row2" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .'>
                 '. __(esc_attr(substr($instance['row2'], 0, $this->limitchars)), 'bizyhood') .'
               </span>
@@ -174,17 +179,17 @@ class bizy_mtm_widget extends WP_Widget {
 		</p>
 		<p>
       <label for="<?php echo $this->get_field_id( 'intro' ); ?>"><?php _e( 'Intro text:' ); ?></label> 
-      <input class="widefat" maxlength="30" id="<?php echo $this->get_field_id( 'intro' ); ?>" name="<?php echo $this->get_field_name( 'intro' ); ?>" type="text" value="<?php echo esc_attr( $intro ); ?>">
-      <small><?php echo $this->limitchars .' '. __('characters max', 'bizyhood' ); ?></small>
+      <input class="widefat" maxlength="<?php echo $this->limitchars_intro; ?>" id="<?php echo $this->get_field_id( 'intro' ); ?>" name="<?php echo $this->get_field_name( 'intro' ); ?>" type="text" value="<?php echo esc_attr( $intro ); ?>">
+      <small><?php echo $this->limitchars_intro .' '. __('characters max', 'bizyhood' ); ?></small>
 		</p>
 		<p>
       <label for="<?php echo $this->get_field_id( 'row1' ); ?>"><?php _e( 'Link text header:' ); ?></label> 
-      <input class="widefat" maxlength="30" id="<?php echo $this->get_field_id( 'row1' ); ?>" name="<?php echo $this->get_field_name( 'row1' ); ?>" type="text" value="<?php echo esc_attr( $row1 ); ?>">
+      <input class="widefat" maxlength="<?php echo $this->limitchars; ?>" id="<?php echo $this->get_field_id( 'row1' ); ?>" name="<?php echo $this->get_field_name( 'row1' ); ?>" type="text" value="<?php echo esc_attr( $row1 ); ?>">
       <small><?php echo $this->limitchars .' '. __('characters max', 'bizyhood' ); ?></small>
     </p>
 		<p>
       <label for="<?php echo $this->get_field_id( 'row2' ); ?>"><?php _e( 'Link text subheader:' ); ?></label> 
-      <input class="widefat" maxlength="30" id="<?php echo $this->get_field_id( 'row2' ); ?>" name="<?php echo $this->get_field_name( 'row2' ); ?>" type="text" value="<?php echo esc_attr( $row2 ); ?>">
+      <input class="widefat" maxlength="<?php echo $this->limitchars; ?>" id="<?php echo $this->get_field_id( 'row2' ); ?>" name="<?php echo $this->get_field_name( 'row2' ); ?>" type="text" value="<?php echo esc_attr( $row2 ); ?>">
       <small><?php echo $this->limitchars .' '. __('characters max', 'bizyhood' ); ?></small>
     </p>
 
@@ -265,3 +270,5 @@ class bizy_mtm_widget extends WP_Widget {
 	}
 
 } // class bizy_mtm_widget
+
+?>
