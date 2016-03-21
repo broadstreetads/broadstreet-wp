@@ -120,6 +120,7 @@ a.facet_helper {
 
 .bizyhood_widget.full  .widget_layout_full .mtm_logo {
   width: 130px;
+  max-width: 130px;
   padding-right: 35px;
 }
 
@@ -331,6 +332,7 @@ span.entypo-star {position:relative;top:-1px;}
   
   .bizyhood_widget.full .mtm_fields.mtm_logo {
     width: 100%;
+    max-width: 50%;
   }
   
   .bizyhood_widget.bizyhood_mtm.full .arrow_box:after, .bizyhood_widget.bizyhood_mtm.full .arrow_box:before {
