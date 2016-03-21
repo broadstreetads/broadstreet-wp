@@ -173,7 +173,9 @@ class Bizyhood_Core
         // load widgets START
         
         Bizyhood_View::load( 'widgets/search', array(), false, true);
+        Bizyhood_View::load( 'widgets/meet_the_merchant', array(), false, true);
         add_action( 'widgets_init', array( $this, 'register_search_widget' ));
+        add_action( 'widgets_init', array( $this, 'register_mtm_widget' ));
       
         // load widgets END
 
@@ -204,6 +206,9 @@ class Bizyhood_Core
     
     function register_search_widget() {
       register_widget( 'bizy_search_widget' );
+    }
+    function register_mtm_widget() {
+      register_widget( 'bizy_mtm_widget' );
     }
 
 

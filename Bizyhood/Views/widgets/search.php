@@ -50,26 +50,26 @@ class bizy_search_widget extends WP_Widget {
     
     $button_style = $input_style = array();
     if ($color_button_back != '') {
-      $button_style[] = 'background-color: #'. $color_button_back .';';
+      $button_style[] = 'background-color: '. $color_button_back .';';
     }
     if ($color_button_back != '') {
-      $button_style[] = 'color: #'. $color_button_font .';';
+      $button_style[] = 'color: '. $color_button_font .';';
     }
     
     if ($color_input_back != '') {
-      $input_style[] = 'background-color: #'. $color_input_back .';';
+      $input_style[] = 'background-color: '. $color_input_back .';';
     }
     if ($color_input_font != '') {
-      $input_style[] = 'color: #'. $color_input_font .';';
+      $input_style[] = 'color: '. $color_input_font .';';
     }
     if ($color_input_border != '') {
-      $input_style[] = 'border-color: #'. $color_input_border .';';
+      $input_style[] = 'border-color: '. $color_input_border .';';
     }
     
     
     
-    echo '<form method="get" action="'. get_permalink(get_option('Bizyhood_Main_page_ID')) .'" id="bizyhood_search_'. $widget_id .'" class="bizyhood_search '. $instance['layout'] .'">
-      <div class="form_wrap search_layout_'. $instance['layout'] .' table_div">
+    echo '<form method="get" action="'. get_permalink(get_option('Bizyhood_Main_page_ID')) .'" id="bizyhood_search_'. $widget_id .'" class="bizyhood_widget bizyhood_search '. $instance['layout'] .'">
+      <div class="form_wrap widget_layout_'. $instance['layout'] .' table_div">
         <div class="tr_div">
           <div class="search_fields search_fields_label td_div" '. ($color_widget_back != '' ? 'style="background-color: '. $color_widget_back .'; border-color: '. $color_widget_back .';"' : '') .'>
             <label for="keywords_'. $instance['layout'] .'" '. ($color_label_font != '' ? 'style="color: '. $color_label_font .'"' : '') .'>'. __('Search for: ', 'bizyhood') .'</label>
