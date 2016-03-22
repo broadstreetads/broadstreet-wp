@@ -45,6 +45,9 @@ a.facet_helper {
 
 /* Bizyhood Widgets */
 
+.bizyhood_widget input { box-sizing : border-box; }
+.bizyhood_search.side .search_fields.td_div { padding: 0 10px; }
+.bizyhood_widget.full .list_your_business { padding: 0 10px; }
 .bizyhood_widget.full .form_wrap { overflow: auto; clear: both; width: 100%; }
 .bizyhood_widget label, .bizyhood_widget input { display: inline-block; }
 .bizyhood_widget { font-size: 13px; }
@@ -52,14 +55,14 @@ a.facet_helper {
 .bizyhood_widget .list_your_business { background-color: #45AAE8; padding: 0; width: 100%; }
 .bizyhood_widget .list_your_business a { display: block; width: 100%; padding: 5px 10px; text-transform: uppercase; font-weight: bold; }
 .bizyhood_widget .list_your_business a span { display: block; font-weight: bold; }
-.bizyhood_widget .list_your_business a span.row1 { color: #ffffff; font-size: 18px; }
+.bizyhood_widget .list_your_business a span.row1 { color: #ffffff; font-size: 18px; line-height: 22px; }
 .bizyhood_widget .list_your_business a span.row2 { color: #333333; font-size: 12px; }
 .bizyhood_widget.side .bizy_search_submit, .bizyhood_widget.side .search_keywords { width: 100%; margin-bottom: 10px; }
 
 .bizyhood_widget .search_keywords {  background-color: #ffffff; color: #333333; border: 2px solid #aaaaaa; padding: 2px; }
 .bizyhood_widget .bizy_search_submit { background-color: #000000; color: #FFFFFF; text-transform: uppercase;  }
 
-.bizyhood_widget.full .search_fields { padding: 15px 0 15px 15px; border: 1px solid #e2e2e2; border-bottom: 0; background-color: #e2e2e2;  }
+.bizyhood_widget .search_fields { padding: 15px 0 15px 15px; border: 1px solid #e2e2e2; border-bottom: 0; background-color: #e2e2e2;  }
 .bizyhood_widget.bizyhood_mtm.full .tr_div { background-color: #e2e2e2; }
 .bizyhood_widget.full .mtm_fields { border: 1px solid #e2e2e2; border-bottom: 0; background-color: #e2e2e2;  }
 .bizyhood_widget.full label, .bizyhood_widget .mtm_intro { color: #6E7273; }
