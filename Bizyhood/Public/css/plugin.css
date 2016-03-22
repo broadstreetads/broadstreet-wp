@@ -127,9 +127,15 @@ a.facet_helper {
   padding-right: 35px;
 }
 
+.mtm_fields.mtm_logo.td_div {
+  text-align: center;
+}
+
 .mtm_logo img {
   max-width: 100%;
   height: auto;
+  max-height: 300px;
+  width: auto;
 }
 
 .mtm_info span {
