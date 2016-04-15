@@ -76,7 +76,11 @@
                 <p itemprop="description"><?php echo wpautop($business->description); ?></p>
                 <?php endif ?>
             </div><!-- /.col-md-8 -->
+<<<<<<< 2d4e02ee45b7532fccecec5065dba6d7f401ef90
             <div class="bh_details bh_col-md-4">
+=======
+            <div class="bh_details bh_col-md4">
+>>>>>>> promotions widget and page
                 <div class="bh_section" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
                     <h5>Location</h5>
                     <p itemprop="streetAddress"><?php echo $business->address1 ?><br>
