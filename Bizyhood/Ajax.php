@@ -17,12 +17,18 @@ class Bizyhood_Ajax
      */
     public static function Bizyhood_saveSettings()
     {
+        // delete transient data
         delete_transient('bizyhood_oauth_data');
+        delete_transient('bizyhood_promotions_widget');
+        delete_transient('bizyhood_mtm_widget');
+        
+        // save the new settings
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_API_PRODUCTION, $_POST['api_production'] === 'true');
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_API_ID, $_POST['api_id']);
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_API_SECRET, $_POST['api_secret']);
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_MAIN_PAGE_ID, $_POST['main_page_id']);
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_SIGNUP_PAGE_ID, $_POST['signup_page_id']);
+        Bizyhood_Utility::setOption(Bizyhood_Core::KEY_PROMOTIONS_PAGE_ID, $_POST['promotions_page_id']);
         die(json_encode(array('success' => true)));
     }
     

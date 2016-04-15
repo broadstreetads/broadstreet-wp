@@ -15,18 +15,20 @@
 <div class="bh_row">			
     <div class="bh_col-md-3 bh_local-nav">
         <h5>Categories</h5>
-        <div class="bh_list-group">
         <?php 
           $category_count = 0;
           if (!empty($categories)) {
+            ?>
+            <div class="bh_list-group">
+            <?php
             foreach($categories as $category) {
             
               if ($category_count == 19) {
-                echo '
+                ?>
                 </div>
                 <div class="bh_list-group more_list_wrap">
                   <div class="more_list_inner">
-                ';
+                <?php
               }
           ?>
               <a class="bh_list-group-item" href="<?php echo get_permalink( $list_page_id ); ?>?cf=<?php echo rawurlencode($category['term']).($keywords != '' ? '&amp;keywords='.$keywords : ''); ?>" title="<?php echo $category['term']; ?> (<?php echo $category['count']; ?>)">
@@ -40,12 +42,13 @@
           
           <?php
             if ( $category_count >= 20 ) {
-              echo '
+              ?>
               </div>
               <p class="facet_helper_wrap">
                 <a href="" title="more categories" class="facet_helper" id="more_categories">more categories</a>
                 <a href="" title="less categories" class="facet_helper" id="less_categories">less categories</a>            
-              </p>';
+              </p>
+              <?php
             }
             if ( $cf != '' ) {
               echo '<p class="facet_helper_wrap"><a href="'. get_permalink($list_page_id).( $keywords != '' ? '?keywords='.$keywords : '') .'" title="show all" class="facet_helper">show all</a></p>';
