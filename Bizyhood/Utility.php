@@ -98,20 +98,6 @@ class Bizyhood_Utility
     {
         return Bizyhood_Utility::getOption(Bizyhood_Core::KEY_API_SECRET);
     }
-    
-    /**
-     * Check the Bizyhood oAuth Data
-     * @return boolean 
-     */
-    public static function checkoAuthData()
-    {
-      
-      if ( get_transient(Bizyhood_Core::KEY_OAUTH_DATA) !== false ) {
-        return true;
-      }
-      
-      return false;
-    }
 
     /**
      * Get the default settings for the WP remote API
