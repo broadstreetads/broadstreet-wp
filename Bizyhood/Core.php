@@ -1020,9 +1020,15 @@ class Bizyhood_Core
     
     
     
-    /***** promotions info *****/
+    /***** additional busineess info *****/    
     
-    public function promotions_information($atts)
+    /**
+     * API call for additional business info
+     * @param array $atts Attributes to be passesd on the API
+     * @param string $command data to get promotions (default) and events
+     * @return mixed results (array) or error (array) or empty
+     */
+    public function business_details_information($atts, $command = 'promotions')
     {
       
       
@@ -1044,7 +1050,7 @@ class Bizyhood_Core
 
       
       try {
-        $response = $client->fetch($api_url.'/promotions/', $params);
+        $response = $client->fetch($api_url.'/'. $command .'/', $params);
       } catch (Exception $e) {
         $error = new WP_Error( 'bizyhood_error', __( 'Service is currently unavailable! Request timed out.', 'bizyhood' ) );
         return array('error' => $error);
@@ -1082,7 +1088,7 @@ class Bizyhood_Core
       
       
       // cache the results
-      $cached_promotions = self::try_transient('bizyhood_promotions_widget', 'response_json', 'promotions_information', $attrs);
+      $cached_promotions = self::try_transient('bizyhood_promotions_widget', 'response_json', 'business_details_information', $attrs);
       
       if ($cached_promotions === false) {
         return Bizyhood_View::load( 'listings/error', array( 'error' => $authetication->get_error_message()), true );
