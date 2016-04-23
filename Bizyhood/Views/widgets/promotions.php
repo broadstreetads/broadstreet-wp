@@ -53,27 +53,13 @@ class bizy_promotions_widget extends WP_Widget {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
 		}
     
-    $atts = array(
-
-    );
+    $atts = array();
         
-    // cache the results    
-    if (get_transient('bizyhood_promotions_widget') === false || get_transient('bizyhood_promotions_widget') == '') {
-      // get businesses
+    // cache the results
+    $promotion = Bizyhood_Core::try_transient('bizyhood_promotions_widget', 'response_json', 'promotions_information', $atts, true);   
 
-      $promotions = Bizyhood_Core::promotions_information($atts);
-      
-      set_transient('bizyhood_promotions_widget', $promotions['response_json'], 12 * HOUR_IN_SECONDS);
-    }
-    
-    $cached_promotions = get_transient('bizyhood_promotions_widget');
-    
-    // pick one random business
-    if (!empty($cached_promotions)) {
-      $random_promotions = array_rand($cached_promotions, 1);
-      $promotion = $cached_promotions[$random_promotions];
-    } else {
-      // or exit with an error message
+    // if no promotions are found exit with an error message
+    if ($promotion === false) {
       echo __('There are no promotions to display', 'bizyhood');
       return;
     }
@@ -106,8 +92,8 @@ class bizy_promotions_widget extends WP_Widget {
       
       // set the default
       $promotion['business_logo']['image']['url'] = Bizyhood_Utility::getImageBaseURL().'placeholder-logo.jpg';
-      $promotion['business_logo']['image_width'] = 307;
-      $promotion['business_logo']['image_height'] = 304;
+      $promotion['business_logo']['image_width'] = Bizyhood_Core::BUSINESS_LOGO_WIDTH;
+      $promotion['business_logo']['image_height'] = Bizyhood_Core::BUSINESS_LOGO_HEIGHT;
       
       // check if a custom is set via the widget
       $headers = @get_headers($instance['image']);
@@ -171,8 +157,8 @@ class bizy_promotions_widget extends WP_Widget {
         </span>
         <?php
           // trim the description if needed
-          if (str_word_count($promotion['details']) > 10) {
-            $promotion['details'] = wp_trim_words($promotion['details'], 20, ' <a href="'. get_permalink( $view_business_page_id ).$promotion['business_slug'].'/'.$promotion['business_identifier'] .'/" title="'. $promotion['business_name'] .' '. __('promotions', 'bizyhood').'">more&hellip;</a>');
+          if (str_word_count($promotion['details']) > Bizyhood_Core::EXCERPT_MAX_LENGTH) {
+            $promotion['details'] = wp_trim_words($promotion['details'], Bizyhood_Core::EXCERPT_MAX_LENGTH, ' <a href="'. get_permalink( $view_business_page_id ).$promotion['business_slug'].'/'.$promotion['business_identifier'] .'/" title="'. $promotion['business_name'] .' '. __('promotions', 'bizyhood').'">more&hellip;</a>');
           }
         ?>
         

@@ -41,28 +41,16 @@ class bizy_mtm_widget extends WP_Widget {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
 		}
     
-    // cache the results    
-    if (get_transient('bizyhood_mtm_widget') === false) {
-      // get businesses
-      $atts = array(
-        'paged'     => 1,
-        'verified'  => true,
-        'ps'        => 25
-      );
-      $businesses = Bizyhood_Core::businesses_information($atts);
-      
-      set_transient('bizyhood_mtm_widget', $businesses['businesses'], 12 * HOUR_IN_SECONDS);
-    }
-    
-    
-    $cached_businesses = get_transient('bizyhood_mtm_widget');
-    
-    // pick one random business
-    if (!empty($cached_businesses)) {
-      $random_business = array_rand($cached_businesses, 1);
-      $business = $cached_businesses[$random_business];
-    } else {
-      // or exit with an error message
+    // cache the results
+    $atts = array(
+      'paged'     => 1,
+      'verified'  => 'y',
+      'ps'        => 25
+    );
+    $business = Bizyhood_Core::try_transient('bizyhood_mtm_widget', 'businesses', 'businesses_information', $atts, true);
+        
+    // if no businesses are found exit with an error message
+    if ($business === false || empty($business)) {
       echo __('There are no businesses to display', 'bizyhood');
       return;
     }
@@ -71,8 +59,8 @@ class bizy_mtm_widget extends WP_Widget {
     
     if (empty($business->business_logo)) {
       $business_logo_url = Bizyhood_Utility::getImageBaseURL().'placeholder-logo.jpg';
-      $business_logo_width = 307;
-      $business_logo_height = 304;
+      $business_logo_width = Bizyhood_Core::BUSINESS_LOGO_WIDTH;;
+      $business_logo_height = Bizyhood_Core::BUSINESS_LOGO_HEIGHT;
     } else {
       $business_logo_url = $business->business_logo->image->url;
       $business_logo_width = $business->business_logo->image_width;

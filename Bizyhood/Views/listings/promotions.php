@@ -31,8 +31,8 @@
         
         // set the default logo
         $promotion['business_logo']['image']['url'] = Bizyhood_Utility::getImageBaseURL().'placeholder-logo.jpg';
-        $promotion['business_logo']['image_width'] = 307;
-        $promotion['business_logo']['image_height'] = 304;
+        $promotion['business_logo']['image_width'] = Bizyhood_Core::BUSINESS_LOGO_WIDTH;
+        $promotion['business_logo']['image_height'] = Bizyhood_Core::BUSINESS_LOGO_HEIGHT;
         
         // check date
         $start_date = date('Y-m-d', strtotime($promotion['start'])); // start date
@@ -55,8 +55,8 @@
         }
         
         // trim the description if needed
-        if (str_word_count($promotion['details']) > 10) {
-          $promotion['details'] = wp_trim_words($promotion['details'], 20, ' <a href="'. get_permalink( $view_business_page_id ).$promotion['business_slug'].'/'.$promotion['business_identifier'] .'/" title="'. $promotion['business_name'] .' '. __('promotions', 'bizyhood').'">more&hellip;</a>');
+        if (str_word_count($promotion['details']) > Bizyhood_Core::EXCERPT_MAX_LENGTH) {
+          $promotion['details'] = wp_trim_words($promotion['details'], Bizyhood_Core::EXCERPT_MAX_LENGTH, ' <a href="'. get_permalink( $view_business_page_id ).$promotion['business_slug'].'/'.$promotion['business_identifier'] .'/" title="'. $promotion['business_name'] .' '. __('promotions', 'bizyhood').'">more&hellip;</a>');
         }
         
      ?>

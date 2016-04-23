@@ -39,6 +39,9 @@ class Bizyhood_Core
     CONST KEY_PROMOTIONS_PAGE_ID  = 'Bizyhood_Promotions_page_ID';
     CONST KEY_INSTALL_REPORT      = 'Bizyhood_Installed';
     CONST API_MAX_LIMIT           = 250;
+    CONST BUSINESS_LOGO_WIDTH     = 307;
+    CONST BUSINESS_LOGO_HEIGHT    = 304;
+    CONST EXCERPT_MAX_LENGTH      = 20;
     
     public static $globals = null;
 
@@ -1078,20 +1081,15 @@ class Bizyhood_Core
       }
       
       
-      // cache the results    
-      if (get_transient('bizyhood_promotions_widget') === false || get_transient('bizyhood_promotions_widget') == '') {
-        
-        // get businesses
-
-        $promotions = $this->promotions_information($atts);
-        
-        set_transient('bizyhood_promotions_widget', $promotions['response_json'], 12 * HOUR_IN_SECONDS);
+      // cache the results
+      $cached_promotions = self::try_transient('bizyhood_promotions_widget', 'response_json', 'promotions_information', $attrs);
+      
+      if ($cached_promotions === false) {
+        return Bizyhood_View::load( 'listings/error', array( 'error' => $authetication->get_error_message()), true );
       }
       
       $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
-      
-      $cached_promotions = get_transient('bizyhood_promotions_widget');
-      
+
       return Bizyhood_View::load( 'listings/promotions', array( 'promotions' => $cached_promotions, 'list_page_id' => $list_page_id ), true );
       
     }
@@ -1138,6 +1136,43 @@ class Bizyhood_Core
         
         return Bizyhood_View::load( 'listings/index', array( 'facets' => (isset($facets) ? $facets : ''), 'keywords' => (isset($keywords) ? $keywords : ''), 'categories' => (isset($categories) ? $categories : ''), 'cf' => (isset($cf) ? $cf : ''), 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
     }
+    
+    
+    
+    /**
+     * Sets and returns cached API results as a transient
+     * @param string $transient_name The name of the transient to get or set
+     * @param string $method_name The name of the function to call to get the API data
+     * @param array $attrs Attributes for the $method_name
+     * @param boolean $random Either to return on random result or all of them
+     * @return array transient result(s) or false
+     */
+    public function try_transient($transient_name, $transient_value = 'response_json', $method_name, $attrs, $random = false) {
+      
+      // cache the results    
+      if (get_transient($transient_name) === false || get_transient($transient_name) == '') {
+        
+        // get businesses
+
+        $transient = Bizyhood_Core::$method_name($attrs);
+        
+        set_transient($transient_name, $transient[$transient_value], 12 * HOUR_IN_SECONDS);
+      }
+      
+      $cached_transient = get_transient($transient_name);
+      
+      // pick one random business
+      if (!empty($cached_transient) && $random === true) {
+        $randomize_transient = array_rand($cached_transient, 1);
+        $random_transient = $cached_transient[$randomize_transient];
+        
+        return $random_transient;
+      }
+      
+      return $cached_transient;
+      
+    }
+    
 
     /**
      * Handler used for modifying the way business listings are displayed
