@@ -1088,7 +1088,7 @@ class Bizyhood_Core
       
       
       // cache the results
-      $cached_promotions = self::try_transient('bizyhood_promotions_widget', 'response_json', 'business_details_information', $attrs);
+      $cached_promotions = self::try_transient('bizyhood_promotions_widget', 'response_json', 'business_details_information', $attrs, 'promotions');
       
       if ($cached_promotions === false) {
         return Bizyhood_View::load( 'listings/error', array( 'error' => $authetication->get_error_message()), true );
@@ -1150,10 +1150,11 @@ class Bizyhood_Core
      * @param string $transient_name The name of the transient to get or set
      * @param string $method_name The name of the function to call to get the API data
      * @param array $attrs Attributes for the $method_name
+     * @param string $method_command The name of the command to be execute by the API
      * @param boolean $random Either to return on random result or all of them
      * @return array transient result(s) or false
      */
-    public function try_transient($transient_name, $transient_value = 'response_json', $method_name, $attrs, $random = false) {
+    public function try_transient($transient_name, $transient_value = 'response_json', $method_name, $attrs, $method_command = null, $random = false) {
       
       // cache the results    
       if (get_transient($transient_name) === false || get_transient($transient_name) == '') {

@@ -47,7 +47,7 @@ class bizy_mtm_widget extends WP_Widget {
       'verified'  => 'y',
       'ps'        => 25
     );
-    $business = Bizyhood_Core::try_transient('bizyhood_mtm_widget', 'businesses', 'businesses_information', $atts, true);
+    $business = Bizyhood_Core::try_transient('bizyhood_mtm_widget', 'businesses', 'businesses_information', $atts, null, true);
         
     // if no businesses are found exit with an error message
     if ($business === false || empty($business)) {
