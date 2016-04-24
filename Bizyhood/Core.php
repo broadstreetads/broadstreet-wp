@@ -1161,7 +1161,7 @@ class Bizyhood_Core
         
         // get businesses
 
-        $transient = Bizyhood_Core::$method_name($attrs);
+        $transient = Bizyhood_Core::$method_name($attrs, $method_command);
         
         set_transient($transient_name, $transient[$transient_value], 12 * HOUR_IN_SECONDS);
       }
