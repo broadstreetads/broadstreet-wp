@@ -56,7 +56,6 @@ class bizy_events_widget extends WP_Widget {
     $atts = array();
         
     // cache the results
-    // delete_transient('bizyhood_events_widget');
     $events = Bizyhood_Core::try_transient('bizyhood_events_widget', 'response_json', 'business_details_information', $atts, 'events', false);
     
     // if no events are found exit with an error message
