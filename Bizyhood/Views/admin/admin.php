@@ -97,8 +97,24 @@
                         </div>
                         <div style="clear:both;"></div>
                     </div>
+                    
                     <div class="break"></div>
-
+                    
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">Business Promotions Page</div>
+                            <div class="desc nomargin">
+                                The page that will be used to display all businesses promotions. Must include the [bh-promotions] shortcode.<br />
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <?php wp_dropdown_pages( array('name' => 'promotions_page_id', 'selected' => $promotions_page_id) ) ?>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    
+                    <div class="break"></div>
+                    
                     <div class="option">
                         <div class="save-container">
                             <span class="success" id="save-success">Saved!</span>

@@ -75,7 +75,7 @@ class bizy_search_widget extends WP_Widget {
             <label for="keywords_'. $instance['layout'] .'" '. ($color_label_font != '' ? 'style="color: '. $color_label_font .'"' : '') .'>'. __('Search for: ', 'bizyhood') .'</label>
           </div>
           <div class="search_fields search_fields_input td_div" '. ($color_widget_back != '' ? 'style="background-color: '. $color_widget_back .'; border-color: '. $color_widget_back .';"' : '') .'>
-            <input class="search_keywords" id="keywords_'. $instance['layout'] .'" name="keywords" value="'. (isset($_GET['keywords']) ? esc_attr($_GET['keywords']) : '') .'" placeholder="'. __('restaurants, pizza, real-estate etc', 'bizyhood') .'"  '. (!empty($input_style) ? 'style="'. implode(' ', $input_style) .'"' : '') .'/>
+            <input class="search_keywords" id="keywords_'. $instance['layout'] .'" name="keywords" value="'. (isset($_GET['keywords']) ? esc_attr(stripslashes($_GET['keywords'])) : '') .'" placeholder="'. __('restaurants, pizza, real-estate etc', 'bizyhood') .'"  '. (!empty($input_style) ? 'style="'. implode(' ', $input_style) .'"' : '') .'/>
           </div>
           <div class="search_fields search_fields_submit td_div" '. ($color_widget_back != '' ? 'style="background-color: '. $color_widget_back .'; border-color: '. $color_widget_back .';"' : '') .'>
             <input type="submit" class="button btn bizy_search_submit" value="'. __('Search', 'bizyhood') .'" '. (!empty($button_style) ? 'style="'. implode(' ', $button_style) .'"' : '') .'>

@@ -17,6 +17,7 @@ require_once dirname(__FILE__) . '/Exception.php';
 require_once dirname(__FILE__) . '/Public/vendor/OAuth2/Client.php';
 require_once dirname(__FILE__) . '/Public/vendor/OAuth2/GrantType/IGrantType.php';
 require_once dirname(__FILE__) . '/Public/vendor/OAuth2/GrantType/ClientCredentials.php';
+require_once dirname(__FILE__) . '/oAuth.php';
 
 
 if (! class_exists('Bizyhood_Core')):
@@ -35,8 +36,12 @@ class Bizyhood_Core
     CONST KEY_OAUTH_DATA          = 'bizyhood_oauth_data';
     CONST KEY_MAIN_PAGE_ID        = 'Bizyhood_Main_page_ID';
     CONST KEY_SIGNUP_PAGE_ID      = 'Bizyhood_Signup_page_ID';
+    CONST KEY_PROMOTIONS_PAGE_ID  = 'Bizyhood_Promotions_page_ID';
     CONST KEY_INSTALL_REPORT      = 'Bizyhood_Installed';
     CONST API_MAX_LIMIT           = 250;
+    CONST BUSINESS_LOGO_WIDTH     = 307;
+    CONST BUSINESS_LOGO_HEIGHT    = 304;
+    CONST EXCERPT_MAX_LENGTH      = 20;
     
     public static $globals = null;
 
@@ -87,6 +92,24 @@ class Bizyhood_Core
             );
             wp_insert_post( $business_view_page );
         }
+        
+        // Create the promotions page
+        $business_promotions_page = get_page_by_path( "business-promotions" );
+        if ( !$business_promotions_page )
+        {
+            $business_promotions_page = array(
+                'post_title'     => 'Business Promotions',
+                'post_type'      => 'page',
+                'post_name'      => 'business-promotions',
+                'post_content'   => '[bh-promotions]',
+                'post_status'    => 'publish',
+                'comment_status' => 'closed',
+                'ping_status'    => 'closed',
+                'post_author'    => 1,
+                'menu_order'     => 0,
+            );
+            wp_insert_post( $business_promotions_page );
+        }
 
     }
 
@@ -109,6 +132,14 @@ class Bizyhood_Core
             Bizyhood_Log::add('info', "Removing view business page (post ID " . $business_view_page->ID . ")");
             wp_delete_post($business_view_page->ID);
         }
+        
+        // Remove business promotions page
+        $business_promotions_page = get_page_by_path( "business-promotions" );
+        if ($business_promotions_page)
+        {
+            Bizyhood_Log::add('info', "Removing promotions page (post ID " . $business_promotions_page->ID . ")");
+            wp_delete_post($business_promotions_page->ID);
+        }
 
     }
 
@@ -126,6 +157,9 @@ class Bizyhood_Core
     private function _registerHooks()
     {
         Bizyhood_Log::add('debug', "Registering hooks..");
+        
+        // check for the pages everytime // upgrades will not execute the install
+        add_action( 'init', array( $this, 'install' ), 10 );
 
         # -- Below is core functionality --
         add_action('admin_menu', 	array($this, 'adminCallback'));
@@ -133,6 +167,7 @@ class Bizyhood_Core
         add_action('wp_enqueue_scripts', 	array($this, 'load_plugin_styles'));
         add_action('wp_enqueue_scripts', 	array($this, 'load_plugin_gallery'));
         add_shortcode('bh-businesses', array($this, 'businesses_shortcode'));
+        add_shortcode('bh-promotions', array($this, 'promotions_shortcode'));
         add_filter('the_content', array($this, 'postTemplate'), 100);
         add_action('wp_ajax_bizyhood_save_settings', array('Bizyhood_Ajax', 'Bizyhood_saveSettings'));
         
@@ -174,15 +209,19 @@ class Bizyhood_Core
         
         Bizyhood_View::load( 'widgets/search', array(), false, true);
         Bizyhood_View::load( 'widgets/meet_the_merchant', array(), false, true);
+        Bizyhood_View::load( 'widgets/promotions', array(), false, true);
+        Bizyhood_View::load( 'widgets/events', array(), false, true);
         add_action( 'widgets_init', array( $this, 'register_search_widget' ));
         add_action( 'widgets_init', array( $this, 'register_mtm_widget' ));
+        add_action( 'widgets_init', array( $this, 'register_promotions_widget' ));
+        add_action( 'widgets_init', array( $this, 'register_events_widget' ));
       
         // load widgets END
 
         
         // add oAuth Data START
 
-        add_action( 'init', array( $this, 'set_oauth_temp_data' ));
+        add_action( 'init', array('Bizyhood_oAuth', 'set_oauth_temp_data') );
         
         // add oAuth Data END
         
@@ -209,6 +248,12 @@ class Bizyhood_Core
     }
     function register_mtm_widget() {
       register_widget( 'bizy_mtm_widget' );
+    }
+    function register_promotions_widget() {
+      register_widget( 'bizy_promotions_widget' );
+    }
+    function register_events_widget() {
+      register_widget( 'bizy_events_widget' );
     }
 
 
@@ -256,8 +301,8 @@ class Bizyhood_Core
       }
       
       if (Bizyhood_Utility::getApiID() != '' && Bizyhood_Utility::getApiSecret() != '') {
-        $authetication = $this->set_oauth_temp_data();
-        if (is_wp_error($authetication) || Bizyhood_Utility::checkoAuthData() == false) {
+        $authetication = Bizyhood_oAuth::set_oauth_temp_data();
+        if (is_wp_error($authetication) || Bizyhood_oAuth::checkoAuthData() == false) {
           $errors[] = __('Can not authenticate to the Bizyhood API. Check your Client ID and Secret Key. %s', 'bizyhood');
         }
       }
@@ -323,11 +368,11 @@ class Bizyhood_Core
               <label id="bizylink_type-l" class="mce-widget mce-label mce-first" for="bizylink_type" aria-disabled="false">Link Type</label>
             </td>
             <td>
-              <input type="radio" id="bizylink_type_box" name="bizylink_type" value="bizybox" class="bizyradio" checked /> 
+              <input type="radio" id="bizylink_type_box" name="bizylink_type" value="bizybox" class="bizyradio" /> 
               Call to Action Link<br>
 
-              <input type="radio" id="bizylink_type_normal" name="bizylink_type" value="bizylink" class="bizyradio" /> 
-              Normal Link
+              <input type="radio" id="bizylink_type_normal" name="bizylink_type" value="bizylink" class="bizyradio" checked /> 
+              Regular Hyperlink
             </td>
           </tr>
           <tr>
@@ -622,7 +667,6 @@ class Bizyhood_Core
     
     public function bizyhood_create_sitemap() {
       
-      $api_url = Bizyhood_Utility::getApiUrl();
       // get only verified businesses
       $urls = $this->bizyhood_create_all_urls(true);
       
@@ -687,41 +731,6 @@ class Bizyhood_Core
       }
       return $sitemap;
     }
-    
-    
-    // add oAuth Data
-    // we use transient because it autoexpires
-    public function set_oauth_temp_data() {
-      
-      $provider = array (
-        'clientId'                =>  Bizyhood_Utility::getApiID(),
-        'clientSecret'            =>  Bizyhood_Utility::getApiSecret(),
-        'redirectUri'             =>  '', // no need for 2-legged auth
-        'urlAuthorize'            =>  Bizyhood_Utility::getApiUrl().'/o/authorize/',
-        'urlAccessToken'          =>  Bizyhood_Utility::getApiUrl().'/o/token/',
-        'urlResourceOwnerDetails' =>  Bizyhood_Utility::getApiUrl().'/o/resource'
-      );
-     
-     // if the oAuth data does not exist
-     if (get_transient('bizyhood_oauth_data') === false ) {
-        $params = array();
-        $client = new OAuth2\Client($provider['clientId'], $provider['clientSecret']);
-        $response = $client->getAccessToken($provider['urlAccessToken'], 'client_credentials', $params);
-        
-        if ( is_array($response) && !empty($response) && isset($response['code']) && strlen($response['result']['access_token']) > 0 && $response['code'] == 200) {
-          
-          $client->setAccessToken($response['result']['access_token']);
-          set_transient('bizyhood_oauth_data', $response['result']['access_token'], $response['result']['expires_in']);
-          
-        } else {
-          delete_transient('bizyhood_oauth_data');
-          return new WP_Error( 'bizyhood_error', __( 'Service is currently unavailable! Error code: '. $response['code'] .'; '.$response['result']['error'], 'bizyhood' ) );
-        }
-      }
-      
-      
-    }
-    
     
     
     function load_plugin_styles()
@@ -824,6 +833,7 @@ class Bizyhood_Core
         $data['api_secret']         = Bizyhood_Utility::getApiSecret();
         $data['main_page_id']       = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
         $data['signup_page_id']     = Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID);
+        $data['promotions_page_id'] = Bizyhood_Utility::getOption(self::KEY_PROMOTIONS_PAGE_ID);
         $data['errors']             = array();
 
         if(!function_exists('curl_exec'))
@@ -893,6 +903,7 @@ class Bizyhood_Core
       $remote_settings = Bizyhood_Utility::getRemoteSettings();
       $api_url = Bizyhood_Utility::getApiUrl();
       $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
+      $params = array();
 
 
       // get current page
@@ -930,9 +941,9 @@ class Bizyhood_Core
       }
       
       // get verified
-      if (isset($a['verified'])) {
-          $verified = $a['verified'];
-      } elseif (get_query_var('verified')) {
+
+      $verified = $a['verified'];
+      if (get_query_var('verified')) {
           $verified = get_query_var('verified');
       } elseif (isset($_GET['verified'])) {
           $verified = $_GET['verified'];
@@ -947,33 +958,12 @@ class Bizyhood_Core
       }
       
 
-      // set oAuth parameters
-      $provider = array (
-        'clientId'                =>  Bizyhood_Utility::getApiID(),
-        'clientSecret'            =>  Bizyhood_Utility::getApiSecret(),
-        'redirectUri'             =>  '', // no need for 2-legged auth
-        'urlAuthorize'            =>  Bizyhood_Utility::getApiUrl().'/o/authorize/',
-        'urlAccessToken'          =>  Bizyhood_Utility::getApiUrl().'/o/token/',
-        'urlResourceOwnerDetails' =>  Bizyhood_Utility::getApiUrl().'/o/resource'
-      );
-      
-      
-      $params = array();
-      try {
-        $client = new OAuth2\Client($provider['clientId'], $provider['clientSecret']);
-      } catch (Exception $e) {
-        $error = new WP_Error( 'bizyhood_error', __( 'Service is currently unavailable! Request timed out.', 'bizyhood' ) );
+      $client = Bizyhood_oAuth::oAuthClient();
+           
+      if (is_wp_error($client)) {
+        $error = new WP_Error( 'bizyhood_error', $client->get_error_message() );
         return array('error' => $error);
-      }
-    
-      $client->setAccessTokenType($client::ACCESS_TOKEN_BEARER);
-      $client->setAccessToken(get_transient('bizyhood_oauth_data'));
-      $curl_timeout = array(
-        CURLOPT_CONNECTTIMEOUT => 10,
-        CURLOPT_TIMEOUT => 10
-      );
-      $client->setCurlOptions($curl_timeout);
-      
+      }      
       
       $params = array(
         'format' =>'json',
@@ -1033,16 +1023,95 @@ class Bizyhood_Core
       return $return;
     }
     
+    
+    
+    /***** additional busineess info *****/    
+    
+    /**
+     * API call for additional business info
+     * @param array $atts Attributes to be passesd on the API
+     * @param string $command data to get promotions (default) and events
+     * @return mixed results (array) or error (array) or empty
+     */
+    public function business_details_information($atts, $command = 'promotions')
+    {
+      
+      
+      $a = shortcode_atts( array(
+        'bid'         => null,
+        'identifier'  => null
+      ), $atts );
+      
+      $remote_settings = Bizyhood_Utility::getRemoteSettings();
+      $api_url = Bizyhood_Utility::getApiUrl();
+      $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);      
+      $client = Bizyhood_oAuth::oAuthClient();
+      
+      $params = array(
+        'format'      => 'json',
+        'bid'         => $a['bid'],
+        'identifier'  => $a['identifier']
+      );
+
+      
+      try {
+        $response = $client->fetch($api_url.'/'. $command .'/', $params);
+      } catch (Exception $e) {
+        $error = new WP_Error( 'bizyhood_error', __( 'Service is currently unavailable! Request timed out.', 'bizyhood' ) );
+        return array('error' => $error);
+      }
+      
+      // avoid throwing an error
+      if (!is_array($response) || empty($response['result'])) { return; }
+
+      $response_json = $response['result'];
+            
+      $return = array(
+        'remote_settings'   => $remote_settings,
+        'api_url'           => $api_url,
+        'list_page_id'      => $list_page_id,
+        'bid'               => (isset($a['bid']) ? $a['bid'] : ''),
+        'identifier'        => (isset($a['identifier']) ? $a['identifier'] : ''),
+        'response'          => json_encode($response_json),
+        'response_json'     => $response_json
+      );
+      
+      return $return;
+      
+    }
+    
     /***** API Calls END *****/
     /***************************/
+    
+    
+    public function promotions_shortcode($attrs) {
+      
+      $authetication = Bizyhood_oAuth::set_oauth_temp_data();
+      if (is_wp_error($authetication) || Bizyhood_oAuth::checkoAuthData() == false) {
+        return Bizyhood_View::load( 'listings/error', array( 'error' => $authetication->get_error_message()), true );
+      }
+      
+      
+      // cache the results
+      $cached_promotions = self::try_transient('bizyhood_promotions_widget', 'response_json', 'business_details_information', $attrs, 'promotions');
+      
+      if ($cached_promotions === false) {
+        return Bizyhood_View::load( 'listings/error', array( 'error' => $authetication->get_error_message()), true );
+      }
+      
+      $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
+
+      return Bizyhood_View::load( 'listings/promotions', array( 'promotions' => $cached_promotions, 'list_page_id' => $list_page_id ), true );
+      
+    }
     
     
     public function businesses_shortcode($attrs)
     {
       
         
-        $authetication = $this->set_oauth_temp_data();
-        if (is_wp_error($authetication) || Bizyhood_Utility::checkoAuthData() == false) {
+        $authetication = Bizyhood_oAuth::set_oauth_temp_data();
+        if (is_wp_error($authetication) || Bizyhood_oAuth::checkoAuthData() == false) {
           return Bizyhood_View::load( 'listings/error', array( 'error' => $authetication->get_error_message()), true );
         }
         
@@ -1059,7 +1128,7 @@ class Bizyhood_Core
        
         $businesses     = $q['businesses'];
         $keywords       = $q['keywords'];
-        $facets         = $q['cf'];
+        $facets         = $q['categories'];
         $categories     = $q['categories'];
         $cf             = $q['category'];
         $total_count    = $q['total_count'];
@@ -1078,6 +1147,44 @@ class Bizyhood_Core
         
         return Bizyhood_View::load( 'listings/index', array( 'facets' => (isset($facets) ? $facets : ''), 'keywords' => (isset($keywords) ? $keywords : ''), 'categories' => (isset($categories) ? $categories : ''), 'cf' => (isset($cf) ? $cf : ''), 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
     }
+    
+    
+    
+    /**
+     * Sets and returns cached API results as a transient
+     * @param string $transient_name The name of the transient to get or set
+     * @param string $method_name The name of the function to call to get the API data
+     * @param array $attrs Attributes for the $method_name
+     * @param string $method_command The name of the command to be execute by the API
+     * @param boolean $random Either to return on random result or all of them
+     * @return array transient result(s) or false
+     */
+    public function try_transient($transient_name, $transient_value = 'response_json', $method_name, $attrs, $method_command = null, $random = false) {
+      
+      // cache the results    
+      if (get_transient($transient_name) === false || get_transient($transient_name) == '') {
+        
+        // get businesses
+
+        $transient = Bizyhood_Core::$method_name($attrs, $method_command);
+        
+        set_transient($transient_name, $transient[$transient_value], 12 * HOUR_IN_SECONDS);
+      }
+      
+      $cached_transient = get_transient($transient_name);
+      
+      // pick one random business
+      if (!empty($cached_transient) && $random === true) {
+        $randomize_transient = array_rand($cached_transient, 1);
+        $random_transient = $cached_transient[$randomize_transient];
+        
+        return $random_transient;
+      }
+      
+      return $cached_transient;
+      
+    }
+    
 
     /**
      * Handler used for modifying the way business listings are displayed
@@ -1087,11 +1194,10 @@ class Bizyhood_Core
     public function postTemplate($content)
     {   
         global $post, $wp_query;
-        
-        
+                
         // no reason to continue if we do not have oAuth token
         if (get_transient('bizyhood_oauth_data') === false) {
-          $authetication = $this->set_oauth_temp_data();
+          $authetication = Bizyhood_oAuth::set_oauth_temp_data();
           if (is_wp_error($authetication)) {
             return Bizyhood_View::load( 'listings/error', array( 'error' => $authetication->get_error_message()), true );
           }
@@ -1099,6 +1205,7 @@ class Bizyhood_Core
         
         
         $api_url = Bizyhood_Utility::getApiUrl();
+        $params = array();
 
         # Override content for the view business page        
         $post_name = $post->post_name;
@@ -1115,32 +1222,11 @@ class Bizyhood_Core
             }
             
             
-            // set oAuth parameters
-            $provider = array (
-              'clientId'                =>  Bizyhood_Utility::getApiID(),
-              'clientSecret'            =>  Bizyhood_Utility::getApiSecret(),
-              'redirectUri'             =>  '', // no need for 2-legged auth
-              'urlAuthorize'            =>  Bizyhood_Utility::getApiUrl().'/o/authorize/',
-              'urlAccessToken'          =>  Bizyhood_Utility::getApiUrl().'/o/token/',
-              'urlResourceOwnerDetails' =>  Bizyhood_Utility::getApiUrl().'/o/resource'
-            );
+            $client = Bizyhood_oAuth::oAuthClient();
             
-            
-            $params = array();
-            try {
-              $client = new OAuth2\Client($provider['clientId'], $provider['clientSecret']);
-            } catch (Exception $e) {
-              return Bizyhood_View::load( 'listings/error', array( 'error' => __( 'Service is currently unavailable! Request timed out.', 'bizyhood' )), true );
+            if (is_wp_error($client)) {
+              return Bizyhood_View::load( 'listings/error', array( 'error' => $client->get_error_message()), true );
             }
-
-          
-            $client->setAccessTokenType($client::ACCESS_TOKEN_BEARER);
-            $client->setAccessToken(get_transient('bizyhood_oauth_data'));
-            $curl_timeout = array(
-              CURLOPT_CONNECTTIMEOUT => 10,
-              CURLOPT_TIMEOUT => 10
-            );
-            $client->setCurlOptions($curl_timeout);
 
             try {
               $response = $client->fetch($api_url . "/business/" . $bizyhood_id.'/', $params);

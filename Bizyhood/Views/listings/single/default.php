@@ -46,7 +46,7 @@
     </div><!-- /.col-md-2 -->
     <div class="bh_col-md-10 bh_business-details">
         <div class="bh_row">
-            <div class="bh_main-content bh_col-md-9">
+            <div class="bh_main-content bh_col-md-8">
                 <h2 itemprop="name"><?php echo $business->name ?></h2>
                 <?php if ( $business->business_images ) : ?>
                 <div class="bh_image-gallery">
@@ -64,10 +64,10 @@
                 <?php endif ?>
                 <div class="bh_alert">
                     <div class="bh_row">
-			<div class="bh_col-md-8">
+            <div class="bh_col-md-7">
 		            <p>Support your local businesses by giving them feedback.</p>
 		        </div>
-		        <div class="bh_col-md-4">
+		        <div class="bh_col-md-5">
 		            <a href="<?php echo $business->bizyhood_url ?>" class="bh_button" target="_blank">Give Feedback</a>
 		        </div>
                     </div>
@@ -75,8 +75,8 @@
                 <?php if ( $business->description ) : ?>
                 <p itemprop="description"><?php echo wpautop($business->description); ?></p>
                 <?php endif ?>
-            </div><!-- /.col-md-9 -->
-            <div class="bh_details bh_col-md-3">
+            </div><!-- /.col-md-8 -->
+            <div class="bh_details bh_col-md-4">
                 <div class="bh_section" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
                     <h5>Location</h5>
                     <p itemprop="streetAddress"><?php echo $business->address1 ?><br>
@@ -110,7 +110,7 @@
                     </div>
                 </div>
                 <?php endif; ?>
-            </div><!-- /.col-md-3 -->
+            </div><!-- /.col-md-4 -->
         </div><!-- /.row -->
     </div><!-- /.col-md-10 -->
 </div><!-- /.row -->
