@@ -56,7 +56,7 @@ class bizy_promotions_widget extends WP_Widget {
     $atts = array();
         
     // cache the results
-    $promotion = Bizyhood_Core::try_transient('bizyhood_promotions_widget', 'response_json', 'business_details_information', $atts, 'promotions', true);   
+    $promotion = Bizyhood_Core::get_cache_value('bizyhood_promotions_widget', 'response_json', 'business_details_information', $atts, 'promotions', true);   
 
     // if no promotions are found exit with an error message
     if ($promotion === false) {
