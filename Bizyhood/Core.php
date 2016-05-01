@@ -1123,7 +1123,6 @@ class Bizyhood_Core
        
         $businesses     = $q['businesses'];
         $keywords       = $q['keywords'];
-        $facets         = $q['categories'];
         $categories     = $q['categories'];
         $cf             = $q['category'];
         $total_count    = $q['total_count'];
@@ -1140,7 +1139,7 @@ class Bizyhood_Core
         );
         $view_business_page_id = get_page_by_path( "business-overview" )->ID;
         
-        return Bizyhood_View::load( 'listings/index', array( 'facets' => (isset($facets) ? $facets : ''), 'keywords' => (isset($keywords) ? $keywords : ''), 'categories' => (isset($categories) ? $categories : ''), 'cf' => (isset($cf) ? $cf : ''), 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
+        return Bizyhood_View::load( 'listings/index', array( 'keywords' => (isset($keywords) ? $keywords : ''), 'categories' => (isset($categories) ? $categories : ''), 'cf' => (isset($cf) ? $cf : ''), 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
     }
     
     
