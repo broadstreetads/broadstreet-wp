@@ -893,7 +893,7 @@ class Bizyhood_Core
         return;
       }
       
-      $a = shortcode_atts( array(
+      $filtered_attributes = shortcode_atts( array(
         'paged'     => null,
         'verified'  => null,
         'ps'        => null
@@ -907,8 +907,8 @@ class Bizyhood_Core
 
 
       // get current page
-      if (isset($a['paged']))
-          $page = $a['paged'];
+      if (isset($filtered_attributes['paged']))
+          $page = $filtered_attributes['paged'];
       elseif (get_query_var('paged'))
           $page = get_query_var('paged');
       elseif (isset($_GET['paged']))
@@ -917,8 +917,8 @@ class Bizyhood_Core
           $page = 1;
 
       // get current ps
-      if (isset($a['ps'])) {
-        $ps = $a['ps'];
+      if (isset($filtered_attributes['ps'])) {
+        $ps = $filtered_attributes['ps'];
       } elseif (get_query_var('ps')) {
         $ps = get_query_var('ps');
       } elseif (isset($_GET['ps'])) {
@@ -942,7 +942,7 @@ class Bizyhood_Core
       
       // get verified
 
-      $verified = $a['verified'];
+      $verified = $filtered_attributes['verified'];
       if (get_query_var('verified')) {
           $verified = get_query_var('verified');
       } elseif (isset($_GET['verified'])) {
@@ -1037,7 +1037,7 @@ class Bizyhood_Core
     {
       
       
-      $a = shortcode_atts( array(
+      $filtered_attributes = shortcode_atts( array(
         'bid'         => null,
         'identifier'  => null
       ), $atts );
@@ -1049,8 +1049,8 @@ class Bizyhood_Core
       
       $params = array(
         'format'      => 'json',
-        'bid'         => $a['bid'],
-        'identifier'  => $a['identifier']
+        'bid'         => $filtered_attributes['bid'],
+        'identifier'  => $filtered_attributes['identifier']
       );
 
       
@@ -1070,8 +1070,8 @@ class Bizyhood_Core
         'remote_settings'   => $remote_settings,
         'api_url'           => $api_url,
         'list_page_id'      => $list_page_id,
-        'bid'               => (isset($a['bid']) ? $a['bid'] : ''),
-        'identifier'        => (isset($a['identifier']) ? $a['identifier'] : ''),
+        'bid'               => (isset($filtered_attributes['bid']) ? $filtered_attributes['bid'] : ''),
+        'identifier'        => (isset($filtered_attributes['identifier']) ? $filtered_attributes['identifier'] : ''),
         'response'          => json_encode($response_json),
         'response_json'     => $response_json
       );
