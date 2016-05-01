@@ -1093,7 +1093,7 @@ class Bizyhood_Core
       
       
       // cache the results
-      $cached_promotions = self::try_transient('bizyhood_promotions_widget', 'response_json', 'business_details_information', $attrs, 'promotions');
+      $cached_promotions = self::get_cache_value('bizyhood_promotions_widget', 'response_json', 'business_details_information', $attrs, 'promotions');
       
       if ($cached_promotions === false) {
         return Bizyhood_View::load( 'listings/error', array( 'error' => $authetication->get_error_message()), true );
@@ -1153,13 +1153,14 @@ class Bizyhood_Core
     /**
      * Sets and returns cached API results as a transient
      * @param string $transient_name The name of the transient to get or set
+     * @param string $transient_key The name of the api result key that will set the value of the key
      * @param string $method_name The name of the function to call to get the API data
      * @param array $attrs Attributes for the $method_name
      * @param string $method_command The name of the command to be execute by the API
      * @param boolean $random Either to return on random result or all of them
      * @return array transient result(s) or false
      */
-    public function try_transient($transient_name, $transient_value = 'response_json', $method_name, $attrs, $method_command = null, $random = false) {
+    public function get_cache_value($transient_name, $transient_key = 'response_json', $method_name, $attrs, $method_command = null, $random = false) {
       
       // cache the results    
       if (get_transient($transient_name) === false || get_transient($transient_name) == '') {
@@ -1168,7 +1169,7 @@ class Bizyhood_Core
 
         $transient = Bizyhood_Core::$method_name($attrs, $method_command);
         
-        set_transient($transient_name, $transient[$transient_value], 12 * HOUR_IN_SECONDS);
+        set_transient($transient_name, $transient[$transient_key], 12 * HOUR_IN_SECONDS);
       }
       
       $cached_transient = get_transient($transient_name);
