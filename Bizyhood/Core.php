@@ -730,8 +730,13 @@ class Bizyhood_Core
     
     function load_plugin_styles()
     {
+        $business_view_page = get_page_by_path( "business-overview" );
+        if (is_page(Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID)) || is_page($business_view_page->ID)) {
+          wp_enqueue_style ('bizyhood-bootstrap-styles', Bizyhood_Utility::getCSSBaseURL() . 'bootstrap.min.css', array(), BIZYHOOD_VERSION);
+          wp_enqueue_style ('bizyhood-plugin-styles',  Bizyhood_Utility::getCSSBaseURL() . 'plugin.css', array(), BIZYHOOD_VERSION);
+        }
         wp_enqueue_style ('bizyhood-icons-styles',  'https://d17bale0hcbyzh.cloudfront.net/bizyhood/styles/entypo/entypo-icon-fonts.css?family=entypoplugin.css', array(), BIZYHOOD_VERSION);
-        wp_enqueue_style ('bizyhood-plugin-styles',  Bizyhood_Utility::getCSSBaseURL() . 'plugin.css', array(), BIZYHOOD_VERSION);
+        wp_enqueue_style ('bizyhood-plugin-global-styles',  Bizyhood_Utility::getCSSBaseURL() . 'plugin-global.css', array(), BIZYHOOD_VERSION);
     }
     
     function load_plugin_gallery()
