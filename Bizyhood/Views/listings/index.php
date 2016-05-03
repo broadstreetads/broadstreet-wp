@@ -1,8 +1,8 @@
-<div class="bh_row bh_business-header">
-    <div class="bh_col-md-8 bh_business-header-title">	
+<div class="row bh_business-header">
+    <div class="col-md-8 bh_business-header-title">	
         <h3>Businesses</h3>
     </div>
-    <div class="bh_col-md-4 bh_business-search">
+    <div class="col-md-4 bh_business-search">
     <form action="<?php echo site_url(); ?>/index.php" method="get">
         <input type="hidden" name="page_id" value="<?php echo $list_page_id; ?>">
         <?php if (isset($_GET['cf'])) { ?>
@@ -12,8 +12,8 @@
     </form>
     </div>
 </div>
-<div class="bh_row">			
-    <div class="bh_col-md-3 bh_local-nav">
+<div class="row">			
+    <div class="col-md-3 bh_local-nav">
         <h5>Categories</h5>
         <?php 
           $category_count = 0;
@@ -56,11 +56,11 @@
           }
         ?>
     </div>
-    <div class="bh_col-md-9 bh_results">
-        <div class="bh_row">
+    <div class="col-md-9 bh_results">
+        <div class="row">
             <?php if ( !empty($businesses) ) { ?>
             <?php $i = 0; foreach($businesses as $business): ?>
-            <div class="bh_col-md-4">
+            <div class="col-md-4">
                 <div class="bh_panel">        
                     <a href="<?php echo get_permalink( $view_business_page_id ); ?><?php echo sanitize_title($business->name).'-'.sanitize_title($business->locality).'-'.sanitize_title($business->region).'-'.sanitize_title($business->postal_code) .'/'.$business->bizyhood_id ?>/" class="bh_block-link">
                         <h5><?php echo $business->name ?></h5>
@@ -77,8 +77,8 @@
             <p>There were no results for your search.</p>
             <?php } ?>
         </div><!-- /.row -->
-        <div class="bh_row">
-            <div class="bh_col-md-12">
+        <div class="row">
+            <div class="col-md-12">
                 <?php echo paginate_links($pagination_args); ?>
             </div><!-- /.col-md-12 -->
         </div><!-- /.row -->

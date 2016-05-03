@@ -1,8 +1,8 @@
-<div class="bh_row bh_business-header">
-    <div class="bh_col-md-8 bh_business-header-title">	
+<div class="row bh_business-header">
+    <div class="col-md-8 bh_business-header-title">	
         <h3>Promotions</h3>
     </div>
-    <div class="bh_col-md-4 bh_business-search">
+    <div class="col-md-4 bh_business-search">
     <form action="<?php echo site_url(); ?>/index.php" method="get">
         <input type="hidden" name="page_id" value="<?php echo $list_page_id; ?>">
         <input type="search" class="bh_search-field" placeholder="Search businesses..." name="keywords" title="Search for:" value="">
@@ -16,7 +16,7 @@
     $view_business_page_id = get_page_by_path( "business-overview" )->ID;
         
     ?>
-    <div class="bh_row bh_promotion-content promotions_page">	
+    <div class="row bh_promotion-content promotions_page">	
     <?php
       
       $i = 0;
@@ -24,7 +24,7 @@
                 
         if ($i != 0 && ($i%2 == false)) {
           ?>
-          </div><div class="bh_row bh_promotion-content promotions_page">	
+          </div><div class="row bh_promotion-content promotions_page">	
           <?php
         }    
         $i++;
@@ -60,16 +60,16 @@
         }
         
      ?>
-        <div class="bh_col-md-6">
+        <div class="col-md-6">
           
           
-          <div class="bh_row no-gutter">
-            <div class="bh_col-sm-12">
+          <div class="row no-gutter">
+            <div class="col-sm-12">
               <a href="<?php echo get_permalink( $view_business_page_id ); ?><?php echo $promotion['business_slug'].'/'.$promotion['business_identifier']; ?>/" title="<?php echo $promotion['business_name'] .' '. __('promotions', 'bizyhood'); ?>">
                 <img alt="<?php echo $promotion['name']; ?>" src="<?php echo $promotion['business_logo']['image']['url']; ?>" width="<?php echo $promotion['business_logo']['image_width']; ?>" height="<?php echo $promotion['business_logo']['image_height']; ?>" />
               </a>
             </div>
-            <div class="bh_col-sm-12">
+            <div class="col-sm-12">
               <a title="<?php echo htmlentities($promotion['business_name']); ?>" href="<?php echo get_permalink( $view_business_page_id ); ?><?php echo $promotion['business_slug'].'/'.$promotion['business_identifier']; ?>/">
               <span class="business_name"><?php echo $promotion['business_name']; ?></span>
               </a>

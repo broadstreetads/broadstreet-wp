@@ -16,13 +16,13 @@
     $backlink = get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_MAIN_PAGE_ID));
   }
 ?>
-<div class="bh_row bh_business-header">
-    <div class="bh_col-md-2">
+<div class="row bh_business-header">
+    <div class="col-md-2">
         <a href="<?php echo $backlink; ?>" class="bh_button"><span class="entypo-left" aria-hidden="true"></span> Back</a>
     </div>
 </div><!-- /.row -->
-<div class="bh_row" itemscope itemtype="http://schema.org/LocalBusiness">
-    <div class="bh_col-md-2">
+<div class="row" itemscope itemtype="http://schema.org/LocalBusiness">
+    <div class="col-md-2">
         <?php if($business->business_logo): ?>
         <div class="bh_business-avatar">
             <img src="<?php echo $business->business_logo->image->url ?>"/>
@@ -44,9 +44,9 @@
             <?php endif; ?>
         </div>
     </div><!-- /.col-md-2 -->
-    <div class="bh_col-md-10 bh_business-details">
-        <div class="bh_row">
-            <div class="bh_main-content bh_col-md-8">
+    <div class="col-md-10 bh_business-details">
+        <div class="row">
+            <div class="bh_main-content col-md-8">
                 <h2 itemprop="name"><?php echo $business->name ?></h2>
                 <?php if ( $business->business_images ) : ?>
                 <div class="bh_image-gallery">
@@ -63,11 +63,11 @@
 	      	</div>
                 <?php endif ?>
                 <div class="bh_alert">
-                    <div class="bh_row">
-            <div class="bh_col-md-7">
+                    <div class="row">
+			<div class="col-md-8">
 		            <p>Support your local businesses by giving them feedback.</p>
 		        </div>
-		        <div class="bh_col-md-5">
+		        <div class="col-md-4">
 		            <a href="<?php echo $business->bizyhood_url ?>" class="bh_button" target="_blank">Give Feedback</a>
 		        </div>
                     </div>
@@ -76,11 +76,7 @@
                 <p itemprop="description"><?php echo wpautop($business->description); ?></p>
                 <?php endif ?>
             </div><!-- /.col-md-8 -->
-<<<<<<< 2d4e02ee45b7532fccecec5065dba6d7f401ef90
-            <div class="bh_details bh_col-md-4">
-=======
-            <div class="bh_details bh_col-md4">
->>>>>>> promotions widget and page
+            <div class="bh_details col-md-4">
                 <div class="bh_section" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
                     <h5>Location</h5>
                     <p itemprop="streetAddress"><?php echo $business->address1 ?><br>

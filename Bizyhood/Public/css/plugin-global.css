@@ -1,0 +1,237 @@
+
+/* Bizyhood Widgets */
+
+.bizyhood_widget input { box-sizing : border-box; }
+.bizyhood_search.side .search_fields.td_div { padding: 0 10px; }
+.bizyhood_widget.full .list_your_business { padding: 0 10px; }
+.bizyhood_widget.full .form_wrap { overflow: auto; clear: both; width: 100%; }
+.bizyhood_widget label, .bizyhood_widget input { display: inline-block; }
+.bizyhood_widget { font-size: 13px; }
+.bizyhood_widget label { text-transform: uppercase; }
+.bizyhood_widget .list_your_business { background-color: #45AAE8; padding: 0; width: 100%; }
+.bizyhood_widget .list_your_business a { display: block; width: 100%; padding: 5px 10px; text-transform: uppercase; font-weight: bold; }
+.bizyhood_widget .list_your_business a span { display: block; font-weight: bold; }
+.bizyhood_widget .list_your_business a span.row1 { color: #ffffff; font-size: 18px; line-height: 22px; }
+.bizyhood_widget .list_your_business a span.row2 { color: #333333; font-size: 12px; }
+.bizyhood_widget.side .bizy_search_submit, .bizyhood_widget.side .search_keywords { width: 100%; margin-bottom: 10px; }
+
+.bizyhood_widget .search_keywords {  background-color: #ffffff; color: #333333; border: 2px solid #aaaaaa; padding: 2px; }
+.bizyhood_widget .bizy_search_submit { background-color: #000000; color: #FFFFFF; text-transform: uppercase;  }
+
+.bizyhood_widget .search_fields { padding: 15px 0 15px 15px; border: 1px solid #e2e2e2; border-bottom: 0; background-color: #e2e2e2;  }
+.bizyhood_widget.bizyhood_mtm.full .tr_div { background-color: #e2e2e2; }
+.bizyhood_widget.full .mtm_fields { border: 1px solid #e2e2e2; border-bottom: 0; background-color: #e2e2e2;  }
+.bizyhood_widget.full label, .bizyhood_widget .mtm_intro, .bizyhood_widget .promotions_intro { color: #6E7273; }
+.bizyhood_widget .mtm_intro, .bizyhood_widget .promotions_intro { font-weight: bold; font-size: 14px; }
+.bizyhood_widget.full .search_keywords { width: 100%; min-width: 200px; }
+
+.bizyhood_widget.full .arrow_box {
+	position: relative;
+	background: #45AAE8;
+	border: 1px solid #45AAE8;
+}
+.bizyhood_widget.full .arrow_box:after, .arrow_box:before {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.bizyhood_widget.full .arrow_box:after {
+	border-color: rgba(69, 170, 232, 0);
+	border-right-color: inherit;
+	border-width: 10px;
+	margin-top: -10px;
+}
+.bizyhood_widget.full .arrow_box:before {
+	border-color: rgba(69, 170, 232, 0);
+	border-right-color: inherit;
+	border-width: 11px;
+	margin-top: -11px;
+}
+
+
+.widget_layout_full.table_div { display: table; width:auto; position:relative;  }
+.widget_layout_full .tr_div { display: table-row; width:auto;  position:relative; }
+.widget_layout_full .td_div { display:table-cell; vertical-align: middle; }
+.bizyhood_widget input {
+    box-sizing: border-box !important;
+}
+.bizyhood_widget .wrap.table_div {
+    width: 100% !important;
+    padding: 0;
+    margin: 0;
+}
+.widget_layout_full .search_fields_label {
+  width: 115px;
+  text-align: right;
+}
+.bizyhood_widget.full  .widget_layout_full .search_fields_submit {
+  width: 130px;
+  padding-right: 35px;
+}
+
+
+.widget_layout_full .mtm_intro,
+.widget_layout_full .promotions_intro {
+  width: 115px;
+}
+
+.widget_layout_full .mtm_intro,
+.widget_layout_full .promotions_intro {
+  padding: 10px;
+}
+
+.bizyhood_widget.full  .widget_layout_full .mtm_logo, 
+.bizyhood_widget.full  .widget_layout_full .promotions_logo {
+  width: 130px;
+  max-width: 130px;
+  padding-right: 35px;
+}
+
+.mtm_fields.mtm_logo.td_div,
+.promotions_fields.promotions_logo.td_div {
+  text-align: center;
+}
+
+.mtm_logo img,
+.promotions_logo img {
+  max-width: 100%;
+  height: auto;
+  max-height: 300px;
+  width: auto;
+}
+
+.mtm_info span {
+  display: block;
+}
+
+.mtm_info a span.merchant_name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+
+.bizyhood_widget.side .mtm_fields.mtm_intro,
+.bizyhood_widget.side .promotions_fields.promotions_intro,
+.bizyhood_widget.side .mtm_fields.mtm_logo,
+.bizyhood_widget.side .promotions_fields.promotions_logo,
+.bizyhood_widget.side .mtm_fields.mtm_info,
+.bizyhood_widget.side .promotions_fields.promotions_info {
+  padding: 10px;
+}
+
+.bizyhood_widget.side .mtm_fields.mtm_intro,
+.bizyhood_widget.side .promotions_fields.promotions_intro {
+  text-align: center;
+  font-size: 16px;
+}
+
+
+.bizyhood_widget.full .list_your_business { width: 30%; vertical-align: middle; }
+
+.promotions_fields span,
+.promotions_page span {
+  display: block;
+}
+
+.promotions_fields .promotion_name {
+  font-size: 20px;
+}
+
+.promotions_page .promotion_name {
+  font-size: 14px;
+  font-weight: bold;
+}
+.promotions_page .promotion_description, .promotions_page .promotions_dates {
+  font-size: 12px;
+}
+
+
+
+
+@media (max-width: 768px) {
+    
+  .bizyhood_widget.full .mtm_fields,
+  .bizyhood_widget.full .promotions_fields {
+    display: block;
+    width: auto;
+    padding: 15px 35px 0 15px;
+  }
+  
+  .bizyhood_widget.full .mtm_fields.mtm_logo,
+  .bizyhood_widget.full .promotions_fields.promotions_logo {
+    width: 100%;
+    max-width: 50%;
+  }
+  
+  .bizyhood_widget.bizyhood_mtm.full .arrow_box:after, .bizyhood_widget.bizyhood_mtm.full .arrow_box:before,
+  .bizyhood_widget.bizyhood_promotions.full .arrow_box:after, .bizyhood_widget.bizyhood_promotions.full .arrow_box:before {
+    top: -11px;
+    left: 50%;
+  }
+
+  .bizyhood_widget.bizyhood_mtm.full .arrow_box:after,
+  .bizyhood_widget.bizyhood_promotions.full .arrow_box:after {
+    border-color: rgba(69, 170, 232, 0);
+    border-bottom-color: inherit;
+    border-width: 10px;
+    margin-left: -10px;
+  }
+  .bizyhood_widget.bizyhood_mtm.full .arrow_box:before,
+  .bizyhood_widget.bizyhood_promotions.full .arrow_box:before {
+    border-color: rgba(69, 170, 232, 0);
+    border-bottom-color: inherit;
+    border-width: 11px;
+    margin-left: -11px;
+  }
+  .bizyhood_widget.bizyhood_mtm.full .mtm_info, 
+  .bizyhood_widget.bizyhood_promotions.full .promotions_info, 
+  .bizyhood_widget.bizyhood_mtm.full .mtm_logo,
+  .bizyhood_widget.bizyhood_promotions.full .promotions_logo {
+    padding-bottom: 20px
+  }
+  
+  .bizyhood_widget.bizyhood_mtm.has_logo.full .mtm_info, 
+  .bizyhood_widget.bizyhood_promotions.has_logo.full .promotions_info, 
+  .bizyhood_widget.bizyhood_mtm.full .mtm_logo,
+  .bizyhood_widget.bizyhood_promotions.full .promotions_logo {
+    float: left;
+    width: 50%;
+  }
+  .bizyhood_widget.bizyhood_mtm.full .mtm_info,
+  .bizyhood_widget.bizyhood_promotions.full .promotions_info {
+    clear: right;
+  }
+  
+  .bizyhood_widget.bizyhood_mtm.full .list_your_business,
+  .bizyhood_widget.bizyhood_promotions.full .list_your_business {
+    clear: both;
+  }
+
+  .bizyhood_widget.full .search_fields, .bizyhood_widget.full .widget_layout_full .search_fields_submit {
+    display: block;
+    width: auto;
+    padding: 15px 35px 0 15px;
+  }
+   
+  .mtm_intro div,
+  .promotions_intro div {
+    text-align: center;
+  }
+  
+  .widget_layout_full .search_fields_label {
+    text-align: left;
+  }
+  .bizyhood_widget.full  .widget_layout_full .search_fields_submit {
+    padding-bottom: 15px;
+    width: 100%;
+  }
+  .bizyhood_widget.full  .widget_layout_full .search_fields_submit input.bizy_search_submit {
+    width: 100%;
+  }
+}
