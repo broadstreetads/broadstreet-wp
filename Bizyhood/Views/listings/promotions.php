@@ -30,29 +30,10 @@
         $i++;
         
         // set the default logo
-        $promotion['business_logo']['image']['url'] = Bizyhood_Utility::getImageBaseURL().'placeholder-logo.jpg';
-        $promotion['business_logo']['image_width'] = Bizyhood_Core::BUSINESS_LOGO_WIDTH;
-        $promotion['business_logo']['image_height'] = Bizyhood_Core::BUSINESS_LOGO_HEIGHT;
+        $promotion['business_logo'] = Bizyhood_Utility::getDefaultLogo();
         
-        // check date
-        $start_date = date('Y-m-d', strtotime($promotion['start'])); // start date
-        $tomorrow_date = date('Y-m-d', strtotime('+ 1 days')); // tomorrow date
-        $end_date = date('Y-m-d', strtotime($promotion['end'])); // end date
-        
-        if (strtotime($start_date) < strtotime($tomorrow_date)) {
-          // display only the ending date
-          $dates = '<span class="promotions_dates">Until '. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span>';
-        } elseif (strtotime($start_date) == strtotime($end_date)) {
-          // if it is today
-          if (strtotime($end_date) == date('Y-m-d', time())) {
-            $dates = '<span class="promotions_dates">Promotion running today!</span>';
-          } else {
-            $dates = '<span class="promotions_dates">Valid on '. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span>';
-          }
-        } else {
-          // display both start and ending day
-          $dates = '<span class="promotions_dates">Valid from '. date_i18n( get_option( 'date_format' ), strtotime($start_date)) .' to '. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span>';
-        }
+        // get date text
+        $dates = Bizyhood_Utility::buildDateText($promotion['start'], $promotion['end'], 'Promotion', 'promotions');
         
         // trim the description if needed
         if (str_word_count($promotion['details']) > Bizyhood_Core::EXCERPT_MAX_LENGTH) {
