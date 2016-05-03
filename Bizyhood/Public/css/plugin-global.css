@@ -137,6 +137,7 @@
 .promotions_fields span,
 .promotions_page span {
   display: block;
+  max-width: 90%;
 }
 
 .promotions_fields .promotion_name {
@@ -155,6 +156,10 @@
 
 
 @media (max-width: 768px) {
+  
+  .promotions_fields span, .promotions_page span {
+    max-width: 100%;
+  }
     
   .bizyhood_widget.full .mtm_fields,
   .bizyhood_widget.full .promotions_fields {
