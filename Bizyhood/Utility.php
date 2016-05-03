@@ -55,6 +55,64 @@ class Bizyhood_Utility
         return $address;
     }
     
+    
+    /**
+     * Build date text from start and end date
+     * @param string $start The starting date
+     * @param string $end The ending date
+     * @param string $single The text string that has to do with the date
+     * @param string $plural The text string in plural form that has to do with the date
+     * @return string The date saying
+     */
+    public static function buildDateText($start, $end, $single, $plural)
+    {
+      
+      $dates = '';
+      
+      // check date
+      $start_date = date('Y-m-d', strtotime($start)); // start date
+      $tomorrow_date = date('Y-m-d', strtotime('+ 1 days')); // tomorrow date
+      $end_date = date('Y-m-d', strtotime($end)); // end date
+      
+      if (strtotime($start_date) < strtotime($tomorrow_date)) {
+        // display only the ending date
+        $dates = '<span class="'. $plural .'_dates">Until '. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span>';
+      } elseif (strtotime($start_date) == strtotime($end_date)) {
+        // if it is today
+        if (strtotime($end_date) == date('Y-m-d', time())) {
+          $dates = '<span class="'. $plural .'_dates">'. $single .' running today!</span>';
+        } else {
+          $dates = '<span class="'. $plural .'_dates">Valid on '. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span>';
+        }
+      } else {
+        // display both start and ending day
+        $dates = '<span class="'. $plural .'_dates">Valid from '. date_i18n( get_option( 'date_format' ), strtotime($start_date)) .' to '. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span>';
+      }
+        
+      return $dates;
+    }
+    
+    
+    
+    
+    /**
+     * Get the default logo for widgets and listings
+     * @param string $filename The filename of the logo
+     * @return array Includes default logo URL, width and height
+     */
+    public static function getDefaultLogo($filename='placeholder-logo.jpg')
+    {
+      $logo = array();
+      
+      // set the default
+      $logo['image']['url'] = Bizyhood_Utility::getImageBaseURL().$filename;
+      $logo['image_width']  = Bizyhood_Core::BUSINESS_LOGO_WIDTH;
+      $logo['image_height'] = Bizyhood_Core::BUSINESS_LOGO_HEIGHT;
+      
+      return $logo;
+    }
+    
+    
     /**
      * Get the Bizyhood API URL
      * @return string 
