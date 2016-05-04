@@ -3,12 +3,15 @@
         <h3>Businesses</h3>
     </div>
     <div class="col-md-4 bh_business-search">
+    <?php
+      $keywords = stripslashes($keywords);
+    ?>
     <form action="<?php echo site_url(); ?>/index.php" method="get">
         <input type="hidden" name="page_id" value="<?php echo $list_page_id; ?>">
         <?php if (isset($_GET['cf'])) { ?>
         <input type="hidden" name="cf" value="<?php echo (urldecode($_GET['cf'])); ?>">
         <?php } ?>
-        <input type="search" class="bh_search-field" placeholder="Search businesses..." name="keywords" title="Search for:" value="<?php echo stripslashes($keywords); ?>">
+        <input type="search" class="bh_search-field" placeholder="Search businesses..." name="keywords" title="Search for:" value="<?php echo $keywords; ?>">
     </form>
     </div>
 </div>
@@ -51,7 +54,7 @@
               <?php
             }
             if ( $cf != '' ) {
-              echo '<p class="facet_helper_wrap"><a href="'. get_permalink($list_page_id).( $keywords != '' ? '?keywords='.stripslashes($keywords) : '') .'" title="show all" class="facet_helper">show all</a></p>';
+              echo '<p class="facet_helper_wrap"><a href="'. get_permalink($list_page_id).( $keywords != '' ? '?keywords='.$keywords : '') .'" title="show all" class="facet_helper">show all</a></p>';
             }
           }
         ?>

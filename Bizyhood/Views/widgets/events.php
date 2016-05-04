@@ -56,7 +56,7 @@ class bizy_events_widget extends WP_Widget {
     $atts = array();
         
     // cache the results
-    $events = Bizyhood_Core::try_transient('bizyhood_events_widget', 'response_json', 'business_details_information', $atts, 'events', false);
+    $events = Bizyhood_Core::get_cache_value('bizyhood_events_widget', 'response_json', 'business_details_information', $atts, 'events', false);
     
     // if no events are found exit with an error message
     if (empty($events) || $events === false || $events === NULL) {
@@ -71,33 +71,14 @@ class bizy_events_widget extends WP_Widget {
     $view_business_page_id = get_page_by_path( "business-overview" )->ID;
     
     
-    // check date
-    $start_date = date('Y-m-d', strtotime($event['start'])); // start date
-    $tomorrow_date = date('Y-m-d', strtotime('+ 1 days')); // tomorrow date
-    $end_date = date('Y-m-d', strtotime($event['end'])); // end date
-    
-    if (strtotime($start_date) < strtotime($tomorrow_date)) {
-      // display only the ending date
-      $dates = '<span class="events_dates">Until '. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span>';
-    } elseif (strtotime($start_date) == strtotime($end_date)) {
-      // if it is today
-      if (strtotime($end_date) == date('Y-m-d', time())) {
-        $dates = '<span class="events_dates">Event running today!</span>';
-      } else {
-        $dates = '<span class="events_dates">Valid on '. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span>';
-      }
-    } else {
-      // display both start and ending day
-      $dates = '<span class="events_dates">Valid from '. date_i18n( get_option( 'date_format' ), strtotime($start_date)) .' to '. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span>';
-    }
+    // get date text
+    $dates = Bizyhood_Utility::buildDateText($event['start'], $event['end'], 'Event', 'events');
     
    
     if (empty($event['business_logo'])) {
       
-      // set the default
-      $event['business_logo']['image']['url'] = Bizyhood_Utility::getImageBaseURL().'placeholder-logo.jpg';
-      $event['business_logo']['image_width'] = Bizyhood_Core::BUSINESS_LOGO_WIDTH;
-      $event['business_logo']['image_height'] = Bizyhood_Core::BUSINESS_LOGO_HEIGHT;
+     // set the default
+      $event['business_logo'] = Bizyhood_Utility::getDefaultLogo();
       
       // check if a custom is set via the widget
       $headers = @get_headers($instance['image']);

@@ -198,7 +198,7 @@ class Bizyhood_Utility
         if( $value !== FALSE ) return $value;
         return $default;
     }
-    
+
     /**
      * If rewrite rules haven't been flushed, flush them.
      * @param $clear Force a flush
@@ -228,7 +228,7 @@ class Bizyhood_Utility
             return $default;
     }
     
-
+    
     /**
      * Get a weighted random key from an (API) array result
      * @param array $MultiArray Array to grab the value from

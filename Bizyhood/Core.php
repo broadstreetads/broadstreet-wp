@@ -122,7 +122,7 @@ class Bizyhood_Core
         if ($business_list_page)
         {
             Bizyhood_Log::add('info', "Removing business list page (post ID " . $business_list_page->ID . ")");
-            wp_delete_post($business_list_page->ID);
+            wp_delete_post($business_list_page->ID, true);
         }
 
         // Remove business list page
@@ -130,7 +130,7 @@ class Bizyhood_Core
         if ($business_view_page)
         {
             Bizyhood_Log::add('info', "Removing view business page (post ID " . $business_view_page->ID . ")");
-            wp_delete_post($business_view_page->ID);
+            wp_delete_post($business_view_page->ID, true);
         }
         
         // Remove business promotions page
@@ -138,7 +138,7 @@ class Bizyhood_Core
         if ($business_promotions_page)
         {
             Bizyhood_Log::add('info', "Removing promotions page (post ID " . $business_promotions_page->ID . ")");
-            wp_delete_post($business_promotions_page->ID);
+            wp_delete_post($business_promotions_page->ID, true);
         }
 
     }
@@ -1069,7 +1069,7 @@ class Bizyhood_Core
       
       // avoid throwing an error
       if (!is_array($response) || empty($response['result'])) { return; }
-
+      
       $response_json = $response['result'];
             
       $return = array(
