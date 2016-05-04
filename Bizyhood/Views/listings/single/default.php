@@ -44,15 +44,9 @@
             <?php endif; ?>
         </div>
     </div><!-- /.col-md-2 -->
-<<<<<<< ced8a7ed4a2b00ac62b400d0692699d55d006149
     <div class="col-md-10 bh_business-details">
         <div class="row">
             <div class="bh_main-content col-md-8">
-=======
-    <div class="bh_col-md-10 bh_business-details">
-        <div class="bh_row">
-            <div class="bh_main-content bh_col-md-8">
->>>>>>> events widget, minor grid changes and misc fixes in bizybox, urlencode, search functionality
                 <h2 itemprop="name"><?php echo $business->name ?></h2>
                 <?php if ( $business->business_images ) : ?>
                 <div class="bh_image-gallery">
@@ -69,19 +63,11 @@
 	      	</div>
                 <?php endif ?>
                 <div class="bh_alert">
-<<<<<<< ced8a7ed4a2b00ac62b400d0692699d55d006149
                     <div class="row">
 			<div class="col-md-8">
 		            <p>Support your local businesses by giving them feedback.</p>
 		        </div>
 		        <div class="col-md-4">
-=======
-                    <div class="bh_row">
-            <div class="bh_col-md-7">
-		            <p>Support your local businesses by giving them feedback.</p>
-		        </div>
-		        <div class="bh_col-md-5">
->>>>>>> events widget, minor grid changes and misc fixes in bizybox, urlencode, search functionality
 		            <a href="<?php echo $business->bizyhood_url ?>" class="bh_button" target="_blank">Give Feedback</a>
 		        </div>
                     </div>
@@ -90,11 +76,7 @@
                 <p itemprop="description"><?php echo wpautop($business->description); ?></p>
                 <?php endif ?>
             </div><!-- /.col-md-8 -->
-<<<<<<< ced8a7ed4a2b00ac62b400d0692699d55d006149
             <div class="bh_details col-md-4">
-=======
-            <div class="bh_details bh_col-md-4">
->>>>>>> events widget, minor grid changes and misc fixes in bizybox, urlencode, search functionality
                 <div class="bh_section" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
                     <h5>Location</h5>
                     <p itemprop="streetAddress"><?php echo $business->address1 ?><br>
