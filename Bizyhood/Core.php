@@ -73,8 +73,6 @@ class Bizyhood_Core
                 'menu_order'     => 0,
             );
             wp_insert_post( $business_list_page );
-        } else {
-          wp_publish_post($business_list_page->ID);
         }
 
         // Create the view business page
@@ -93,8 +91,6 @@ class Bizyhood_Core
                 'menu_order'     => 0,
             );
             wp_insert_post( $business_view_page );
-        } else {
-          wp_publish_post($business_view_page->ID);
         }
         
         // Create the promotions page
@@ -113,8 +109,6 @@ class Bizyhood_Core
                 'menu_order'     => 0,
             );
             wp_insert_post( $business_promotions_page );
-        } else {
-            wp_publish_post($business_promotions_page->ID);
         }
 
     }
@@ -122,31 +116,8 @@ class Bizyhood_Core
     public function uninstall()
     {
         Bizyhood_Log::add('debug', "Bizyhood uninstalling");
-
-        // Remove business list page
-        $business_list_page = get_page_by_path( "business-directory" );
-        if ($business_list_page)
-        {
-            Bizyhood_Log::add('info', "Removing business list page (post ID " . $business_list_page->ID . ")");
-            wp_delete_post($business_list_page->ID);
-        }
-
-        // Remove business list page
-        $business_view_page = get_page_by_path( "business-overview" );
-        if ($business_view_page)
-        {
-            Bizyhood_Log::add('info', "Removing view business page (post ID " . $business_view_page->ID . ")");
-            wp_delete_post($business_view_page->ID);
-        }
         
-        // Remove business promotions page
-        $business_promotions_page = get_page_by_path( "business-promotions" );
-        if ($business_promotions_page)
-        {
-            Bizyhood_Log::add('info', "Removing promotions page (post ID " . $business_promotions_page->ID . ")");
-            wp_delete_post($business_promotions_page->ID);
-        }
-
+        // DO NOT DELETE PAGES // LET PUBLISHERS DO THIS MANUALLY
     }
 
     /**
@@ -207,6 +178,9 @@ class Bizyhood_Core
         add_action( 'wp_ajax_bizylink_business_results', array( $this, 'bizylink_business_results' ));
 
         // editor bizybutton END
+
+        // add settings link on plugins list
+        add_filter( 'plugin_action_links_' . str_replace('Bizyhood/Core.php', 'bizyhood.php', plugin_basename(__FILE__)), array( $this, 'bizyhood_plugin_action_links') );
         
         // load widgets START
         
@@ -1248,6 +1222,11 @@ class Bizyhood_Core
         }
 
         return $content;
+    }
+    
+    function bizyhood_plugin_action_links( $links ) {
+       $links[] = '<a href="'. esc_url( get_admin_url(null, 'options-general.php?page=Bizyhood') ) .'">'. __('Settings', 'bizyhood') .'</a>';
+       return $links;
     }
     
 }

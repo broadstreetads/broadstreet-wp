@@ -2,7 +2,7 @@
 /*
 Plugin Name: Bizyhood
 Plugin URI: https://bizyhood.com
-Description: Integrate Bizyhood business directory on your site
+Description: Integrates Bizyhood for Publishers engagement and discovery platform to your hyperlocal digital publishing site
 Version: 1.1.0
 Author: Bizyhood
 Author URI: http://bizyhood.com
