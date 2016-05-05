@@ -73,8 +73,6 @@ class Bizyhood_Core
                 'menu_order'     => 0,
             );
             wp_insert_post( $business_list_page );
-        } else {
-          wp_publish_post($business_list_page->ID);
         }
 
         // Create the view business page
@@ -93,8 +91,6 @@ class Bizyhood_Core
                 'menu_order'     => 0,
             );
             wp_insert_post( $business_view_page );
-        } else {
-          wp_publish_post($business_view_page->ID);
         }
         
         // Create the promotions page
@@ -113,8 +109,6 @@ class Bizyhood_Core
                 'menu_order'     => 0,
             );
             wp_insert_post( $business_promotions_page );
-        } else {
-            wp_publish_post($business_promotions_page->ID);
         }
 
     }
@@ -122,7 +116,9 @@ class Bizyhood_Core
     public function uninstall()
     {
         Bizyhood_Log::add('debug', "Bizyhood uninstalling");
-
+        
+        // DO NOT DELETE PAGES // LET PUBLISHERS DO THIS MANUALLY
+        /*
         // Remove business list page
         $business_list_page = get_page_by_path( "business-directory" );
         if ($business_list_page)
@@ -146,7 +142,7 @@ class Bizyhood_Core
             Bizyhood_Log::add('info', "Removing promotions page (post ID " . $business_promotions_page->ID . ")");
             wp_delete_post($business_promotions_page->ID);
         }
-
+        */
     }
 
     /**
