@@ -73,6 +73,8 @@ class Bizyhood_Core
                 'menu_order'     => 0,
             );
             wp_insert_post( $business_list_page );
+        } else {
+          wp_publish_post($business_list_page->ID);
         }
 
         // Create the view business page
@@ -91,6 +93,8 @@ class Bizyhood_Core
                 'menu_order'     => 0,
             );
             wp_insert_post( $business_view_page );
+        } else {
+          wp_publish_post($business_view_page->ID);
         }
         
         // Create the promotions page
@@ -109,6 +113,8 @@ class Bizyhood_Core
                 'menu_order'     => 0,
             );
             wp_insert_post( $business_promotions_page );
+        } else {
+            wp_publish_post($business_promotions_page->ID);
         }
 
     }
@@ -122,7 +128,7 @@ class Bizyhood_Core
         if ($business_list_page)
         {
             Bizyhood_Log::add('info', "Removing business list page (post ID " . $business_list_page->ID . ")");
-            wp_delete_post($business_list_page->ID, true);
+            wp_delete_post($business_list_page->ID);
         }
 
         // Remove business list page
@@ -130,15 +136,7 @@ class Bizyhood_Core
         if ($business_view_page)
         {
             Bizyhood_Log::add('info', "Removing view business page (post ID " . $business_view_page->ID . ")");
-            wp_delete_post($business_view_page->ID, true);
-        }
-        
-        // Remove business promotions page
-        $business_promotions_page = get_page_by_path( "business-promotions" );
-        if ($business_promotions_page)
-        {
-            Bizyhood_Log::add('info', "Removing promotions page (post ID " . $business_promotions_page->ID . ")");
-            wp_delete_post($business_promotions_page->ID, true);
+            wp_delete_post($business_view_page->ID);
         }
         
         // Remove business promotions page
@@ -166,9 +164,6 @@ class Bizyhood_Core
     {
         Bizyhood_Log::add('debug', "Registering hooks..");
         
-        // check for the pages everytime // upgrades will not execute the install
-        add_action( 'init', array( $this, 'install' ), 10 );
-
         # -- Below is core functionality --
         add_action('admin_menu', 	array($this, 'adminCallback'));
         add_action('admin_init', 	array($this, 'adminInitCallback'));
