@@ -3,7 +3,7 @@ Contributors: Bizyhood
 Tags: bizyhood,local,publishers,hyperlocal,independent,news,business,directory
 Requires at least: 3.0
 Tested up to: 4.4.x
-Stable tag: 1.0.5
+Stable tag: 1.1.0
 
 Integrate Bizyhood business directory into your site.
 
@@ -24,6 +24,7 @@ To learn more about Bizyhood, and how it can help you as a local publisher,
 send an email to [support@bizyhood.com](support@bizyhood.com).
 
 == Fix Log ==
+* 1.1.0: Added events and promotions widgets. Included Bootstrap framework for layout elements. Fixed defects.
 * 1.0.5: Added Meet the Merchant widget
 * 1.0.4: Reduced number of calls to BH API for sitemap generation. Fixed race condition in rewrite rules.
 * 1.0.3: Fixed urlencoding of unicode, added settings error messaging, added verified businesses only to sitemap generation.
