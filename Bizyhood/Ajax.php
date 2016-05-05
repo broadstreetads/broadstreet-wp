@@ -20,6 +20,7 @@ class Bizyhood_Ajax
         // delete transient data
         delete_transient('bizyhood_oauth_data');
         delete_transient('bizyhood_promotions_widget');
+        delete_transient('bizyhood_events_widget');
         delete_transient('bizyhood_mtm_widget');
         
         // save the new settings

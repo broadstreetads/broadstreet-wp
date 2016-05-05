@@ -122,7 +122,7 @@ class Bizyhood_Core
         if ($business_list_page)
         {
             Bizyhood_Log::add('info', "Removing business list page (post ID " . $business_list_page->ID . ")");
-            wp_delete_post($business_list_page->ID);
+            wp_delete_post($business_list_page->ID, true);
         }
 
         // Remove business list page
@@ -130,7 +130,15 @@ class Bizyhood_Core
         if ($business_view_page)
         {
             Bizyhood_Log::add('info', "Removing view business page (post ID " . $business_view_page->ID . ")");
-            wp_delete_post($business_view_page->ID);
+            wp_delete_post($business_view_page->ID, true);
+        }
+        
+        // Remove business promotions page
+        $business_promotions_page = get_page_by_path( "business-promotions" );
+        if ($business_promotions_page)
+        {
+            Bizyhood_Log::add('info', "Removing promotions page (post ID " . $business_promotions_page->ID . ")");
+            wp_delete_post($business_promotions_page->ID, true);
         }
         
         // Remove business promotions page
@@ -210,9 +218,11 @@ class Bizyhood_Core
         Bizyhood_View::load( 'widgets/search', array(), false, true);
         Bizyhood_View::load( 'widgets/meet_the_merchant', array(), false, true);
         Bizyhood_View::load( 'widgets/promotions', array(), false, true);
+        Bizyhood_View::load( 'widgets/events', array(), false, true);
         add_action( 'widgets_init', array( $this, 'register_search_widget' ));
         add_action( 'widgets_init', array( $this, 'register_mtm_widget' ));
         add_action( 'widgets_init', array( $this, 'register_promotions_widget' ));
+        add_action( 'widgets_init', array( $this, 'register_events_widget' ));
       
         // load widgets END
 
@@ -249,6 +259,9 @@ class Bizyhood_Core
     }
     function register_promotions_widget() {
       register_widget( 'bizy_promotions_widget' );
+    }
+    function register_events_widget() {
+      register_widget( 'bizy_events_widget' );
     }
 
 
@@ -363,11 +376,11 @@ class Bizyhood_Core
               <label id="bizylink_type-l" class="mce-widget mce-label mce-first" for="bizylink_type" aria-disabled="false">Link Type</label>
             </td>
             <td>
-              <input type="radio" id="bizylink_type_box" name="bizylink_type" value="bizybox" class="bizyradio" checked /> 
+              <input type="radio" id="bizylink_type_box" name="bizylink_type" value="bizybox" class="bizyradio" /> 
               Call to Action Link<br>
 
-              <input type="radio" id="bizylink_type_normal" name="bizylink_type" value="bizylink" class="bizyradio" /> 
-              Normal Link
+              <input type="radio" id="bizylink_type_normal" name="bizylink_type" value="bizylink" class="bizyradio" checked /> 
+              Regular Hyperlink
             </td>
           </tr>
           <tr>
@@ -1063,7 +1076,7 @@ class Bizyhood_Core
       }
       
       // avoid throwing an error
-      if (!is_array($response) || empty($response)) { return; }
+      if (!is_array($response) || empty($response['result'])) { return; }
       
       $response_json = $response['result'];
             

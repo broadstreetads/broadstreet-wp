@@ -21,8 +21,8 @@
 .bizyhood_widget .search_fields { padding: 15px 0 15px 15px; border: 1px solid #e2e2e2; border-bottom: 0; background-color: #e2e2e2;  }
 .bizyhood_widget.bizyhood_mtm.full .tr_div { background-color: #e2e2e2; }
 .bizyhood_widget.full .mtm_fields { border: 1px solid #e2e2e2; border-bottom: 0; background-color: #e2e2e2;  }
-.bizyhood_widget.full label, .bizyhood_widget .mtm_intro, .bizyhood_widget .promotions_intro { color: #6E7273; }
-.bizyhood_widget .mtm_intro, .bizyhood_widget .promotions_intro { font-weight: bold; font-size: 14px; }
+.bizyhood_widget.full label, .bizyhood_widget .mtm_intro, .bizyhood_widget .promotions_intro, .bizyhood_widget .events_intro { color: #6E7273; }
+.bizyhood_widget .mtm_intro, .bizyhood_widget .promotions_intro, .bizyhood_widget .events_intro { font-weight: bold; font-size: 14px; }
 .bizyhood_widget.full .search_keywords { width: 100%; min-width: 200px; }
 
 .bizyhood_widget.full .arrow_box {
@@ -77,29 +77,34 @@
 
 
 .widget_layout_full .mtm_intro,
-.widget_layout_full .promotions_intro {
+.widget_layout_full .promotions_intro,
+.widget_layout_full .events_intro {
   width: 115px;
 }
 
 .widget_layout_full .mtm_intro,
-.widget_layout_full .promotions_intro {
+.widget_layout_full .promotions_intro,
+.widget_layout_full .events_intro {
   padding: 10px;
 }
 
 .bizyhood_widget.full  .widget_layout_full .mtm_logo, 
-.bizyhood_widget.full  .widget_layout_full .promotions_logo {
+.bizyhood_widget.full  .widget_layout_full .promotions_logo,
+.bizyhood_widget.full  .widget_layout_full .events_logo {
   width: 130px;
   max-width: 130px;
   padding-right: 35px;
 }
 
 .mtm_fields.mtm_logo.td_div,
-.promotions_fields.promotions_logo.td_div {
+.promotions_fields.promotions_logo.td_div,
+.events_fields.events_logo.td_div {
   text-align: center;
 }
 
 .mtm_logo img,
-.promotions_logo img {
+.promotions_logo img,
+.events_logo img {
   max-width: 100%;
   height: auto;
   max-height: 300px;
@@ -118,15 +123,19 @@
 
 .bizyhood_widget.side .mtm_fields.mtm_intro,
 .bizyhood_widget.side .promotions_fields.promotions_intro,
+.bizyhood_widget.side .events_fields.promotions_intro,
 .bizyhood_widget.side .mtm_fields.mtm_logo,
 .bizyhood_widget.side .promotions_fields.promotions_logo,
+.bizyhood_widget.side .events_fields.events_logo,
 .bizyhood_widget.side .mtm_fields.mtm_info,
-.bizyhood_widget.side .promotions_fields.promotions_info {
+.bizyhood_widget.side .promotions_fields.promotions_info,
+.bizyhood_widget.side .events_fields.events_info {
   padding: 10px;
 }
 
 .bizyhood_widget.side .mtm_fields.mtm_intro,
-.bizyhood_widget.side .promotions_fields.promotions_intro {
+.bizyhood_widget.side .promotions_fields.promotions_intro,
+.bizyhood_widget.side .events_fields.events_intro {
   text-align: center;
   font-size: 16px;
 }
@@ -135,20 +144,25 @@
 .bizyhood_widget.full .list_your_business { width: 30%; vertical-align: middle; }
 
 .promotions_fields span,
-.promotions_page span {
+.promotions_page span,
+.events_fields span,
+.events_page span {
   display: block;
   max-width: 90%;
 }
 
-.promotions_fields .promotion_name {
+.promotions_fields .promotion_name,
+.events_fields .event_name {
   font-size: 20px;
 }
 
-.promotions_page .promotion_name {
+.promotions_page .promotion_name,
+.events_page .event_name {
   font-size: 14px;
   font-weight: bold;
 }
-.promotions_page .promotion_description, .promotions_page .promotions_dates {
+.promotions_page .promotion_description, .promotions_page .promotions_dates,
+.events_page .event_description, .events_page .events_dates {
   font-size: 12px;
 }
 
@@ -157,38 +171,60 @@
 
 @media (max-width: 768px) {
   
-  .promotions_fields span, .promotions_page span {
+  .promotions_fields span, .promotions_page span,
+  .events_fields span, .events_page span {
     max-width: 100%;
   }
     
   .bizyhood_widget.full .mtm_fields,
-  .bizyhood_widget.full .promotions_fields {
+  .bizyhood_widget.full .promotions_fields,
+  .bizyhood_widget.full .events_fields {
     display: block;
     width: auto;
     padding: 15px 35px 0 15px;
   }
   
   .bizyhood_widget.full .mtm_fields.mtm_logo,
-  .bizyhood_widget.full .promotions_fields.promotions_logo {
+  .bizyhood_widget.full .promotions_fields.promotions_logo,
+  .bizyhood_widget.full .events_fields.events_logo {
     width: 100%;
     max-width: 50%;
   }
   
   .bizyhood_widget.bizyhood_mtm.full .arrow_box:after, .bizyhood_widget.bizyhood_mtm.full .arrow_box:before,
-  .bizyhood_widget.bizyhood_promotions.full .arrow_box:after, .bizyhood_widget.bizyhood_promotions.full .arrow_box:before {
+  .bizyhood_widget.bizyhood_promotions.full .arrow_box:after, .bizyhood_widget.bizyhood_promotions.full .arrow_box:before,
+  .bizyhood_widget.bizyhood_events.full .arrow_box:after, .bizyhood_widget.bizyhood_events.full .arrow_box:before {
     top: -11px;
     left: 50%;
   }
 
   .bizyhood_widget.bizyhood_mtm.full .arrow_box:after,
-  .bizyhood_widget.bizyhood_promotions.full .arrow_box:after {
+  .bizyhood_widget.bizyhood_promotions.full .arrow_box:after,
+  .bizyhood_widget.bizyhood_events.full .arrow_box:after {
     border-color: rgba(69, 170, 232, 0);
     border-bottom-color: inherit;
     border-width: 10px;
     margin-left: -10px;
   }
   .bizyhood_widget.bizyhood_mtm.full .arrow_box:before,
-  .bizyhood_widget.bizyhood_promotions.full .arrow_box:before {
+  .bizyhood_widget.bizyhood_promotions.full .arrow_box:before,
+  .bizyhood_widget.bizyhood_events.full .arrow_box:before {
+    border-color: rgba(69, 170, 232, 0);
+    border-bottom-color: inherit;
+    border-width: 11px;
+    margin-left: -11px;
+  }
+  .bizyhood_widget.bizyhood_mtm.full .arrow_box:after,
+  .bizyhood_widget.bizyhood_promotions.full .arrow_box:after,
+  .bizyhood_widget.bizyhood_events.full .arrow_box:after {
+    border-color: rgba(69, 170, 232, 0);
+    border-bottom-color: inherit;
+    border-width: 10px;
+    margin-left: -10px;
+  }
+  .bizyhood_widget.bizyhood_mtm.full .arrow_box:before,
+  .bizyhood_widget.bizyhood_promotions.full .arrow_box:before,
+  .bizyhood_widget.bizyhood_events.full .arrow_box:before {
     border-color: rgba(69, 170, 232, 0);
     border-bottom-color: inherit;
     border-width: 11px;
@@ -196,25 +232,31 @@
   }
   .bizyhood_widget.bizyhood_mtm.full .mtm_info, 
   .bizyhood_widget.bizyhood_promotions.full .promotions_info, 
+  .bizyhood_widget.bizyhood_events.full .events_info, 
   .bizyhood_widget.bizyhood_mtm.full .mtm_logo,
-  .bizyhood_widget.bizyhood_promotions.full .promotions_logo {
+  .bizyhood_widget.bizyhood_promotions.full .promotions_logo,
+  .bizyhood_widget.bizyhood_events.full .events_logo {
     padding-bottom: 20px
   }
   
   .bizyhood_widget.bizyhood_mtm.has_logo.full .mtm_info, 
   .bizyhood_widget.bizyhood_promotions.has_logo.full .promotions_info, 
+  .bizyhood_widget.bizyhood_events.has_logo.full .events_info, 
   .bizyhood_widget.bizyhood_mtm.full .mtm_logo,
-  .bizyhood_widget.bizyhood_promotions.full .promotions_logo {
+  .bizyhood_widget.bizyhood_promotions.full .promotions_logo,
+  .bizyhood_widget.bizyhood_events.full .events_logo {
     float: left;
     width: 50%;
   }
   .bizyhood_widget.bizyhood_mtm.full .mtm_info,
-  .bizyhood_widget.bizyhood_promotions.full .promotions_info {
+  .bizyhood_widget.bizyhood_promotions.full .promotions_info,
+  .bizyhood_widget.bizyhood_events.full .events_info {
     clear: right;
   }
   
   .bizyhood_widget.bizyhood_mtm.full .list_your_business,
-  .bizyhood_widget.bizyhood_promotions.full .list_your_business {
+  .bizyhood_widget.bizyhood_promotions.full .list_your_business,
+  .bizyhood_widget.bizyhood_events.full .list_your_business {
     clear: both;
   }
 
@@ -225,7 +267,8 @@
   }
    
   .mtm_intro div,
-  .promotions_intro div {
+  .promotions_intro div,
+  .events_intro div {
     text-align: center;
   }
   
@@ -238,5 +281,12 @@
   }
   .bizyhood_widget.full  .widget_layout_full .search_fields_submit input.bizy_search_submit {
     width: 100%;
+  }
+  
+  .promotions_fields span,
+  .promotions_page span,
+  .events_fields span,
+  .events_page span {
+    max-width: 100%;
   }
 }
