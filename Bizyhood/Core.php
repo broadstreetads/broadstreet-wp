@@ -118,31 +118,6 @@ class Bizyhood_Core
         Bizyhood_Log::add('debug', "Bizyhood uninstalling");
         
         // DO NOT DELETE PAGES // LET PUBLISHERS DO THIS MANUALLY
-        /*
-        // Remove business list page
-        $business_list_page = get_page_by_path( "business-directory" );
-        if ($business_list_page)
-        {
-            Bizyhood_Log::add('info', "Removing business list page (post ID " . $business_list_page->ID . ")");
-            wp_delete_post($business_list_page->ID);
-        }
-
-        // Remove business list page
-        $business_view_page = get_page_by_path( "business-overview" );
-        if ($business_view_page)
-        {
-            Bizyhood_Log::add('info', "Removing view business page (post ID " . $business_view_page->ID . ")");
-            wp_delete_post($business_view_page->ID);
-        }
-        
-        // Remove business promotions page
-        $business_promotions_page = get_page_by_path( "business-promotions" );
-        if ($business_promotions_page)
-        {
-            Bizyhood_Log::add('info', "Removing promotions page (post ID " . $business_promotions_page->ID . ")");
-            wp_delete_post($business_promotions_page->ID);
-        }
-        */
     }
 
     /**
