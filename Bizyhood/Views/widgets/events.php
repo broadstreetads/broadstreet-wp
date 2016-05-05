@@ -157,12 +157,12 @@ class bizy_events_widget extends WP_Widget {
       echo '
         <div class="events_fields list_your_business arrow_box td_div" '. ($color_cta_back != '' ? 'style="background-color: '. $color_cta_back .'; border-color: '. $color_cta_back .';"' : '') .'>
           
-            <a href="'. get_permalink($events_page) .'" title="'. __('All events', 'bizyhood') .'" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .' >
+            <a href="'. $events_page .'" title="'. __('All events', 'bizyhood') .'" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .' >
               <span class="link_row row1" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .'>
                 '. __(esc_attr(substr($instance['row1'], 0, $this->limitchars)), 'bizyhood') .'
               </span>
             </a>
-            <a href="'. get_permalink($events_page) .'" title="'. __('All events', 'bizyhood') .'" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .' >
+            <a href="'. $events_page .'" title="'. __('All events', 'bizyhood') .'" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .' >
               <span class="link_row row2" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .'>
                 '. __(esc_attr(substr($instance['row2'], 0, $this->limitchars)), 'bizyhood') .'
               </span>
@@ -206,8 +206,9 @@ class bizy_events_widget extends WP_Widget {
       <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>
     <p>
-      <label for="<?php echo $this->get_field_id( 'events_page' ); ?>"><?php _e( 'Events page to link to:' ); ?></label> 
-      <?php wp_dropdown_pages( array('name' => $this->get_field_name( 'events_page' ), 'selected' => $events_page, 'id' => $this->get_field_id( 'events_page' ), 'class' => 'widefat') ); ?>
+      <label for="<?php echo $this->get_field_id( 'events_page' ); ?>"><?php _e( 'Events page to link to:' ); ?></label>
+      <input class="widefat" id="<?php echo $this->get_field_id( 'events_page' ); ?>" name="<?php echo $this->get_field_name( 'events_page' ); ?>" type="text" value="<?php echo esc_attr( $events_page ); ?>"><br />
+      <small>Enter a fully qualified URL</small>
     </p>
 		<p>
       <label for="<?php echo $this->get_field_id( 'layout' ); ?>"><?php _e( 'Layout:', 'bizyhood' ); ?></label> 
