@@ -203,6 +203,9 @@ class Bizyhood_Core
         add_action( 'wp_ajax_bizylink_business_results', array( $this, 'bizylink_business_results' ));
 
         // editor bizybutton END
+
+        // add settings link on plugins list
+        add_filter( 'plugin_action_links_' . str_replace('Bizyhood/Core.php', 'bizyhood.php', plugin_basename(__FILE__)), array( $this, 'bizyhood_plugin_action_links') );
         
         // load widgets START
         
@@ -1244,6 +1247,11 @@ class Bizyhood_Core
         }
 
         return $content;
+    }
+    
+    function bizyhood_plugin_action_links( $links ) {
+       $links[] = '<a href="'. esc_url( get_admin_url(null, 'options-general.php?page=Bizyhood') ) .'">'. __('Settings', 'bizyhood') .'</a>';
+       return $links;
     }
     
 }
