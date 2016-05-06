@@ -167,7 +167,7 @@ a.facet_helper {
 }
 
 
-.bh_local-nav h5 {padding:10px;background:#000;color:#fff;margin:0;}
+.bh_local-nav h5 {padding:10px;background:#000 !important;color:#fff !important;margin:0;}
 .bh_business-header-title h3 {font-size:24px;  margin:0 0 20px;}
 .bh_business-header {border-bottom:0;margin-bottom:15px;}
 .bh_panel {border-top:1px solid #ccc;}

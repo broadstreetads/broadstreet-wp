@@ -1,6 +1,13 @@
 
 /* Bizyhood Widgets */
 
+.widget_bizy_promotions_widget,
+.widget_bizy_search_widget,
+.widget_bizy_mtm_widget,
+.widget_bizy_events_widget {
+  font-size: 100% !important;
+}
+
 .bizyhood_widget input { box-sizing : border-box; }
 .bizyhood_search.side .search_fields.td_div { padding: 0 10px; }
 .bizyhood_widget.full .list_your_business { padding: 0 10px; }
@@ -23,7 +30,7 @@
 .bizyhood_widget.full .mtm_fields { border: 1px solid #e2e2e2; border-bottom: 0; background-color: #e2e2e2;  }
 .bizyhood_widget.full label, .bizyhood_widget .mtm_intro, .bizyhood_widget .promotions_intro, .bizyhood_widget .events_intro { color: #6E7273; }
 .bizyhood_widget .mtm_intro, .bizyhood_widget .promotions_intro, .bizyhood_widget .events_intro { font-weight: bold; font-size: 14px; }
-.bizyhood_widget.full .search_keywords { width: 100%; min-width: 200px; }
+.bizyhood_widget.full .search_keywords { width: 100%; min-width: auto; }
 
 .bizyhood_widget.full .arrow_box {
 	position: relative;
@@ -278,6 +285,7 @@
   .bizyhood_widget.full  .widget_layout_full .search_fields_submit {
     padding-bottom: 15px;
     width: 100%;
+    box-sizing: border-box !important;
   }
   .bizyhood_widget.full  .widget_layout_full .search_fields_submit input.bizy_search_submit {
     width: 100%;

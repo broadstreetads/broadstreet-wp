@@ -57,6 +57,30 @@ class Bizyhood_Utility
     
     
     /**
+     * Checks if this is a bizyhood page
+     * @return boolean
+     */
+    public function is_bizyhood_page() {
+      
+      $business_view_page = get_page_by_path( "business-overview" );
+      $business_promotions = get_page_by_path( "business-promotions" );
+      $business_signup = get_page_by_path( "business-signup" );
+      if (
+        is_page(self::getOption(Bizyhood_Core::KEY_SIGNUP_PAGE_ID)) || 
+        is_page(self::getOption(Bizyhood_Core::KEY_MAIN_PAGE_ID)) || 
+        ($business_view_page !== null && is_page($business_view_page->ID)) || 
+        ($business_promotions !== null && is_page($business_promotions->ID)) || 
+        ($business_signup !== null && is_page($business_signup->ID))
+      ) {
+        return true;
+      }
+        
+      return false;
+      
+    }
+    
+    
+    /**
      * Build date text from start and end date
      * @param string $start The starting date
      * @param string $end The ending date
