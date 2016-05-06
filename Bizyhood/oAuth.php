@@ -99,15 +99,20 @@ class Bizyhood_oAuth
         $params = array();
         $client = new OAuth2\Client($provider['clientId'], $provider['clientSecret']);
         $response = $client->getAccessToken($provider['urlAccessToken'], 'client_credentials', $params);
+
         
-        if ( is_array($response) && !empty($response) && isset($response['code']) && strlen($response['result']['access_token']) > 0 && $response['code'] == 200) {
+        if ( is_array($response) && !empty($response) && isset($response['code']) && $response['code'] == 200 && (isset($response['result']['access_token']) && strlen($response['result']['access_token']) > 0)) {
           
           $client->setAccessToken($response['result']['access_token']);
           set_transient('bizyhood_oauth_data', $response['result']['access_token'], $response['result']['expires_in']);
                     
         } else {
           delete_transient('bizyhood_oauth_data');
-          return new WP_Error( 'bizyhood_error', __( 'Service is currently unavailable! Error code: '. $response['code'] .'; '.$response['result']['error'], 'bizyhood' ) );
+          if (Bizyhood_Utility::is_bizyhood_page()) {
+            return new WP_Error( 'bizyhood_error', __( 'Service is currently unavailable! Error code: '. $response['code'] .'; '.$response['result']['error'], 'bizyhood' ) );
+          } else {
+            return false;
+          }
         }
       }
       

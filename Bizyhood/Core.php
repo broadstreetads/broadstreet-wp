@@ -42,6 +42,7 @@ class Bizyhood_Core
     CONST BUSINESS_LOGO_WIDTH     = 307;
     CONST BUSINESS_LOGO_HEIGHT    = 304;
     CONST EXCERPT_MAX_LENGTH      = 20;
+    CONST BOOTSTRAP_VERSION       = '3.3.5';
     
     public static $globals = null;
 
@@ -197,8 +198,8 @@ class Bizyhood_Core
 
         
         // add oAuth Data START
-
-        add_action( 'init', array('Bizyhood_oAuth', 'set_oauth_temp_data') );
+        
+        add_action( 'template_redirect', array('Bizyhood_oAuth', 'set_oauth_temp_data') );
         
         // add oAuth Data END
         
@@ -712,10 +713,8 @@ class Bizyhood_Core
     
     function load_plugin_styles()
     {
-        $business_view_page = get_page_by_path( "business-overview" );
-        $business_promotions = get_page_by_path( "business-promotions" );
-        if (is_page(Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID)) || is_page($business_view_page->ID) || is_page($business_promotions->ID)) {
-          wp_enqueue_style ('bizyhood-bootstrap-styles', Bizyhood_Utility::getCSSBaseURL() . 'bootstrap.min.css', array(), BIZYHOOD_VERSION);
+        if (Bizyhood_Utility::is_bizyhood_page()) {
+          wp_enqueue_style ('bizyhood-bootstrap-styles', Bizyhood_Utility::getCSSBaseURL() . 'bootstrap.min.css', array(), self::BOOTSTRAP_VERSION);
           wp_enqueue_style ('bizyhood-plugin-styles',  Bizyhood_Utility::getCSSBaseURL() . 'plugin.css', array(), BIZYHOOD_VERSION);
         }
         wp_enqueue_style ('bizyhood-icons-styles',  'https://d17bale0hcbyzh.cloudfront.net/bizyhood/styles/entypo/entypo-icon-fonts.css?family=entypoplugin.css', array(), BIZYHOOD_VERSION);
@@ -1030,6 +1029,10 @@ class Bizyhood_Core
       $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);      
       $client = Bizyhood_oAuth::oAuthClient();
       
+      if (is_wp_error($client)) {
+        return false;
+      }
+      
       $params = array(
         'format'      => 'json',
         'bid'         => $filtered_attributes['bid'],
@@ -1155,6 +1158,10 @@ class Bizyhood_Core
       }
       
       $cached_transient = get_transient($transient_name);
+      
+      if (!is_array($cached_transient)) {
+        return false;
+      }
       
       // pick one random business
       if (!empty($cached_transient) && $random === true) {
