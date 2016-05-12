@@ -116,6 +116,7 @@
   height: auto;
   max-height: 300px;
   width: auto;
+  margin: 0 auto;
 }
 
 .mtm_info span {
@@ -137,6 +138,10 @@
 .bizyhood_widget.side .mtm_fields.mtm_info,
 .bizyhood_widget.side .promotions_fields.promotions_info,
 .bizyhood_widget.side .events_fields.events_info {
+  padding: 10px;
+}
+
+.full .tr_div .td_div:first-child {
   padding: 10px;
 }
 

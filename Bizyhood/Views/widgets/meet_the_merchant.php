@@ -74,6 +74,7 @@ class bizy_mtm_widget extends WP_Widget {
 		$color_cta_font = ! empty( $instance['color_cta_font'] ) ? $instance['color_cta_font'] : '';	
     $color_label_font = ! empty( $instance['color_label_font'] ) ? $instance['color_label_font'] : '';
     $color_business_font = ! empty( $instance['color_business_font'] ) ? $instance['color_business_font'] : '';
+    $logo_percent = ! empty( $instance['logo_percent'] ) ? $instance['logo_percent'] : 100;
 		
     $widget_backcolor = ($color_widget_back != '' ? 'style="background-color: '. $color_widget_back .'; border-color: '. $color_widget_back .';"' : '');
     
@@ -83,22 +84,23 @@ class bizy_mtm_widget extends WP_Widget {
     <div class="wrap widget_layout_'. $instance['layout'] .' table_div">
       <div class="tr_div" '. $widget_backcolor .'>';
       
-      if ($instance['intro'] != '') {
+      if ($intro != '') {
       ?>
         <div class="mtm_fields mtm_intro td_div" <?php echo $widget_backcolor; ?>>
           <div <?php echo ($color_label_font != '' ? 'style="color: '. $color_label_font .'"' : ''); ?>>
-            <?php echo substr($instance['intro'], 0, $this->limitchars); ?>
+            <?php echo substr($intro, 0, $this->limitchars); ?>
           </div>
         </div>
       <?php }
       
-
+      if ($logo_percent > 0 ) {
       ?>
       <div class="mtm_fields  mtm_logo td_div" <?php echo $widget_backcolor; ?>>
         <a href="<?php echo get_permalink( $view_business_page_id ); ?><?php echo sanitize_title($business->name).'-'.sanitize_title($business->locality).'-'.sanitize_title($business->region).'-'.sanitize_title($business->postal_code) .'/'.$business->bizyhood_id ?>/" title="<?php echo $business->name; ?>">
-          <img alt="<?php echo $business->name; ?>" src="<?php echo $business_logo_url; ?>" width="<?php echo $business_logo_width; ?>" height="<?php echo $business_logo_height; ?>" />
+          <img alt="<?php echo $business->name; ?>" src="<?php echo $business_logo_url; ?>" width="<?php echo $business_logo_width; ?>" height="<?php echo $business_logo_height; ?>" style="width: <?php echo $logo_percent;?>%"/>
         </a>
       </div>
+      <?php } ?>
 
       <!-- business info START -->
       <div class="mtm_fields  mtm_info td_div" <?php echo $widget_backcolor; ?>>
@@ -143,7 +145,7 @@ class bizy_mtm_widget extends WP_Widget {
 	public function form( $instance ) {
 		$title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'New title', 'bizyhood' );
 		$layout = ! empty( $instance['layout'] ) ? $instance['layout'] : 'full';
-		$intro = ! empty( $instance['intro'] ) ? $instance['intro'] : 'Meet Our Merchants';
+		$intro = ! empty( $instance['intro'] ) ? $instance['intro'] : '';
 		$row1 = ! empty( $instance['row1'] ) ? $instance['row1'] : 'Want to see all our business listings?';
 		$row2 = ! empty( $instance['row2'] ) ? $instance['row2'] : 'CLICK HERE';
 		$color_widget_back = ! empty( $instance['color_widget_back'] ) ? $instance['color_widget_back'] : '#e2e2e2';
@@ -151,6 +153,7 @@ class bizy_mtm_widget extends WP_Widget {
 		$color_cta_font = ! empty( $instance['color_cta_font'] ) ? $instance['color_cta_font'] : '#FFFFFF';
 		$color_label_font = ! empty( $instance['color_label_font'] ) ? $instance['color_label_font'] : '#6E7273';
 		$color_business_font = ! empty( $instance['color_business_font'] ) ? $instance['color_business_font'] : '#333333';
+    $logo_percent = ! empty( $instance['logo_percent'] ) && $instance['logo_percent'] !== -1 ? $instance['logo_percent'] : 100;
     
     $uid = uniqid ();
 		?>
@@ -165,9 +168,23 @@ class bizy_mtm_widget extends WP_Widget {
         <option value="side" <?php echo ($layout == 'side' ? 'selected="selected"': ''); ?>><?php _e( 'Sidebar', 'bizyhood' ); ?></option>
       </select>
 		</p>
+
+    <p>
+      <label for="<?php echo $this->get_field_id( 'logo_percent' ); ?>"><?php _e( 'Logo Width (%):', 'bizyhood' ); ?></label> 
+      <select class="widefat" id="<?php echo $this->get_field_id( 'logo_percent' ); ?>" name="<?php echo $this->get_field_name( 'logo_percent' ); ?>">
+        <option value="100" <?php echo ($logo_percent == '100' ? 'selected="selected"': ''); ?>>100%</option>
+        <option value="90" <?php echo ($logo_percent == '90' ? 'selected="selected"': ''); ?>>90%</option>
+        <option value="80" <?php echo ($logo_percent == '80' ? 'selected="selected"': ''); ?>>80%</option>
+        <option value="70" <?php echo ($logo_percent == '70' ? 'selected="selected"': ''); ?>>70%</option>
+        <option value="60" <?php echo ($logo_percent == '60' ? 'selected="selected"': ''); ?>>60%</option>
+        <option value="50" <?php echo ($logo_percent == '50' ? 'selected="selected"': ''); ?>>50%</option>
+        <option value="-1" <?php echo ($logo_percent == '-1' ? 'selected="selected"': ''); ?>><?php echo __('hide', 'bizyhood'); ?></option>
+      </select>
+		</p>
+        
 		<p>
       <label for="<?php echo $this->get_field_id( 'intro' ); ?>"><?php _e( 'Intro text:' ); ?></label> 
-      <input class="widefat" maxlength="<?php echo $this->limitchars; ?>" id="<?php echo $this->get_field_id( 'intro' ); ?>" name="<?php echo $this->get_field_name( 'intro' ); ?>" type="text" value="<?php echo esc_attr( $intro ); ?>">
+      <input placeholder="eg.Meet Our Merchants" class="widefat" maxlength="<?php echo $this->limitchars; ?>" id="<?php echo $this->get_field_id( 'intro' ); ?>" name="<?php echo $this->get_field_name( 'intro' ); ?>" type="text" value="<?php echo esc_attr( $intro ); ?>">
       <small><?php echo $this->limitchars .' '. __('characters max', 'bizyhood' ); ?></small>
 		</p>
 		<p>
@@ -252,7 +269,9 @@ class bizy_mtm_widget extends WP_Widget {
 		$instance['color_cta_back']       = ( ! empty( $new_instance['color_cta_back'] ) ) ? strip_tags( $new_instance['color_cta_back'] ) : '';
 		$instance['color_cta_font']       = ( ! empty( $new_instance['color_cta_font'] ) ) ? strip_tags( $new_instance['color_cta_font'] ) : '';
 		$instance['color_label_font']     = ( ! empty( $new_instance['color_label_font'] ) ) ? strip_tags( $new_instance['color_label_font'] ) : '';   
-		$instance['color_business_font']  = ( ! empty( $new_instance['color_business_font'] ) ) ? strip_tags( $new_instance['color_business_font'] ) : '';   
+		$instance['color_business_font']  = ( ! empty( $new_instance['color_business_font'] ) ) ? strip_tags( $new_instance['color_business_font'] ) : '';  
+
+    $instance['logo_percent']     = ( ! empty( $new_instance['logo_percent'] ) ) ? strip_tags( $new_instance['logo_percent'] ) : -1;    
 
 		return $instance;
 	}

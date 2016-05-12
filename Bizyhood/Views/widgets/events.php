@@ -97,7 +97,7 @@ class bizy_events_widget extends WP_Widget {
     }
     
     
-    $intro = ! empty( $instance['intro'] ) ? $instance['intro'] : '';
+    $intro = ! empty( $instance['intro'] ) ? trim($instance['intro']) : '';
     
     $color_widget_back = ! empty( $instance['color_widget_back'] ) ? $instance['color_widget_back'] : '';
 		$color_cta_back = ! empty( $instance['color_cta_back'] ) ? $instance['color_cta_back'] : '';
@@ -105,6 +105,7 @@ class bizy_events_widget extends WP_Widget {
     $color_label_font = ! empty( $instance['color_label_font'] ) ? $instance['color_label_font'] : '';
     $color_event_font = ! empty( $instance['color_event_font'] ) ? $instance['color_event_font'] : '';
     $events_page = ! empty( $instance['events_page'] ) ? $instance['events_page'] : '';
+    $logo_percent = ! empty( $instance['logo_percent'] ) ? $instance['logo_percent'] : 100;
     
 		
     $widget_backcolor = ($color_widget_back != '' ? 'style="background-color: '. $color_widget_back .'; border-color: '. $color_widget_back .';"' : '');
@@ -114,24 +115,27 @@ class bizy_events_widget extends WP_Widget {
     echo '
     <div class="wrap widget_layout_'. $instance['layout'] .' table_div">
       <div class="tr_div" '. $widget_backcolor .'>';
-      
-      if ($instance['intro'] != '') {
+
+      if ($intro != '') {
       ?>
         <div class="events_fields events_intro td_div" <?php echo $widget_backcolor; ?>>
           <div <?php echo ($color_label_font != '' ? 'style="color: '. $color_label_font .'"' : ''); ?>>
-            <?php echo substr($instance['intro'], 0, $this->limitchars); ?>
+            <?php echo substr($intro, 0, $this->limitchars); ?>
           </div>
         </div>
-      <?php }
+      <?php
+      }
       
-
+      if ($logo_percent > 0 ) {
       ?>
       <div class="events_fields  events_logo td_div" <?php echo $widget_backcolor; ?>>
         <a href="<?php echo get_permalink( $view_business_page_id ); ?><?php echo $event['business_slug'].'/'.$event['business_identifier']; ?>/" title="<?php echo $event['business_name'] .' '. __('events', 'bizyhood'); ?>">
-          <img alt="<?php echo $event['name']; ?>" src="<?php echo $event['business_logo']['image']['url']; ?>" width="<?php echo $event['business_logo']['image_width']; ?>" height="<?php echo $event['business_logo']['image_height']; ?>" />
+          <img alt="<?php echo $event['name']; ?>" src="<?php echo $event['business_logo']['image']['url']; ?>" width="<?php echo $event['business_logo']['image_width']; ?>" height="<?php echo $event['business_logo']['image_height']; ?>" style="width: <?php echo $logo_percent;?>%" />
         </a>
       </div>
-
+      
+      <?php } ?>
+      
       <!-- business info START -->
       <div class="events_fields  events_info td_div" <?php echo $widget_backcolor; ?>>
         <a <?php echo ($color_event_font != '' ? 'style="color: '. $color_event_font .'"' : ''); ?> title="<?php echo htmlentities($event['business_name']); ?>" href="<?php echo get_permalink( $view_business_page_id ); ?><?php echo $event['business_slug'].'/'.$event['business_identifier']; ?>/">
@@ -189,7 +193,7 @@ class bizy_events_widget extends WP_Widget {
 		$title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'New title', 'bizyhood' );
 		$events_page = ! empty( $instance['events_page'] ) ? $instance['events_page'] : '';
 		$layout = ! empty( $instance['layout'] ) ? $instance['layout'] : 'full';
-		$intro = ! empty( $instance['intro'] ) ? $instance['intro'] : 'Our Local Businesses events';
+		$intro = ! empty( $instance['intro'] ) ? $instance['intro'] : '';
 		$row1 = ! empty( $instance['row1'] ) ? $instance['row1'] : 'Want to see all our local events?';
 		$row2 = ! empty( $instance['row2'] ) ? $instance['row2'] : 'Click Here';
 		$color_widget_back = ! empty( $instance['color_widget_back'] ) ? $instance['color_widget_back'] : '#e2e2e2';
@@ -198,6 +202,7 @@ class bizy_events_widget extends WP_Widget {
 		$color_label_font = ! empty( $instance['color_label_font'] ) ? $instance['color_label_font'] : '#6E7273';
 		$color_event_font = ! empty( $instance['color_event_font'] ) ? $instance['color_event_font'] : '#333333';
 		$image = ! empty( $instance['image'] ) ? $instance['image'] : '';
+		$logo_percent = ! empty( $instance['logo_percent'] ) && $instance['logo_percent'] !== -1 ? $instance['logo_percent'] : 100;
     
     $uid = uniqid ();
 		?>
@@ -217,6 +222,7 @@ class bizy_events_widget extends WP_Widget {
         <option value="side" <?php echo ($layout == 'side' ? 'selected="selected"': ''); ?>><?php _e( 'Sidebar', 'bizyhood' ); ?></option>
       </select>
 		</p>
+		
     
     <p>
         <label for="<?php echo $this->get_field_name( 'image' ); ?>"><?php _e( 'Custom Logo:' ); ?></label>
@@ -224,10 +230,22 @@ class bizy_events_widget extends WP_Widget {
         <input class="upload_image_button button button-primary" type="button" value="Upload Image" />
     </p>
     
+    <p>
+      <label for="<?php echo $this->get_field_id( 'logo_percent' ); ?>"><?php _e( 'Logo Width (%):', 'bizyhood' ); ?></label> 
+      <select class="widefat" id="<?php echo $this->get_field_id( 'logo_percent' ); ?>" name="<?php echo $this->get_field_name( 'logo_percent' ); ?>">
+        <option value="100" <?php echo ($logo_percent == '100' ? 'selected="selected"': ''); ?>>100%</option>
+        <option value="90" <?php echo ($logo_percent == '90' ? 'selected="selected"': ''); ?>>90%</option>
+        <option value="80" <?php echo ($logo_percent == '80' ? 'selected="selected"': ''); ?>>80%</option>
+        <option value="70" <?php echo ($logo_percent == '70' ? 'selected="selected"': ''); ?>>70%</option>
+        <option value="60" <?php echo ($logo_percent == '60' ? 'selected="selected"': ''); ?>>60%</option>
+        <option value="50" <?php echo ($logo_percent == '50' ? 'selected="selected"': ''); ?>>50%</option>
+        <option value="-1" <?php echo ($logo_percent == '-1' ? 'selected="selected"': ''); ?>><?php echo __('hide', 'bizyhood'); ?></option>
+      </select>
+		</p>
     
 		<p>
       <label for="<?php echo $this->get_field_id( 'intro' ); ?>"><?php _e( 'Intro text:' ); ?></label> 
-      <input class="widefat" maxlength="30" id="<?php echo $this->get_field_id( 'intro' ); ?>" name="<?php echo $this->get_field_name( 'intro' ); ?>" type="text" value="<?php echo esc_attr( $intro ); ?>">
+      <input placeholder="eg. Our Local Businesses events" class="widefat" maxlength="30" id="<?php echo $this->get_field_id( 'intro' ); ?>" name="<?php echo $this->get_field_name( 'intro' ); ?>" type="text" value="<?php echo esc_attr( $intro ); ?>">
       <small><?php echo $this->limitchars .' '. __('characters max', 'bizyhood' ); ?></small>
 		</p>
 		<p>
@@ -308,15 +326,18 @@ class bizy_events_widget extends WP_Widget {
 		$instance['row1'] = ( ! empty( $new_instance['row1'] ) ) ? strip_tags( $new_instance['row1'] ) : '';
 		$instance['row2'] = ( ! empty( $new_instance['row2'] ) ) ? strip_tags( $new_instance['row2'] ) : '';
     
+    
     // colors
     $instance['color_widget_back']    = ( ! empty( $new_instance['color_widget_back'] ) ) ? strip_tags( $new_instance['color_widget_back'] ) : '';
 		$instance['color_cta_back']       = ( ! empty( $new_instance['color_cta_back'] ) ) ? strip_tags( $new_instance['color_cta_back'] ) : '';
 		$instance['color_cta_font']       = ( ! empty( $new_instance['color_cta_font'] ) ) ? strip_tags( $new_instance['color_cta_font'] ) : '';
 		$instance['color_label_font']     = ( ! empty( $new_instance['color_label_font'] ) ) ? strip_tags( $new_instance['color_label_font'] ) : '';   
-		$instance['color_event_font']  = ( ! empty( $new_instance['color_event_font'] ) ) ? strip_tags( $new_instance['color_event_font'] ) : '';
+		$instance['color_event_font']     = ( ! empty( $new_instance['color_event_font'] ) ) ? strip_tags( $new_instance['color_event_font'] ) : '';
     
     // image
-		$instance['image']  = ( ! empty( $new_instance['image'] ) ) ? strip_tags( $new_instance['image'] ) : '';
+		$instance['image']            = ( ! empty( $new_instance['image'] ) ) ? strip_tags( $new_instance['image'] ) : '';
+		$instance['logo_percent']     = ( ! empty( $new_instance['logo_percent'] ) ) ? strip_tags( $new_instance['logo_percent'] ) : -1;
+
 
 		return $instance;
 	}

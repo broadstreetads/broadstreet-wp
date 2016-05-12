@@ -238,7 +238,7 @@ class Bizyhood_Core
     function remove_empty_paragraphs() {
       
       // if it is not a bizyhood page there is nothign to do
-      if ( is_admin() || !( is_page(Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID)) || is_page(Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID)) ) ) {
+      if ( !( is_page(Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID)) || is_page(Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID)) ) ) {
         return;
       }
       
@@ -250,9 +250,9 @@ class Bizyhood_Core
         
         foreach  ($filter_array as $filter_function => $filter) {
           
-          if ($filter_function == 'wpautop' || $filter_function == 'aw_formatter') {
+          if ($filter_function == 'wpautop') {
             
-            remove_filter('the_content', $filter_function, $priority);
+            remove_filter('the_content', 'wpautop', $priority);
             
             // no need to keep looping
             return;
