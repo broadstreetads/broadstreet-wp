@@ -42,6 +42,7 @@ class Bizyhood_Core
     CONST BUSINESS_LOGO_WIDTH     = 307;
     CONST BUSINESS_LOGO_HEIGHT    = 304;
     CONST EXCERPT_MAX_LENGTH      = 20;
+    CONST META_DESCRIPTION_LENGTH = 80;
     CONST BOOTSTRAP_VERSION       = '3.3.5';
     
     public static $globals = null;
@@ -218,6 +219,14 @@ class Bizyhood_Core
         // remove empty paragraphs END
         
         
+        // meta START
+
+        add_action('wp_loaded', array( $this, 'buffer_start'), 100000);    
+        add_action('shutdown', array( $this, 'buffer_end'), 100000);       
+        
+        // meta END
+        
+        
     }
     
     
@@ -234,7 +243,91 @@ class Bizyhood_Core
       register_widget( 'bizy_events_widget' );
     }
 
+    function buffer_start() { 
+      ob_start(array(&$this, "buffer_callback")); 
+    }
+    function buffer_end() { 
+      if (ob_get_contents()) {
+        ob_end_flush(); 
+      }
+    }
+    
+    function buffer_callback($buffer) {
+      
+      $overview_page = get_page_by_path( 'business-overview' );
+      
+      if (!is_page($overview_page)) {
+        return $buffer;
+      }
+      
+      
+      $single_business_information = self::single_business_information();
+      
+      $business = '';
+      
+      if($single_business_information === false) {
+        return $buffer;
+      } else {
+       $business = $single_business_information; 
+      }
+      
+      // remove meta
+      $buffer = preg_replace( '/<meta property="og.*?\/>\n/i', '', $buffer );
+      $buffer = preg_replace( '/<meta name="twitter.*?\/>\n/i', '', $buffer );
+      $buffer = preg_replace( '/<link rel="canonical.*?\/>\n/i', '', $buffer );
+      
+      $title = htmlentities($business->name .', '. $business->locality .', '. $business->region .' '. $business->postal_code .' - '.get_bloginfo('name'));
+      
+      $meta = '
+        <link rel="canonical" href="'. get_permalink($overview_page->ID)  . $business->slug .'/'.$business->bizyhood_id .'/" />
+        <meta property="og:locale" content="'. get_locale() .'" />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="'. $title .'" />
+        <meta property="og:url" content="'. get_permalink($overview_page->ID)  . $business->slug .'/'.$business->bizyhood_id .'/" />
+        <meta property="og:site_name" content="'. get_bloginfo('name') .'" />
+        
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="'. $title .'" />
+      ';
+      $claimed_description = wp_trim_words(htmlentities($business->description), self::META_DESCRIPTION_LENGTH, '');
+      $generic_description = $business->name.' is a hyper-local, small business, located in and/or serving the '. $business->locality .' '. $business->region .'area.';
+      
+      if($business->claimed == 1) {
+        
+        
+        $meta .= '
+          <meta property="og:description" content="'. ($claimed_description != '' ? $claimed_description : $generic_description) .'" />
+          <meta name="twitter:description" content="'. ($claimed_description != '' ? $claimed_description : $generic_description) .'" />
+          ';
+      } else {
+        
+        
+        $meta .= '        
+          <meta property="og:description" content="'. $generic_description  .'" />
+          <meta name="twitter:description" content="'. $generic_description  .'" />
+          ';
+          
 
+      }
+      
+      if($business->business_logo) {
+        
+        $meta .= '
+          <meta property="og:image" content="'. $business->business_logo->image->url .'" />
+        ';
+      }
+      
+      
+      $buffer = preg_replace( '/<title.*?\/title>/i', '<title>'. $title .'</title>'."\n".$meta, $buffer );
+
+  
+    
+      return $buffer;
+    }
+
+    
+    
+    
     function remove_empty_paragraphs() {
       
       // if it is not a bizyhood page there is nothign to do
@@ -867,6 +960,37 @@ class Bizyhood_Core
     /***************************/
     /***** API Calls START *****/
     
+    public function single_business_information($bizyhood_id = '')
+    {
+      
+      global $wp_query;
+      
+      $api_url = Bizyhood_Utility::getApiUrl();
+      $params = array();
+      
+      if ($bizyhood_id == '') {
+        if(isset($wp_query->query_vars['bizyhood_id'])) {
+          $bizyhood_id = urldecode($wp_query->query_vars['bizyhood_id']);
+        } else {
+          $bizyhood_id = (isset($_REQUEST['bizyhood_id']) ? $_REQUEST['bizyhood_id'] : '');
+        }
+      }
+
+      $client = Bizyhood_oAuth::oAuthClient();
+      
+      if (is_wp_error($client)) {
+        return false;
+      }
+
+      try {
+        $response = $client->fetch($api_url . "/business/" . $bizyhood_id.'/', $params);
+      } catch (Exception $e) {
+        return false;
+      }  
+      $business = json_decode(json_encode($response['result']), FALSE);
+    
+      return $business;
+    }
     public function businesses_information($atts)
     {
       
@@ -1192,10 +1316,6 @@ class Bizyhood_Core
             return Bizyhood_View::load( 'listings/error', array( 'error' => $authetication->get_error_message()), true );
           }
         }
-        
-        
-        $api_url = Bizyhood_Utility::getApiUrl();
-        $params = array();
 
         # Override content for the view business page        
         $post_name = $post->post_name;
@@ -1203,27 +1323,13 @@ class Bizyhood_Core
         {
             $signup_page_id = Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID);
             
-            // get the bizyhood_id
-            if(isset($wp_query->query_vars['bizyhood_id'])) {
-              
-              $bizyhood_id = urldecode($wp_query->query_vars['bizyhood_id']);
-            } else {
-              $bizyhood_id = (isset($_REQUEST['bizyhood_id']) ? $_REQUEST['bizyhood_id'] : '');
-            }
+            $single_business_information = self::single_business_information();
             
-            
-            $client = Bizyhood_oAuth::oAuthClient();
-            
-            if (is_wp_error($client)) {
-              return Bizyhood_View::load( 'listings/error', array( 'error' => $client->get_error_message()), true );
-            }
-
-            try {
-              $response = $client->fetch($api_url . "/business/" . $bizyhood_id.'/', $params);
-            } catch (Exception $e) {
+            if ($single_business_information === false) {
               return Bizyhood_View::load( 'listings/error', array( 'error' => __( 'Service is currently unavailable! Request timed out.', 'bizyhood' )), true );
-            }  
-            $business = json_decode(json_encode($response['result']), FALSE);
+            } else {
+              $business = $single_business_information;
+            }
                         
             return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id), true);
         }
