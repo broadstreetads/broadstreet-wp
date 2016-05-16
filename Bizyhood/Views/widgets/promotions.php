@@ -99,7 +99,7 @@ class bizy_promotions_widget extends WP_Widget {
 		$color_cta_font = ! empty( $instance['color_cta_font'] ) ? $instance['color_cta_font'] : '';	
     $color_label_font = ! empty( $instance['color_label_font'] ) ? $instance['color_label_font'] : '';
     $color_promotion_font = ! empty( $instance['color_promotion_font'] ) ? $instance['color_promotion_font'] : '';
-    $logo_percent = ! empty( $instance['logo_percent'] ) ? $instance['logo_percent'] : 100;
+    $logo_size = ! empty( $instance['logo_size'] ) ? $instance['logo_size'] : 'large';
 		
     $widget_backcolor = ($color_widget_back != '' ? 'style="background-color: '. $color_widget_back .'; border-color: '. $color_widget_back .';"' : '');
     
@@ -118,11 +118,11 @@ class bizy_promotions_widget extends WP_Widget {
         </div>
       <?php }
       
-      if ($logo_percent > 0 ) {
+      if ($logo_size != 'hide' ) {
       ?>
       <div class="promotions_fields  promotions_logo td_div" <?php echo $widget_backcolor; ?>>
         <a href="<?php echo get_permalink( $view_business_page_id ); ?><?php echo $promotion['business_slug'].'/'.$promotion['business_identifier']; ?>/" title="<?php echo $promotion['business_name'] .' '. __('promotions', 'bizyhood'); ?>">
-          <img alt="<?php echo $promotion['name']; ?>" src="<?php echo $promotion['business_logo']['image']['url']; ?>" width="<?php echo $promotion['business_logo']['image_width']; ?>" height="<?php echo $promotion['business_logo']['image_height']; ?>" />
+          <img alt="<?php echo $promotion['name']; ?>" src="<?php echo $promotion['business_logo']['image']['url']; ?>" width="<?php echo $promotion['business_logo']['image_width']; ?>" height="<?php echo $promotion['business_logo']['image_height']; ?>" class="<?php echo $logo_size; ?>" />
         </a>
       </div>
       <?php } ?>
@@ -192,7 +192,7 @@ class bizy_promotions_widget extends WP_Widget {
 		$color_label_font = ! empty( $instance['color_label_font'] ) ? $instance['color_label_font'] : '#6E7273';
 		$color_promotion_font = ! empty( $instance['color_promotion_font'] ) ? $instance['color_promotion_font'] : '#333333';
 		$image = ! empty( $instance['image'] ) ? $instance['image'] : '';
-    $logo_percent = ! empty( $instance['logo_percent'] ) && $instance['logo_percent'] !== -1 ? $instance['logo_percent'] : 100;
+    $logo_size = ! empty( $instance['logo_size'] ) ? $instance['logo_size'] : 'large';
     
     $uid = uniqid ();
 		?>
@@ -215,15 +215,11 @@ class bizy_promotions_widget extends WP_Widget {
     </p>
     
     <p>
-      <label for="<?php echo $this->get_field_id( 'logo_percent' ); ?>"><?php _e( 'Logo Width (%):', 'bizyhood' ); ?></label> 
-      <select class="widefat" id="<?php echo $this->get_field_id( 'logo_percent' ); ?>" name="<?php echo $this->get_field_name( 'logo_percent' ); ?>">
-        <option value="100" <?php echo ($logo_percent == '100' ? 'selected="selected"': ''); ?>>100%</option>
-        <option value="90" <?php echo ($logo_percent == '90' ? 'selected="selected"': ''); ?>>90%</option>
-        <option value="80" <?php echo ($logo_percent == '80' ? 'selected="selected"': ''); ?>>80%</option>
-        <option value="70" <?php echo ($logo_percent == '70' ? 'selected="selected"': ''); ?>>70%</option>
-        <option value="60" <?php echo ($logo_percent == '60' ? 'selected="selected"': ''); ?>>60%</option>
-        <option value="50" <?php echo ($logo_percent == '50' ? 'selected="selected"': ''); ?>>50%</option>
-        <option value="-1" <?php echo ($logo_percent == '-1' ? 'selected="selected"': ''); ?>><?php echo __('hide', 'bizyhood'); ?></option>
+      <label for="<?php echo $this->get_field_id( 'logo_size' ); ?>"><?php _e( 'Logo Width:', 'bizyhood' ); ?></label> 
+      <select class="widefat" id="<?php echo $this->get_field_id( 'logo_size' ); ?>" name="<?php echo $this->get_field_name( 'logo_size' ); ?>">
+        <option value="large" <?php echo ($logo_size == 'large' ? 'selected="selected"': ''); ?>><?php echo __('large', 'bizyhood'); ?></option>
+        <option value="small" <?php echo ($logo_size == 'small' ? 'selected="selected"': ''); ?>><?php echo __('small', 'bizyhood'); ?></option>
+        <option value="hide" <?php echo ($logo_size == 'hide' ? 'selected="selected"': ''); ?>><?php echo __('hide', 'bizyhood'); ?></option>
       </select>
 		</p>
     
@@ -318,7 +314,7 @@ class bizy_promotions_widget extends WP_Widget {
     
     // image
 		$instance['image']          = ( ! empty( $new_instance['image'] ) ) ? strip_tags( $new_instance['image'] ) : '';
-    $instance['logo_percent']   = ( ! empty( $new_instance['logo_percent'] ) ) ? strip_tags( $new_instance['logo_percent'] ) : -1;   
+    $instance['logo_size']   = ( ! empty( $new_instance['logo_size'] ) ) ? strip_tags( $new_instance['logo_size'] ) : '';   
 
 		return $instance;
 	}

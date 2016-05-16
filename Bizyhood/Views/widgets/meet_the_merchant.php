@@ -74,7 +74,7 @@ class bizy_mtm_widget extends WP_Widget {
 		$color_cta_font = ! empty( $instance['color_cta_font'] ) ? $instance['color_cta_font'] : '';	
     $color_label_font = ! empty( $instance['color_label_font'] ) ? $instance['color_label_font'] : '';
     $color_business_font = ! empty( $instance['color_business_font'] ) ? $instance['color_business_font'] : '';
-    $logo_percent = ! empty( $instance['logo_percent'] ) ? $instance['logo_percent'] : 100;
+    $logo_size = ! empty( $instance['logo_size'] ) ? $instance['logo_size'] : 'large';
 		
     $widget_backcolor = ($color_widget_back != '' ? 'style="background-color: '. $color_widget_back .'; border-color: '. $color_widget_back .';"' : '');
     
@@ -93,11 +93,11 @@ class bizy_mtm_widget extends WP_Widget {
         </div>
       <?php }
       
-      if ($logo_percent > 0 ) {
+      if ($logo_size != 'hide' ) {
       ?>
       <div class="mtm_fields  mtm_logo td_div" <?php echo $widget_backcolor; ?>>
         <a href="<?php echo get_permalink( $view_business_page_id ); ?><?php echo sanitize_title($business->name).'-'.sanitize_title($business->locality).'-'.sanitize_title($business->region).'-'.sanitize_title($business->postal_code) .'/'.$business->bizyhood_id ?>/" title="<?php echo $business->name; ?>">
-          <img alt="<?php echo $business->name; ?>" src="<?php echo $business_logo_url; ?>" width="<?php echo $business_logo_width; ?>" height="<?php echo $business_logo_height; ?>" style="width: <?php echo $logo_percent;?>%"/>
+          <img alt="<?php echo $business->name; ?>" src="<?php echo $business_logo_url; ?>" width="<?php echo $business_logo_width; ?>" height="<?php echo $business_logo_height; ?>" class="<?php echo $logo_size;?>"/>
         </a>
       </div>
       <?php } ?>
@@ -153,7 +153,7 @@ class bizy_mtm_widget extends WP_Widget {
 		$color_cta_font = ! empty( $instance['color_cta_font'] ) ? $instance['color_cta_font'] : '#FFFFFF';
 		$color_label_font = ! empty( $instance['color_label_font'] ) ? $instance['color_label_font'] : '#6E7273';
 		$color_business_font = ! empty( $instance['color_business_font'] ) ? $instance['color_business_font'] : '#333333';
-    $logo_percent = ! empty( $instance['logo_percent'] ) && $instance['logo_percent'] !== -1 ? $instance['logo_percent'] : 100;
+    $logo_size = ! empty( $instance['logo_size'] ) ? $instance['logo_size'] : 'large';
     
     $uid = uniqid ();
 		?>
@@ -170,15 +170,11 @@ class bizy_mtm_widget extends WP_Widget {
 		</p>
 
     <p>
-      <label for="<?php echo $this->get_field_id( 'logo_percent' ); ?>"><?php _e( 'Logo Width (%):', 'bizyhood' ); ?></label> 
-      <select class="widefat" id="<?php echo $this->get_field_id( 'logo_percent' ); ?>" name="<?php echo $this->get_field_name( 'logo_percent' ); ?>">
-        <option value="100" <?php echo ($logo_percent == '100' ? 'selected="selected"': ''); ?>>100%</option>
-        <option value="90" <?php echo ($logo_percent == '90' ? 'selected="selected"': ''); ?>>90%</option>
-        <option value="80" <?php echo ($logo_percent == '80' ? 'selected="selected"': ''); ?>>80%</option>
-        <option value="70" <?php echo ($logo_percent == '70' ? 'selected="selected"': ''); ?>>70%</option>
-        <option value="60" <?php echo ($logo_percent == '60' ? 'selected="selected"': ''); ?>>60%</option>
-        <option value="50" <?php echo ($logo_percent == '50' ? 'selected="selected"': ''); ?>>50%</option>
-        <option value="-1" <?php echo ($logo_percent == '-1' ? 'selected="selected"': ''); ?>><?php echo __('hide', 'bizyhood'); ?></option>
+      <label for="<?php echo $this->get_field_id( 'logo_size' ); ?>"><?php _e( 'Logo Width:', 'bizyhood' ); ?></label> 
+      <select class="widefat" id="<?php echo $this->get_field_id( 'logo_size' ); ?>" name="<?php echo $this->get_field_name( 'logo_size' ); ?>">
+        <option value="large" <?php echo ($logo_size == 'large' ? 'selected="selected"': ''); ?>><?php echo __('large', 'bizyhood'); ?></option>
+        <option value="small" <?php echo ($logo_size == 'small' ? 'selected="selected"': ''); ?>><?php echo __('small', 'bizyhood'); ?></option>
+        <option value="hide" <?php echo ($logo_size == 'hide' ? 'selected="selected"': ''); ?>><?php echo __('hide', 'bizyhood'); ?></option>
       </select>
 		</p>
         
@@ -271,7 +267,7 @@ class bizy_mtm_widget extends WP_Widget {
 		$instance['color_label_font']     = ( ! empty( $new_instance['color_label_font'] ) ) ? strip_tags( $new_instance['color_label_font'] ) : '';   
 		$instance['color_business_font']  = ( ! empty( $new_instance['color_business_font'] ) ) ? strip_tags( $new_instance['color_business_font'] ) : '';  
 
-    $instance['logo_percent']     = ( ! empty( $new_instance['logo_percent'] ) ) ? strip_tags( $new_instance['logo_percent'] ) : -1;    
+    $instance['logo_size']   = ( ! empty( $new_instance['logo_size'] ) ) ? strip_tags( $new_instance['logo_size'] ) : '';   
 
 		return $instance;
 	}
