@@ -109,13 +109,20 @@
   text-align: center;
 }
 
-.mtm_logo img,
-.promotions_logo img,
-.events_logo img {
+.bizyhood_widget img {
   max-width: 100%;
   height: auto;
-  max-height: 300px;
   width: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bizyhood_widget img.large {
+  max-height: 300px;  
+}
+
+.bizyhood_widget img.small {
+  max-height: 150px;
 }
 
 .mtm_info span {
@@ -137,6 +144,10 @@
 .bizyhood_widget.side .mtm_fields.mtm_info,
 .bizyhood_widget.side .promotions_fields.promotions_info,
 .bizyhood_widget.side .events_fields.events_info {
+  padding: 10px;
+}
+
+.full .tr_div .td_div:first-child {
   padding: 10px;
 }
 

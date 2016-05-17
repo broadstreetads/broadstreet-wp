@@ -99,6 +99,7 @@ class bizy_promotions_widget extends WP_Widget {
 		$color_cta_font = ! empty( $instance['color_cta_font'] ) ? $instance['color_cta_font'] : '';	
     $color_label_font = ! empty( $instance['color_label_font'] ) ? $instance['color_label_font'] : '';
     $color_promotion_font = ! empty( $instance['color_promotion_font'] ) ? $instance['color_promotion_font'] : '';
+    $logo_size = ! empty( $instance['logo_size'] ) ? $instance['logo_size'] : 'large';
 		
     $widget_backcolor = ($color_widget_back != '' ? 'style="background-color: '. $color_widget_back .'; border-color: '. $color_widget_back .';"' : '');
     
@@ -108,22 +109,23 @@ class bizy_promotions_widget extends WP_Widget {
     <div class="wrap widget_layout_'. $instance['layout'] .' table_div">
       <div class="tr_div" '. $widget_backcolor .'>';
       
-      if ($instance['intro'] != '') {
+      if ($intro != '') {
       ?>
         <div class="promotions_fields promotions_intro td_div" <?php echo $widget_backcolor; ?>>
           <div <?php echo ($color_label_font != '' ? 'style="color: '. $color_label_font .'"' : ''); ?>>
-            <?php echo substr($instance['intro'], 0, $this->limitchars); ?>
+            <?php echo substr($intro, 0, $this->limitchars); ?>
           </div>
         </div>
       <?php }
       
-
+      if ($logo_size != 'hide' ) {
       ?>
       <div class="promotions_fields  promotions_logo td_div" <?php echo $widget_backcolor; ?>>
         <a href="<?php echo get_permalink( $view_business_page_id ); ?><?php echo $promotion['business_slug'].'/'.$promotion['business_identifier']; ?>/" title="<?php echo $promotion['business_name'] .' '. __('promotions', 'bizyhood'); ?>">
-          <img alt="<?php echo $promotion['name']; ?>" src="<?php echo $promotion['business_logo']['image']['url']; ?>" width="<?php echo $promotion['business_logo']['image_width']; ?>" height="<?php echo $promotion['business_logo']['image_height']; ?>" />
+          <img alt="<?php echo $promotion['name']; ?>" src="<?php echo $promotion['business_logo']['image']['url']; ?>" width="<?php echo $promotion['business_logo']['image_width']; ?>" height="<?php echo $promotion['business_logo']['image_height']; ?>" class="<?php echo $logo_size; ?>" />
         </a>
       </div>
+      <?php } ?>
 
       <!-- business info START -->
       <div class="promotions_fields  promotions_info td_div" <?php echo $widget_backcolor; ?>>
@@ -181,7 +183,7 @@ class bizy_promotions_widget extends WP_Widget {
 	public function form( $instance ) {
 		$title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'New title', 'bizyhood' );
 		$layout = ! empty( $instance['layout'] ) ? $instance['layout'] : 'full';
-		$intro = ! empty( $instance['intro'] ) ? $instance['intro'] : 'Our Local Businesses Promotions';
+		$intro = ! empty( $instance['intro'] ) ? $instance['intro'] : '';
 		$row1 = ! empty( $instance['row1'] ) ? $instance['row1'] : 'Want to see all our local promotions?';
 		$row2 = ! empty( $instance['row2'] ) ? $instance['row2'] : 'Click Here';
 		$color_widget_back = ! empty( $instance['color_widget_back'] ) ? $instance['color_widget_back'] : '#e2e2e2';
@@ -190,6 +192,7 @@ class bizy_promotions_widget extends WP_Widget {
 		$color_label_font = ! empty( $instance['color_label_font'] ) ? $instance['color_label_font'] : '#6E7273';
 		$color_promotion_font = ! empty( $instance['color_promotion_font'] ) ? $instance['color_promotion_font'] : '#333333';
 		$image = ! empty( $instance['image'] ) ? $instance['image'] : '';
+    $logo_size = ! empty( $instance['logo_size'] ) ? $instance['logo_size'] : 'large';
     
     $uid = uniqid ();
 		?>
@@ -211,10 +214,18 @@ class bizy_promotions_widget extends WP_Widget {
         <input class="upload_image_button button button-primary" type="button" value="Upload Image" />
     </p>
     
+    <p>
+      <label for="<?php echo $this->get_field_id( 'logo_size' ); ?>"><?php _e( 'Logo Width:', 'bizyhood' ); ?></label> 
+      <select class="widefat" id="<?php echo $this->get_field_id( 'logo_size' ); ?>" name="<?php echo $this->get_field_name( 'logo_size' ); ?>">
+        <option value="large" <?php echo ($logo_size == 'large' ? 'selected="selected"': ''); ?>><?php echo __('large', 'bizyhood'); ?></option>
+        <option value="small" <?php echo ($logo_size == 'small' ? 'selected="selected"': ''); ?>><?php echo __('small', 'bizyhood'); ?></option>
+        <option value="hide" <?php echo ($logo_size == 'hide' ? 'selected="selected"': ''); ?>><?php echo __('hide', 'bizyhood'); ?></option>
+      </select>
+		</p>
     
 		<p>
       <label for="<?php echo $this->get_field_id( 'intro' ); ?>"><?php _e( 'Intro text:' ); ?></label> 
-      <input class="widefat" maxlength="30" id="<?php echo $this->get_field_id( 'intro' ); ?>" name="<?php echo $this->get_field_name( 'intro' ); ?>" type="text" value="<?php echo esc_attr( $intro ); ?>">
+      <input placeholder="eg.Our Local Businesses Promotions" class="widefat" maxlength="30" id="<?php echo $this->get_field_id( 'intro' ); ?>" name="<?php echo $this->get_field_name( 'intro' ); ?>" type="text" value="<?php echo esc_attr( $intro ); ?>">
       <small><?php echo $this->limitchars .' '. __('characters max', 'bizyhood' ); ?></small>
 		</p>
 		<p>
@@ -302,7 +313,8 @@ class bizy_promotions_widget extends WP_Widget {
 		$instance['color_promotion_font']  = ( ! empty( $new_instance['color_promotion_font'] ) ) ? strip_tags( $new_instance['color_promotion_font'] ) : '';
     
     // image
-		$instance['image']  = ( ! empty( $new_instance['image'] ) ) ? strip_tags( $new_instance['image'] ) : '';
+		$instance['image']          = ( ! empty( $new_instance['image'] ) ) ? strip_tags( $new_instance['image'] ) : '';
+    $instance['logo_size']   = ( ! empty( $new_instance['logo_size'] ) ) ? strip_tags( $new_instance['logo_size'] ) : '';   
 
 		return $instance;
 	}
