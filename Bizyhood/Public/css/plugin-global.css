@@ -112,10 +112,13 @@
 .bizyhood_widget img {
   max-width: 100%;
   height: auto;
-  max-height: 300px;
   width: auto;
   margin-left: auto;
   margin-right: auto;
+}
+
+.bizyhood_widget img.large {
+  max-height: 300px;  
 }
 
 .bizyhood_widget img.small {
