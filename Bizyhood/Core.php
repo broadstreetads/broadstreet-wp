@@ -290,7 +290,7 @@ class Bizyhood_Core
         <meta name="twitter:title" content="'. $title .'" />
       ';
       $claimed_description = wp_trim_words(htmlentities($business->description), self::META_DESCRIPTION_LENGTH, '');
-      $generic_description = $business->name.' is a hyper-local, small business, located in and/or serving the '. $business->locality .' '. $business->region .'area.';
+      $generic_description = htmlentities($business->name.' is a hyper-local, small business, located in and/or serving the '. $business->locality .' '. $business->region .'area.');
       
       if($business->claimed == 1) {
         
@@ -298,6 +298,7 @@ class Bizyhood_Core
         $meta .= '
           <meta property="og:description" content="'. ($claimed_description != '' ? $claimed_description : $generic_description) .'" />
           <meta name="twitter:description" content="'. ($claimed_description != '' ? $claimed_description : $generic_description) .'" />
+          <meta name="description" content="'. ($claimed_description != '' ? $claimed_description : $generic_description) .'" />
           ';
       } else {
         
@@ -305,6 +306,7 @@ class Bizyhood_Core
         $meta .= '        
           <meta property="og:description" content="'. $generic_description  .'" />
           <meta name="twitter:description" content="'. $generic_description  .'" />
+          <meta name="description" content="'. $generic_description .'" />
           ';
           
 
