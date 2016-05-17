@@ -250,9 +250,9 @@ class Bizyhood_Core
         
         foreach  ($filter_array as $filter_function => $filter) {
           
-          if ($filter_function == 'wpautop') {
+          if ($filter_function == 'wpautop' || $filter_function == 'aw_formatter') {
             
-            remove_filter('the_content', 'wpautop', $priority);
+            remove_filter('the_content', $filter_function, $priority);
             
             // no need to keep looping
             return;
