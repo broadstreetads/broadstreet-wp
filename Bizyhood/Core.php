@@ -238,7 +238,7 @@ class Bizyhood_Core
     function remove_empty_paragraphs() {
       
       // if it is not a bizyhood page there is nothign to do
-      if ( !( is_page(Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID)) || is_page(Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID)) ) ) {
+      if ( is_admin() || !( is_page(Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID)) || is_page(Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID)) ) ) {
         return;
       }
       
