@@ -1,4 +1,12 @@
 
+.bizybox {
+    background-color: #f5f5f5;
+    border: 1px solid;
+    display: block;
+    padding: 12px;
+    font-size: 17px;
+}
+
 /* Bizyhood Widgets */
 
 .widget_bizy_promotions_widget,

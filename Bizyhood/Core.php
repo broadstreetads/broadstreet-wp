@@ -1099,12 +1099,12 @@ class Bizyhood_Core
       }  
       
       // avoid throwing an error
-      if (!is_array($response) || empty($response)) { return; }
+      if (!is_array($response) || (is_array($response) && isset($response['code']) && $response['code'] != 200)) { return; }
       
       $response_json = $response['result'];
       
       // avoid throwing an error
-      if ($response_json === null) { return; }
+      if ($response_json === null || empty($response_json)) { return; }
       
       $businesses = json_decode(json_encode($response_json['businesses']), FALSE);
       $total_count = $response_json['total_count'];

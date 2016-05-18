@@ -21,13 +21,6 @@ html, body
 a.facet_helper {
   font-weight: normal;
 }
-.bizybox {
-    background-color: #f5f5f5;
-    border: 1px solid;
-    display: block;
-    padding: 12px;
-    font-size: 17px;
-}
 
 .row a {transition:.25s all linear;}
 
@@ -116,7 +109,28 @@ a.facet_helper {
 
 .bh_business-search input[type="search"] {width:100%;max-width: 100%;line-height:2;padding:.5em;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
 .bh_business-search {position:relative;float: right;}
-.bh_business-search:before {font-family: 'entypo';content: "\1f50d";position:absolute;right:1.25em;top:.5em;opacity:.5;font-size:20px;font-style: normal;font-weight: 400;line-height: 1;-webkit-font-smoothing: antialiased;}
+.bh_business-search button.search_submit {
+  font-family: 'entypo';
+  position: absolute;
+  right: 1.1em;
+  top: 0.5em;
+  opacity: .5;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  color: #000;
+  background-color: rgba(0, 0, 0, 0);
+  border: 0;
+  box-shadow: none;
+  padding: 5px; 
+}
+.bh_business-search button.search_submit:hover {
+  background-color: transparent;
+  opacity: 1;
+  color: #000;
+}
 
 .bh_section {margin-bottom:30px;}
 
