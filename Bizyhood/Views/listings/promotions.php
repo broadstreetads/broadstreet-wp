@@ -6,6 +6,7 @@
     <form action="<?php echo site_url(); ?>/index.php" method="get">
         <input type="hidden" name="page_id" value="<?php echo $list_page_id; ?>">
         <input type="search" class="bh_search-field" placeholder="Search businesses..." name="keywords" title="Search for:" value="">
+        <input type="submit" value="&#x1f50d;">
     </form>
     </div>
 </div>

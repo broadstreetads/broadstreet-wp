@@ -12,6 +12,7 @@
         <input type="hidden" name="cf" value="<?php echo (urldecode($_GET['cf'])); ?>">
         <?php } ?>
         <input type="search" class="bh_search-field" placeholder="Search businesses..." name="keywords" title="Search for:" value="<?php echo $keywords; ?>">
+        <input type="submit" value="&#x1f50d;">
     </form>
     </div>
 </div>
