@@ -109,7 +109,7 @@ a.facet_helper {
 
 .bh_business-search input[type="search"] {width:100%;max-width: 100%;line-height:2;padding:.5em;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
 .bh_business-search {position:relative;float: right;}
-.bh_business-search input[type="submit"] {
+.bh_business-search button.search_submit {
   font-family: 'entypo';
   position: absolute;
   right: 1.1em;
@@ -126,7 +126,7 @@ a.facet_helper {
   box-shadow: none;
   padding: 5px; 
 }
-.bh_business-search input[type="submit"]:hover {
+.bh_business-search button.search_submit:hover {
   background-color: transparent;
   opacity: 1;
   color: #000;
