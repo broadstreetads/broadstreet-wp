@@ -3,7 +3,7 @@ Contributors: bizyscott, efabrikant, spyrosvl
 Tags: business directory, events, promotions, search, Local SEO, hyperlocal, news, publishers
 Requires at least: 3.9
 Tested up to: 4.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,13 @@ Bizyhood is a software company based in Asbury Park, NJ that believes in the pow
 
 
 == Changelog ==
+
+= 1.1.0 =
+
+* Added Opengraph and Twitter SEO metadata
+* Improved error handling.
+* Business Logo scaling in widgets
+* Minor visual improvements
 
 = 1.1.0 =
 
