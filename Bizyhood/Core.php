@@ -1208,7 +1208,10 @@ class Bizyhood_Core
       $cached_promotions = self::get_cache_value('bizyhood_promotions_widget', 'response_json', 'business_details_information', $attrs, 'promotions');
       
       if ($cached_promotions === false) {
-        return Bizyhood_View::load( 'listings/error', array( 'error' => $authetication->get_error_message()), true );
+        $signup_page_id = Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID);
+        $errormessage = 'Are you a business owner? Would you like to see your promotion(s) on this page? Click <a href="'. get_permalink($signup_page_id) .'" title="sign up or login to Bizyhood">here</a> to sign up or login!';
+        
+        return Bizyhood_View::load( 'listings/noresults', array( 'error' => $errormessage), true );
       }
       
       $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
