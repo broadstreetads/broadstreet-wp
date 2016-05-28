@@ -44,6 +44,7 @@ class Bizyhood_Core
     CONST EXCERPT_MAX_LENGTH      = 20;
     CONST META_DESCRIPTION_LENGTH = 80;
     CONST BOOTSTRAP_VERSION       = '3.3.5';
+    CONST GOOGLEMAPS_API_KEY      = 'AIzaSyBu3ULkIPYc_YNNazSo8_PJqrsVb7JxTMU';
     
     public static $globals = null;
 
@@ -823,6 +824,7 @@ class Bizyhood_Core
         wp_enqueue_script('photoswipe-js', Bizyhood_Utility::getVendorBaseURL() . 'photoswipe/js/photoswipe.min.js', array(), BIZYHOOD_VERSION, true);
         wp_enqueue_script('photoswipe-ui-js', Bizyhood_Utility::getVendorBaseURL() . 'photoswipe/js/photoswipe-ui-default.js', array('photoswipe-js'), BIZYHOOD_VERSION, true);
         wp_enqueue_script('bizyhood-gallery-js', Bizyhood_Utility::getJSBaseURL() . 'bizyhood-plugin-gallery.js', array(), BIZYHOOD_VERSION, true);
+        wp_enqueue_script('bizyhood-matchHeight-js', Bizyhood_Utility::getJSBaseURL() . 'jquery.matchHeight-min.js', array(), BIZYHOOD_VERSION, true);
         wp_enqueue_script('bizyhood-custom-js', Bizyhood_Utility::getJSBaseURL() . 'bizyhood-custom.js', array(), BIZYHOOD_VERSION, true);
     }
     
@@ -1203,10 +1205,9 @@ class Bizyhood_Core
         return Bizyhood_View::load( 'listings/error', array( 'error' => $authetication->get_error_message()), true );
       }
       
-      
       // cache the results
       $cached_promotions = self::get_cache_value('bizyhood_promotions_widget', 'response_json', 'business_details_information', $attrs, 'promotions');
-      
+            
       if ($cached_promotions === false) {
         $signup_page_id = Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID);
         $errormessage = 'Are you a business owner? Would you like to see your promotion(s) on this page? Click <a href="'. get_permalink($signup_page_id) .'" title="sign up or login to Bizyhood">here</a> to sign up or login!';
@@ -1276,7 +1277,7 @@ class Bizyhood_Core
      */
     public function get_cache_value($transient_name, $transient_key = 'response_json', $method_name, $attrs, $method_command = null, $random = false) {
       
-      // cache the results    
+      // cache the results
       if (get_transient($transient_name) === false || get_transient($transient_name) == '') {
         
         // get businesses
@@ -1327,16 +1328,21 @@ class Bizyhood_Core
         if ($post_name === 'business-overview')
         {
             $signup_page_id = Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID);
+            $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID); 
             
             $single_business_information = self::single_business_information();
-            
+                                    
             if ($single_business_information === false) {
               return Bizyhood_View::load( 'listings/error', array( 'error' => __( 'Service is currently unavailable! Request timed out.', 'bizyhood' )), true );
             } else {
               $business = $single_business_information;
             }
-                        
-            return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id), true);
+            
+            if ($single_business_information->claimed == 1) {
+              return Bizyhood_View::load('listings/single/claimed', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id, 'list_page_id' => $list_page_id), true);
+            } else {
+              return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id, 'list_page_id' => $list_page_id), true);
+            }
         }
 
         return $content;
