@@ -22,6 +22,16 @@ jQuery(function($){
     
     return false;
   });
+  
+  bizyload();
+  jQuery(window).load(function() { bizyload(); });
+  jQuery(window).resize(function() { bizyload(); });
+  
+  function bizyload() { 
+    
+    jQuery('.sameheight').matchHeight();
+
+  }
 });
     
     
