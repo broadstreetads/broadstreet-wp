@@ -28,6 +28,31 @@
     </div>
   </div>
 
+  <div class="row zero-gutter">
+    <div class="col-md-8">
+      <?php 
+        if (!empty($business->categories)) {
+        
+          $categories = array();
+          foreach ($business->categories as $category) {
+            $categories[] = '
+              <p>
+                <a class="bh_category_link" href="'. get_permalink( $list_page_id ) .'?cf='. rawurlencode($category) .'" title="'. $category .'">
+                  <span class="bh_category_title">'. $category .'</span>
+                </a>
+              </p>
+            ';
+          }
+      ?>
+      Filed in: <?php echo implode(' | ', $categories); ?>
+      <?php
+        }
+      ?>
+    </div>
+    <div class="col-md-4">
+      <a href="<?php echo $business->bizyhood_url ?>" class="btn btn-info btn-block">Do you recommend this business?</a>
+    </div>
+  </div>
     
   <div class="row rowgrid zero-gutter main_business_info sameheight">
     <div class="col-md-8 feedback_cta">
