@@ -10,12 +10,6 @@
     
   }
   
-  // check and create the backlink
-  $backlink = wp_get_referer();
-  if (wp_get_referer() == get_site_url() . $_SERVER["REQUEST_URI"] || wp_get_referer() == false) {
-    $backlink = get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_MAIN_PAGE_ID));
-  }
-  
   $footer_columns = 12;
   if (isset($business->latest_event) && !empty($business->latest_event)) {
     $footer_columns = $footer_columns - 3;
@@ -41,26 +35,31 @@
   $output= json_decode($geocode);
   $latitude = $output->results[0]->geometry->location->lat;
   $longitude = $output->results[0]->geometry->location->lng;
-  
-  // echo '<pre>'.print_r($business, true).'</pre>';
-  
+
 ?>
-<div class="bizyhood_wrap" itemscope itemtype="http://schema.org/LocalBusiness">
-  <div class="row">
+<div class="bizyhood_wrap claimed" itemscope itemtype="http://schema.org/LocalBusiness">
+  <div class="row zero-gutter bh_headline_row">
     <div class="col-md-9">
-      Learn more about our business & services and leave feedback.
+      <h2 itemprop="name"><?php echo $business->name ?></h2>
     </div>
     <div class="col-md-3">
       <a href="<?php echo get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_MAIN_PAGE_ID)); ?>" class="btn-inline pull-right hidden-xs hidden-sm"><span class="entypo-left" aria-hidden="true"></span> See all listings</a>
+    </div>
+  </div>
+
+  <div class="row zero-gutter">
+    <div class="col-md-8">
       <?php 
         if (!empty($business->categories)) {
         
           $categories = array();
           foreach ($business->categories as $category) {
             $categories[] = '
-              <a class="bh_category_link" href="'. get_permalink( $list_page_id ) .'?cf='. rawurlencode($category) .'" title="'. $category .'">
-                <span class="bh_category_title">'. $category .'</span>
-              </a>
+              <p>
+                <a class="bh_category_link" href="'. get_permalink( $list_page_id ) .'?cf='. rawurlencode($category) .'" title="'. $category .'">
+                  <span class="bh_category_title">'. $category .'</span>
+                </a>
+              </p>
             ';
           }
       ?>
@@ -68,12 +67,6 @@
       <?php
         }
       ?>
-    </div>
-  </div>
-
-  <div class="row zero-gutter bh_headline_row">
-    <div class="col-md-8">
-      <h2 itemprop="name"><?php echo $business->name ?></h2>
     </div>
     <div class="col-md-4">
       <a href="<?php echo $business->bizyhood_url ?>" class="btn btn-info btn-block">Do you recommend this business?</a>
@@ -90,6 +83,8 @@
         <?php } ?>
         <?php if ( $business->description ) { ?>
           <div itemprop="description"><?php echo wpautop($business->description); ?></div>
+        <?php } else { ?>
+          <div itemprop="description" class="text-muted"><?php echo wpautop('This business has not yet added a description.'); ?></div>
         <?php } ?>
       </div>
       
@@ -134,7 +129,7 @@
         <?php } ?>
       </div>
       
-      <div class="tablesplit clearfix"></div>
+      <div class="tablesplit"></div>
       
       <div class="column-inner">
         <div class="bh_section" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
@@ -150,7 +145,7 @@
           <p class="bh_staticmap text-center">
             <a class="clearfix" itemprop="url" href="https://maps.google.com?daddr=<?php echo urlencode($business->address1) ?>+<?php echo urlencode($business->locality) ?>+<?php echo urlencode($business->region) ?>+<?php echo urlencode($business->postal_code) ?>" target="_blank">
               <span itemprop="image">
-                <img src="https://maps.googleapis.com/maps/api/staticmap?zoom=14&scale2&size=400x400&maptype=roadmap&markers=color:red%7C<?php echo $latitude; ?>,<?php echo $longitude; ?>&key=<?php echo Bizyhood_Core::GOOGLEMAPS_API_KEY; ?>" />
+                <img src="https://maps.googleapis.com/maps/api/staticmap?zoom=14&scale2&size=400x200&maptype=roadmap&markers=color:red%7C<?php echo $latitude; ?>,<?php echo $longitude; ?>&key=<?php echo Bizyhood_Core::GOOGLEMAPS_API_KEY; ?>" />
               </span>
               <span class="bh_directions">Get Directions</span>
             </a>
