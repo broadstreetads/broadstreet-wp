@@ -37,6 +37,7 @@ class Bizyhood_Core
     CONST KEY_MAIN_PAGE_ID        = 'Bizyhood_Main_page_ID';
     CONST KEY_SIGNUP_PAGE_ID      = 'Bizyhood_Signup_page_ID';
     CONST KEY_PROMOTIONS_PAGE_ID  = 'Bizyhood_Promotions_page_ID';
+    CONST KEY_EVENTS_PAGE_ID      = 'Bizyhood_Events_page_ID';
     CONST KEY_INSTALL_REPORT      = 'Bizyhood_Installed';
     CONST API_MAX_LIMIT           = 250;
     CONST BUSINESS_LOGO_WIDTH     = 307;
@@ -599,11 +600,17 @@ class Bizyhood_Core
       $bizy_rules = array('business-overview/([^/]+)/([^/]+)/?$' => 'index.php?pagename=business-overview&bizyhood_name=$matches[1]&bizyhood_id=$matches[2]');
       $wr_rules = $bizy_rules + $wr_rules;
       
-      $promo_rules = array('business-promotions/([^/]+)/([^/]+)/?$' => 'index.php?pagename=business-promotions&bizyhood_name=$matches[1]&bizyhood_id=$matches[2]');
+      $promo_rules = array('business-promotions/([^/]+)/?$' => 'index.php?pagename=business-promotions&bizyhood_name=$matches[1]');
       $wr_rules = $promo_rules + $wr_rules;
       
-      $events_rules = array('business-events/([^/]+)/([^/]+)/?$' => 'index.php?pagename=business-events&bizyhood_name=$matches[1]&bizyhood_id=$matches[2]');
+      $promo_rules_single = array('business-promotions/([^/]+)/([^/]+)/?$' => 'index.php?pagename=business-promotions&bizyhood_name=$matches[1]&bizyhood_id=$matches[2]');
+      $wr_rules = $promo_rules_single + $wr_rules;
+      
+      $events_rules = array('business-events/([^/]+)/?$' => 'index.php?pagename=business-events&bizyhood_name=$matches[1]');
       $wr_rules = $events_rules + $wr_rules;
+      
+      $events_rules_single = array('business-events/([^/]+)/([^/]+)/?$' => 'index.php?pagename=business-events&bizyhood_name=$matches[1]&bizyhood_id=$matches[2]');
+      $wr_rules = $events_rules_single + $wr_rules;
       
       return $wr_rules;
     }
@@ -614,7 +621,12 @@ class Bizyhood_Core
       $wr_rules = get_option( 'rewrite_rules' );
       
       // check if the rule already exits and if not then flush the rewrite rules
-      if ( ! isset( $wr_rules['business-overview/([^/]+)/([^/]+)/?$'] ) ) {
+      if ( ! isset( $wr_rules['business-overview/([^/]+)/([^/]+)/?$'] ) || 
+            ! isset( $wr_rules['business-promotions/([^/]+)/?$'] ) || 
+            ! isset( $wr_rules['business-promotions/([^/]+)/([^/]+)/?$'] ) || 
+            ! isset( $wr_rules['business-events/([^/]+)/?$'] ) || 
+            ! isset( $wr_rules['business-events/([^/]+)/([^/]+)/?$'] )
+          ) {
         global $wp_rewrite;
         $wp_rewrite->flush_rules();
       }
@@ -938,6 +950,7 @@ class Bizyhood_Core
         $data['main_page_id']       = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
         $data['signup_page_id']     = Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID);
         $data['promotions_page_id'] = Bizyhood_Utility::getOption(self::KEY_PROMOTIONS_PAGE_ID);
+        $data['events_page_id']     = Bizyhood_Utility::getOption(self::KEY_EVENTS_PAGE_ID);
         $data['errors']             = array();
 
         if(!function_exists('curl_exec'))
@@ -1158,6 +1171,49 @@ class Bizyhood_Core
       return $return;
     }
     
+     public function single_business_additional_info($info_request = '', $business_identifier = '', $bizyhood_id = '')
+    {
+      
+      global $wp_query;
+      
+      if ($info_request == '') {
+        return false;
+      }
+      
+      $api_url = Bizyhood_Utility::getApiUrl();
+      $params = array();
+      
+      if ($business_identifier == '') {
+        if(isset($wp_query->query_vars['bizyhood_name'])) {
+          $business_identifier = urldecode($wp_query->query_vars['bizyhood_name']);
+        } else {
+          $business_identifier = (isset($_REQUEST['bizyhood_name']) ? $_REQUEST['bizyhood_name'] : '');
+        }
+      }
+      
+      // false if there is no business name
+      if ($business_identifier == '') {
+        return false;
+      } else {
+        $params['bid'] = $business_identifier;
+      }
+
+      $client = Bizyhood_oAuth::oAuthClient();
+      
+      if (is_wp_error($client)) {
+        return false;
+      }
+
+      try {
+        $response = $client->fetch($api_url . '/'. $info_request .($bizyhood_id != '' ? '/' . $bizyhood_id : '').'/', $params);
+      } catch (Exception $e) {
+        return false;
+      }  
+      $info = json_decode(json_encode($response['result']), FALSE);
+    
+      return $info;
+    }
+    
     
     
     /***** additional busineess info *****/    
@@ -1225,6 +1281,11 @@ class Bizyhood_Core
     
     public function promotions_shortcode($attrs) {
       
+      global $wp_query;
+      
+      // init variable
+      $business_name = '';
+      
       $authetication = Bizyhood_oAuth::set_oauth_temp_data();
       if (is_wp_error($authetication) || Bizyhood_oAuth::checkoAuthData() == false) {
         return Bizyhood_View::load( 'listings/error', array( 'error' => $authetication->get_error_message()), true );
@@ -1241,12 +1302,52 @@ class Bizyhood_Core
       }
       
       $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
+      
+      
+      if (isset($wp_query->query_vars['bizyhood_name']) && isset($wp_query->query_vars['bizyhood_id'])) {
+        $promotions = self::single_business_additional_info('promotions', $wp_query->query_vars['bizyhood_name'], $wp_query->query_vars['bizyhood_id']);
+        
+        if ($promotions !== false && !empty($promotions) && !empty($promotions->identifier)) {
+          $cached_promotions = array();
+          $cached_promotions = json_decode(json_encode($promotions), true); // convert to array and replace results
+          $business_name = $cached_promotions['business_name'];
+          
+          $promotions_args = array( 
+            'promotion' => $cached_promotions, 
+            'list_page_id' => $list_page_id, 
+            'business_name' => $business_name
+          );
+          
+          // no need to continue // we can return a template page with the result
+          return Bizyhood_View::load( 'listings/single/promotion', $promotions_args, true );
+          
+        }
+      }
+      
+      if (isset($wp_query->query_vars['bizyhood_name']) && !isset($wp_query->query_vars['bizyhood_id'])) {
+        $promotions = self::single_business_additional_info('promotions', $wp_query->query_vars['bizyhood_name']);
+        if ($promotions !== false && !empty($promotions)) {
+          $cached_promotions = json_decode(json_encode($promotions), true); // convert to array and replace results
+          $business_name = $cached_promotions[0]['business_name'];
+        }
+      }
+      
+      $promotions_args = array( 
+        'promotions' => $cached_promotions, 
+        'list_page_id' => $list_page_id, 
+        'business_name' => $business_name
+      );
 
-      return Bizyhood_View::load( 'listings/promotions', array( 'promotions' => $cached_promotions, 'list_page_id' => $list_page_id ), true );
+      return Bizyhood_View::load( 'listings/promotions', $promotions_args, true );
       
     }
     
     public function events_shortcode($attrs) {
+      
+      global $wp_query;
+      
+      // init variable
+      $business_name = '';
       
       $authetication = Bizyhood_oAuth::set_oauth_temp_data();
       if (is_wp_error($authetication) || Bizyhood_oAuth::checkoAuthData() == false) {
@@ -1264,9 +1365,45 @@ class Bizyhood_Core
       }
       
       $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
-
-      return Bizyhood_View::load( 'listings/events', array( 'events' => $cached_events, 'list_page_id' => $list_page_id ), true );
       
+      if (isset($wp_query->query_vars['bizyhood_name']) && isset($wp_query->query_vars['bizyhood_id'])) {
+        $events = self::single_business_additional_info('events', $wp_query->query_vars['bizyhood_name'], $wp_query->query_vars['bizyhood_id']);
+        
+        if ($events !== false && !empty($events) && !empty($events->identifier)) {
+          $cached_events = array();
+          $cached_events = json_decode(json_encode($events), true); // convert to array and replace results
+          $business_name = $cached_events['business_name'];
+          $event_identifier = $cached_events['identifier'];
+          
+          $events_args = array( 
+            'event' => $cached_events, 
+            'list_page_id' => $list_page_id, 
+            'business_name' => $business_name,
+            'event_identifier' => $event_identifier
+          );
+          
+          // no need to continue // we can return a template page with the result
+          return Bizyhood_View::load( 'listings/single/event', $events_args, true );
+          
+        }
+      }
+      
+      if (isset($wp_query->query_vars['bizyhood_name']) && !isset($wp_query->query_vars['bizyhood_id'])) {
+        $events = self::single_business_additional_info('events', $wp_query->query_vars['bizyhood_name']);
+        if ($events !== false && !empty($events)) {
+          $cached_events = json_decode(json_encode($events), true); // convert to array and replace results
+          $business_name = $cached_events[0]['business_name'];
+        }
+      }
+      
+      $events_args = array( 
+        'events' => $cached_events, 
+        'list_page_id' => $list_page_id, 
+        'business_name' => $business_name
+      );
+      
+      return Bizyhood_View::load( 'listings/events', $events_args, true );
+
     }
     
     

@@ -29,7 +29,7 @@ jQuery(function($){
   
   function bizyload() { 
     
-    jQuery('.sameheight').matchHeight();
+    jQuery('.sameheight>div').matchHeight();
 
   }
 });

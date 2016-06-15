@@ -176,6 +176,10 @@
   display: block;
   max-width: 90%;
 }
+.events_page .events_dates span {
+  display: inline-block;
+  max-width: 90%;
+}
 
 .promotions_fields .promotion_name,
 .events_fields .event_name {

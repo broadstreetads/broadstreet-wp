@@ -35,6 +35,14 @@
   $output= json_decode($geocode);
   $latitude = $output->results[0]->geometry->location->lat;
   $longitude = $output->results[0]->geometry->location->lng;
+  
+  // check and create the backlink
+  $backlink = wp_get_referer();
+  if (wp_get_referer() == get_site_url() . $_SERVER["REQUEST_URI"] || wp_get_referer() == false) {
+    $backlink = get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_MAIN_PAGE_ID));
+  }
+  
+  // echo '<pre>'.print_r($business, true).'</pre>';
 
 ?>
 <div class="bizyhood_wrap claimed" itemscope itemtype="http://schema.org/LocalBusiness">
@@ -43,12 +51,12 @@
       <h2 itemprop="name"><?php echo $business->name ?></h2>
     </div>
     <div class="col-md-3">
-      <a href="<?php echo get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_MAIN_PAGE_ID)); ?>" class="btn-inline pull-right hidden-xs hidden-sm"><span class="entypo-left" aria-hidden="true"></span> See all listings</a>
+      <a href="<?php echo $backlink; ?>" class="btn-inline pull-right hidden-xs hidden-sm"><span class="entypo-left" aria-hidden="true"></span> See all listings</a>
     </div>
   </div>
 
   <div class="row zero-gutter">
-    <div class="col-md-8">
+    <div class="col-md-12">
       <?php 
         if (!empty($business->categories)) {
         
@@ -67,9 +75,6 @@
       <?php
         }
       ?>
-    </div>
-    <div class="col-md-4">
-      <a href="<?php echo $business->bizyhood_url ?>" class="btn btn-info btn-block">Do you recommend this business?</a>
     </div>
   </div>
     
@@ -163,7 +168,7 @@
                 <h5>Hours</h5>
                 <dl class="bh_dl-horizontal">
                     <?php foreach($business->hours as $hour): ?>
-                    <dt><link itemprop="dayOfWeek" href="http://purl.org/goodrelations/v1#<?php echo $hour->day_name; ?>"><?php echo $hour->day_name; ?>:</dt><br />
+                    <dt><link itemprop="dayOfWeek" href="http://purl.org/goodrelations/v1#<?php echo $hour->day_name; ?>"><?php echo substr($hour->day_name,0,3); ?>:</dt>
                     <dd><?php if($hour->hours_type == 1): ?><?php foreach($hour->hours as $hour_display): ?><span itemprop="opens" content="<?php echo date('c',strtotime($hour_display[0])); ?>"><?php echo date('g:i a',strtotime($hour_display[0])); ?></span>&ndash;<span itemprop="closes" content="<?php echo date('c',strtotime($hour_display[1])); ?>"><?php echo date('g:i a',strtotime($hour_display[1])); ?></span> <?php endforeach; ?><?php else : ?><?php echo $hour->hours_type_name; ?><?php endif; ?></dd>
                     <?php endforeach; ?>
                 </dl>
@@ -207,7 +212,7 @@
               <a itemprop="url" href="<?php echo $business->latest_event->details_url; ?>" title="<?php echo $business->latest_event->name; ?> details" target="_blank">View Details &rarr;</a>
             </div>
             
-            <a itemprop="url" class="btn btn-info" href="<?php echo $business->events_url; ?>" title="All <?php echo $business->name; ?> events">All Events</a>
+            <a itemprop="url" class="btn btn-info" href="<?php echo get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_EVENTS_PAGE_ID)).$business->bizyhood_id.'/'; ?>" title="All <?php echo $business->name; ?> events">All Events</a>
         </div>
       </div>
     <?php } ?>
@@ -237,13 +242,13 @@
             <div class="bh_alert">
               <h4><?php echo $business->latest_promotion->name; ?></h4>
               <dl class="bh_dl-horizontal">
-                <dt>Date</dt>
+                <dt>Date</dt><br />
                 <dd><time itemprop="startDate" datetime="<?php echo date('c', strtotime($business->latest_promotion->start));?>"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $business->latest_promotion->start ) ); ?></time></dd>
               </dl>
               <a href="<?php echo $business->latest_promotion->details_url; ?>" title="<?php echo $business->latest_promotion->name; ?> details" target="_blank">View Details &rarr;</a>
             </div>
             
-            <a class="btn btn-info" href="<?php echo $business->promotions_url; ?>" title="All <?php echo $business->name; ?> events">All Events</a>
+            <a itemprop="url" class="btn btn-info" href="<?php echo get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_PROMOTIONS_PAGE_ID)).$business->bizyhood_id.'/'; ?>" title="All <?php echo $business->name; ?> promotions">All Promotions</a>
         </div>
       </div>
     <?php } ?>
@@ -290,7 +295,7 @@
 
   </div><!-- /.row -->
   
-  <a href="<?php echo get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_MAIN_PAGE_ID)); ?>" class="btn-inline pull-right"><span class="entypo-left" aria-hidden="true"></span> See all listings</a>
+  <a href="<?php echo $backlink; ?>" class="btn-inline pull-right"><span class="entypo-left" aria-hidden="true"></span> See all listings</a>
   
 <!-- Root element of PhotoSwipe. Must have class pswp. -->
 <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">

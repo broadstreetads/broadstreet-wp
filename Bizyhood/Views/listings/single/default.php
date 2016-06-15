@@ -17,6 +17,12 @@
   $latitude = $output->results[0]->geometry->location->lat;
   $longitude = $output->results[0]->geometry->location->lng;
   
+  // check and create the backlink
+  $backlink = wp_get_referer();
+  if (wp_get_referer() == get_site_url() . $_SERVER["REQUEST_URI"] || wp_get_referer() == false) {
+    $backlink = get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_MAIN_PAGE_ID));
+  }
+  
 ?>
 <div class="bizyhood_wrap unclaimed" itemscope itemtype="http://schema.org/LocalBusiness">
   <div class="row zero-gutter bh_headline_row">
@@ -24,7 +30,7 @@
       <h2 itemprop="name"><?php echo $business->name ?></h2>
     </div>
     <div class="col-md-3">
-      <a href="<?php echo get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_MAIN_PAGE_ID)); ?>" class="btn-inline pull-right hidden-xs hidden-sm"><span class="entypo-left" aria-hidden="true"></span> See all listings</a>
+      <a href="<?php echo $backlink; ?>" class="btn-inline pull-right hidden-xs hidden-sm"><span class="entypo-left" aria-hidden="true"></span> See all listings</a>
     </div>
   </div>
 
@@ -94,4 +100,4 @@
     </div>
   </div><!-- /.row -->
   
-  <a href="<?php echo get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_MAIN_PAGE_ID)); ?>" class="btn-inline pull-right"><span class="entypo-left" aria-hidden="true"></span> See all listings</a>
+  <a href="<?php echo $backlink; ?>" class="btn-inline pull-right"><span class="entypo-left" aria-hidden="true"></span> See all listings</a>

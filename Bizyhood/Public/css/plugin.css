@@ -8,6 +8,11 @@ html, body
 
 [class*="entypo-"]:before { font-family: 'entypo', sans-serif;}
 
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.hidden, .hidden span, .hidden a { display: none !important; }
+
 #less_categories {
   display: none;
 }
@@ -148,9 +153,10 @@ a.facet_helper {
 .bh_block-link {text-decoration:none;}
 .bh_block-link h5 {color:inherit;}
 .col-md-4:nth-of-type(3n+1) {clear: left;}
+.bh_border {padding:0;margin:0 -5px;border-radius:0;box-shadow:none;border:0;}
 .bh_panel {padding:0;margin:0 -5px;border-radius:0;box-shadow:none;border:0;}
 .bh_panel .bh_address {color:#333;}
-.bh_panel p {color:inherit;line-height:1.5;margin:0;}
+.bh_results .bh_panel p, .bh_panel p {color:inherit;line-height:1.5;margin:0;}
 .bh_panel a {display:block;padding:10px 10px 15px;}
 .bh_panel a.bh_inactive {color:inherit;pointer-events:none;}
 .bh_panel a:hover {text-decoration:none;background:rgba(0,0,0,.05);}
@@ -227,7 +233,8 @@ a.facet_helper {
 }
 
 .bh_dl-horizontal {word-break: break-word;word-wrap: break-word;}
-.bh_dl-horizontal dd {margin: 0 0 5px 10px;}
+.bh_dl-horizontal dd {margin: 0 0 5px 40px;}
+.bh_infobox .bh_dl-horizontal dd {margin: 0 0 5px 10px;}
 .bh_dl-horizontal dt {
   float: left;
   clear: left;
@@ -267,7 +274,7 @@ a.facet_helper {
 .bh_local-nav h5 {padding:10px;background:#000 !important;color:#fff !important;margin:0;}
 .bh_business-header-title h3 {font-size:24px;  margin:0 0 20px;}
 .bh_business-header {border-bottom:0;margin-bottom:15px;}
-.bh_panel {border-top:1px solid #ccc;}
+.bh_panel, .bh_border {border-top:1px solid #ccc;}
 .bh_alert {padding:15px;background:rgba(0,0,0,.05);margin:15px 0;}
 .bh_alert p {margin:5px 0;}
 .bh_claim {padding:15px;border:1px solid #ccc;margin-bottom:10px;}
@@ -327,6 +334,23 @@ span.entypo-star {position:relative;top:-1px;}
 }
 .unclaimed .feedback_cta h4 {
   margin: 20px 0;
+}
+
+.single_event_page .bh_dl-horizontal dd,
+.single_promotion_page .bh_dl-horizontal dd {
+  margin-left: 0;
+}
+.single_event_page .bh_dl-horizontal,
+.single_promotion_page .bh_dl-horizontal {
+  margin-top: 0;
+}
+
+.truncate {
+  width: 195px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
 }
 
 @media (max-width: 992px) {

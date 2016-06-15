@@ -114,6 +114,21 @@
                     </div>
                     
                     <div class="break"></div>
+                    
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">Business Events Page</div>
+                            <div class="desc nomargin">
+                                The page that will be used to display all businesses events. Must include the [bh-events] shortcode.<br />
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <?php wp_dropdown_pages( array('name' => 'events_page_id', 'selected' => $events_page_id) ) ?>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    
+                    <div class="break"></div>
 
                     <div class="option">
                         <div class="save-container">

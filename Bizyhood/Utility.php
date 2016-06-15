@@ -64,12 +64,14 @@ class Bizyhood_Utility
       
       $business_view_page = get_page_by_path( "business-overview" );
       $business_promotions = get_page_by_path( "business-promotions" );
+      $business_events = get_page_by_path( "business-events" );
       $business_signup = get_page_by_path( "business-signup" );
       if (
         is_page(self::getOption(Bizyhood_Core::KEY_SIGNUP_PAGE_ID)) || 
         is_page(self::getOption(Bizyhood_Core::KEY_MAIN_PAGE_ID)) || 
         ($business_view_page !== null && is_page($business_view_page->ID)) || 
         ($business_promotions !== null && is_page($business_promotions->ID)) || 
+        ($business_events !== null && is_page($business_events->ID)) || 
         ($business_signup !== null && is_page($business_signup->ID))
       ) {
         return true;
@@ -111,6 +113,48 @@ class Bizyhood_Utility
       } else {
         // display both start and ending day
         $dates = '<span class="'. $plural .'_dates">Valid from '. date_i18n( get_option( 'date_format' ), strtotime($start_date)) .' to '. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span>';
+      }
+        
+      return $dates;
+    }
+    
+    /**
+     * Build date text from start and end date with microdata
+     * @param string $start The starting date
+     * @param string $end The ending date
+     * @param string $single The text string that has to do with the date
+     * @param string $plural The text string in plural form that has to do with the date
+     * @return string The date saying
+     */
+    public static function buildDateTextMicrodata($start, $end, $single, $plural)
+    {
+      
+      $dates = '';
+      
+      // check date
+      $start_date = date('Y-m-d', strtotime($start)); // start date
+      $tomorrow_date = date('Y-m-d', strtotime('+ 1 days')); // tomorrow date
+      $end_date = date('Y-m-d', strtotime($end)); // end date
+      
+      if (strtotime($start_date) < strtotime($tomorrow_date)) {
+        // display only the ending date
+        $dates = '
+          <span class="hidden" itemprop="startDate" content="'. date('c',strtotime($start_date)) .'">'. date_i18n( get_option( 'date_format' ), strtotime($start_date)) .'</span>
+          <span class="'. $plural .'_dates">Until <span itemprop="endDate"  content="'. date('c',strtotime($end_date)) .'">'. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span></span>';
+      } elseif (strtotime($start_date) == strtotime($end_date)) {
+        // if it is today
+        if (strtotime($end_date) == date('Y-m-d', time())) {
+          $dates = '
+            <span class="'. $plural .'_dates">'. $single .' running today!</span>
+            <span class="hidden" itemprop="startDate" content="'. date('c',strtotime($start_date)) .'">'. date_i18n( get_option( 'date_format' ), strtotime($start_date)) .'</span>';
+        } else {
+          $dates = '
+            <span class="hidden" itemprop="startDate" content="'. date('c',strtotime($start_date)) .'">'. date_i18n( get_option( 'date_format' ), strtotime($start_date)) .'</span>
+            <span class="'. $plural .'_dates">Valid on <span itemprop="endDate"  content="'. date('c',strtotime($end_date)) .'">'. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span></span>';
+        }
+      } else {
+        // display both start and ending day
+        $dates = '<span class="'. $plural .'_dates">Valid from <span itemprop="startDate" content="'. date('c',strtotime($start_date)) .'">'. date_i18n( get_option( 'date_format' ), strtotime($start_date)) .'</span> to <span itemprop="endDate"  content="'. date('c',strtotime($end_date)) .'">'. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span></span>';
       }
         
       return $dates;
