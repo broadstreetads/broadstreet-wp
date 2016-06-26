@@ -30,7 +30,7 @@
       <h2 itemprop="name"><?php echo $business->name ?></h2>
     </div>
     <div class="col-md-3">
-      <a href="<?php echo $backlink; ?>" class="btn-inline pull-right hidden-xs hidden-sm"><span class="entypo-left" aria-hidden="true"></span> See all listings</a>
+      <a href="<?php echo $backlink; ?>" class="btn-inline pull-right hidden-xs hidden-sm"><span class="entypo-left" aria-hidden="true"></span> Back</a>
     </div>
   </div>
 
@@ -39,16 +39,32 @@
   <div class="row rowgrid zero-gutter main_business_info sameheight">
     <div class="col-md-8 feedback_cta">
       <div class="bh_table">
+        <div class="bh_tablerow">
+          <div class="bh_tablecell">
+          
+            <div class="bh_alert text-center">
+              <h4 class="h2">IS THIS YOUR BUSINESS?</h4>
+              <a href="https://business.bizyhood.com/accounts/signup/" class="btn btn-info" <?php echo $colors['style']; ?> target="_blank">Claim it now!</a>
+            </div>
+          </div>  
+        </div>  
+
+              
+        <div class="tablesplit"></div>
+              
+
           <div class="bh_tablerow">
             <div class="bh_tablecell">
+            
               <div class="bh_alert text-center">
                 <h4 class="h2">SUPPORT YOUR LOCAL BUSINESS</h4>
-                <a href="<?php echo $business->bizyhood_url ?>" class="btn btn-info" target="_blank">Give Feedback</a>
+                <a href="<?php echo $business->bizyhood_url ?>" class="btn btn-info" <?php echo $colors['style']; ?> target="_blank">Give Feedback</a>
               </div>
             </div>
           </div>
         </div>      
-    </div><!-- /.col-md-6 -->
+    </div><!-- /.col-md-4 -->
+    
     
     <div class="col-md-4">
     
@@ -86,8 +102,8 @@
             </p>
         </div>
         <div class="bh_section bh_map_wrap" itemprop="hasMap" itemtype="http://schema.org/Map">
-          <p class="bh_staticmap text-center">
-            <a class="clearfix" itemprop="url" href="https://maps.google.com?daddr=<?php echo urlencode($business->address1) ?>+<?php echo urlencode($business->locality) ?>+<?php echo urlencode($business->region) ?>+<?php echo urlencode($business->postal_code) ?>" target="_blank">
+          <p class="bh_staticmap text-center" <?php echo $colors['style']; ?>>
+            <a class="clearfix" <?php echo $colors['stylefont']; ?> itemprop="url" href="https://maps.google.com?daddr=<?php echo urlencode($business->address1) ?>+<?php echo urlencode($business->locality) ?>+<?php echo urlencode($business->region) ?>+<?php echo urlencode($business->postal_code) ?>" target="_blank">
               <span itemprop="image">
                 <img src="https://maps.googleapis.com/maps/api/staticmap?zoom=14&scale2&size=400x200&maptype=roadmap&markers=color:red%7C<?php echo $latitude; ?>,<?php echo $longitude; ?>&key=<?php echo Bizyhood_Core::GOOGLEMAPS_API_KEY; ?>" />
               </span>
@@ -100,4 +116,4 @@
     </div>
   </div><!-- /.row -->
   
-  <a href="<?php echo $backlink; ?>" class="btn-inline pull-right"><span class="entypo-left" aria-hidden="true"></span> See all listings</a>
+  <a href="<?php echo $backlink; ?>" class="btn-inline pull-right"><span class="entypo-left" aria-hidden="true"></span> Back</a>

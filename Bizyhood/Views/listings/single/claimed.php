@@ -41,8 +41,6 @@
   if (wp_get_referer() == get_site_url() . $_SERVER["REQUEST_URI"] || wp_get_referer() == false) {
     $backlink = get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_MAIN_PAGE_ID));
   }
-  
-  // echo '<pre>'.print_r($business, true).'</pre>';
 
 ?>
 <div class="bizyhood_wrap claimed" itemscope itemtype="http://schema.org/LocalBusiness">
@@ -51,7 +49,7 @@
       <h2 itemprop="name"><?php echo $business->name ?></h2>
     </div>
     <div class="col-md-3">
-      <a href="<?php echo $backlink; ?>" class="btn-inline pull-right hidden-xs hidden-sm"><span class="entypo-left" aria-hidden="true"></span> See all listings</a>
+      <a href="<?php echo $backlink; ?>" class="btn-inline pull-right hidden-xs hidden-sm"><span class="entypo-left" aria-hidden="true"></span> Back</a>
     </div>
   </div>
 
@@ -118,7 +116,7 @@
           <p>Call us: <a href="tel:<?php echo $business->telephone; ?>" itemprop="telephone"><?php echo $business->telephone; ?></a></p>
         <?php } ?>
         <?php if($business->website) { ?>
-          <p>Visit: <a class="bh_site_link" itemprop="url" href="<?php echo $business->website; ?>" target="_blank"><?php echo str_replace(array('http://', 'https://', 'www.'), array('','',''), $business->website); ?></a></p>
+          <p>Visit: <a class="bh_site_link truncate" itemprop="url" href="<?php echo $business->website; ?>" target="_blank"><?php echo str_replace(array('http://', 'https://', 'www.'), array('','',''), $business->website); ?></a></p>
         <?php } ?>
         
         <?php if($business->social_networks) { ?>
@@ -127,7 +125,7 @@
                 $social_network->name = 'gplus';
               }
             ?>
-            <a class="bh_social_link" itemprop="sameAs" href="<?php echo $social_network->url; ?>" title="<?php echo $social_network->name; ?>" target="_blank">
+            <a class="bh_social_link" <?php echo $colors['style']; ?> itemprop="sameAs" href="<?php echo $social_network->url; ?>" title="<?php echo $social_network->name; ?>" target="_blank">
               <span class="entypo-<?php echo strtolower($social_network->name); ?>"></span>
             </a>
           <?php } ?>
@@ -147,8 +145,8 @@
             </p>
         </div>
         <div class="bh_section bh_map_wrap" itemprop="hasMap" itemtype="http://schema.org/Map">
-          <p class="bh_staticmap text-center">
-            <a class="clearfix" itemprop="url" href="https://maps.google.com?daddr=<?php echo urlencode($business->address1) ?>+<?php echo urlencode($business->locality) ?>+<?php echo urlencode($business->region) ?>+<?php echo urlencode($business->postal_code) ?>" target="_blank">
+          <p class="bh_staticmap text-center" <?php echo $colors['style']; ?>>
+            <a class="clearfix" <?php echo $colors['stylefont']; ?> itemprop="url" href="https://maps.google.com?daddr=<?php echo urlencode($business->address1) ?>+<?php echo urlencode($business->locality) ?>+<?php echo urlencode($business->region) ?>+<?php echo urlencode($business->postal_code) ?>" target="_blank">
               <span itemprop="image">
                 <img src="https://maps.googleapis.com/maps/api/staticmap?zoom=14&scale2&size=400x200&maptype=roadmap&markers=color:red%7C<?php echo $latitude; ?>,<?php echo $longitude; ?>&key=<?php echo Bizyhood_Core::GOOGLEMAPS_API_KEY; ?>" />
               </span>
@@ -209,10 +207,10 @@
                 <dt>Date</dt><br />
                 <dd><time itemprop="startDate" datetime="<?php echo date('c', strtotime($business->latest_event->start));?>"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $business->latest_event->start ) ); ?></time></dd>
               </dl>
-              <a itemprop="url" href="<?php echo $business->latest_event->details_url; ?>" title="<?php echo $business->latest_event->name; ?> details" target="_blank">View Details &rarr;</a>
+              <a itemprop="url" href="<?php echo get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_EVENTS_PAGE_ID)).$business->bizyhood_id.'/'.$business->latest_event->identifier; ?>" title="<?php echo $business->latest_event->name; ?> details">View Details &rarr;</a>
             </div>
             
-            <a itemprop="url" class="btn btn-info" href="<?php echo get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_EVENTS_PAGE_ID)).$business->bizyhood_id.'/'; ?>" title="All <?php echo $business->name; ?> events">All Events</a>
+            <a itemprop="url" class="btn btn-info" <?php echo $colors['style']; ?> href="<?php echo get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_EVENTS_PAGE_ID)).$business->bizyhood_id.'/'; ?>" title="All <?php echo $business->name; ?> events">All Events</a>
         </div>
       </div>
     <?php } ?>
@@ -228,7 +226,7 @@
               <a href="#" title="read more" target="_blank">Read More &rarr;</a>
             </div>
             
-            <a class="btn btn-info" href="#" title="All news">All News</a>
+            <a class="btn btn-info" <?php echo $colors['style']; ?> href="#" title="All news">All News</a>
         </div>
       </div>
     <?php } ?>
@@ -243,12 +241,12 @@
               <h4><?php echo $business->latest_promotion->name; ?></h4>
               <dl class="bh_dl-horizontal">
                 <dt>Date</dt><br />
-                <dd><time itemprop="startDate" datetime="<?php echo date('c', strtotime($business->latest_promotion->start));?>"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $business->latest_promotion->start ) ); ?></time></dd>
+                <dd><?php echo Bizyhood_Utility::buildDateTextMicrodata($business->latest_promotion->start, $business->latest_promotion->end, 'promotion', 'promotions'); ?></dd>
               </dl>
-              <a href="<?php echo $business->latest_promotion->details_url; ?>" title="<?php echo $business->latest_promotion->name; ?> details" target="_blank">View Details &rarr;</a>
+              <a href="<?php echo get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_PROMOTIONS_PAGE_ID)).$business->bizyhood_id.'/'.$business->latest_promotion->identifier; ?>" title="<?php echo $business->latest_promotion->name; ?> details">View Details &rarr;</a>
             </div>
             
-            <a itemprop="url" class="btn btn-info" href="<?php echo get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_PROMOTIONS_PAGE_ID)).$business->bizyhood_id.'/'; ?>" title="All <?php echo $business->name; ?> promotions">All Promotions</a>
+            <a itemprop="url" class="btn btn-info" <?php echo $colors['style']; ?> href="<?php echo get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_PROMOTIONS_PAGE_ID)).$business->bizyhood_id.'/'; ?>" title="All <?php echo $business->name; ?> promotions">All Promotions</a>
         </div>
       </div>
     <?php } ?>
@@ -263,7 +261,7 @@
               <h4><?php echo $business->latest_feedback->name; ?></h4>
             </div>
             
-            <a class="btn btn-info" href="<?php echo $business->feedback_url; ?>" title="All <?php echo $business->name; ?> feedback">All Feedback</a>
+            <a class="btn btn-info" <?php echo $colors['style']; ?> href="<?php echo $business->feedback_url; ?>" title="All <?php echo $business->name; ?> feedback">All Feedback</a>
         </div>
       </div>
     <?php } ?>
@@ -280,7 +278,7 @@
             <div class="bh_tablecell">
               <div class="bh_alert text-center">
                 <h4 class="h2">SUPPORT YOUR LOCAL BUSINESS</h4>
-                <a href="<?php echo $business->bizyhood_url ?>" class="btn btn-info" target="_blank">Give Feedback</a>
+                <a href="<?php echo $business->bizyhood_url ?>" class="btn btn-info" <?php echo $colors['style']; ?> target="_blank">Give Feedback</a>
               </div>
             </div>
           </div>
@@ -295,7 +293,7 @@
 
   </div><!-- /.row -->
   
-  <a href="<?php echo $backlink; ?>" class="btn-inline pull-right"><span class="entypo-left" aria-hidden="true"></span> See all listings</a>
+  <a href="<?php echo $backlink; ?>" class="btn-inline pull-right"><span class="entypo-left" aria-hidden="true"></span> Back</a>
   
 <!-- Root element of PhotoSwipe. Must have class pswp. -->
 <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">

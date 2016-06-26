@@ -129,6 +129,36 @@
                     </div>
                     
                     <div class="break"></div>
+                    
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">Buttons background color</div>
+                            <div class="desc nomargin">
+                                
+                            </div>
+                        </div>
+                        <div class="control-container">
+                          <input class="widefat color-picker colorfield colorfield_btn_bg jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo Bizyhood_Core::BTN_BG_COLOR; ?>" name="btn_bg_color" type="text" value="<?php echo esc_attr( $btn_bg_color ); ?>">
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    
+                    <div class="break"></div>
+                    
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">Buttons font color</div>
+                            <div class="desc nomargin">
+                                
+                            </div>
+                        </div>
+                        <div class="control-container">
+                          <input class="widefat color-picker colorfield colorfield_btn_font jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo Bizyhood_Core::BTN_FONT_COLOR; ?>" name="btn_font_color" type="text" value="<?php echo esc_attr( $btn_font_color ); ?>">
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    
+                    <div class="break"></div>
 
                     <div class="option">
                         <div class="save-container">

@@ -43,19 +43,18 @@
         </div>
       */
       ?>
-        <div class="col-sm-8">
+        <div class="col-sm-12">
           
           <span class="promotion_name"><?php echo $promotion['name']; ?></span>
           <span class="promotion_description"><?php echo $promotion['details']; ?></span>
-          <?php echo $dates; ?>
-        </div>
-        <div class="col-sm-4">
+          <br /><br />
           <dl class="bh_dl-horizontal">
-            <dt>Offer Valid</dt><br />
+            <dt>Offer Valid</dt>&nbsp; 
             <dd><?php echo $dates; ?></dd>
-            <dt>More Information</dt><br />
-            <dd><a class="details_url truncate" href="<?php echo $promotion['details_url']; ?>" target="_blank" title="<?php echo $promotion['name']; ?>"><?php echo $promotion['details_url']; ?></a></dd>
+            <dt>More Information</dt>&nbsp; 
+            <dd><a class="details_url" href="<?php echo $promotion['details_url']; ?>" target="_blank" title="<?php echo $promotion['name']; ?>"><?php echo $promotion['details_url']; ?></a></dd>
           </dl>
+
         </div>
       </div>
           

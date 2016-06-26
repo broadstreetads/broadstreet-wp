@@ -46,6 +46,8 @@ class Bizyhood_Core
     CONST META_DESCRIPTION_LENGTH = 80;
     CONST BOOTSTRAP_VERSION       = '3.3.5';
     CONST GOOGLEMAPS_API_KEY      = 'AIzaSyBu3ULkIPYc_YNNazSo8_PJqrsVb7JxTMU';
+    CONST BTN_BG_COLOR            = 'bh_btn_bg_color';
+    CONST BTN_FONT_COLOR          = 'bh_btn_font_color';
     
     public static $globals = null;
 
@@ -286,7 +288,7 @@ class Bizyhood_Core
       
       $business = '';
       
-      if($single_business_information === false) {
+      if($single_business_information === false || !isset($single_business_information->name)) {
         return $buffer;
       } else {
        $business = $single_business_information; 
@@ -341,7 +343,7 @@ class Bizyhood_Core
       }
       
       
-      $buffer = preg_replace( '/<title.*?\/title>/i', '<title>'. $title .'</title>'."\n".$meta, $buffer );
+      $buffer = preg_replace( '/<title.*?\/title>/si', '<title>'. $title .'</title>'."\n".$meta, $buffer );
 
   
     
@@ -899,7 +901,7 @@ class Bizyhood_Core
         if(strstr($_SERVER['QUERY_STRING'], 'Bizyhood'))
         {
             wp_enqueue_style ('Bizyhood-styles',  Bizyhood_Utility::getCSSBaseURL() . 'bizyhood.css?v='. BIZYHOOD_VERSION);
-            wp_enqueue_script('Bizyhood-main'  ,  Bizyhood_Utility::getJSBaseURL().'bizyhood.js?v='. BIZYHOOD_VERSION);
+            wp_enqueue_script('Bizyhood-main'  ,  Bizyhood_Utility::getJSBaseURL().'bizyhood.js?v='. BIZYHOOD_VERSION, array( 'wp-color-picker' ));
         }
         
         # Only register on the post editing page
@@ -917,6 +919,11 @@ class Bizyhood_Core
                 || strstr($_SERVER['QUERY_STRING'], 'Bizyhood-Business'))
         {
           wp_enqueue_style ('Bizyhood-custom-post-css', Bizyhood_Utility::getCSSBaseURL() . 'bizyhood-admin-widgets.css');
+          wp_enqueue_style( 'wp-color-picker' );        
+          wp_enqueue_script( 'wp-color-picker' );
+        }
+        
+        if (isset($_GET['page']) && $_GET['page'] == 'Bizyhood') {
           wp_enqueue_style( 'wp-color-picker' );        
           wp_enqueue_script( 'wp-color-picker' );
         }
@@ -951,6 +958,8 @@ class Bizyhood_Core
         $data['signup_page_id']     = Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID);
         $data['promotions_page_id'] = Bizyhood_Utility::getOption(self::KEY_PROMOTIONS_PAGE_ID);
         $data['events_page_id']     = Bizyhood_Utility::getOption(self::KEY_EVENTS_PAGE_ID);
+        $data['btn_bg_color']       = Bizyhood_Utility::getOption(self::BTN_BG_COLOR);
+        $data['btn_font_color']     = Bizyhood_Utility::getOption(self::BTN_FONT_COLOR);
         $data['errors']             = array();
 
         if(!function_exists('curl_exec'))
@@ -1203,6 +1212,7 @@ class Bizyhood_Core
       if (is_wp_error($client)) {
         return false;
       }
+      
 
       try {
         $response = $client->fetch($api_url . '/'. $info_request .($bizyhood_id != '' ? '/' . $bizyhood_id : '').'/', $params);
@@ -1248,7 +1258,6 @@ class Bizyhood_Core
         'identifier'  => $filtered_attributes['identifier']
       );
 
-      
       try {
         $response = $client->fetch($api_url.'/'. $command .'/', $params);
       } catch (Exception $e) {
@@ -1302,13 +1311,13 @@ class Bizyhood_Core
       }
       
       $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
-      
-      
+
       if (isset($wp_query->query_vars['bizyhood_name']) && isset($wp_query->query_vars['bizyhood_id'])) {
+        
         $promotions = self::single_business_additional_info('promotions', $wp_query->query_vars['bizyhood_name'], $wp_query->query_vars['bizyhood_id']);
         
         if ($promotions !== false && !empty($promotions) && !empty($promotions->identifier)) {
-          $cached_promotions = array();
+          
           $cached_promotions = json_decode(json_encode($promotions), true); // convert to array and replace results
           $business_name = $cached_promotions['business_name'];
           
@@ -1326,6 +1335,7 @@ class Bizyhood_Core
       
       if (isset($wp_query->query_vars['bizyhood_name']) && !isset($wp_query->query_vars['bizyhood_id'])) {
         $promotions = self::single_business_additional_info('promotions', $wp_query->query_vars['bizyhood_name']);
+        
         if ($promotions !== false && !empty($promotions)) {
           $cached_promotions = json_decode(json_encode($promotions), true); // convert to array and replace results
           $business_name = $cached_promotions[0]['business_name'];
@@ -1523,10 +1533,50 @@ class Bizyhood_Core
               $business = $single_business_information;
             }
             
+            // get buttons color settings
+            $colors = array(
+              'bg'        => Bizyhood_Utility::getOption(self::BTN_BG_COLOR),
+              'font'      => Bizyhood_Utility::getOption(self::BTN_FONT_COLOR),
+              'style'     => '',
+              'stylefont' => '',
+              'stylebg'   => '',
+            );
+            
+            if ($colors['bg'] != '' || $colors['font'] != '') {
+              $colors['style'] = 'style="'. ($colors['bg'] != '' ? 'background-color: '.$colors['bg'].'; border-color: '.$colors['bg'].'; ' : '') .''. ($colors['font'] != '' ? 'color: '.$colors['font'].';' : '') .'"';
+            }
+            
+            if ($colors['font'] != '') {
+              $colors['stylefont'] = 'style="color: '.$colors['font'].';"';
+            }
+            
+            if ($colors['bg'] != '') {
+              $colors['stylebg'] = 'style="background-color: '.$colors['bg'].';"';
+            }
+            
             if ($single_business_information->claimed == 1) {
-              return Bizyhood_View::load('listings/single/claimed', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id, 'list_page_id' => $list_page_id), true);
+              
+              // get promotions and events only for claimed businesses
+              
+              $events     = self::single_business_additional_info('events', $business->bizyhood_id);
+              $promotions = self::single_business_additional_info('promotions', $business->bizyhood_id);
+              
+              if ($events !== false && !empty($events)) {
+                $business->latest_event = $events[0]; 
+              } else {
+                $business->latest_event = '';
+              }
+              
+              if ($promotions !== false && !empty($promotions)) {
+                $business->latest_promotion = $promotions[0]; 
+              } else {
+                $business->latest_promotion = '';
+              }
+
+              
+              return Bizyhood_View::load('listings/single/claimed', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id, 'list_page_id' => $list_page_id, 'colors' => $colors), true);
             } else {
-              return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id, 'list_page_id' => $list_page_id), true);
+              return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id, 'list_page_id' => $list_page_id, 'colors' => $colors), true);
             }
         }
 

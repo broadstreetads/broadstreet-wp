@@ -31,6 +31,8 @@ class Bizyhood_Ajax
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_SIGNUP_PAGE_ID, $_POST['signup_page_id']);
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_PROMOTIONS_PAGE_ID, $_POST['promotions_page_id']);
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_EVENTS_PAGE_ID, $_POST['events_page_id']);
+        Bizyhood_Utility::setOption(Bizyhood_Core::BTN_BG_COLOR, $_POST['btn_bg_color']);
+        Bizyhood_Utility::setOption(Bizyhood_Core::BTN_FONT_COLOR, $_POST['btn_font_color']);
         die(json_encode(array('success' => true)));
     }
     
