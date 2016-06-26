@@ -1572,7 +1572,6 @@ class Bizyhood_Core
               } else {
                 $business->latest_promotion = '';
               }
-
               
               return Bizyhood_View::load('listings/single/claimed', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id, 'list_page_id' => $list_page_id, 'colors' => $colors), true);
             } else {

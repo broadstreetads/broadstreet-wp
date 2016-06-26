@@ -278,7 +278,7 @@
             <div class="bh_tablecell">
               <div class="bh_alert text-center">
                 <h4 class="h2">SUPPORT YOUR LOCAL BUSINESS</h4>
-                <a href="<?php echo $business->bizyhood_url ?>" class="btn btn-info" <?php echo $colors['style']; ?> target="_blank">Give Feedback</a>
+                <a href="<?php echo $business->feedback_url ?>" class="btn btn-info" <?php echo $colors['style']; ?> target="_blank">Give Feedback</a>
               </div>
             </div>
           </div>

@@ -44,7 +44,7 @@
           
             <div class="bh_alert text-center">
               <h4 class="h2">IS THIS YOUR BUSINESS?</h4>
-              <a href="https://business.bizyhood.com/accounts/signup/" class="btn btn-info" <?php echo $colors['style']; ?> target="_blank">Claim it now!</a>
+              <a href="<?php echo get_permalink(Bizyhood_Utility::getOption(Bizyhood_Core::KEY_SIGNUP_PAGE_ID)); ?>" class="btn btn-info" <?php echo $colors['style']; ?> target="_blank">Claim it now!</a>
             </div>
           </div>  
         </div>  

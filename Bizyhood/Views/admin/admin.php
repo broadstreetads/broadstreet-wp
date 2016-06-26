@@ -132,7 +132,7 @@
                     
                     <div class="option">
                         <div class="control-label">
-                            <div class="name nomargin">Buttons background color</div>
+                            <div class="name nomargin">Business Detail Page button background color</div>
                             <div class="desc nomargin">
                                 
                             </div>
@@ -147,7 +147,7 @@
                     
                     <div class="option">
                         <div class="control-label">
-                            <div class="name nomargin">Buttons font color</div>
+                            <div class="name nomargin">Business Detail Page button font color</div>
                             <div class="desc nomargin">
                                 
                             </div>

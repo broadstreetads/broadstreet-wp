@@ -355,6 +355,12 @@ span.entypo-star {position:relative;top:-1px;}
   display: inline-block;
 }
 
+.bh_infobox .btn.btn-info {
+  margin-left: auto;
+  margin-right: auto;
+  display: table;
+}
+
 @media (max-width: 992px) {
   .bh_gallery-list .bh_gallery-thumb {width:33%;}
   .row.rowgrid [class*="col-"] {
@@ -372,11 +378,6 @@ span.entypo-star {position:relative;top:-1px;}
   }
   .business_hours .bh_section {
     padding-bottom: 15px;
-  }
-  .bh_infobox .btn.btn-info {
-    margin-left: auto;
-    margin-right: auto;
-    display: table;
   }
   
 }
