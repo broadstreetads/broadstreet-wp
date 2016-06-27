@@ -88,7 +88,7 @@ class Bizyhood_Utility
      * @param string $end The ending date
      * @param string $single The text string that has to do with the date
      * @param string $plural The text string in plural form that has to do with the date
-     * @return string The date saying
+     * @return html template with the date
      */
     public static function buildDateText($start, $end, $single, $plural)
     {
@@ -100,22 +100,18 @@ class Bizyhood_Utility
       $tomorrow_date = date('Y-m-d', strtotime('+ 1 days')); // tomorrow date
       $end_date = date('Y-m-d', strtotime($end)); // end date
       
-      if (strtotime($start_date) < strtotime($tomorrow_date)) {
-        // display only the ending date
-        $dates = '<span class="'. $plural .'_dates">Until '. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span>';
-      } elseif (strtotime($start_date) == strtotime($end_date)) {
-        // if it is today
-        if (strtotime($end_date) == date('Y-m-d', time())) {
-          $dates = '<span class="'. $plural .'_dates">'. $single .' running today!</span>';
-        } else {
-          $dates = '<span class="'. $plural .'_dates">Valid on '. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span>';
-        }
-      } else {
-        // display both start and ending day
-        $dates = '<span class="'. $plural .'_dates">Valid from '. date_i18n( get_option( 'date_format' ), strtotime($start_date)) .' to '. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span>';
-      }
+      $data = array(
+        'single' => strtotime($single),
+        'plural' => strtotime($plural),
+        'str_start_date' => strtotime($start_date),
+        'str_tomorrow_date' => strtotime($tomorrow_date),
+        'str_end_date' => strtotime($end_date),
+        'wp_start_date' => date_i18n( get_option( 'date_format' ), strtotime($start_date)),
+        'wp_tomorrow_date' => date_i18n( get_option( 'date_format' ), strtotime($tomorrow_date)),
+        'wp_end_date' => date_i18n( get_option( 'date_format' ), strtotime($end_date))
+      );
         
-      return $dates;
+      return Bizyhood_View::load( 'snippets/dateText', $data, true );
     }
     
     /**
@@ -124,7 +120,7 @@ class Bizyhood_Utility
      * @param string $end The ending date
      * @param string $single The text string that has to do with the date
      * @param string $plural The text string in plural form that has to do with the date
-     * @return string The date saying
+     * @return html template with the date with microdata
      */
     public static function buildDateTextMicrodata($start, $end, $single, $plural)
     {
@@ -136,28 +132,21 @@ class Bizyhood_Utility
       $tomorrow_date = date('Y-m-d', strtotime('+ 1 days')); // tomorrow date
       $end_date = date('Y-m-d', strtotime($end)); // end date
       
-      if (strtotime($start_date) < strtotime($tomorrow_date)) {
-        // display only the ending date
-        $dates = '
-          <span class="hidden" itemprop="startDate" content="'. date('c',strtotime($start_date)) .'">'. date_i18n( get_option( 'date_format' ), strtotime($start_date)) .'</span>
-          <span class="'. $plural .'_dates">Until <span itemprop="endDate"  content="'. date('c',strtotime($end_date)) .'">'. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span></span>';
-      } elseif (strtotime($start_date) == strtotime($end_date)) {
-        // if it is today
-        if (strtotime($end_date) == date('Y-m-d', time())) {
-          $dates = '
-            <span class="'. $plural .'_dates">'. $single .' running today!</span>
-            <span class="hidden" itemprop="startDate" content="'. date('c',strtotime($start_date)) .'">'. date_i18n( get_option( 'date_format' ), strtotime($start_date)) .'</span>';
-        } else {
-          $dates = '
-            <span class="hidden" itemprop="startDate" content="'. date('c',strtotime($start_date)) .'">'. date_i18n( get_option( 'date_format' ), strtotime($start_date)) .'</span>
-            <span class="'. $plural .'_dates">Valid on <span itemprop="endDate"  content="'. date('c',strtotime($end_date)) .'">'. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span></span>';
-        }
-      } else {
-        // display both start and ending day
-        $dates = '<span class="'. $plural .'_dates">Valid from <span itemprop="startDate" content="'. date('c',strtotime($start_date)) .'">'. date_i18n( get_option( 'date_format' ), strtotime($start_date)) .'</span> to <span itemprop="endDate"  content="'. date('c',strtotime($end_date)) .'">'. date_i18n( get_option( 'date_format' ), strtotime($end_date)) .'</span></span>';
-      }
-        
-      return $dates;
+      $data = array(
+        'single' => strtotime($single),
+        'plural' => strtotime($plural),
+        'str_start_date' => strtotime($start_date),
+        'str_tomorrow_date' => strtotime($tomorrow_date),
+        'str_end_date' => strtotime($end_date),
+        'wp_start_date' => date_i18n( get_option( 'date_format' ), strtotime($start_date)),
+        'wp_tomorrow_date' => date_i18n( get_option( 'date_format' ), strtotime($tomorrow_date)),
+        'wp_end_date' => date_i18n( get_option( 'date_format' ), strtotime($end_date)),
+        'c_start_date' => date('c',strtotime($start_date)),
+        'c_tomorrow_date' => date('c',strtotime($tomorrow_date)),
+        'c_end_date' => date('c',strtotime($end_date))
+      );
+      
+      return Bizyhood_View::load( 'snippets/dateTextMicrodata', $data, true );
     }
     
     

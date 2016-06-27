@@ -116,7 +116,7 @@
           <p>Call us: <a href="tel:<?php echo $business->telephone; ?>" itemprop="telephone"><?php echo $business->telephone; ?></a></p>
         <?php } ?>
         <?php if($business->website) { ?>
-          <p>Visit: <a class="bh_site_link truncate" itemprop="url" href="<?php echo $business->website; ?>" target="_blank"><?php echo str_replace(array('http://', 'https://', 'www.'), array('','',''), $business->website); ?></a></p>
+          <p class="truncate long">Visit: <a class="bh_site_link" itemprop="url" href="<?php echo $business->website; ?>" target="_blank"><?php echo str_replace(array('http://', 'https://', 'www.'), array('','',''), $business->website); ?></a></p>
         <?php } ?>
         
         <?php if($business->social_networks) { ?>

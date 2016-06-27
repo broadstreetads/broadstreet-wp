@@ -14,19 +14,19 @@
     <div class="row bh_promotion-content promotions_page">	
     <?php
       
-      $i = 0;
+      $index = 0;
       foreach($promotions as $promotion) {
         
         $single_promotion_link    = get_permalink( $view_promotions_page_id ).$promotion['business_identifier'].'/'.$promotion['identifier'].'/';
         $business_promotions_link = get_permalink( $view_promotions_page_id ).$promotion['business_identifier'].'/';
         $business_link            = get_permalink( $view_business_page_id ).$promotion['business_slug'].'/'.$promotion['business_identifier'].'/';
                 
-        if ($i != 0 && ($i%2 == false)) {
+        if ($index != 0 && ($index%2 == false)) {
           ?>
           </div><div class="row bh_promotion-content promotions_page">	
           <?php
         }    
-        $i++;
+        $index++;
         
         // set the default logo
         //$promotion['business_logo'] = Bizyhood_Utility::getDefaultLogo();

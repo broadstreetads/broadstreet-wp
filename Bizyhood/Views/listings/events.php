@@ -13,8 +13,7 @@
     ?>
     <div class="row bh_event-content events_page">	
     <?php
-      // echo '<pre>'.print_r($events, true).'</pre>';
-      $i = 0;
+      $index = 0;
       foreach($events as $event) {
         
         $single_event_link    = get_permalink( $view_events_page_id ).$event['business_identifier'].'/'.$event['identifier'].'/';
@@ -25,12 +24,12 @@
 
         
         
-        if ($i != 0 && ($i%2 == false)) {
+        if ($index != 0 && ($index%2 == false)) {
           ?>
           </div><div class="row bh_event-content events_page">	
           <?php
         }    
-        $i++;
+        $index++;
         
         // set the default logo
         // $event['business_logo'] = Bizyhood_Utility::getDefaultLogo();

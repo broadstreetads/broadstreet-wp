@@ -354,6 +354,10 @@ span.entypo-star {position:relative;top:-1px;}
   text-overflow: ellipsis;
   display: inline-block;
 }
+.truncate.long {
+  max-width: 230px;
+  width: 95%;
+}
 
 .bh_infobox .btn.btn-info {
   margin-left: auto;
