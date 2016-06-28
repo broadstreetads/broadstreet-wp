@@ -1543,15 +1543,15 @@ class Bizyhood_Core
             );
             
             if ($colors['bg'] != '' || $colors['font'] != '') {
-              $colors['style'] = 'style="'. ($colors['bg'] != '' ? 'background-color: '.$colors['bg'].'; border-color: '.$colors['bg'].'; ' : '') .''. ($colors['font'] != '' ? 'color: '.$colors['font'].';' : '') .'"';
+              $colors['style'] = 'style="'. ($colors['bg'] != '' ? 'background-color: '.$colors['bg'].' !important; border-color: '.$colors['bg'].' !important; ' : '') .''. ($colors['font'] != '' ? 'color: '.$colors['font'].' !important;' : '') .'"';
             }
             
             if ($colors['font'] != '') {
-              $colors['stylefont'] = 'style="color: '.$colors['font'].';"';
+              $colors['stylefont'] = 'style="color: '.$colors['font'].' !important;"';
             }
             
             if ($colors['bg'] != '') {
-              $colors['stylebg'] = 'style="background-color: '.$colors['bg'].';"';
+              $colors['stylebg'] = 'style="background-color: '.$colors['bg'].' !important;"';
             }
             
             if ($single_business_information->claimed == 1) {
