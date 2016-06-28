@@ -31,7 +31,7 @@
   
   // Get lat and long by address         
   $address = urlencode($business->address1).'+'.urlencode($business->locality).'+'.urlencode($business->region).'+'.urlencode($business->postal_code);
-  $geocode=file_get_contents('https://maps.google.com/maps/api/geocode/json?address='.$address.'&sensor=false');
+  $geocode=file_get_contents(Bizyhood_Utility::get_protocol().'maps.google.com/maps/api/geocode/json?address='.$address.'&sensor=false');
   $output= json_decode($geocode);
   $latitude = $output->results[0]->geometry->location->lat;
   $longitude = $output->results[0]->geometry->location->lng;

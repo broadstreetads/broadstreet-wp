@@ -149,7 +149,15 @@ class Bizyhood_Utility
       return Bizyhood_View::load( 'snippets/dateTextMicrodata', $data, true );
     }
     
-    
+    /**
+     * @return http protocol
+     */
+    function get_protocol() {
+      
+      $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+      
+      return $protocol;
+    }
     
     
     /**
