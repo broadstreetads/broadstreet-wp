@@ -365,6 +365,10 @@ span.entypo-star {position:relative;top:-1px;}
   display: table;
 }
 
+h3.bh_category {
+  margin: 0;
+}
+
 @media (max-width: 992px) {
   .bh_gallery-list .bh_gallery-thumb {width:33%;}
   .row.rowgrid [class*="col-"] {
