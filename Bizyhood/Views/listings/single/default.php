@@ -35,10 +35,6 @@
   
   // Get lat and long by address         
   $address = urlencode($business->address1).'+'.urlencode($business->locality).'+'.urlencode($business->region).'+'.urlencode($business->postal_code);
-  $geocode=file_get_contents(Bizyhood_Utility::get_protocol().'maps.google.com/maps/api/geocode/json?address='.$address.'&sensor=false');
-  $output= json_decode($geocode);
-  $latitude = $output->results[0]->geometry->location->lat;
-  $longitude = $output->results[0]->geometry->location->lng;
   
   // check and create the backlink
   $backlink = wp_get_referer();
@@ -56,7 +52,6 @@
       <a href="<?php echo $backlink; ?>" class="btn-inline pull-right hidden-xs hidden-sm"><span class="entypo-left" aria-hidden="true"></span> Back</a>
     </div>
   </div>
-
       
   <div class="row zero-gutter">
     <div class="col-md-12">
@@ -68,11 +63,7 @@
           }
       ?>
     </div>
-  </div>    
-
-  
-  
-  
+  </div>
   
   <div class="row rowgrid zero-gutter main_business_info sameheight">
   
@@ -105,11 +96,11 @@
           </div>
         </div>      
     </div><!-- /.col-md-8 -->
-  
+    
   <?php } ?>
   
   <?php if ($business->claimed == 1) { ?>
-  
+    
     <div class="col-md-6">
       <div class="column-inner">
         <?php if($business->business_logo) {?>
@@ -142,13 +133,9 @@
         <?php } ?>
     </div><!-- /.col-md-6 -->
   
-  
   <?php } ?>
-  
-  
     
     <div class="col-md-<?php echo $location_column_width; ?>">
-    
       <div class="column-inner">
         <?php if($business->telephone) { ?>
           <p>Call us: <a href="tel:<?php echo $business->telephone; ?>" itemprop="telephone"><?php echo $business->telephone; ?></a></p>
@@ -184,9 +171,9 @@
         </div>
         <div class="bh_section bh_map_wrap" itemprop="hasMap" itemtype="http://schema.org/Map">
           <p class="bh_staticmap text-center" <?php echo $colors['style']; ?>>
-            <a class="clearfix" <?php echo $colors['stylefont']; ?> itemprop="url" href="https://maps.google.com?daddr=<?php echo urlencode($business->address1) ?>+<?php echo urlencode($business->locality) ?>+<?php echo urlencode($business->region) ?>+<?php echo urlencode($business->postal_code) ?>" target="_blank">
+            <a class="clearfix" <?php echo $colors['stylefont']; ?> itemprop="url" href="https://maps.google.com?daddr=<?php echo $address; ?>" target="_blank">
               <span itemprop="image">
-                <img src="https://maps.googleapis.com/maps/api/staticmap?zoom=14&scale2&size=400x200&maptype=roadmap&markers=color:red%7C<?php echo $latitude; ?>,<?php echo $longitude; ?>&key=<?php echo Bizyhood_Core::GOOGLEMAPS_API_KEY; ?>" />
+                <img src="https://maps.googleapis.com/maps/api/staticmap?center=<?php echo $address; ?>&zoom=14&scale2&size=400x200&maptype=roadmap&markers=color:red%7C<?php echo $address; ?>&key=<?php echo Bizyhood_Core::GOOGLEMAPS_API_KEY; ?>" />
               </span>
               <span class="bh_directions">Get Directions</span>
             </a>
@@ -195,7 +182,6 @@
       </div>
       
     </div>
-    
     
     <?php if($business->hours): ?>
       <div class="col-md-3 business_hours">
@@ -214,12 +200,9 @@
     <?php endif; ?>
   </div><!-- /.row -->
   
-  
-  
   <?php if ($business->claimed == 1) { ?>
   
   <div class="row rowgrid zero-gutter bh_infoboxes sameheight">
-  
     <?php if (isset($business->latest_event) && !empty($business->latest_event)) { ?>
       <div class="col-md-3 latest_events bh_infobox event-wrapper" itemscope itemtype="http://schema.org/Event">
             
@@ -255,8 +238,7 @@
         </div>
       </div>
     <?php } ?>
-    
-    
+
     <?php if (isset($business->news) && !empty($business->news)) { ?>
       <div class="col-md-3 latest_news bh_infobox">
         <h3>In the news</h3>
@@ -271,7 +253,6 @@
         </div>
       </div>
     <?php } ?>
-    
     
     <?php if (isset($business->latest_promotion) && !empty($business->latest_promotion)) { ?>
       <div class="col-md-3 latest_promotion bh_infobox">
@@ -292,7 +273,6 @@
       </div>
     <?php } ?>
     
-    
     <?php if (isset($business->latest_feedback) && !empty($business->latest_feedback)) { ?>
       <div class="col-md-3 latest_feedback bh_infobox">
         <h3>Customer Feedback</h3>
@@ -306,7 +286,6 @@
         </div>
       </div>
     <?php } ?>
-    
     
     <?php 
     // if not all 4 columns were used
@@ -330,8 +309,6 @@
     }
     ?>
     
-    
-
   </div><!-- /.row -->
   <?php } ?>
 
