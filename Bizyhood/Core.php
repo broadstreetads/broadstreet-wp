@@ -1554,29 +1554,24 @@ class Bizyhood_Core
               $colors['stylebg'] = 'style="background-color: '.$colors['bg'].' !important;"';
             }
             
-            if ($single_business_information->claimed == 1) {
-              
-              // get promotions and events only for claimed businesses
-              
-              $events     = self::single_business_additional_info('events', $business->bizyhood_id);
-              $promotions = self::single_business_additional_info('promotions', $business->bizyhood_id);
-              
-              if ($events !== false && !empty($events)) {
-                $business->latest_event = $events[0]; 
-              } else {
-                $business->latest_event = '';
-              }
-              
-              if ($promotions !== false && !empty($promotions)) {
-                $business->latest_promotion = $promotions[0]; 
-              } else {
-                $business->latest_promotion = '';
-              }
-              
-              return Bizyhood_View::load('listings/single/claimed', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id, 'list_page_id' => $list_page_id, 'colors' => $colors), true);
+            // get promotions and events only for claimed businesses
+
+            $events     = self::single_business_additional_info('events', $business->bizyhood_id);
+            $promotions = self::single_business_additional_info('promotions', $business->bizyhood_id);
+
+            if ($events !== false && !empty($events)) {
+              $business->latest_event = $events[0]; 
             } else {
-              return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id, 'list_page_id' => $list_page_id, 'colors' => $colors), true);
+              $business->latest_event = '';
             }
+
+            if ($promotions !== false && !empty($promotions)) {
+              $business->latest_promotion = $promotions[0]; 
+            } else {
+              $business->latest_promotion = '';
+            }
+
+            return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id, 'list_page_id' => $list_page_id, 'colors' => $colors), true);
         }
 
         return $content;
