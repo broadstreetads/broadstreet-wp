@@ -20,7 +20,9 @@ jQuery(function($){
         jQuery(span_id).show().delay(500).fadeOut();
     }
     
-    jQuery('.left_column .box .color-picker').wpColorPicker(); 
+    if (jQuery('.left_column .box .color-picker').length > 0) {
+      jQuery('.left_column .box .color-picker').wpColorPicker(); 
+    }
    
     $('#save-bizyhood').click(function() {
         
