@@ -23,6 +23,7 @@ jQuery(function($){
     if (jQuery('.left_column .box .color-picker').length > 0) {
       jQuery('.left_column .box .color-picker').wpColorPicker(); 
     }
+    
    
     $('#save-bizyhood').click(function() {
         
