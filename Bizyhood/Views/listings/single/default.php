@@ -173,7 +173,7 @@
           <p class="bh_staticmap text-center" <?php echo $colors['style']; ?>>
             <a class="clearfix" <?php echo $colors['stylefont']; ?> itemprop="url" href="https://maps.google.com?daddr=<?php echo $address; ?>" target="_blank">
               <span itemprop="image">
-                <img src="https://maps.googleapis.com/maps/api/staticmap?center=<?php echo $address; ?>&zoom=14&scale2&size=400x200&maptype=roadmap&markers=color:red%7C<?php echo $address; ?>&key=<?php echo Bizyhood_Core::GOOGLEMAPS_API_KEY; ?>" />
+                <img src="https://maps.googleapis.com/maps/api/staticmap?center=<?php echo $address; ?>&amp;zoom=14&amp;scale=2&amp;size=400x200&amp;maptype=roadmap&amp;markers=color:red%7C<?php echo $address; ?>&amp;key=<?php echo Bizyhood_Core::GOOGLEMAPS_API_KEY; ?>" />
               </span>
               <span class="bh_directions">Get Directions</span>
             </a>
