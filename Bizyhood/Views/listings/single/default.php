@@ -191,7 +191,25 @@
                 <dl class="bh_dl-horizontal">
                     <?php foreach($business->hours as $hour): ?>
                     <dt><link itemprop="dayOfWeek" href="http://purl.org/goodrelations/v1#<?php echo $hour->day_name; ?>"><?php echo substr($hour->day_name,0,3); ?>:</dt>
-                    <dd><?php if($hour->hours_type == 1): ?><?php foreach($hour->hours as $hour_display): ?><span itemprop="opens" content="<?php echo date('c',strtotime($hour_display[0])); ?>"><?php echo date('g:i a',strtotime($hour_display[0])); ?></span>&ndash;<span itemprop="closes" content="<?php echo date('c',strtotime($hour_display[1])); ?>"><?php echo date('g:i a',strtotime($hour_display[1])); ?></span> <?php endforeach; ?><?php else : ?><?php echo $hour->hours_type_name; ?><?php endif; ?></dd>
+                    <dd>
+                      <?php 
+                        if($hour->hours_type == 1) { 
+                          foreach($hour->hours as $hoursindex => $hour_display) {
+                            
+                            // get the next pair of hours to the next line
+                            if ($hoursindex > 0) { ?>
+                              </dd><dt>&nbsp;</dt><dd>
+                            <?php } ?>
+                            <span itemprop="opens" content="<?php echo date('c',strtotime($hour_display[0])); ?>">
+                              <?php echo date('g:i a',strtotime($hour_display[0])); ?>
+                            </span>&ndash;
+                            <span itemprop="closes" content="<?php echo date('c',strtotime($hour_display[1])); ?>">
+                              <?php echo date('g:i a',strtotime($hour_display[1])); ?></span> 
+                          <?php }
+                        } else { 
+                          echo $hour->hours_type_name; 
+                        } 
+                      ?></dd>
                     <?php endforeach; ?>
                 </dl>
             </div>
