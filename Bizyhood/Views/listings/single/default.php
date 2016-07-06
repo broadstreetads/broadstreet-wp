@@ -135,30 +135,7 @@
   
   <?php } ?>
     
-    <div class="col-md-<?php echo $location_column_width; ?>">
-      <div class="column-inner">
-        <?php if($business->telephone) { ?>
-          <p>Call us: <a href="tel:<?php echo $business->telephone; ?>" itemprop="telephone"><?php echo $business->telephone; ?></a></p>
-        <?php } ?>
-        <?php if($business->website) { ?>
-          <p class="truncate long">Visit: <a class="bh_site_link" itemprop="url" href="<?php echo $business->website; ?>" target="_blank"><?php echo str_replace(array('http://', 'https://', 'www.'), array('','',''), $business->website); ?></a></p>
-        <?php } ?>
-        
-        <?php if($business->social_networks) { ?>
-          <?php foreach($business->social_networks as $social_network) { 
-              if (strtolower($social_network->name) == 'google') {
-                $social_network->name = 'gplus';
-              }
-            ?>
-            <a class="bh_social_link" <?php echo $colors['style']; ?> itemprop="sameAs" href="<?php echo $social_network->url; ?>" title="<?php echo $social_network->name; ?>" target="_blank">
-              <span class="entypo-<?php echo strtolower($social_network->name); ?>"></span>
-            </a>
-          <?php } ?>
-        <?php } ?>
-      </div>
-      
-      <div class="tablesplit"></div>
-      
+    <div class="col-md-<?php echo $location_column_width; ?>">      
       <div class="column-inner">
         <div class="bh_section" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
             <h5>Location</h5>
@@ -185,6 +162,28 @@
     
     <?php if($business->hours): ?>
       <div class="col-md-3 business_hours">
+        <div class="column-inner">
+          <?php if($business->telephone) { ?>
+            <p>Call us: <a href="tel:<?php echo $business->telephone; ?>" itemprop="telephone"><?php echo $business->telephone; ?></a></p>
+          <?php } ?>
+          <?php if($business->website) { ?>
+            <p class="truncate long">Visit: <a class="bh_site_link" itemprop="url" href="<?php echo $business->website; ?>" target="_blank"><?php echo str_replace(array('http://', 'https://', 'www.'), array('','',''), $business->website); ?></a></p>
+          <?php } ?>
+
+          <?php if($business->social_networks) { ?>
+            <?php foreach($business->social_networks as $social_network) { 
+                if (strtolower($social_network->name) == 'google') {
+                  $social_network->name = 'gplus';
+                }
+              ?>
+              <a class="bh_social_link" <?php echo $colors['style']; ?> itemprop="sameAs" href="<?php echo $social_network->url; ?>" title="<?php echo $social_network->name; ?>" target="_blank">
+                <span class="entypo-<?php echo strtolower($social_network->name); ?>"></span>
+              </a>
+            <?php } ?>
+          <?php } ?>
+        </div>
+      
+        <div class="tablesplit"></div>
         <div class="column-inner">
             <div class="bh_section" itemprop="openingHoursSpecification" itemscope itemtype="http://schema.org/OpeningHoursSpecification">
                 <h5>Hours</h5>
