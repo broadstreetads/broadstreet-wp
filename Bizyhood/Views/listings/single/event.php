@@ -48,7 +48,9 @@
       <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
         <a itemprop="url" href="<?php echo $single_event_link; ?>">
           <span itemprop="validFrom" content="<?php echo date('c',strtotime($event['start'])); ?>"><?php echo date('c',strtotime($event['start'])); ?></span> – 
+          <?php if (isset($event['end']) && !empty($event['end'])) { ?>
           <span itemprop="validThrough" content="<?php echo date('c',strtotime($event['end'])); ?>"><?php echo date('c',strtotime($event['end'])); ?></span> – 
+          <?php } ?>
           <?php if (isset($event['admission_info']) && !empty($event['admission_info'])) { ?>
           <span itemprop="price" content="<?php echo number_format(str_replace('$', '', $event['admission_info']), 2, '.', ' '); ?>"><span itemprop="priceCurrency" content="USD"><?php echo $event['admission_info']; ?></span></span>
           <?php } ?>
@@ -77,7 +79,7 @@
             <dt>Date</dt><br />
             <dd><?php echo $dates; ?></dd>
             <dt>Time</dt><br />
-            <dd><?php echo date('H:i', strtotime($event['start'])); ?></dd>
+            <dd><?php echo date('g:i A', strtotime($event['start'])); ?></dd>
             <dt>Location</dt><br />
             <dd><?php echo $event['address1']; ?><br /><?php echo $event['locality']; ?>, <?php echo $event['region']; ?> <?php echo $event['postal_code']; ?></dd>
             <dt>Cost</dt><br />
