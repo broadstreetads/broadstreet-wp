@@ -17,6 +17,7 @@
                 <span  class="business_name"><?php echo $promotion['business_name']; ?></span>
               </a>
             </h3>
+            <h4><span class="promotion_name"><?php echo $promotion['name']; ?></span></h4>
         </div>
     </div>
     <?php
@@ -45,7 +46,7 @@
       ?>
         <div class="col-sm-12">
           
-          <span class="promotion_name"><?php echo $promotion['name']; ?></span>
+          
           <span class="promotion_description"><?php echo $promotion['details']; ?></span>
           <br /><br />
           <dl class="bh_dl-horizontal">
