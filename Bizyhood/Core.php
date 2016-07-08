@@ -164,6 +164,7 @@ class Bizyhood_Core
         add_action('admin_init', 	array($this, 'adminInitCallback'));
         add_action('wp_enqueue_scripts', 	array($this, 'load_plugin_styles'));
         add_action('wp_enqueue_scripts', 	array($this, 'load_plugin_gallery'));
+        add_action('wp_enqueue_scripts', 	array($this, 'load_plugin_analytics'));
         add_shortcode('bh-businesses', array($this, 'businesses_shortcode'));
         add_shortcode('bh-promotions', array($this, 'promotions_shortcode'));
         add_shortcode('bh-events', array($this, 'events_shortcode'));
@@ -865,6 +866,22 @@ class Bizyhood_Core
         wp_enqueue_script('bizyhood-gallery-js', Bizyhood_Utility::getJSBaseURL() . 'bizyhood-plugin-gallery.js', array(), BIZYHOOD_VERSION, true);
         wp_enqueue_script('bizyhood-matchHeight-js', Bizyhood_Utility::getJSBaseURL() . 'jquery.matchHeight-min.js', array(), BIZYHOOD_VERSION, true);
         wp_enqueue_script('bizyhood-custom-js', Bizyhood_Utility::getJSBaseURL() . 'bizyhood-custom.js', array(), BIZYHOOD_VERSION, true);
+    }
+    
+    function load_plugin_analytics()
+    {
+        wp_enqueue_script('bizyhood-segment-js', Bizyhood_Utility::getJSBaseURL() . 'bizyhood-segment-load.js', array(), BIZYHOOD_VERSION);
+        if (Bizyhood_Utility::getApiProduction() == true) {
+            $segment_api_key = 'a8yEWAUktJ3QtLruFMGqXIWnjGO1qoys';
+        }else {
+            $segment_api_key = '749WYOtudlvSDMYvverj7tObiaRI71ua';
+        }
+        
+        $analytics_settings_array = array(
+            'segment_api_key' => $segment_api_key
+        );
+        
+        wp_localize_script( 'bizyhood-segment-js', 'analytics_settings', $analytics_settings_array );
     }
     
     /**
