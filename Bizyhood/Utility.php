@@ -105,10 +105,10 @@ class Bizyhood_Utility
         'plural' => strtotime($plural),
         'str_start_date' => strtotime($start_date),
         'str_tomorrow_date' => strtotime($tomorrow_date),
-        'str_end_date' => strtotime($end_date),
+        'str_end_date' => ($end !== NULL ? strtotime($end_date) : false),
         'wp_start_date' => date_i18n( get_option( 'date_format' ), strtotime($start_date)),
         'wp_tomorrow_date' => date_i18n( get_option( 'date_format' ), strtotime($tomorrow_date)),
-        'wp_end_date' => date_i18n( get_option( 'date_format' ), strtotime($end_date))
+        'wp_end_date' => ($end !== NULL ? date_i18n( get_option( 'date_format' ), strtotime($end_date)) : false)
       );
         
       return Bizyhood_View::load( 'snippets/dateText', $data, true );
@@ -124,7 +124,7 @@ class Bizyhood_Utility
      */
     public static function buildDateTextMicrodata($start, $end, $single, $plural)
     {
-      
+
       $dates = '';
       
       // check date
@@ -137,13 +137,13 @@ class Bizyhood_Utility
         'plural' => strtotime($plural),
         'str_start_date' => strtotime($start_date),
         'str_tomorrow_date' => strtotime($tomorrow_date),
-        'str_end_date' => strtotime($end_date),
+        'str_end_date' => ($end !== NULL ? strtotime($end_date) : false),
         'wp_start_date' => date_i18n( get_option( 'date_format' ), strtotime($start_date)),
         'wp_tomorrow_date' => date_i18n( get_option( 'date_format' ), strtotime($tomorrow_date)),
-        'wp_end_date' => date_i18n( get_option( 'date_format' ), strtotime($end_date)),
+        'wp_end_date' => ($end !== NULL ? date_i18n( get_option( 'date_format' ), strtotime($end_date)) : false),
         'c_start_date' => date('c',strtotime($start_date)),
         'c_tomorrow_date' => date('c',strtotime($tomorrow_date)),
-        'c_end_date' => date('c',strtotime($end_date))
+        'c_end_date' => ($end !== NULL ? date('c',strtotime($end_date)): false)
       );
       
       return Bizyhood_View::load( 'snippets/dateTextMicrodata', $data, true );

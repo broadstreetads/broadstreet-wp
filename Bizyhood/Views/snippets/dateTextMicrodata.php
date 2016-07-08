@@ -20,6 +20,11 @@ if ($str_start_date < $str_tomorrow_date) {
       <span class="<?php echo $plural; ?>_dates">Valid on <span itemprop="endDate"  content="<?php echo $c_end_date; ?>"><?php echo $wp_end_date; ?></span></span>
     <?php
   }
+} elseif ($str_end_date === false) {
+  ?>
+  <span class="<?php echo $plural; ?>_dates">Valid on <span itemprop="startDate"  content="<?php echo $c_start_date; ?>"><?php echo $wp_start_date; ?></span></span>
+  <span class="hidden" itemprop="endDate"  content="<?php echo $c_end_date; ?>">?php echo $wp_end_date; ?></span>
+  <?php
 } else {
   // display both start and ending day
   ?>

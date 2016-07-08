@@ -17,6 +17,10 @@ if (strtotime($str_start_date) < strtotime($str_tomorrow_date)) {
     <span class="<?php echo $plural;?>_dates">Valid on <?php echo $wp_end_date; ?></span>
     <?php
   }
+} elseif ($str_end_date === false) {
+  ?>
+  <span class="<?php echo $plural;?>_dates">Valid on <?php echo $wp_start_date; ?></span>
+  <?php
 } else {
   // display both start and ending day
   ?>
