@@ -66,3 +66,6 @@
     <?php
   }
 ?>
+<script type="text/javascript">
+    analytics.page('Business Promotion', {"path":location.pathname});
+</script>

@@ -104,3 +104,6 @@
   <?php
   }
 ?>
+<script type="text/javascript">
+    analytics.page('Business Event', {"path":location.pathname});
+</script>
