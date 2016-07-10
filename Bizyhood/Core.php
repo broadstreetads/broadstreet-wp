@@ -29,6 +29,7 @@ if (! class_exists('Bizyhood_Core')):
  */
 class Bizyhood_Core
 {
+    CONST KEY_VERSION             = 'bh_version';
     CONST KEY_API_URL             = 'Bizyhood_API_URL';
     CONST KEY_API_PRODUCTION      = 'Bizyhood_API_Production';
     CONST KEY_API_ID              = 'Bizyhood_API_ID';
@@ -159,7 +160,13 @@ class Bizyhood_Core
     {
         Bizyhood_Log::add('debug', "Registering hooks..");
         
-        # -- Below is core functionality --
+        # -- Below is core functionality --        
+        
+        // check if we need to reinitialize
+        if (is_admin()) {
+          add_action( 'wp', array($this, 'reinitialize') );
+        }
+        
         add_action('admin_menu', 	array($this, 'adminCallback'));
         add_action('admin_init', 	array($this, 'adminInitCallback'));
         add_action('wp_enqueue_scripts', 	array($this, 'load_plugin_styles'));
@@ -253,6 +260,15 @@ class Bizyhood_Core
         
     }
     
+    function reinitialize() {
+      
+      // check if the pages already exist and if not add them       
+      // check version
+      if( is_admin() && (!Bizyhood_Utility::getOption(self::KEY_VERSION) ||  Bizyhood_Utility::getOption(self::KEY_VERSION) != BIZYHOOD_VERSION)) {
+        Bizyhood_Utility::setOption(self::KEY_VERSION, BIZYHOOD_VERSION);
+        self::install('initializing');
+      }
+    }
     
     function register_search_widget() {
       register_widget( 'bizy_search_widget' );
