@@ -49,6 +49,7 @@ class Bizyhood_Core
     CONST GOOGLEMAPS_API_KEY      = 'AIzaSyBJvxrmMgNs6vQAJ9BUgzr7nG0KHKK9cns';
     CONST BTN_BG_COLOR            = 'bh_btn_bg_color';
     CONST BTN_FONT_COLOR          = 'bh_btn_font_color';
+    CONST API_CACHE_TIME          = 30; // 30 seconds
     
     public static $globals = null;
 
@@ -373,7 +374,7 @@ class Bizyhood_Core
     function remove_empty_paragraphs() {
       
       // if it is not a bizyhood page there is nothign to do
-      if ( is_admin() || !( is_page(Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID)) || is_page(Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID)) ) ) {
+      if ( is_admin() || !( Bizyhood_Utility::is_bizyhood_page() ) ) {
         return;
       }
       
@@ -1512,7 +1513,7 @@ class Bizyhood_Core
 
         $transient = Bizyhood_Core::$method_name($attrs, $method_command);
         
-        set_transient($transient_name, $transient[$transient_key], 12 * HOUR_IN_SECONDS);
+        set_transient($transient_name, $transient[$transient_key], self::API_CACHE_TIME);
       }
       
       $cached_transient = get_transient($transient_name);
