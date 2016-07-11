@@ -54,20 +54,14 @@
               </div>
             */
             ?>
-              <div class="col-sm-12">
-                <a title="<?php echo htmlentities($promotion['business_name']); ?>" href="<?php echo get_permalink( $view_business_page_id ); ?><?php echo $promotion['business_slug'].'/'.$promotion['business_identifier']; ?>/">
-                <span class="business_name"><?php echo $promotion['business_name']; ?></span>
-                </a>
+            <div class="col-sm-12">
+                <h3><a title="<?php echo htmlentities($promotion['business_name']); ?>" href="<?php echo get_permalink( $view_business_page_id ); ?><?php echo $promotion['business_slug'].'/'.$promotion['business_identifier']; ?>/"><span class="business_name"><?php echo $promotion['business_name']; ?></span></a></h3>
+                <h4><span class="promotion_name"><a href="<?php echo $single_promotion_link; ?>" title="<?php echo 'More about '. $promotion['name']; ?>"><?php echo $promotion['name']; ?></a></span></h4>
                 
-                
-                <span class="promotion_name">
-                  <a href="<?php echo $single_promotion_link; ?>" title="<?php echo 'More about '. $promotion['name']; ?>"><?php echo $promotion['name']; ?></a>
-                </span>
                 <span class="promotion_description"><?php echo $promotion['details']; ?></span>
                 <?php echo $dates; ?>
               </div>
             </div>
-            
 
           </div>
         </div>
