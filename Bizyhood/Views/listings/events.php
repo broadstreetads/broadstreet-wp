@@ -80,11 +80,8 @@
             */
             ?>
               <div class="col-sm-12">
-                <a title="<?php echo htmlentities($event['business_name']); ?>" href="<?php echo $business_link; ?>">
-                <span itemprop="name" class="business_name"><?php echo $event['business_name']; ?></span>
-                </a>
-                
-                <span class="event_name"><a href="<?php echo $single_event_link; ?>" title="<?php echo 'More about '. $event['name']; ?>"><?php echo $event['name']; ?></a></span>
+                  <h3><a title="<?php echo htmlentities($event['business_name']); ?>" href="<?php echo $business_link; ?>"><span itemprop="name" class="business_name"><?php echo $event['business_name']; ?></span></a></h3>
+                  <h4><span class="event_name"><a href="<?php echo $single_event_link; ?>" title="<?php echo 'More about '. $event['name']; ?>"><?php echo $event['name']; ?></a></span></h4>
                 <span class="event_description" itemprop="description"><?php echo $event['description']; ?></span>
                 <?php echo $dates; ?>
               </div>
