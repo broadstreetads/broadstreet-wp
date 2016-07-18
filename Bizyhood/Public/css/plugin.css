@@ -129,10 +129,6 @@ a.facet_helper {
 .bh_list-title {
 	text-transform: capitalize;
 	display: inline-block;
-	max-width: 80%;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 .bh_badge {
 	float: right;
