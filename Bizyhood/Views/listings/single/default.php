@@ -1,14 +1,4 @@
 <?php
-  if (isset($business->total_count) && $business->total_count == 0) {
-    global $wp_query;
-    $wp_query->set_404();
-    status_header( 404 );
-    get_header();
-    get_template_part( 404 ); 
-    get_footer();
-    exit();
-    
-  }
   
   if ($business->claimed == 1) {
     $footer_columns = 12;

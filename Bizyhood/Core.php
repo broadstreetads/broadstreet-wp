@@ -303,6 +303,9 @@ class Bizyhood_Core
         // meta END
         
         
+        add_action('wp', array( $this, 'handle_404'));
+        
+        
     }
     
     function reinitialize() {
@@ -1709,11 +1712,30 @@ class Bizyhood_Core
             } else {
               $business->latest_promotion = '';
             }
-
+            
             return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id, 'list_page_id' => $list_page_id, 'colors' => $colors), true);
+            
         }
 
         return $content;
+    }
+    
+    function handle_404(){
+      global $wp_query;
+      
+      if (Bizyhood_Utility::is_bizyhood_page() && $wp_query->query_vars['pagename'] == 'business-overview') { // to be replaced with ID
+        
+        $single_business_information = self::single_business_information();
+        
+        if ($single_business_information->bizyhood_id == '' || (isset($single_business_information->total_count) && $single_business_information->total_count == 0)) {
+        
+          $wp_query->set_404();
+          status_header( 404 );
+          nocache_headers();
+          include( get_query_template( '404' ) );
+          die();
+        }
+      }
     }
     
     function bizyhood_plugin_action_links( $links ) {
