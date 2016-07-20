@@ -1,6 +1,6 @@
 <div class="row bh_business-header">
     <div class="col-md-8 bh_business-header-title">	
-        <h3>Businesses</h3>
+        <h3>Businesses<?php echo ( !empty($businesses) && isset($_GET['cf']) && $_GET['cf'] != '' ? ' in the '.$_GET['cf'] .' category' : '')  ?></h3>
     </div>
     <div class="col-md-4 bh_business-search">
     <?php
