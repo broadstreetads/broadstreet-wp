@@ -47,49 +47,27 @@ class bizy_search_widget extends WP_Widget {
 		$color_input_back = ! empty( $instance['color_input_back'] ) ? $instance['color_input_back'] : '';
 		$color_input_border = ! empty( $instance['color_input_border'] ) ? $instance['color_input_border'] : '';
 		$color_input_font = ! empty( $instance['color_input_font'] ) ? $instance['color_input_font'] : '';
+    $layout = ! empty( $instance['layout'] ) ? $instance['layout'] : 'full';
+    $row1 = ! empty( $instance['row1'] ) ? $instance['row1'] : 'List your business';
+		$row2 = ! empty( $instance['row2'] ) ? $instance['row2'] : 'Add now, it\'s free';
     
-    $button_style = $input_style = array();
-    if ($color_button_back != '') {
-      $button_style[] = 'background-color: '. $color_button_back .';';
-    }
-    if ($color_button_back != '') {
-      $button_style[] = 'color: '. $color_button_font .';';
-    }
-    
-    if ($color_input_back != '') {
-      $input_style[] = 'background-color: '. $color_input_back .';';
-    }
-    if ($color_input_font != '') {
-      $input_style[] = 'color: '. $color_input_font .';';
-    }
-    if ($color_input_border != '') {
-      $input_style[] = 'border-color: '. $color_input_border .';';
-    }
-    
-    
-    
-    echo '<form method="get" action="'. get_permalink(get_option('Bizyhood_Main_page_ID')) .'" id="bizyhood_search_'. $widget_id .'" class="bizyhood_widget bizyhood_search '. $instance['layout'] .'">
-      <div class="form_wrap widget_layout_'. $instance['layout'] .' table_div">
-        <div class="tr_div">
-          <div class="search_fields search_fields_label td_div" '. ($color_widget_back != '' ? 'style="background-color: '. $color_widget_back .'; border-color: '. $color_widget_back .';"' : '') .'>
-            <label for="keywords_'. $instance['layout'] .'" '. ($color_label_font != '' ? 'style="color: '. $color_label_font .'"' : '') .'>'. __('Search for: ', 'bizyhood') .'</label>
-          </div>
-          <div class="search_fields search_fields_input td_div" '. ($color_widget_back != '' ? 'style="background-color: '. $color_widget_back .'; border-color: '. $color_widget_back .';"' : '') .'>
-            <input class="search_keywords" id="keywords_'. $instance['layout'] .'" name="keywords" value="'. (isset($_GET['keywords']) ? esc_attr(stripslashes($_GET['keywords'])) : '') .'" placeholder="'. __('restaurants, pizza, real-estate etc', 'bizyhood') .'"  '. (!empty($input_style) ? 'style="'. implode(' ', $input_style) .'"' : '') .'/>
-          </div>
-          <div class="search_fields search_fields_submit td_div" '. ($color_widget_back != '' ? 'style="background-color: '. $color_widget_back .'; border-color: '. $color_widget_back .';"' : '') .'>
-            <input type="submit" class="button btn bizy_search_submit" value="'. __('Search', 'bizyhood') .'" '. (!empty($button_style) ? 'style="'. implode(' ', $button_style) .'"' : '') .'>
-          </div>
-          <div class="list_your_business arrow_box td_div" '. ($color_cta_back != '' ? 'style="background-color: '. $color_cta_back .'; border-color: '. $color_cta_back .';"' : '') .'>
-            <a href="'. get_permalink(get_option('Bizyhood_Signup_page_ID')) .'" title="'. __('List you business', 'bizyhood') .'" >
-              <span class="link_row row1" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .'>'. __(esc_attr($instance['row1']), 'bizyhood') .'</span>
-              <span class="link_row row2" '. ($color_cta_font != '' ? 'style="color: '. $color_cta_font .';"' : '') .'>'. __(esc_attr($instance['row2']), 'bizyhood') .'</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </form>
-    ';
+    $shortcode_args = array(
+      'widget_id='.$widget_id,
+      'color_widget_back='.$color_widget_back,
+      'color_cta_back='.$color_cta_back,
+      'color_cta_font='.$color_cta_font,
+      'color_button_back='.$color_button_back,
+      'color_button_font='.$color_button_font,
+      'color_label_font='.$color_label_font,
+      'color_input_back='.$color_input_back,
+      'color_input_border='.$color_input_border,
+      'color_input_font='.$color_input_font,
+      'layout='.$layout,
+      'row1="'.esc_attr($row1).'"',
+      'row2="'.esc_attr($row2).'"'
+    );
+
+    echo do_shortcode('[bh-search '. implode(' ', $shortcode_args) .' ]');
     
 		echo $args['after_widget'];
 	}
@@ -102,6 +80,9 @@ class bizy_search_widget extends WP_Widget {
 	 * @param array $instance Previously saved values from database.
 	 */
 	public function form( $instance ) {
+    
+    global $widget_instance;
+    
 		$title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'New title', 'bizyhood' );
 		$layout = ! empty( $instance['layout'] ) ? $instance['layout'] : 'full';
 		$row1 = ! empty( $instance['row1'] ) ? $instance['row1'] : 'List your business';
@@ -178,6 +159,33 @@ class bizy_search_widget extends WP_Widget {
       </p>
       <p>
         <a class="colorfield_reset" href="#">Reset Colors to Default</a>
+      </p>
+      <p>
+        Widget shortcode:
+        
+      <?php 
+      $shortcode_args = array(
+        'widget_id='.uniqid (),
+        'color_widget_back='.$color_widget_back,
+        'color_cta_back='.$color_cta_back,
+        'color_cta_font='.$color_cta_font,
+        'color_button_back='.$color_button_back,
+        'color_button_font='.$color_button_font,
+        'color_label_font='.$color_label_font,
+        'color_input_back='.$color_input_back,
+        'color_input_border='.$color_input_border,
+        'color_input_font='.$color_input_font,
+        'layout='.$layout,
+        'row1="'.esc_attr($row1).'"',
+        'row2="'.esc_attr($row2).'"'
+      );
+      
+      echo '<pre style="white-space: normal;">[bh-search '. implode(' ', $shortcode_args) .']</pre>';
+      ?>
+
+    
+        
+        
       </p>
     </div>
     <script>

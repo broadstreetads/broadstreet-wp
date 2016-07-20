@@ -177,6 +177,7 @@ class Bizyhood_Core
         add_shortcode('bh-businesses', array($this, 'businesses_shortcode'));
         add_shortcode('bh-promotions', array($this, 'promotions_shortcode'));
         add_shortcode('bh-events', array($this, 'events_shortcode'));
+        add_shortcode('bh-search', array($this, 'search_shortcode'));
         add_filter('the_content', array($this, 'postTemplate'), 100);
         add_action('wp_ajax_bizyhood_save_settings', array('Bizyhood_Ajax', 'Bizyhood_saveSettings'));
         
@@ -1453,6 +1454,50 @@ class Bizyhood_Core
       
       return Bizyhood_View::load( 'listings/events', $events_args, true );
 
+    }
+    
+    
+    public function search_shortcode($attrs) {
+      
+      $attributes = shortcode_atts( array(
+        'color_widget_back' => '',
+        'color_cta_back' => '',
+        'color_cta_font' => '',
+        'color_button_back' => '',
+        'color_button_font' => '',
+        'color_label_font' => '',
+        'color_input_back' => '',
+        'color_input_border' => '',
+        'color_input_font' => '',
+        'layout' => 'full',
+        'row1' => 'List your business',
+        'row2' => 'Add now, it\'s free',
+        'widget_id' => uniqid ()
+      ), $attrs );
+      
+      
+      $button_style = $input_style = array();
+      if ($attributes['color_button_back'] != '') {
+        $button_style[] = 'background-color: '. $attributes['color_button_back'] .';';
+      }
+      if ($attributes['color_button_font'] != '') {
+        $button_style[] = 'color: '. $attributes['color_button_font'] .';';
+      }
+      
+      if ($attributes['color_input_back'] != '') {
+        $input_style[] = 'background-color: '. $attributes['color_input_back'] .';';
+      }
+      if ($attributes['color_input_font'] != '') {
+        $input_style[] = 'color: '. $attributes['color_input_font'] .';';
+      }
+      if ($attributes['color_input_border'] != '') {
+        $input_style[] = 'border-color: '. $attributes['color_input_border'] .';';
+      }
+      
+      $attributes['button_style'] = $button_style;
+      $attributes['input_style']  = $input_style;
+
+      return Bizyhood_View::load( 'widgets/search-shortcode', $attributes, true );
     }
     
     

@@ -2,19 +2,6 @@
     <div class="col-md-8 bh_business-header-title">	
         <h3>Businesses<?php echo ( !empty($businesses) && isset($_GET['cf']) && $_GET['cf'] != '' ? ' in the '.$_GET['cf'] .' category' : '')  ?></h3>
     </div>
-    <div class="col-md-4 bh_business-search">
-    <?php
-      $keywords = stripslashes($keywords);
-    ?>
-    <form action="<?php echo site_url(); ?>/index.php" method="get">
-        <input type="hidden" name="page_id" value="<?php echo $list_page_id; ?>">
-        <?php if (isset($_GET['cf'])) { ?>
-        <input type="hidden" name="cf" value="<?php echo (urldecode($_GET['cf'])); ?>">
-        <?php } ?>
-        <input type="search" class="bh_search-field" placeholder="Search businesses..." name="keywords" title="Search for:" value="<?php echo $keywords; ?>">
-        <button class="search_submit" ><span class="entypo-search"></span></button>
-    </form>
-    </div>
 </div>
 <div class="row">
     <?php if ($keywords !='') { ?>
