@@ -1033,6 +1033,7 @@ class Bizyhood_Core
         $data['api_id']             = Bizyhood_Utility::getApiID();
         $data['api_secret']         = Bizyhood_Utility::getApiSecret();
         $data['main_page_id']       = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
+        $data['overview_page_id']   = Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID);
         $data['signup_page_id']     = Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID);
         $data['promotions_page_id'] = Bizyhood_Utility::getOption(self::KEY_PROMOTIONS_PAGE_ID);
         $data['events_page_id']     = Bizyhood_Utility::getOption(self::KEY_EVENTS_PAGE_ID);

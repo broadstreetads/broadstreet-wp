@@ -28,6 +28,7 @@ class Bizyhood_Ajax
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_API_ID, $_POST['api_id']);
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_API_SECRET, $_POST['api_secret']);
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_MAIN_PAGE_ID, $_POST['main_page_id']);
+        Bizyhood_Utility::setOption(Bizyhood_Core::KEY_OVERVIEW_PAGE_ID, $_POST['overview_page_id']);
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_SIGNUP_PAGE_ID, $_POST['signup_page_id']);
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_PROMOTIONS_PAGE_ID, $_POST['promotions_page_id']);
         Bizyhood_Utility::setOption(Bizyhood_Core::KEY_EVENTS_PAGE_ID, $_POST['events_page_id']);

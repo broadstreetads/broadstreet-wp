@@ -84,6 +84,20 @@
                         <div style="clear:both;"></div>
                     </div>
                     <div class="break"></div>
+
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">Single Business Overview Page</div>
+                            <div class="desc nomargin">
+                                The page that will be used to show the single business details.<br />
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <?php wp_dropdown_pages( array('name' => 'overview_page_id', 'selected' => $overview_page_id) ) ?>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="break"></div>
                     
                     <div class="option">
                         <div class="control-label">

@@ -36,6 +36,7 @@ jQuery(function($){
              api_id: $('#api_id').val(),
              api_secret: $('#api_secret').val(),
              main_page_id: $('#main_page_id').val(),
+             overview_page_id: $('#overview_page_id').val(),
              signup_page_id: $('#signup_page_id').val(),
              promotions_page_id: $('#promotions_page_id').val(),
              events_page_id: $('#events_page_id').val(),
