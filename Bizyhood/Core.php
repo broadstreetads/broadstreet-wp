@@ -36,6 +36,7 @@ class Bizyhood_Core
     CONST KEY_API_SECRET          = 'Bizyhood_API_Secret';
     CONST KEY_OAUTH_DATA          = 'bizyhood_oauth_data';
     CONST KEY_MAIN_PAGE_ID        = 'Bizyhood_Main_page_ID';
+    CONST KEY_OVERVIEW_PAGE_ID    = 'Bizyhood_Overview_page_ID';
     CONST KEY_SIGNUP_PAGE_ID      = 'Bizyhood_Signup_page_ID';
     CONST KEY_PROMOTIONS_PAGE_ID  = 'Bizyhood_Promotions_page_ID';
     CONST KEY_EVENTS_PAGE_ID      = 'Bizyhood_Events_page_ID';
@@ -67,8 +68,16 @@ class Bizyhood_Core
         Bizyhood_Log::add('debug', "Bizyhood installing");
         
         // Create the business list page
-        $business_list_page = get_page_by_path( "business-directory" );
-        if ( !$business_list_page )
+        
+        $business_list_page         = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
+        $business_list_page_exists  = false;
+        
+        // check if the id exists and if the page has not been deleted
+        if (intval($business_list_page) > 0 && get_post_field('post_name', $business_list_page) !== '') {
+          $business_list_page_exists = true;
+        }
+        
+        if ( intval($business_list_page) == 0 || $business_list_page_exists === false )
         {
             $business_list_page = array(
                 'post_title'     => 'Business Directory',
@@ -81,12 +90,22 @@ class Bizyhood_Core
                 'post_author'    => 1,
                 'menu_order'     => 0,
             );
-            wp_insert_post( $business_list_page );
+            $business_list_page_id = wp_insert_post( $business_list_page );
+            if ($business_list_page_id) {
+              Bizyhood_Utility::setOption(self::KEY_MAIN_PAGE_ID, $business_list_page_id);
+            }
         }
 
         // Create the view business page
-        $business_view_page = get_page_by_path( "business-overview" );
-        if ( !$business_view_page )
+        $business_view_page         = Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID);
+        $business_view_page_exists  = false;
+        
+        // check if the id exists and if the page has not been deleted
+        if (intval($business_view_page) > 0 && get_post_field('post_name', $business_view_page) !== '') {
+          $business_view_page_exists = true;
+        }
+        
+        if ( intval($business_view_page) == 0 ||  $business_view_page_exists === false )
         {
             $business_view_page = array(
                 'post_title'     => 'Business Overview',
@@ -99,12 +118,22 @@ class Bizyhood_Core
                 'post_author'    => 1,
                 'menu_order'     => 0,
             );
-            wp_insert_post( $business_view_page );
+            $business_view_page_id = wp_insert_post( $business_view_page );
+            if ($business_view_page_id) {
+              Bizyhood_Utility::setOption(self::KEY_OVERVIEW_PAGE_ID, $business_view_page_id);
+            }
         }
         
         // Create the promotions page
-        $business_promotions_page = get_page_by_path( "business-promotions" );
-        if ( !$business_promotions_page )
+        $business_promotions_page         = Bizyhood_Utility::getOption(self::KEY_PROMOTIONS_PAGE_ID);
+        $business_promotions_page_exists  = false;
+        
+        // check if the id exists and if the page has not been deleted
+        if (intval($business_promotions_page) > 0 && get_post_field('post_name', $business_promotions_page) !== '') {
+          $business_promotions_page_exists = true;
+        }
+        
+        if ( intval($business_promotions_page) == 0 || $business_promotions_page_exists  === false )
         {
             $business_promotions_page = array(
                 'post_title'     => 'Business Promotions',
@@ -117,12 +146,22 @@ class Bizyhood_Core
                 'post_author'    => 1,
                 'menu_order'     => 0,
             );
-            wp_insert_post( $business_promotions_page );
+            $business_promotions_page_id = wp_insert_post( $business_promotions_page );
+            if ($business_promotions_page_id) {
+              Bizyhood_Utility::setOption(self::KEY_PROMOTIONS_PAGE_ID, $business_promotions_page_id);
+            }
         }
         
         // Create the events page
-        $business_events_page = get_page_by_path( "business-events" );
-        if ( !$business_events_page )
+        $business_events_page         = Bizyhood_Utility::getOption(self::KEY_EVENTS_PAGE_ID);
+        $business_events_page_exists  = false;
+        
+        // check if the id exists and if the page has not been deleted
+        if (intval($business_events_page) > 0 && get_post_field('post_name', $business_events_page) !== '') {
+          $business_events_page_exists = true;
+        }
+        
+        if ( intval($business_events_page) == 0 || $business_events_page_exists === false )
         {
             $business_events_page = array(
                 'post_title'     => 'Business Events',
@@ -135,7 +174,10 @@ class Bizyhood_Core
                 'post_author'    => 1,
                 'menu_order'     => 0,
             );
-            wp_insert_post( $business_events_page );
+            $business_events_page_id = wp_insert_post( $business_events_page );
+            if ($business_events_page_id) {
+              Bizyhood_Utility::setOption(self::KEY_EVENTS_PAGE_ID, $business_events_page_id);
+            }
         }
 
     }
