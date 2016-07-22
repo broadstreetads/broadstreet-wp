@@ -1,7 +1,7 @@
 <?php if (!empty($promotion)) { 
   
-  $view_business_page_id = get_page_by_path( "business-overview" )->ID;
-  $view_promotions_page_id    = get_page_by_path( "business-promotions" )->ID;
+  $view_business_page_id      = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_OVERVIEW_PAGE_ID);
+  $view_promotions_page_id    = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_PROMOTIONS_PAGE_ID);
   
   $single_promotion_link    = get_permalink( $view_promotions_page_id ).$promotion['business_identifier'].'/'.$promotion['identifier'].'/';
   $business_promotions_link = get_permalink( $view_promotions_page_id ).$promotion['business_identifier'].'/';

@@ -62,17 +62,12 @@ class Bizyhood_Utility
      */
     public function is_bizyhood_page() {
       
-      $business_view_page = get_page_by_path( "business-overview" );
-      $business_promotions = get_page_by_path( "business-promotions" );
-      $business_events = get_page_by_path( "business-events" );
-      $business_signup = get_page_by_path( "business-signup" );
       if (
         is_page(self::getOption(Bizyhood_Core::KEY_SIGNUP_PAGE_ID)) || 
         is_page(self::getOption(Bizyhood_Core::KEY_MAIN_PAGE_ID)) || 
-        ($business_view_page !== null && is_page($business_view_page->ID)) || 
-        ($business_promotions !== null && is_page($business_promotions->ID)) || 
-        ($business_events !== null && is_page($business_events->ID)) || 
-        ($business_signup !== null && is_page($business_signup->ID))
+        is_page(self::getOption(Bizyhood_Core::KEY_OVERVIEW_PAGE_ID)) || 
+        is_page(self::getOption(Bizyhood_Core::KEY_PROMOTIONS_PAGE_ID)) || 
+        is_page(self::getOption(Bizyhood_Core::KEY_EVENTS_PAGE_ID))
       ) {
         return true;
       }

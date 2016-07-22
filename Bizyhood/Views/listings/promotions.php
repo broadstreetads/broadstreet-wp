@@ -7,8 +7,8 @@
 
   if (!empty($promotions)) {
     
-    $view_business_page_id    = get_page_by_path( "business-overview" )->ID;
-    $view_promotions_page_id  = get_page_by_path( "business-promotions" )->ID;
+    $view_business_page_id    = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_OVERVIEW_PAGE_ID);
+    $view_promotions_page_id  = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_PROMOTIONS_PAGE_ID);
         
     ?>
     <div class="row bh_promotion-content promotions_page">	

@@ -7,8 +7,8 @@
 
   if (!empty($events)) {
     
-    $view_business_page_id  = get_page_by_path( "business-overview" )->ID;
-    $view_events_page_id    = get_page_by_path( "business-events" )->ID;
+    $view_business_page_id  = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_OVERVIEW_PAGE_ID);
+    $view_events_page_id    = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_EVENTS_PAGE_ID);
 
     ?>
     <div class="row bh_event-content events_page">	

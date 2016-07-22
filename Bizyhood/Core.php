@@ -339,7 +339,7 @@ class Bizyhood_Core
     
     function buffer_callback($buffer) {
       
-      $overview_page = get_page_by_path( 'business-overview' );
+      $overview_page = get_post( Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID) );
       
       if (!is_page($overview_page)) {
         return $buffer;
@@ -484,7 +484,7 @@ class Bizyhood_Core
       
       $queryapi = $this->businesses_information(array('paged' => 1));
       $numofpages = floor($queryapi['total_count'] / $queryapi['page_size']);
-      $urlbase = get_permalink( get_page_by_path( 'business-overview' ) );
+      $urlbase = get_permalink( Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID) );
       $date = date("Y-m-d H:i");
       $count  = $queryapi['total_count']; // get the number of results // 492
       
@@ -609,7 +609,7 @@ class Bizyhood_Core
       
       $queryapi = $this->businesses_information(array('paged' => 1, 'verified' => 'y', 'ps' => self::API_MAX_LIMIT));
       $numofpages = floor($queryapi['total_count'] / $queryapi['page_size']);
-      $urlbase = get_permalink( get_page_by_path( 'business-overview' ) );
+      $urlbase = get_permalink( Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID) );
       $date = date("Y-m-d H:i");
       $count  = $queryapi['total_count']; // get the number of results // 492
       
@@ -661,19 +661,19 @@ class Bizyhood_Core
     {
       
       
-      $bizy_rules = array('business-overview/([^/]+)/([^/]+)/?$' => 'index.php?pagename=business-overview&bizyhood_name=$matches[1]&bizyhood_id=$matches[2]');
+      $bizy_rules = array(get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID)).'/([^/]+)/([^/]+)/?$' => 'index.php?pagename='. get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID)) .'&bizyhood_name=$matches[1]&bizyhood_id=$matches[2]');
       $wr_rules = $bizy_rules + $wr_rules;
       
-      $promo_rules = array('business-promotions/([^/]+)/?$' => 'index.php?pagename=business-promotions&bizyhood_name=$matches[1]');
+      $promo_rules = array(get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_PROMOTIONS_PAGE_ID)).'/([^/]+)/?$' => 'index.php?pagename='. get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_PROMOTIONS_PAGE_ID)) .'&bizyhood_name=$matches[1]');
       $wr_rules = $promo_rules + $wr_rules;
       
-      $promo_rules_single = array('business-promotions/([^/]+)/([^/]+)/?$' => 'index.php?pagename=business-promotions&bizyhood_name=$matches[1]&bizyhood_id=$matches[2]');
+      $promo_rules_single = array(get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_PROMOTIONS_PAGE_ID)).'/([^/]+)/([^/]+)/?$' => 'index.php?pagename='. get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_PROMOTIONS_PAGE_ID)) .'&bizyhood_name=$matches[1]&bizyhood_id=$matches[2]');
       $wr_rules = $promo_rules_single + $wr_rules;
       
-      $events_rules = array('business-events/([^/]+)/?$' => 'index.php?pagename=business-events&bizyhood_name=$matches[1]');
+      $events_rules = array(get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_EVENTS_PAGE_ID)).'/([^/]+)/?$' => 'index.php?pagename='. get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_EVENTS_PAGE_ID)) .'&bizyhood_name=$matches[1]');
       $wr_rules = $events_rules + $wr_rules;
       
-      $events_rules_single = array('business-events/([^/]+)/([^/]+)/?$' => 'index.php?pagename=business-events&bizyhood_name=$matches[1]&bizyhood_id=$matches[2]');
+      $events_rules_single = array(get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_EVENTS_PAGE_ID)).'/([^/]+)/([^/]+)/?$' => 'index.php?pagename='. get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_EVENTS_PAGE_ID)) .'&bizyhood_name=$matches[1]&bizyhood_id=$matches[2]');
       $wr_rules = $events_rules_single + $wr_rules;
       
       return $wr_rules;
@@ -685,11 +685,11 @@ class Bizyhood_Core
       $wr_rules = get_option( 'rewrite_rules' );
       
       // check if the rule already exits and if not then flush the rewrite rules
-      if ( ! isset( $wr_rules['business-overview/([^/]+)/([^/]+)/?$'] ) || 
-            ! isset( $wr_rules['business-promotions/([^/]+)/?$'] ) || 
-            ! isset( $wr_rules['business-promotions/([^/]+)/([^/]+)/?$'] ) || 
-            ! isset( $wr_rules['business-events/([^/]+)/?$'] ) || 
-            ! isset( $wr_rules['business-events/([^/]+)/([^/]+)/?$'] )
+      if (  ! isset( $wr_rules[get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID)).'/([^/]+)/([^/]+)/?$'] ) || 
+            ! isset( $wr_rules[get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_PROMOTIONS_PAGE_ID)).'/([^/]+)/?$'] ) || 
+            ! isset( $wr_rules[get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_PROMOTIONS_PAGE_ID)).'/([^/]+)/([^/]+)/?$'] ) || 
+            ! isset( $wr_rules[get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_EVENTS_PAGE_ID)).'/([^/]+)/?$'] ) || 
+            ! isset( $wr_rules[get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_EVENTS_PAGE_ID)).'/([^/]+)/([^/]+)/?$'] )
           ) {
         global $wp_rewrite;
         $wp_rewrite->flush_rules();
@@ -723,7 +723,7 @@ class Bizyhood_Core
       $yoastoptions = WPSEO_Options::get_all();
       $max_entries  = $yoastoptions['entries-per-page']; // get the limit of urls per sitemap page
       $sitemapnum   = (get_query_var( 'sitemap_n' ) ? get_query_var( 'sitemap_n' ) : 1); // get the sitemap number / page
-      $urlbase      = get_permalink( get_page_by_path( 'business-overview' ) );
+      $urlbase      = get_permalink( Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID) );
       $date         = date("Y-m-d H:i");
 
       $urls         = array(); // initialize URLs array
@@ -1046,14 +1046,14 @@ class Bizyhood_Core
             $data['errors'][] = 'Bizyhood requires the PHP cURL module to be enabled. You may need to ask your web host or developer to enable this.';
         }
         
-        if(get_category_by_slug('businesses-overview'))
+        if(get_category_by_slug(get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID))))
         {
-            $data['errors'][] = 'You have a category named "businesses-overview", which will interfere with the business directory if you plan to use it. You must delete that page.';
+            $data['errors'][] = 'You have a category named "'. get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID)) .'", which will interfere with the business directory if you plan to use it. You must rename the slug of this category.';
         }
         
-        if(get_category_by_slug('business-directory'))
+        if(get_category_by_slug(get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID))))
         {
-            $data['errors'][] = 'You have a category named "business-directory", which will interfere with the business directory if you plan to use it. You must delete that category.';
+            $data['errors'][] = 'You have a category named "'. get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID)) .'", which will interfere with the business directory if you plan to use it. You must rename the slug of this category.';
         }
 
         Bizyhood_View::load('admin/admin', $data);
@@ -1580,7 +1580,7 @@ class Bizyhood_Core
             'current'            => $page,
             'type'               => 'list',
         );
-        $view_business_page_id = get_page_by_path( "business-overview" )->ID;
+        $view_business_page_id = Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID);
         
         return Bizyhood_View::load( 'listings/index', array( 'keywords' => (isset($keywords) ? $keywords : ''), 'categories' => (isset($categories) ? $categories : ''), 'cf' => (isset($cf) ? $cf : ''), 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
     }
@@ -1647,12 +1647,7 @@ class Bizyhood_Core
 
         # Override content for the view business page        
         $post_name = $post->post_name;
-        
-        if ($post_name === 'business-overview') {
-          
-        }
-        
-        if ($post_name === 'business-overview')
+        if ($post_name === get_post_field('post_name', Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID)))
         {
             $signup_page_id = Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID);
             $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID); 

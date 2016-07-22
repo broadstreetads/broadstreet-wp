@@ -64,7 +64,7 @@ class bizy_promotions_widget extends WP_Widget {
       return;
     }
     
-    $view_business_page_id = get_page_by_path( "business-overview" )->ID;
+    $view_business_page_id = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_OVERVIEW_PAGE_ID);
     
     // get date text
     $dates = Bizyhood_Utility::buildDateText($promotion['start'], $promotion['end'], 'Promotion', 'promotions');

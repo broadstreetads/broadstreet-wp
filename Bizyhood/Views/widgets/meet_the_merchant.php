@@ -55,7 +55,7 @@ class bizy_mtm_widget extends WP_Widget {
       return;
     }
     
-    $view_business_page_id = get_page_by_path( "business-overview" )->ID;
+    $view_business_page_id = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_OVERVIEW_PAGE_ID);
     
     if (empty($business->business_logo)) {
       $business_logo_url = Bizyhood_Utility::getImageBaseURL().'placeholder-logo.jpg';

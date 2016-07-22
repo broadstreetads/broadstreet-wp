@@ -68,7 +68,7 @@ class bizy_events_widget extends WP_Widget {
     // get random weighted event
     $event = $events[Bizyhood_Utility::getRandomWeightedElementByDate($events, 'end')];
 
-    $view_business_page_id = get_page_by_path( "business-overview" )->ID;
+    $view_business_page_id = Bizyhood_Utility::getOption(Bizyhood_Core::KEY_OVERVIEW_PAGE_ID);
     
     
     // get date text
