@@ -1127,9 +1127,9 @@ class Bizyhood_Core
       // get category filter
       $category = false;
       if (get_query_var('cf')) {
-        $category = urldecode( get_query_var('cf') );
+        $category = urldecode( stripslashes(get_query_var('cf')) );
       } elseif (isset($_GET['cf'])) {
-        $category = urldecode( $_GET['cf'] );
+        $category = urldecode( stripslashes($_GET['cf']) );
       }
       
       $keywords = false;
