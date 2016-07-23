@@ -73,7 +73,7 @@ class Bizyhood_Core
         $business_list_page_exists  = false;
         
         // check if the id exists and if the page has not been deleted
-        if (intval($business_list_page) > 0 && get_post_field('post_name', $business_list_page) !== '') {
+        if (intval($business_list_page) > 0 && get_post_field('post_status', $business_list_page) == 'publish') {
           $business_list_page_exists = true;
         }
         
@@ -101,7 +101,7 @@ class Bizyhood_Core
         $business_view_page_exists  = false;
         
         // check if the id exists and if the page has not been deleted
-        if (intval($business_view_page) > 0 && get_post_field('post_name', $business_view_page) !== '') {
+        if (intval($business_view_page) > 0 && get_post_field('post_status', $business_view_page) == 'publish') {
           $business_view_page_exists = true;
         }
         
@@ -129,7 +129,7 @@ class Bizyhood_Core
         $business_promotions_page_exists  = false;
         
         // check if the id exists and if the page has not been deleted
-        if (intval($business_promotions_page) > 0 && get_post_field('post_name', $business_promotions_page) !== '') {
+        if (intval($business_promotions_page) > 0 && get_post_field('post_status', $business_promotions_page) == 'publish') {
           $business_promotions_page_exists = true;
         }
         
@@ -157,7 +157,7 @@ class Bizyhood_Core
         $business_events_page_exists  = false;
         
         // check if the id exists and if the page has not been deleted
-        if (intval($business_events_page) > 0 && get_post_field('post_name', $business_events_page) !== '') {
+        if (intval($business_events_page) > 0 && get_post_field('post_status', $business_events_page) == 'publish') {
           $business_events_page_exists = true;
         }
         
@@ -307,6 +307,13 @@ class Bizyhood_Core
     
     function reinitialize() {
       
+      // create the business overview DB entry to avoid duplicate page
+      if( is_admin() && Bizyhood_Utility::getOption(self::KEY_VERSION) == '1.2.2' ) {
+        $business_view_page = get_page_by_path( "business-overview" );
+        if ( $business_view_page ) {
+          Bizyhood_Utility::setOption(self::KEY_OVERVIEW_PAGE_ID, $business_view_page->ID);
+        }
+      }
       // check if the pages already exist and if not add them       
       // check version
       if( is_admin() && (!Bizyhood_Utility::getOption(self::KEY_VERSION) ||  Bizyhood_Utility::getOption(self::KEY_VERSION) != BIZYHOOD_VERSION)) {
