@@ -16,7 +16,8 @@
     </form>
     </div>
 </div>
-<div class="row">			
+<div class="row">
+    <?php if ($keywords !='') { ?>
     <div class="col-md-3 bh_local-nav">
         <h5>Categories</h5>
         <?php 
@@ -36,7 +37,7 @@
               }
           ?>
               <a class="bh_list-group-item" href="<?php echo get_permalink( $list_page_id ); ?>?cf=<?php echo rawurlencode($category['term']).($keywords != '' ? '&amp;keywords='.$keywords : ''); ?>" title="<?php echo $category['term']; ?> (<?php echo $category['count']; ?>)">
-                  <span class="bh_list-title"><?php echo $category['term']; ?> (<?php echo $category['count']; ?>)</span>
+                  <span class="bh_list-title"><?php echo (strlen($category['term']) > Bizyhood_Core::CATEGORIES_LENGTH ? substr($category['term'], 0, 35).'&hellip;' : $category['term']); ?> (<?php echo $category['count']; ?>)</span>
               </a> 
           <?php 
               $category_count++;
@@ -60,7 +61,8 @@
           }
         ?>
     </div>
-    <div class="col-md-9 bh_results">
+    <?php } ?>
+    <div class="col-md-<?php echo ($keywords !='' ? 9 : 12); ?> bh_results">
         <div class="row">
             <?php if ( !empty($businesses) ) { ?>
             <?php $i = 0; foreach($businesses as $business): ?>
