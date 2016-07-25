@@ -1061,6 +1061,10 @@ class Bizyhood_Core
           $bizyhood_id = (isset($_REQUEST['bizyhood_id']) ? $_REQUEST['bizyhood_id'] : '');
         }
       }
+      
+      if (!$bizyhood_id) {
+        return NULL;
+      }
 
       $client = Bizyhood_oAuth::oAuthClient();
       
@@ -1555,6 +1559,11 @@ class Bizyhood_Core
 
         # Override content for the view business page        
         $post_name = $post->post_name;
+        
+        if ($post_name === 'business-overview') {
+          
+        }
+        
         if ($post_name === 'business-overview')
         {
             $signup_page_id = Bizyhood_Utility::getOption(self::KEY_SIGNUP_PAGE_ID);
@@ -1562,6 +1571,11 @@ class Bizyhood_Core
             
             $single_business_information = self::single_business_information();
                                     
+            if ($single_business_information === NULL) {
+              $business_view_page = get_page_by_path( 'business-directory' );
+              wp_safe_redirect( get_permalink($business_view_page) );
+              die;
+            }
             if ($single_business_information === false) {
               return Bizyhood_View::load( 'listings/error', array( 'error' => __( 'Service is currently unavailable! Request timed out.', 'bizyhood' )), true );
             } else {
