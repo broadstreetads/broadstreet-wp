@@ -300,11 +300,7 @@ class Bizyhood_Core
         add_action('wp_loaded', array( $this, 'buffer_start'), 100000);    
         add_action('shutdown', array( $this, 'buffer_end'), 100000);       
         
-        // meta END
-        
-        
-        add_action('wp', array( $this, 'handle_404'));
-        
+        // meta END       
         
     }
     
@@ -1670,8 +1666,17 @@ class Bizyhood_Core
               die;
             }
             if ($single_business_information === false) {
+              
               return Bizyhood_View::load( 'listings/error', array( 'error' => __( 'Service is currently unavailable! Request timed out.', 'bizyhood' )), true );
-            } else {
+              
+            } elseif($single_business_information->bizyhood_id == '') {
+              
+              $wp_query->set_404();
+              status_header( 404 );
+              nocache_headers();
+              return Bizyhood_View::load( 'listings/error', array( 'error' => __( 'The business you requested can not be found.', 'bizyhood' ), 'noheader' => true), true );
+              
+            }else {
               $business = $single_business_information;
             }
             
@@ -1719,24 +1724,7 @@ class Bizyhood_Core
 
         return $content;
     }
-    
-    function handle_404(){
-      global $wp_query;
-      
-      if (Bizyhood_Utility::is_bizyhood_page() && $wp_query->query_vars['pagename'] == 'business-overview') { // to be replaced with ID
-        
-        $single_business_information = self::single_business_information();
-        
-        if ($single_business_information->bizyhood_id == '' || (isset($single_business_information->total_count) && $single_business_information->total_count == 0)) {
-        
-          $wp_query->set_404();
-          status_header( 404 );
-          nocache_headers();
-          include( get_query_template( '404' ) );
-          die();
-        }
-      }
-    }
+
     
     function bizyhood_plugin_action_links( $links ) {
        $links[] = '<a href="'. esc_url( get_admin_url(null, 'options-general.php?page=Bizyhood') ) .'">'. __('Settings', 'bizyhood') .'</a>';
