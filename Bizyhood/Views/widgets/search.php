@@ -83,7 +83,7 @@ class bizy_search_widget extends WP_Widget {
     
     global $widget_instance;
     
-		$title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'New title', 'bizyhood' );
+		$title = ! empty( $instance['title'] ) ? $instance['title'] : '';
 		$layout = ! empty( $instance['layout'] ) ? $instance['layout'] : 'full';
 		$row1 = ! empty( $instance['row1'] ) ? $instance['row1'] : 'List your business';
 		$row2 = ! empty( $instance['row2'] ) ? $instance['row2'] : 'Add now, it\'s free';
