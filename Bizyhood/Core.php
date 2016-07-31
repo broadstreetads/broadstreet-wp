@@ -1553,6 +1553,10 @@ class Bizyhood_Core
     public function businesses_shortcode($attrs)
     {
       
+        $attributes = shortcode_atts( array(
+          'search_widget' => 'on', // set to off to disable the search widget before the directory content
+        ), $attrs );
+      
         
         $authetication = Bizyhood_oAuth::set_oauth_temp_data();
         if (is_wp_error($authetication) || Bizyhood_oAuth::checkoAuthData() == false) {
@@ -1588,7 +1592,7 @@ class Bizyhood_Core
         );
         $view_business_page_id = Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID);
         
-        return Bizyhood_View::load( 'listings/index', array( 'keywords' => (isset($keywords) ? $keywords : ''), 'categories' => (isset($categories) ? $categories : ''), 'cf' => (isset($cf) ? $cf : ''), 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id ), true );
+        return Bizyhood_View::load( 'listings/index', array( 'keywords' => (isset($keywords) ? $keywords : ''), 'categories' => (isset($categories) ? $categories : ''), 'cf' => (isset($cf) ? $cf : ''), 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id, 'search_widget' => $attributes['search_widget'] ), true );
     }
     
     
