@@ -117,7 +117,7 @@ a.facet_helper {
 .feedback_cta .bh_tablecell, .claim_cta .bh_tablecell {
   padding: 15px;
 }
-
+.bh_list-group-item.selected_category, .bh_list-group-item.selected_category span { font-weight: bold; }
 .bh_list-group-item {
 	position: relative;
 	display: block;

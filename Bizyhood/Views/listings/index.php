@@ -1,6 +1,6 @@
 <div class="row bh_business-header">
-    <div class="col-md-8 bh_business-header-title">	
-        <h3>Businesses<?php echo ( !empty($businesses) && isset($_GET['cf']) && $_GET['cf'] != '' ? ' in the '.$_GET['cf'] .' category' : '')  ?></h3>
+    <div class="col-md-12 bh_business-header-title">	
+        <h3>Businesses</h3>
     </div>
 </div>
 <div class="row">
@@ -23,7 +23,7 @@
                 <?php
               }
           ?>
-              <a class="bh_list-group-item" href="<?php echo get_permalink( $list_page_id ); ?>?cf=<?php echo rawurlencode($category['term']).($keywords != '' ? '&amp;keywords='.$keywords : ''); ?>" title="<?php echo $category['term']; ?> (<?php echo $category['count']; ?>)">
+              <a class="bh_list-group-item <?php echo (isset($_GET['cf']) && rawurlencode($_GET['cf']) == rawurlencode($category['term']) ? 'selected_category' : ''); ?>" href="<?php echo get_permalink( $list_page_id ); ?>?cf=<?php echo rawurlencode($category['term']).($keywords != '' ? '&amp;keywords='.$keywords : ''); ?>" title="<?php echo $category['term']; ?> (<?php echo $category['count']; ?>)">
                   <span class="bh_list-title"><?php echo (strlen($category['term']) > Bizyhood_Core::CATEGORIES_LENGTH ? substr($category['term'], 0, 35).'&hellip;' : $category['term']); ?> (<?php echo $category['count']; ?>)</span>
               </a> 
           <?php 
