@@ -13,6 +13,14 @@ class bizy_mtm_widget extends WP_Widget {
   var $limitchars = 30;
   var $limitchars_header = 40;
 
+  static private $default_colors = array(
+    "color_widget_back"  => '#e2e2e2',
+    "color_cta_back"     => '#45aae8',
+    "color_cta_font"     => '#ffffff',
+    "color_label_font"   => '#6e7273',
+    "color_business_font"=> '#333333',
+  );
+  
 	/**
 	 * Register widget with WordPress.
 	 */
@@ -148,11 +156,11 @@ class bizy_mtm_widget extends WP_Widget {
 		$intro = ! empty( $instance['intro'] ) ? $instance['intro'] : '';
 		$row1 = ! empty( $instance['row1'] ) ? $instance['row1'] : 'Want to see all our business listings?';
 		$row2 = ! empty( $instance['row2'] ) ? $instance['row2'] : 'CLICK HERE';
-		$color_widget_back = ! empty( $instance['color_widget_back'] ) ? $instance['color_widget_back'] : '#e2e2e2';
-		$color_cta_back = ! empty( $instance['color_cta_back'] ) ? $instance['color_cta_back'] : '#45AAE8';
-		$color_cta_font = ! empty( $instance['color_cta_font'] ) ? $instance['color_cta_font'] : '#FFFFFF';
-		$color_label_font = ! empty( $instance['color_label_font'] ) ? $instance['color_label_font'] : '#6E7273';
-		$color_business_font = ! empty( $instance['color_business_font'] ) ? $instance['color_business_font'] : '#333333';
+		$color_widget_back = ! empty( $instance['color_widget_back'] ) ? $instance['color_widget_back'] : self::$default_colors['color_widget_back'];
+		$color_cta_back = ! empty( $instance['color_cta_back'] ) ? $instance['color_cta_back'] : self::$default_colors['color_cta_back'];
+		$color_cta_font = ! empty( $instance['color_cta_font'] ) ? $instance['color_cta_font'] : self::$default_colors['color_cta_font'];
+		$color_label_font = ! empty( $instance['color_label_font'] ) ? $instance['color_label_font'] : self::$default_colors['color_label_font'];
+		$color_business_font = ! empty( $instance['color_business_font'] ) ? $instance['color_business_font'] : self::$default_colors['color_business_font'];
     $logo_size = ! empty( $instance['logo_size'] ) ? $instance['logo_size'] : 'large';
     
     $uid = uniqid ();
@@ -195,26 +203,26 @@ class bizy_mtm_widget extends WP_Widget {
     </p>
 
     <h4>Colors</h4>
-    <div class="color_wrap color_wrap_<?php echo $uid; ?>">
+    <div class="color_wrap" id="color_wrap_<?php echo $uid; ?>">
       <p>
         <label for="<?php echo $this->get_field_id( 'color_widget_back' ); ?>"><?php _e( 'Widget Background:' ); ?></label> 
-        <input class="widefat color-picker colorfield jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_widget_back' ); ?>" name="<?php echo $this->get_field_name( 'color_widget_back' ); ?>" type="text" value="<?php echo esc_attr( $color_widget_back ); ?>">
+        <input data-default-color="<?php echo self::$default_colors['color_widget_back']; ?>" class="widefat color-picker colorfield jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_widget_back' ); ?>" name="<?php echo $this->get_field_name( 'color_widget_back' ); ?>" type="text" value="<?php echo esc_attr( $color_widget_back ); ?>">
       </p>
       <p>
         <label for="<?php echo $this->get_field_id( 'color_cta_back' ); ?>"><?php _e( 'Call to Action Background:' ); ?></label> 
-        <input class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_cta_back' ); ?>" name="<?php echo $this->get_field_name( 'color_cta_back' ); ?>" type="text" value="<?php echo esc_attr( $color_cta_back ); ?>">
+        <input data-default-color="<?php echo self::$default_colors['color_cta_back']; ?>" class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_cta_back' ); ?>" name="<?php echo $this->get_field_name( 'color_cta_back' ); ?>" type="text" value="<?php echo esc_attr( $color_cta_back ); ?>">
       </p>
       <p>
         <label for="<?php echo $this->get_field_id( 'color_cta_font' ); ?>"><?php _e( 'Call to Action Font:' ); ?></label> 
-        <input class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_cta_font' ); ?>" name="<?php echo $this->get_field_name( 'color_cta_font' ); ?>" type="text" value="<?php echo esc_attr( $color_cta_font ); ?>">
+        <input data-default-color="<?php echo self::$default_colors['color_cta_font']; ?>" class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_cta_font' ); ?>" name="<?php echo $this->get_field_name( 'color_cta_font' ); ?>" type="text" value="<?php echo esc_attr( $color_cta_font ); ?>">
       </p>
       <p>
         <label for="<?php echo $this->get_field_id( 'color_label_font' ); ?>"><?php _e( 'Label Font:' ); ?></label> 
-        <input class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_label_font' ); ?>" name="<?php echo $this->get_field_name( 'color_label_font' ); ?>" type="text" value="<?php echo esc_attr( $color_label_font ); ?>">
+        <input data-default-color="<?php echo self::$default_colors['color_label_font']; ?>" class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_label_font' ); ?>" name="<?php echo $this->get_field_name( 'color_label_font' ); ?>" type="text" value="<?php echo esc_attr( $color_label_font ); ?>">
       </p>
       <p>
         <label for="<?php echo $this->get_field_id( 'color_business_font' ); ?>"><?php _e( 'Business Info Font:' ); ?></label> 
-        <input class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_business_font' ); ?>" name="<?php echo $this->get_field_name( 'color_business_font' ); ?>" type="text" value="<?php echo esc_attr( $color_business_font ); ?>">
+        <input data-default-color="<?php echo self::$default_colors['color_business_font']; ?>" class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_business_font' ); ?>" name="<?php echo $this->get_field_name( 'color_business_font' ); ?>" type="text" value="<?php echo esc_attr( $color_business_font ); ?>">
       </p>
       <p>
         <a class="colorfield_reset" href="#">Reset Colors to Default</a>
@@ -223,17 +231,23 @@ class bizy_mtm_widget extends WP_Widget {
     <script>
       jQuery(document).ready(function() {
         
-        jQuery('#widgets-right .color-picker, .inactive-sidebar .color-picker').wpColorPicker();
-        jQuery(document).ajaxComplete(function() {
-          jQuery('#widgets-right .color-picker, .inactive-sidebar .color-picker').wpColorPicker();
+        jQuery('#color_wrap_<?php echo $uid; ?> .color-picker').each(function() {
+          jQuery(this).wpColorPicker();
         });
         
-        jQuery('.colorfield_reset').on('click', function(e) {
+          jQuery(document).ajaxComplete(function() {
+            jQuery('#color_wrap_<?php echo $uid; ?> .color-picker').each(function() {
+              jQuery(this).wpColorPicker();
+            });
+          });
+ 
+        
+        jQuery('#color_wrap_<?php echo $uid; ?> .colorfield_reset').on('click', function(e) {
           e.preventDefault();
-          jQuery('#widgets-right .color-picker, .inactive-sidebar .color-picker').wpColorPicker('color', false);
-          jQuery('#widgets-right .color-picker, .inactive-sidebar .color-picker').wpColorPicker('color', '');
-          jQuery('.color_wrap_<?php echo $uid; ?> .wp-color-result').css({'background-color':'rgba(0,0,0,0)'});
-          jQuery(this).closest('div').find('input.colorfield').val('');
+          jQuery('#color_wrap_<?php echo $uid; ?> .color-picker').each(function() {
+            jQuery(this).wpColorPicker('color', jQuery(this).data('default-color'));            
+          });
+
           return false;
           
         });
