@@ -308,7 +308,7 @@ class bizy_events_widget extends WP_Widget {
           jQuery('#color_wrap_<?php echo $uid; ?> .color-picker').each(function() {
             jQuery(this).wpColorPicker('color', jQuery(this).data('default-color'));            
           });
-//           jQuery(this).closest('div').find('input.colorfield').val('');
+
           return false;
           
         });
