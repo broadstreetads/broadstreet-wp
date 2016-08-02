@@ -366,6 +366,9 @@ h3.bh_category {
   margin: 0;
 }
 
+.linkback { text-align: center; }
+.linkback a { font-size: 18px; }
+
 @media (max-width: 992px) {
   .bh_gallery-list .bh_gallery-thumb {width:33%;}
   .row.rowgrid [class*="col-"] {
