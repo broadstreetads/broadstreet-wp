@@ -96,6 +96,14 @@ class Bizyhood_Core
             }
         }
 
+        // create the business overview DB entry to avoid duplicate page
+        if( !Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID) ) {
+          $business_view_page = get_page_by_path( "business-overview" );
+          if ( $business_view_page ) {
+            Bizyhood_Utility::setOption(self::KEY_OVERVIEW_PAGE_ID, $business_view_page->ID);
+          }
+        }
+        
         // Create the view business page
         $business_view_page         = Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID);
         $business_view_page_exists  = false;
@@ -311,13 +319,6 @@ class Bizyhood_Core
         return; 
       }
       
-      // create the business overview DB entry to avoid duplicate page
-      if( !Bizyhood_Utility::getOption(self::KEY_VERSION) ) {
-        $business_view_page = get_page_by_path( "business-overview" );
-        if ( $business_view_page ) {
-          Bizyhood_Utility::setOption(self::KEY_OVERVIEW_PAGE_ID, $business_view_page->ID);
-        }
-      }
       // check if the pages already exist and if not add them       
       // check version
       if( !Bizyhood_Utility::getOption(self::KEY_VERSION) ||  Bizyhood_Utility::getOption(self::KEY_VERSION) != BIZYHOOD_VERSION ) {
