@@ -208,7 +208,7 @@ class Bizyhood_Core
         
         // check if we need to reinitialize
         if (is_admin()) {
-          add_action( 'wp', array($this, 'reinitialize') );
+          add_action( 'init', array($this, 'reinitialize') );
         }
         
         add_action('admin_menu', 	array($this, 'adminCallback'));
@@ -306,8 +306,13 @@ class Bizyhood_Core
     
     function reinitialize() {
       
+      // nothing to do if this is not admin
+      if (!is_admin()) { 
+        return; 
+      }
+      
       // create the business overview DB entry to avoid duplicate page
-      if( is_admin() && Bizyhood_Utility::getOption(self::KEY_VERSION) == '1.2.2' ) {
+      if( !Bizyhood_Utility::getOption(self::KEY_VERSION) ) {
         $business_view_page = get_page_by_path( "business-overview" );
         if ( $business_view_page ) {
           Bizyhood_Utility::setOption(self::KEY_OVERVIEW_PAGE_ID, $business_view_page->ID);
@@ -315,7 +320,7 @@ class Bizyhood_Core
       }
       // check if the pages already exist and if not add them       
       // check version
-      if( is_admin() && (!Bizyhood_Utility::getOption(self::KEY_VERSION) ||  Bizyhood_Utility::getOption(self::KEY_VERSION) != BIZYHOOD_VERSION)) {
+      if( !Bizyhood_Utility::getOption(self::KEY_VERSION) ||  Bizyhood_Utility::getOption(self::KEY_VERSION) != BIZYHOOD_VERSION ) {
         Bizyhood_Utility::setOption(self::KEY_VERSION, BIZYHOOD_VERSION);
         self::install('initializing');
       }
