@@ -206,41 +206,50 @@ class bizy_mtm_widget extends WP_Widget {
     <div class="color_wrap" id="color_wrap_<?php echo $uid; ?>">
       <p>
         <label for="<?php echo $this->get_field_id( 'color_widget_back' ); ?>"><?php _e( 'Widget Background:' ); ?></label> 
-        <input data-default-color="<?php echo self::$default_colors['color_widget_back']; ?>" class="widefat color-picker colorfield jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_widget_back' ); ?>" name="<?php echo $this->get_field_name( 'color_widget_back' ); ?>" type="text" value="<?php echo esc_attr( $color_widget_back ); ?>">
+        <input data-default-color="<?php echo self::$default_colors['color_widget_back']; ?>" class="widefat color-picker colorfield " id="<?php echo $this->get_field_id( 'color_widget_back' ); ?>" name="<?php echo $this->get_field_name( 'color_widget_back' ); ?>" type="text" value="<?php echo esc_attr( $color_widget_back ); ?>">
       </p>
       <p>
         <label for="<?php echo $this->get_field_id( 'color_cta_back' ); ?>"><?php _e( 'Call to Action Background:' ); ?></label> 
-        <input data-default-color="<?php echo self::$default_colors['color_cta_back']; ?>" class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_cta_back' ); ?>" name="<?php echo $this->get_field_name( 'color_cta_back' ); ?>" type="text" value="<?php echo esc_attr( $color_cta_back ); ?>">
+        <input data-default-color="<?php echo self::$default_colors['color_cta_back']; ?>" class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> " id="<?php echo $this->get_field_id( 'color_cta_back' ); ?>" name="<?php echo $this->get_field_name( 'color_cta_back' ); ?>" type="text" value="<?php echo esc_attr( $color_cta_back ); ?>">
       </p>
       <p>
         <label for="<?php echo $this->get_field_id( 'color_cta_font' ); ?>"><?php _e( 'Call to Action Font:' ); ?></label> 
-        <input data-default-color="<?php echo self::$default_colors['color_cta_font']; ?>" class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_cta_font' ); ?>" name="<?php echo $this->get_field_name( 'color_cta_font' ); ?>" type="text" value="<?php echo esc_attr( $color_cta_font ); ?>">
+        <input data-default-color="<?php echo self::$default_colors['color_cta_font']; ?>" class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> " id="<?php echo $this->get_field_id( 'color_cta_font' ); ?>" name="<?php echo $this->get_field_name( 'color_cta_font' ); ?>" type="text" value="<?php echo esc_attr( $color_cta_font ); ?>">
       </p>
       <p>
         <label for="<?php echo $this->get_field_id( 'color_label_font' ); ?>"><?php _e( 'Label Font:' ); ?></label> 
-        <input data-default-color="<?php echo self::$default_colors['color_label_font']; ?>" class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_label_font' ); ?>" name="<?php echo $this->get_field_name( 'color_label_font' ); ?>" type="text" value="<?php echo esc_attr( $color_label_font ); ?>">
+        <input data-default-color="<?php echo self::$default_colors['color_label_font']; ?>" class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> " id="<?php echo $this->get_field_id( 'color_label_font' ); ?>" name="<?php echo $this->get_field_name( 'color_label_font' ); ?>" type="text" value="<?php echo esc_attr( $color_label_font ); ?>">
       </p>
       <p>
         <label for="<?php echo $this->get_field_id( 'color_business_font' ); ?>"><?php _e( 'Business Info Font:' ); ?></label> 
-        <input data-default-color="<?php echo self::$default_colors['color_business_font']; ?>" class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> jscolor {width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" id="<?php echo $this->get_field_id( 'color_business_font' ); ?>" name="<?php echo $this->get_field_name( 'color_business_font' ); ?>" type="text" value="<?php echo esc_attr( $color_business_font ); ?>">
+        <input data-default-color="<?php echo self::$default_colors['color_business_font']; ?>" class="widefat color-picker colorfield colorfield_<?php echo $uid; ?> " id="<?php echo $this->get_field_id( 'color_business_font' ); ?>" name="<?php echo $this->get_field_name( 'color_business_font' ); ?>" type="text" value="<?php echo esc_attr( $color_business_font ); ?>">
       </p>
       <p>
         <a class="colorfield_reset" href="#">Reset Colors to Default</a>
       </p>
     </div>
     <script>
+      ( function( $ ){
+          function initColorPicker( widget ) {
+                  widget.find( '.color-picker' ).wpColorPicker( {
+                          change: _.throttle( function() { // For Customizer
+                                  $(this).trigger( 'change' );
+                          }, 3000 )
+                  });
+          }
+              function onFormUpdate( event, widget ) {
+                  initColorPicker( widget );
+          }
+          $( document ).on( 'widget-added widget-updated', onFormUpdate );
+
+          $( document ).ready( function() {
+                  $( '#widgets-right .widget:has(.color-picker)' ).each( function () {
+                          initColorPicker( $( this ) );                                                   
+                  } );
+          } );
+      }( jQuery ) );  
+      
       jQuery(document).ready(function() {
-        
-        jQuery('#color_wrap_<?php echo $uid; ?> .color-picker').each(function() {
-          jQuery(this).wpColorPicker();
-        });
-        
-          jQuery(document).ajaxComplete(function() {
-            jQuery('#color_wrap_<?php echo $uid; ?> .color-picker').each(function() {
-              jQuery(this).wpColorPicker();
-            });
-          });
- 
         
         jQuery('#color_wrap_<?php echo $uid; ?> .colorfield_reset').on('click', function(e) {
           e.preventDefault();
