@@ -1515,6 +1515,7 @@ class Bizyhood_Core
     public function search_shortcode($attrs) {
       
       $attributes = shortcode_atts( array(
+        'title' => '',
         'color_widget_back' => '',
         'color_cta_back' => '',
         'color_cta_font' => '',
