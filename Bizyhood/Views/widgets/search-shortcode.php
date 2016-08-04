@@ -1,3 +1,4 @@
+<?php echo $title; ?>
 <form method="get" action="<?php echo get_permalink(get_option('Bizyhood_Main_page_ID')); ?>" id="bizyhood_search_<?php echo $widget_id; ?>" class="bizyhood_widget bizyhood_search <?php echo $layout; ?>">
   
   <?php if (isset($_GET['cf'])) { ?>

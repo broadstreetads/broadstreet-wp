@@ -81,6 +81,10 @@ class bizy_search_widget extends WP_Widget {
       'row1="'.esc_attr($row1).'"',
       'row2="'.esc_attr($row2).'"'
     );
+    
+    if (apply_filters( 'widget_title', $instance['title'] ) != '') {
+      $shortcode_args[] = 'title='.$args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
+    }
 
     echo do_shortcode('[bh-search '. implode(' ', $shortcode_args) .' ]');
     
@@ -181,6 +185,7 @@ class bizy_search_widget extends WP_Widget {
       <?php 
       $shortcode_args = array(
         'widget_id='.uniqid (),
+        'title="'.$title.'"',
         'color_widget_back='.$color_widget_back,
         'color_cta_back='.$color_cta_back,
         'color_cta_font='.$color_cta_font,
