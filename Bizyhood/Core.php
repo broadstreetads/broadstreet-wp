@@ -1137,6 +1137,8 @@ class Bizyhood_Core
     
       return $business;
     }
+    
+    
     public function businesses_information($atts)
     {
       
@@ -1157,7 +1159,8 @@ class Bizyhood_Core
       $list_page_id = Bizyhood_Utility::getOption(self::KEY_MAIN_PAGE_ID);
       $params = array();
 
-
+      $show_category_facets = FALSE;
+      
       // get current page
       if (isset($filtered_attributes['paged']))
           $page = $filtered_attributes['paged'];
@@ -1178,18 +1181,26 @@ class Bizyhood_Core
       } else {
         $ps = self::API_MAX_LIMIT;
       }
-        
+
+      if (isset($_GET['c'])) {
+          $categories_query = $_GET['c'];
+          $show_category_facets = TRUE;
+      }
+      
       // get category filter
       $category = false;
       if (get_query_var('cf')) {
         $category = urldecode( stripslashes(get_query_var('cf')) );
+        $show_category_facets = TRUE;
       } elseif (isset($_GET['cf'])) {
         $category = urldecode( stripslashes($_GET['cf']) );
+        $show_category_facets = TRUE;
       }
       
       $keywords = false;
-      if(isset($_GET['keywords'])) {
+      if(!empty($_GET['keywords'])) {
         $keywords = esc_attr(strip_tags($_GET['keywords']));
+        $show_category_facets = TRUE;
       }
       
       // get verified
@@ -1235,6 +1246,10 @@ class Bizyhood_Core
         $params['verified'] = $verified;
       }
       
+      if (!empty($categories_query)) {
+         $params['cat'] = $categories_query; 
+      }
+      
       try {
         $response = $client->fetch($api_url.'/business/', $params);
       } catch (Exception $e) {
@@ -1269,7 +1284,8 @@ class Bizyhood_Core
         'page_size'         => $page_size,
         'response'          => json_encode($response['result']),
         'response_json'     => $response_json,
-        'facets'            => $facets
+        'facets'            => $facets,
+        'show_category_facets' => $show_category_facets     
       );
       
       return $return;
@@ -1583,6 +1599,7 @@ class Bizyhood_Core
         $businesses     = $q['businesses'];
         $keywords       = $q['keywords'];
         $categories     = $q['categories'];
+        $show_category_facets = $q['show_category_facets'];
         $cf             = $q['category'];
         $total_count    = $q['total_count'];
         $page_size      = $q['page_size'];
@@ -1598,7 +1615,7 @@ class Bizyhood_Core
         );
         $view_business_page_id = Bizyhood_Utility::getOption(self::KEY_OVERVIEW_PAGE_ID);
         
-        return Bizyhood_View::load( 'listings/index', array( 'keywords' => (isset($keywords) ? $keywords : ''), 'categories' => (isset($categories) ? $categories : ''), 'cf' => (isset($cf) ? $cf : ''), 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id, 'search_widget' => $attributes['search_widget'] ), true );
+        return Bizyhood_View::load( 'listings/index', array( 'keywords' => (isset($keywords) ? $keywords : ''), 'categories' => (isset($categories) ? $categories : ''), 'show_category_facets' => $show_category_facets,'cf' => (isset($cf) ? $cf : ''), 'list_page_id' => $list_page_id, 'pagination_args' => $pagination_args, 'businesses' => $businesses, 'view_business_page_id' => $view_business_page_id, 'search_widget' => $attributes['search_widget'] ), true );
     }
     
     

@@ -9,7 +9,7 @@
     </div>
 </div>
 <div class="row">
-    <?php if ($keywords !='') { ?>
+    <?php if ($show_category_facets) { ?>
     <div class="col-md-3 bh_local-nav">
         <h5>Categories</h5>
         <?php 
@@ -54,7 +54,7 @@
         ?>
     </div>
     <?php } ?>
-    <div class="col-md-<?php echo ($keywords !='' ? 9 : 12); ?> bh_results">
+    <div class="col-md-<?php echo ($show_category_facets ? 9 : 12); ?> bh_results">
         <div class="row">
             <?php if ( !empty($businesses) ) { ?>
             <?php $i = 0; foreach($businesses as $business): ?>
