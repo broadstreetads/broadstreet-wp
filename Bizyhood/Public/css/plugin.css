@@ -179,6 +179,7 @@ a.facet_helper {
   border: 1px solid #ddd;
   border-radius:0;
   margin-left: -1px;
+  white-space: nowrap;
 }
 .row .page-numbers .current {
   color: #999;
