@@ -141,6 +141,12 @@
               <span itemprop="addressRegion"><?php echo $business->region ?></span> 
               <span itemprop="postalCode"><?php echo $business->postal_code ?></span>
             </p>
+            <?php if ($business->claimed != 1 && $business->telephone) { ?>
+              <p>Call us: <a href="tel:<?php echo $business->telephone; ?>" itemprop="telephone"><?php echo $business->telephone; ?></a></p>
+            <?php } ?>
+            <?php if ($business->claimed != 1 && $business->website) { ?>
+              <p class="truncate long">Visit: <a class="bh_site_link" itemprop="url" href="<?php echo $business->website; ?>" target="_blank"><?php echo str_replace(array('http://', 'https://', 'www.'), array('','',''), $business->website); ?></a></p>
+            <?php } ?>
         </div>
         <div class="bh_section bh_map_wrap" itemprop="hasMap" itemtype="http://schema.org/Map">
           <p class="bh_staticmap text-center" <?php echo $colors['style']; ?>>
@@ -156,7 +162,7 @@
       
     </div>
     
-    <?php if($business->hours || $business->telephone || $business->website || $business->social_networks): ?>
+    <?php if($business->claimed == 1 && ($business->hours || $business->telephone || $business->website || $business->social_networks)): ?>
       <div class="col-md-3 business_hours">
         <div class="column-inner">
           <?php if($business->telephone) { ?>
