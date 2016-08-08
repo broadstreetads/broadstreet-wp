@@ -16,7 +16,13 @@
     }
     
     $location_column_width = 3;
-    if(!isset($business->hours) || empty($business->hours)) {
+    if(
+      (!isset($business->hours) || empty($business->hours)) && 
+      (!isset($business->telephone) || empty($business->telephone)) && 
+      (!isset($business->website) || empty($business->website)) && 
+      (!isset($business->social_networks) || empty($business->social_networks))
+      ) 
+    {
       $location_column_width = 6;
     }
   } else {
@@ -150,7 +156,7 @@
       
     </div>
     
-    <?php if($business->hours): ?>
+    <?php if($business->hours || $business->telephone || $business->website || $business->social_networks): ?>
       <div class="col-md-3 business_hours">
         <div class="column-inner">
           <?php if($business->telephone) { ?>
@@ -173,6 +179,7 @@
           <?php } ?>
         </div>
       
+        <?php if($business->hours) { ?>
         <div class="tablesplit"></div>
         <div class="column-inner">
             <div class="bh_section" itemprop="openingHoursSpecification" itemscope itemtype="http://schema.org/OpeningHoursSpecification">
@@ -203,6 +210,7 @@
                 </dl>
             </div>
         </div>
+        <?php } ?>
       </div>
     <?php endif; ?>
   </div><!-- /.row -->
