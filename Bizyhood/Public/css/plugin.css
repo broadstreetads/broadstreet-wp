@@ -180,6 +180,7 @@ a.facet_helper {
   border-radius:0;
   margin-left: -1px;
   white-space: nowrap;
+  width: auto;
 }
 .row .page-numbers .current {
   color: #999;
