@@ -1,34 +1,5 @@
 <?php
   
-  if ($business->claimed == 1) {
-    $footer_columns = 12;
-    if (isset($business->latest_event) && !empty($business->latest_event)) {
-      $footer_columns = $footer_columns - 3;
-    }
-    if (isset($business->news) && !empty($business->news)) {
-      $footer_columns = $footer_columns - 3;
-    }
-    if (isset($business->latest_promotion) && !empty($business->latest_promotion)) {
-      $footer_columns = $footer_columns - 3;
-    }
-    if (isset($business->feedback) && !empty($business->feedback)) {
-      $footer_columns = $footer_columns - 3;
-    }
-    
-    $location_column_width = 3;
-    if(
-      (!isset($business->hours) || empty($business->hours)) && 
-      (!isset($business->telephone) || empty($business->telephone)) && 
-      (!isset($business->website) || empty($business->website)) && 
-      (!isset($business->social_networks) || empty($business->social_networks))
-      ) 
-    {
-      $location_column_width = 6;
-    }
-  } else {
-    $location_column_width = 4;
-  }
-  
   // Get lat and long by address         
   $address = urlencode($business->address1).'+'.urlencode($business->locality).'+'.urlencode($business->region).'+'.urlencode($business->postal_code);
   
@@ -65,7 +36,7 @@
   
   <?php if ($business->claimed != 1) { ?>
   
-    <div class="col-md-8 feedback_cta">
+    <div class="col-md-<?php echo $claimit_width; ?> feedback_cta">
       <div class="bh_table">
         <div class="bh_tablerow">
           <div class="bh_tablecell">
@@ -156,7 +127,7 @@
       
     </div>
     
-    <?php if($business->hours || $business->telephone || $business->website || $business->social_networks): ?>
+    <?php if($show_third_column): ?>
       <div class="col-md-3 business_hours">
         <div class="column-inner">
           <?php if($business->telephone) { ?>

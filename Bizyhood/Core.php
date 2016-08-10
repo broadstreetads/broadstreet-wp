@@ -1746,7 +1746,58 @@ class Bizyhood_Core
               $business->latest_promotion = '';
             }
             
-            return Bizyhood_View::load('listings/single/default', array('content' => $content, 'business' => $business, 'signup_page_id' => $signup_page_id, 'list_page_id' => $list_page_id, 'colors' => $colors), true);
+            
+            $footer_columns = 12;
+            $location_column_width = 3;
+            $show_third_column = false;
+            $claimit_width = 8;
+            
+            if ($business->claimed == 1) {
+              if (isset($business->latest_event) && !empty($business->latest_event)) {
+                $footer_columns = $footer_columns - 3;
+              }
+              if (isset($business->news) && !empty($business->news)) {
+                $footer_columns = $footer_columns - 3;
+              }
+              if (isset($business->latest_promotion) && !empty($business->latest_promotion)) {
+                $footer_columns = $footer_columns - 3;
+              }
+              if (isset($business->feedback) && !empty($business->feedback)) {
+                $footer_columns = $footer_columns - 3;
+              }
+              
+              if(
+                (!isset($business->hours) || empty($business->hours)) && 
+                (!isset($business->telephone) || empty($business->telephone)) && 
+                (!isset($business->website) || empty($business->website)) && 
+                (!isset($business->social_networks) || empty($business->social_networks))
+                ) 
+              {
+                $location_column_width = 6;
+              }
+            } else {
+              $location_column_width = 4;
+            }
+            
+            if( $business->hours || $business->telephone || $business->website || $business->social_networks) {
+              $show_third_column = true;
+              $claimit_width = 6;
+              $location_column_width = 3;
+            }
+              
+            $defaut_args = array(
+              'content' => $content, 
+              'business' => $business, 
+              'signup_page_id' => $signup_page_id, 
+              'list_page_id' => $list_page_id, 
+              'colors' => $colors, 
+              'footer_columns' => $footer_columns, 
+              'location_column_width' => $location_column_width, 
+              'show_third_column' => $show_third_column,
+              'claimit_width' => $claimit_width
+            );
+            
+            return Bizyhood_View::load('listings/single/default', $defaut_args, true);
             
         }
 
