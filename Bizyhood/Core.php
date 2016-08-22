@@ -1199,7 +1199,7 @@ class Bizyhood_Core
       
       $keywords = false;
       if(!empty($_GET['keywords'])) {
-        $keywords = esc_attr(strip_tags($_GET['keywords']));
+        $keywords = stripslashes(strip_tags($_GET['keywords']));
         $show_category_facets = TRUE;
       }
       
