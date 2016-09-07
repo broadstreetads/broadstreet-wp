@@ -47,9 +47,6 @@
               </p>
               <?php
             }
-            if ( $cf != '' ) {
-              echo '<p class="facet_helper_wrap"><a href="'. get_permalink($list_page_id).( $keywords != '' ? '?keywords='.$keywords : '') .'" title="show all" class="facet_helper">show all</a></p>';
-            }
           }
         ?>
     </div>
