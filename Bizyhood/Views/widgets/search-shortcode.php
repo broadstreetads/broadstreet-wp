@@ -25,4 +25,8 @@
     </div>
   </div>
 </form>
-    
+<script type="text/javascript">
+    var form = document.getElementById('bizyhood_search_<?php echo $widget_id; ?>');
+
+    analytics.trackForm(form, 'Plugin Search Submitted', {'searchTerm': form.elements["keywords"].value});
+</script>
