@@ -91,19 +91,20 @@ class Bizyhood_Utility
       $dates = '';
       
       // check date
-      $start_date = date('Y-m-d', strtotime($start)); // start date
-      $tomorrow_date = date('Y-m-d', strtotime('+ 1 days')); // tomorrow date
-      $end_date = date('Y-m-d', strtotime($end)); // end date
+      $today = new DateTime();
+      $start_date = new DateTime($start); // start date
+      $tomorrow_date = $today->add(new DateInterval('P1D')); // tomorrow date
+      $end_date = new DateTime($end); // end date
       
       $data = array(
         'single' => strtotime($single),
         'plural' => strtotime($plural),
-        'str_start_date' => strtotime($start_date),
-        'str_tomorrow_date' => strtotime($tomorrow_date),
-        'str_end_date' => ($end !== NULL ? strtotime($end_date) : false),
-        'wp_start_date' => date_i18n( get_option( 'date_format' ), strtotime($start_date)),
-        'wp_tomorrow_date' => date_i18n( get_option( 'date_format' ), strtotime($tomorrow_date)),
-        'wp_end_date' => ($end !== NULL ? date_i18n( get_option( 'date_format' ), strtotime($end_date)) : false)
+        'str_start_date' => $start_date->format('U'),
+        'str_tomorrow_date' => $tomorrow_date->format('U'),
+        'str_end_date' => ($end !== NULL ? $end_date->format('U') : false),
+        'wp_start_date' => date_i18n( get_option( 'date_format' ), $start_date->format('U')),
+        'wp_tomorrow_date' => date_i18n( get_option( 'date_format' ), $tomorrow_date->format('U')),
+        'wp_end_date' => ($end !== NULL ? date_i18n( get_option( 'date_format' ), $end_date->format('U')) : false),
       );
         
       return Bizyhood_View::load( 'snippets/dateText', $data, true );
@@ -123,22 +124,23 @@ class Bizyhood_Utility
       $dates = '';
       
       // check date
-      $start_date = date('Y-m-d', strtotime($start)); // start date
-      $tomorrow_date = date('Y-m-d', strtotime('+ 1 days')); // tomorrow date
-      $end_date = date('Y-m-d', strtotime($end)); // end date
+      $today = new DateTime();
+      $start_date = new DateTime($start); // start date
+      $tomorrow_date = $today->add(new DateInterval('P1D')); // tomorrow date
+      $end_date = new DateTime($end); // end date
       
       $data = array(
         'single' => strtotime($single),
         'plural' => strtotime($plural),
-        'str_start_date' => strtotime($start_date),
-        'str_tomorrow_date' => strtotime($tomorrow_date),
-        'str_end_date' => ($end !== NULL ? strtotime($end_date) : false),
-        'wp_start_date' => date_i18n( get_option( 'date_format' ), strtotime($start_date)),
-        'wp_tomorrow_date' => date_i18n( get_option( 'date_format' ), strtotime($tomorrow_date)),
-        'wp_end_date' => ($end !== NULL ? date_i18n( get_option( 'date_format' ), strtotime($end_date)) : false),
-        'c_start_date' => date('c',strtotime($start_date)),
-        'c_tomorrow_date' => date('c',strtotime($tomorrow_date)),
-        'c_end_date' => ($end !== NULL ? date('c',strtotime($end_date)): false)
+        'str_start_date' => $start_date->format('U'),
+        'str_tomorrow_date' => $tomorrow_date->format('U'),
+        'str_end_date' => ($end !== NULL ? $end_date->format('U') : false),
+        'wp_start_date' => date_i18n( get_option( 'date_format' ), $start_date->format('U')),
+        'wp_tomorrow_date' => date_i18n( get_option( 'date_format' ), $tomorrow_date->format('U')),
+        'wp_end_date' => ($end !== NULL ? date_i18n( get_option( 'date_format' ), $end_date->format('U')) : false),
+        'c_start_date' => $start_date->format('c'),
+        'c_tomorrow_date' => $tomorrow_date->format('c'),
+        'c_end_date' => ($end !== NULL ? $end_date->format('c'): false)
       );
       
       return Bizyhood_View::load( 'snippets/dateTextMicrodata', $data, true );

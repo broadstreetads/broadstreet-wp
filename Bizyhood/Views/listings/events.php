@@ -28,7 +28,7 @@
           ?>
           </div><div class="row bh_event-content events_page">	
           <?php
-        }    
+        }
         $index++;
         
         // set the default logo
@@ -41,6 +41,10 @@
         if (str_word_count($event['description']) > Bizyhood_Core::EXCERPT_MAX_LENGTH) {
           $event['description'] = wp_trim_words($event['description'], Bizyhood_Core::EXCERPT_MAX_LENGTH, ' <a itemprop="url" href="'. $single_event_link .'" title="More about '. $event['name'] .'">more&hellip;</a>');
         }
+        
+        // create date objects
+        $eventstart = new DateTime($event['start']);
+        $eventend = new DateTime($event['end']);
         
      ?>
         <div class="col-md-6" itemscope itemtype="http://schema.org/Event">
@@ -58,8 +62,8 @@
             </span>
             <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
               <a itemprop="url" href="<?php echo $single_event_link; ?>">
-                <span itemprop="validFrom" content="<?php echo date('c',strtotime($event['start'])); ?>"><?php echo date('c',strtotime($event['start'])); ?></span> – 
-                <span itemprop="validThrough" content="<?php echo date('c',strtotime($event['end'])); ?>"><?php echo date('c',strtotime($event['end'])); ?></span> – 
+                <span itemprop="validFrom" content="<?php echo $eventstart->format('c'); ?>"><?php echo $eventstart->format('c'); ?></span> – 
+                <span itemprop="validThrough" content="<?php echo $eventend->format('c'); ?>"><?php echo $eventend->format('c'); ?></span> – 
                 <?php if (isset($event['admission_info']) && !empty($event['admission_info'])) { ?>
                 <span itemprop="price" content="<?php echo number_format(str_replace('$', '', $event['admission_info']), 2, '.', ' '); ?>"><span itemprop="priceCurrency" content="USD"><?php echo $event['admission_info']; ?></span></span>
                 <?php } ?>

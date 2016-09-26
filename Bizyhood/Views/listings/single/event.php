@@ -31,6 +31,9 @@
   // get date text
   $dates = Bizyhood_Utility::buildDateTextMicrodata($event['start'], $event['end'], 'Event', 'events');
   
+  // create date objects
+  $eventstart = new DateTime($event['start']);
+  $eventend = new DateTime($event['end']);
   
 ?>
 
@@ -47,9 +50,9 @@
       </span>
       <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
         <a itemprop="url" href="<?php echo $single_event_link; ?>">
-          <span itemprop="validFrom" content="<?php echo date('c',strtotime($event['start'])); ?>"><?php echo date('c',strtotime($event['start'])); ?></span> – 
+          <span itemprop="validFrom" content="<?php echo $eventstart->format('c'); ?>"><?php echo $eventstart->format('c'); ?></span> – 
           <?php if (isset($event['end']) && !empty($event['end'])) { ?>
-          <span itemprop="validThrough" content="<?php echo date('c',strtotime($event['end'])); ?>"><?php echo date('c',strtotime($event['end'])); ?></span> – 
+          <span itemprop="validThrough" content="<?php echo $eventend->format('c'); ?>"><?php echo $eventend->format('c'); ?></span> – 
           <?php } ?>
           <?php if (isset($event['admission_info']) && !empty($event['admission_info'])) { ?>
           <span itemprop="price" content="<?php echo number_format(str_replace('$', '', $event['admission_info']), 2, '.', ' '); ?>"><span itemprop="priceCurrency" content="USD"><?php echo $event['admission_info']; ?></span></span>
@@ -79,7 +82,7 @@
             <dt>Date</dt><br />
             <dd><?php echo $dates; ?></dd>
             <dt>Time</dt><br />
-            <dd><?php echo date('g:i A', strtotime($event['start'])); ?></dd>
+            <dd><?php echo $eventstart->format('g:i A'); ?></dd>
             <dt>Location</dt><br />
             <dd><?php echo $event['address1']; ?><br /><?php echo $event['locality']; ?>, <?php echo $event['region']; ?> <?php echo $event['postal_code']; ?></dd>
             <dt>Cost</dt><br />
