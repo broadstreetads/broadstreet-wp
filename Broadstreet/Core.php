@@ -318,6 +318,14 @@ class Broadstreet_Core
      */
     public function addPoweredBy()
     {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        if (property_exists($placement_settings, 'use_beta_tags') && $placement_settings->use_beta_tags) {
+            $args = '{}';
+            if (property_exists($placement_settings, 'beta_tag_arguments') && strlen($placement_settings->beta_tag_arguments)) {
+                $args = $placement_settings->beta_tag_arguments;
+            }
+            echo "<script>broadstreet.watch($args)</script>";
+        }
     }
 
     public function setWhitelabel()
@@ -330,18 +338,28 @@ class Broadstreet_Core
     
     public function addZoneTag()
     {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        $beta = false;
+        if (property_exists($placement_settings, 'use_beta_tags') && $placement_settings->use_beta_tags) {
+            $beta = true;
+        }
+
         # Add Broadstreet ad zone CDN
         if(!is_admin()) 
         {
-            if(is_ssl()) {
-                wp_enqueue_script('Broadstreet-cdn', 'https://s3.amazonaws.com/street-production/init.js');
+            if($beta) {
+                wp_enqueue_script('Broadstreet-cdn', 'http://street-production.s3.amazonaws.com/init-2.0.0b.min.js');
             } else {
                 $placement_settings = Broadstreet_Utility::getPlacementSettings();
                 $host = 'cdn.broadstreetads.com';
                 if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->cdn_whitelabel) > 0) {
                     $host = $placement_settings->cdn_whitelabel;
                 }
-                wp_enqueue_script('Broadstreet-cdn', "http://$host/init.js");
+                # except for cdn whitelabels
+                if (is_ssl() && $placement_settings->cdn_whitelabel) {
+                    $host = 's3.amazonaws.com/street-production';
+                }
+                wp_enqueue_script('Broadstreet-cdn', "//$host/init.js");
             }
         }
     }
@@ -403,7 +421,7 @@ class Broadstreet_Core
         add_image_size('bs-biz-size', 600, 450, true);
         
         # Only register javascript and css if the Broadstreet admin page is loading
-        if(strstr($_SERVER['QUERY_STRING'], 'Broadstreet'))
+        if(isset($_SERVER['QUERY_STRING']) && strstr($_SERVER['QUERY_STRING'], 'Broadstreet'))
         {
             wp_enqueue_style ('Broadstreet-styles',  Broadstreet_Utility::getCSSBaseURL() . 'broadstreet.css?v='. BROADSTREET_VERSION);
             wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js?v='. BROADSTREET_VERSION);
@@ -423,7 +441,7 @@ class Broadstreet_Core
         
         # Include thickbox on widgets page
         if($GLOBALS['pagenow'] == 'widgets.php'
-                || strstr($_SERVER['QUERY_STRING'], 'Broadstreet-Business'))
+                || (isset($_SERVER['QUERY_STRING']) && strstr($_SERVER['QUERY_STRING'], 'Broadstreet-Business')))
         {
             wp_enqueue_script('thickbox');
             wp_enqueue_style( 'thickbox' );

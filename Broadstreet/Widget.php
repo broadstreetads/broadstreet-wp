@@ -12,7 +12,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
      function __construct()
      {
         $widget_ops = array('classname' => 'bs_zones', 'description' => 'Easily place a Broadstreet ad zone with this widget');
-        $this->WP_Widget('bs_zones', 'Broadstreet Ad Zone', $widget_ops);
+        parent::__construct('bs_zones', 'Broadstreet Ad Zone', $widget_ops);
      }
 
      /**
@@ -101,7 +101,7 @@ class Broadstreet_Multiple_Zone_Widget extends WP_Widget
      function __construct()
      {
         $widget_ops = array('classname' => 'bs_multiple_zones', 'description' => 'Easily place a muliple Broadstreet ad zones inside a single widget');
-        $this->WP_Widget('bs_multiple_zones', 'Broadstreet Multiple Ad Zones', $widget_ops);
+        parent::__construct('bs_multiple_zones', 'Broadstreet Multiple Ad Zones', $widget_ops);
      }
 
      /**
@@ -215,7 +215,7 @@ class Broadstreet_SBSZone_Widget extends WP_Widget
      function __construct()
      {
         $widget_ops = array('classname' => 'bs_sbszones', 'description' => 'Place two ad zones (like button zones) side-by-side');
-        $this->WP_Widget('bs_sbszones', 'Broadstreet Side-by-Side Zones', $widget_ops);
+        parent::__construct('bs_sbszones', 'Broadstreet Side-by-Side Zones', $widget_ops);
      }
 
      /**
@@ -319,7 +319,7 @@ class Broadstreet_Business_Listing_Widget extends WP_Widget
      function __construct()
      {
         $widget_ops = array('classname' => 'bs_business_listings', 'description' => 'A list of entries in the business directory');
-        $this->WP_Widget('bs_business_listings', 'Broadstreet Business List', $widget_ops);
+        parent::__construct('bs_business_listings', 'Broadstreet Business List', $widget_ops);
      }
 
      /**
@@ -439,6 +439,7 @@ class Broadstreet_Business_Listing_Widget extends WP_Widget
             <label for="<?php echo $this->get_field_id('w_title'); ?>">Title:</label>
             <input class="widefat" type="text" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="<?php echo $instance['w_title']; ?>" />
         </p>
+        <?php if(is_array($categories)): ?>
        <p>
             <label for="<?php echo $this->get_field_id('w_category'); ?>">Business Category:</label>
             <select class="widefat" id="<?php echo $this->get_field_id( 'w_category' ); ?>" name="<?php echo $this->get_field_name('w_category'); ?>" >
@@ -448,6 +449,7 @@ class Broadstreet_Business_Listing_Widget extends WP_Widget
                 <?php endforeach; ?>
             </select>
        </p>
+         <?php endif; ?>
        <p>
            <label for="<?php echo $this->get_field_id('w_random'); ?>">Random Selection? </label>
            <input type="checkbox" name="<?php echo $this->get_field_name('w_random'); ?>" value="yes"  <?php if($instance['w_random'] == 'yes') echo 'checked'; ?> />
@@ -482,7 +484,7 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
      function __construct()
      {
         $widget_ops = array('classname' => 'bs_business_profile', 'description' => 'A profile for a business in your sidebar');
-        $this->WP_Widget('bs_business_profile', 'Broadstreet Business Spotlight', $widget_ops);
+        parent::__construct('bs_business_profile', 'Broadstreet Business Spotlight', $widget_ops);
      }
 
      /**
@@ -642,6 +644,7 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
                 <?php endforeach; ?>
             </select>
        </p>
+         <?php if(is_array($categories)): ?>
        <p>
             <label for="<?php echo $this->get_field_id('w_category'); ?>">Business Category:</label><br/>
             <small>Applicable only if you chose 'Random' for the above. Then we'll pick something from this category.</small>
@@ -652,6 +655,7 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
                 <?php endforeach; ?>
             </select>
        </p>
+         <?php endif; ?>
 
         </div>
        <?php
@@ -669,7 +673,7 @@ class Broadstreet_Business_Categories_Widget extends WP_Widget
      function __construct()
      {
         $widget_ops = array('classname' => 'bs_business_categories', 'description' => 'A listing of all business categories');
-        $this->WP_Widget('bs_business_categories', 'Broadstreet Business Categories', $widget_ops);
+        parent::__construct('bs_business_categories', 'Broadstreet Business Categories', $widget_ops);
      }
 
      /**
@@ -765,7 +769,7 @@ class Broadstreet_Editable_Widget extends WP_Widget
      function __construct()
      {
         $widget_ops = array('classname' => 'bs_editable', 'description' => 'Offer something to your advertisers that no one else can! Editable Ads&trade;');
-        $this->WP_Widget('bs_editable', 'Broadstreet Editable Ad&trade;', $widget_ops);
+        parent::__construct('bs_editable', 'Broadstreet Editable Ad&trade;', $widget_ops);
      }
 
      /**

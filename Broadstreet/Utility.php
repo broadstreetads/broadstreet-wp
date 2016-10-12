@@ -19,6 +19,8 @@ class Broadstreet_Utility
     protected static $_zoneCache = NULL;
     protected static $_apiKeyValid = NULL;
     protected static $_businessEnabled = NULL;
+
+    protected static $_placementSettingsCache = NULL;
     
     /**
      * Get ad code for a specific ad
@@ -33,8 +35,36 @@ class Broadstreet_Utility
      * @param type $id
      * @return type
      */
-    public static function getZoneCode($id) {
-        return '<script type="text/javascript">broadstreet.zone('. $id .', {responsive: true, softKeywords: true, keywords: [' . Broadstreet_Utility::getAllAdKeywordsString() . ']});</script>';
+    public static function getZoneCode($id, $attrs = array()) {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+
+        $beta = false;
+        if (property_exists($placement_settings, 'use_beta_tags') && $placement_settings->use_beta_tags) {
+            $beta = true;
+        }
+
+        $keywords = Broadstreet_Utility::getAllAdKeywordsString();
+        if (!$beta) {
+            return '<script type="text/javascript">broadstreet.zone(' . $id . ', {responsive: true, softKeywords: true, keywords: [' . $keywords . ']});</script>';
+        } else {
+            if (!isset($attrs['zone-id']) && !isset($attrs['alt-zone-id'])) {
+                $attrs['zone-id'] = $id;
+            }
+
+            $attrs['keywords'] = $keywords;
+            $attrs['soft-keywords'] = 'true';
+
+            $attr_string = join(' ', array_map(function($key) use ($attrs)
+                {
+                    if(is_bool($attrs[$key]))
+                    {
+                        return $attrs[$key]?$key:'';
+                    }
+                    return $key.'="'.$attrs[$key].'"';
+                }, array_keys($attrs)));
+
+            return "<broadstreet-zone $attr_string></broadstreet-zone>";
+        }
     }
     
     /**
@@ -263,7 +293,7 @@ class Broadstreet_Utility
         {
             $deprecated = ' ';
             $autoload   = 'no';
-            add_option($name, $value, $deprecated, $autoload);
+            add_option($name, $value);
         }
     }
 
@@ -283,7 +313,11 @@ class Broadstreet_Utility
 
     public static function getPlacementSettings()
     {
-        return Broadstreet_Utility::getOption(Broadstreet_Core::KEY_PLACEMENTS, (object)array());
+        if (self::$_placementSettingsCache === NULL) {
+            self::$_placementSettingsCache = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_PLACEMENTS, (object)array());
+        }
+
+        return self::$_placementSettingsCache;
     }
 
     
@@ -882,7 +916,7 @@ class Broadstreet_Utility
      * Get all ad keyword slugs
      * @return string
      */
-    function getAllAdKeywordsString() {
+    public static function getAllAdKeywordsString() {
          $keywords = array();
 
          /* Figure out which keywords are available */

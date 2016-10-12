@@ -134,7 +134,36 @@
                     </div>
                     <div class="clearfix"></div>
                     <div class="break"></div>
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">
+                                Beta Ad Tags
+                            </div>
+                            <div class="desc nomargin">
+                                Would you like to use Broadstreet experimental, <a href="http://information.broadstreetads.com/using-broadstreets-v2-ad-tags/">async ad tags</a>?
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <input type="checkbox" ng-model="data.positions_zones.use_beta_tags" />
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
                     <div class="clearfix"></div>
+                    <div class="break" ng-show="data.positions_zones.use_beta_tags"></div>
+                    <div class="option" ng-show="data.positions_zones.use_beta_tags">
+                        <div class="control-label">
+                            <div class="name nomargin">
+                                Beta Ad Tag Arguments (Optional, JSON)
+                            </div>
+                            <div class="desc nomargin">
+                                You can specify (optional) arguments here.
+                            </div>
+                        </div>
+                        <div class="full-control-container" style="clear: both; display: block;">
+                            <textarea placeholder="{ ... }" ng-model="data.positions_zones.beta_tag_arguments" style="width: 100%; height: 100px;"></textarea>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
                     <div class="break"></div>
                     <div class="option">
                         <div class="control-label">
@@ -221,7 +250,7 @@
 
             $scope.data.categories = catList;
 
-            $scope.save = function() {                
+            $scope.save = function() {
                 console.log($scope.data.positions_zones);
                 $scope.loadingMessage = 'Saving ...';
                 var params = $scope.data.positions_zones;
