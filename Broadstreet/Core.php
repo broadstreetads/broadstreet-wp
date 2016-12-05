@@ -120,7 +120,8 @@ class Broadstreet_Core
         # -- Below is core functionality --
         add_action('admin_menu', 	array($this, 'adminCallback'     ));
         add_action('admin_init', 	array($this, 'adminInitCallback' ));
-        add_action('init',          array($this, 'addZoneTag' ));
+        add_action('wp_enqueue_scripts',          array($this, 'addZoneTag' ));
+        add_filter('script_loader_tag',          array($this, 'finalizeZoneTag' ));
         add_action('init',          array($this, 'businessIndexSidebar' ));
         add_action('admin_notices',     array($this, 'adminWarningCallback'));
         add_action('widgets_init', array($this, 'registerWidget'));
@@ -319,11 +320,25 @@ class Broadstreet_Core
     public function addPoweredBy()
     {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
-        if (property_exists($placement_settings, 'use_beta_tags') && $placement_settings->use_beta_tags) {
-            $args = '{}';
-            if (property_exists($placement_settings, 'beta_tag_arguments') && strlen($placement_settings->beta_tag_arguments)) {
-                $args = $placement_settings->beta_tag_arguments;
+        $network_id = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
+        $args = '{}';
+        if (property_exists($placement_settings, 'beta_tag_arguments') && strlen($placement_settings->beta_tag_arguments)) {
+            $args = $placement_settings->beta_tag_arguments;
+            $args = json_decode($args);
+            if (!$args) {
+                $args = new stdClass();
             }
+
+            $args->networkId = $network_id;
+            if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->adserver_whitelabel) > 0) {
+                $args->domain = $placement_settings->adserver_whitelabel;
+            }
+            $args = json_encode($args);
+        }
+
+        if (property_exists($placement_settings, 'defer_configuration') && strlen($placement_settings->defer_configuration)) {
+            echo "<script>if (window.broadstreet && window.broadstreet.loadNetworkJS) window.broadstreet.loadNetworkJS($network_id)</script>";
+        } else {
             echo "<script>broadstreet.watch($args)</script>";
         }
     }
@@ -331,36 +346,57 @@ class Broadstreet_Core
     public function setWhitelabel()
     {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
-        if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->adserver_whitelabel) > 0) {
-            echo "<script>broadstreet.setWhitelabel('//{$placement_settings->adserver_whitelabel}/')</script>";
+        if (property_exists($placement_settings, 'use_old_tags') && $placement_settings->use_old_tags) {
+            if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->adserver_whitelabel) > 0) {
+                echo "<script>broadstreet.setWhitelabel('//{$placement_settings->adserver_whitelabel}/')</script>";
+            }
         }
+    }
+
+    /**
+     * Manipulate our cdn tags to include anti-cloudflare stuff, because they think they own
+     * all of the internet's javascript
+     * @param $tag
+     * @param string $handle
+     * @param bool $src
+     * @return mixed
+     */
+    public function finalizeZoneTag($tag, $handle = '', $src = false)
+    {
+        // add cloudflare attrs. but seriously, f cloudflare
+        if (strstr($tag, 'init-2.min.js') || strstr($tag, 'init.js')) {
+            $tag = str_replace('src', "data-cfasync='false' src", $tag);
+        }
+
+        return $tag;
     }
     
     public function addZoneTag()
     {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
-        $beta = false;
-        if (property_exists($placement_settings, 'use_beta_tags') && $placement_settings->use_beta_tags) {
-            $beta = true;
+        $old = false;
+        if (property_exists($placement_settings, 'use_old_tags') && $placement_settings->use_old_tags) {
+            $old = true;
         }
 
         # Add Broadstreet ad zone CDN
         if(!is_admin()) 
         {
-            if($beta) {
-                wp_enqueue_script('Broadstreet-cdn', 'http://street-production.s3.amazonaws.com/init-2.0.0b.min.js');
-            } else {
-                $placement_settings = Broadstreet_Utility::getPlacementSettings();
-                $host = 'cdn.broadstreetads.com';
-                if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->cdn_whitelabel) > 0) {
-                    $host = $placement_settings->cdn_whitelabel;
-                }
-                # except for cdn whitelabels
-                if (is_ssl() && $placement_settings->cdn_whitelabel) {
-                    $host = 's3.amazonaws.com/street-production';
-                }
-                wp_enqueue_script('Broadstreet-cdn', "//$host/init.js");
+            $file = 'init-2.min.js';
+            if ($old) {
+                $file = 'init.js';
             }
+
+            $placement_settings = Broadstreet_Utility::getPlacementSettings();
+            $host = 'cdn.broadstreetads.com';
+            if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->cdn_whitelabel) > 0) {
+                $host = $placement_settings->cdn_whitelabel;
+            }
+            # except for cdn whitelabels
+            if (is_ssl() && $placement_settings->cdn_whitelabel) {
+                $host = 's3.amazonaws.com/street-production';
+            }
+            wp_enqueue_script('broadstreet-cdn', "//$host/$file");
         }
     }
     
@@ -379,7 +415,6 @@ class Broadstreet_Core
               ));
         }
     }
-    
 
     /**
      * A callback executed whenever the user tried to access the Broadstreet admin page

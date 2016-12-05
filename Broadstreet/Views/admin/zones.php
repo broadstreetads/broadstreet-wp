@@ -137,23 +137,39 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
-                                Beta Ad Tags
+                                Old Ad Tags
                             </div>
                             <div class="desc nomargin">
-                                Would you like to use Broadstreet experimental, <a href="http://information.broadstreetads.com/using-broadstreets-v2-ad-tags/">async ad tags</a>?
+                                Would you like to use Broadstreet's old ad tags, as opposed to the new <a href="http://information.broadstreetads.com/using-broadstreets-v2-ad-tags/">async ad tags</a>?
                             </div>
                         </div>
                         <div class="control-container">
-                            <input type="checkbox" ng-model="data.positions_zones.use_beta_tags" />
+                            <input type="checkbox" ng-model="data.positions_zones.use_old_tags" />
                         </div>
                         <div style="clear:both;"></div>
                     </div>
                     <div class="clearfix"></div>
-                    <div class="break" ng-show="data.positions_zones.use_beta_tags"></div>
-                    <div class="option" ng-show="data.positions_zones.use_beta_tags">
+                    <div class="break"></div>
+                    <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
-                                Beta Ad Tag Arguments (Optional, JSON)
+                                Defer Configuration
+                            </div>
+                            <div class="desc nomargin">
+                                Only enable this if Broadstreet personnel asks you to (otherwise, your ads won't load without the right setup)
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <input type="checkbox" ng-model="data.positions_zones.defer_configuration" />
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="break"></div>
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">
+                                Ad Tag Init Arguments (Optional, JSON)
                             </div>
                             <div class="desc nomargin">
                                 You can specify (optional) arguments here.

@@ -27,7 +27,7 @@ class Broadstreet_Utility
      * @param type $id
      */
     public static function getAdCode($id) {
-        return "<script type=\"text/javascript\" src=\"//ad.broadstreetads.com/display/$id.js\"></script>";
+        return "<script data-cfasync=\"false\" type=\"text/javascript\" src=\"//ad.broadstreetads.com/display/$id.js\"></script>";
     }
     
     /**
@@ -38,15 +38,17 @@ class Broadstreet_Utility
     public static function getZoneCode($id, $attrs = array()) {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
 
-        $beta = false;
-        if (property_exists($placement_settings, 'use_beta_tags') && $placement_settings->use_beta_tags) {
-            $beta = true;
+        $old = false;
+        if (property_exists($placement_settings, 'use_old_tags') && $placement_settings->use_old_tags) {
+            $old = true;
         }
 
-        $keywords = Broadstreet_Utility::getAllAdKeywordsString();
-        if (!$beta) {
-            return '<script type="text/javascript">broadstreet.zone(' . $id . ', {responsive: true, softKeywords: true, keywords: [' . $keywords . ']});</script>';
+
+        if ($old) {
+            $keywords = Broadstreet_Utility::getAllAdKeywordsString();
+            return '<script data-cfasync="false" type="text/javascript">broadstreet.zone(' . $id . ', {responsive: true, softKeywords: true, keywords: [' . $keywords . ']});</script>';
         } else {
+            $keywords = Broadstreet_Utility::getAllAdKeywordsString(true);
             if (!isset($attrs['zone-id']) && !isset($attrs['alt-zone-id'])) {
                 $attrs['zone-id'] = $id;
             }
@@ -916,7 +918,7 @@ class Broadstreet_Utility
      * Get all ad keyword slugs
      * @return string
      */
-    public static function getAllAdKeywordsString() {
+    public static function getAllAdKeywordsString($omit_quotes = false) {
          $keywords = array();
 
          /* Figure out which keywords are available */
@@ -938,7 +940,11 @@ class Broadstreet_Utility
             $keywords[] = $slug;
         }
 
-        $keywords_string = "'" . implode("','", $keywords) . "'";
+        if ($omit_quotes) {
+            $keywords_string = implode(",", $keywords);
+        } else {
+            $keywords_string = "'" . implode("','", $keywords) . "'";
+        }
 
         return $keywords_string;
     }
