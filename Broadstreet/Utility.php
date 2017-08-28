@@ -27,7 +27,7 @@ class Broadstreet_Utility
      * @param type $id
      */
     public static function getAdCode($id) {
-        return "<script data-cfasync=\"false\" type=\"text/javascript\" src=\"//ad.broadstreetads.com/display/$id.js\"></script>";
+        return "<div street-address=\"$id\"></div><script><script data-cfasync=\"false\" type=\"text/javascript\" src=\"//ad.broadstreetads.com/display/$id.js?sa=1\"></script>";
     }
     
     /**
@@ -682,6 +682,10 @@ class Broadstreet_Utility
 
             $zones = $kzones;
         }
+
+        uasort($zones, function($a, $b) {
+            return strcasecmp($a->name, $b->name);
+        });
         
         self::$_zoneCache = $zones;
         
@@ -912,6 +916,41 @@ class Broadstreet_Utility
         }
 
         return $slugs;
+    }
+
+    public static function getTargets() {
+        $targets = array();
+
+        # page type
+        if (is_single() && !is_page()) {
+            $targets['pagetype'] = array('post');
+        } elseif (is_single() && is_page()) {
+            $targets['pagetype'] = array('page');
+        } elseif (is_archive()) {
+            $targets['pagetype'] = array('archive');
+        } else {
+            $targets['pagetype'] = array();
+        }
+
+        if (is_home()) {
+            $targets['pagetype'][] = 'is_home_page';
+        } else {
+            $targets['pagetype'][] = 'not_home_page';
+        }
+
+        # categories
+        $slugs = self::getAllAdSlugs();
+        $categories = [];
+        foreach($slugs as $slug) {
+            $categories[] = $slug;
+        }
+
+        $targets['category'] = $categories;
+
+        # url
+        $targets['url'] = basename(get_permalink());
+
+        return $targets;
     }
 
     /**

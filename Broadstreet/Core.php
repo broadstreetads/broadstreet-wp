@@ -330,6 +330,8 @@ class Broadstreet_Core
             }
 
             $args->networkId = $network_id;
+            $args->targets = Broadstreet_Utility::getTargets();
+
             if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->adserver_whitelabel) > 0) {
                 $args->domain = $placement_settings->adserver_whitelabel;
             }
@@ -505,11 +507,6 @@ class Broadstreet_Core
         $data['key_valid']          = false;
         $data['has_cc']             = false;
         
-        if(!function_exists('curl_exec'))
-        {
-            $data['errors'][] = 'Broadstreet requires the PHP cURL module to be enabled. You may need to ask your web host or developer to enable this.';
-        }
-        
         if(get_page_by_path('businesses'))
         {
             $data['errors'][] = 'You have a page named "businesses", which will interfere with the business directory if you plan to use it. You must delete that page.';
@@ -568,11 +565,6 @@ class Broadstreet_Core
         $data['key_valid']          = false;
         $data['categories']         = get_categories(array('hide_empty' => false));
         $data['tags']               = get_tags(array('hide_empty' => false));
-        
-        if(!function_exists('curl_exec'))
-        {
-            $data['errors'][] = 'Broadstreet requires the PHP cURL module to be enabled. You may need to ask your web host or developer to enable this.';
-        }
         
         if(!$data['api_key']) 
         {

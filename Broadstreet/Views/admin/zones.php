@@ -42,7 +42,7 @@
                                 </div>
                             </div>
                             <div class="control-container">
-                                <select type="text" ng-options="zone.id as zone.name for (id, zone) in data.zones" ng-model="data.positions_zones[position.id]">
+                                <select type="text" ng-options="zone.id as zone.name for zone in data.zones" ng-model="data.positions_zones[position.id]">
                                     <option value="">None</option>                             
                                 </select>
                             </div>
@@ -242,8 +242,11 @@
                 }
             ];
 
+            var zoneList = Object.values(bootstrap.zones);
             $scope.data = {
-                zones: bootstrap.zones,
+                zones: zoneList.sort(function(a, b) {
+                    return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+                }),
                 positions_zones: bootstrap.placements
             };
 

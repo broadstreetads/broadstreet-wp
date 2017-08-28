@@ -61,7 +61,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
      {
         $defaults = array('w_title' => '', 'w_info_string' => '', 'w_opener' => '', 'w_closer' => '', 'w_zone' => '');
 		$instance = wp_parse_args((array) $instance, $defaults);
-        
+
         $zones = Broadstreet_Utility::getZoneCache();
         
        ?>

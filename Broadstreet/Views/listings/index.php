@@ -33,5 +33,4 @@
     
 </div>
 
-<?php $i++; endforeach; ?>
-
+<?php $i++; endforeach;
