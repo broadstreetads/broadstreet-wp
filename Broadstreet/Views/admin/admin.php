@@ -1,4 +1,4 @@
-<script src="https://broadstreet-common.s3.amazonaws.com/broadstreet-net/init.js"></script>
+    <script src="https://broadstreet-common.s3.amazonaws.com/broadstreet-net/init.js"></script>
 <div id="main">
       <?php Broadstreet_View::load('admin/global/header') ?>
       <div class="left_column">
@@ -58,7 +58,7 @@
                         <div class="control-container">
                             <select id="network" type="text">
                                 <?php foreach($networks as $network): ?>
-                                <option <?php if($network_id == $network->id) echo "selected"; ?> value="<?php echo $network->id ?>"><?php echo htmlentities($network->name) ?></option>
+                                <option <?php if($network_id == $network->id) echo "selected"; ?> value="<?php echo $network->id ?>"><?php echo htmlentities($network->name) . '(' . $network->id . ')' ?></option>
                                 <?php endforeach; ?>
                                 <?php if(count($networks) == 0): ?>
                                 <option value="-1">Enter a valid token above</option>

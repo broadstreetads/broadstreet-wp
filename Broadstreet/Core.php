@@ -180,6 +180,9 @@ class Broadstreet_Core
                 if (stristr($content, '[broadstreet zone'))
                     return $content;
 
+                if (stristr($content, '<broadstreet-zone'))
+                    return $content;
+
                 $in_story_zone = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->in_content);
 
                 /* Split the content into paragraphs, clear out anything that is only whitespace */
@@ -338,9 +341,13 @@ class Broadstreet_Core
             $args = json_encode($args);
         }
 
+        echo "<script>window.broadstreetKeywords = [" . Broadstreet_Utility::getAllAdKeywordsString() . "]</script>";
+        echo "<script>window.broadstreetTargets = " . json_encode(Broadstreet_Utility::getTargets()) . ";</script>";
+
         if (property_exists($placement_settings, 'defer_configuration') && strlen($placement_settings->defer_configuration)) {
             echo "<script>if (window.broadstreet && window.broadstreet.loadNetworkJS) window.broadstreet.loadNetworkJS($network_id)</script>";
         } else {
+
             echo "<script>broadstreet.watch($args)</script>";
         }
     }

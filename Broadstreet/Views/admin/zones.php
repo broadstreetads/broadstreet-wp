@@ -26,7 +26,7 @@
          <?php endif; ?>
                <div><strong>Please note:</strong> These options will work with <em>most</em> themes, 
                but not all of them, due to non-standard behavior of some themes. Remember, you can
-               create new zones specificcally for these placements in our dashboard.</div>
+               create new zones specifically for these placements in our dashboard.</div>
           <div id="controls">
             <div class="box">
                 <div class="title">Additional Zone Options</div>
