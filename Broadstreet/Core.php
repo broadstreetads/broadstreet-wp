@@ -167,15 +167,9 @@ class Broadstreet_Core
         $in_content = property_exists($placement_settings, 'in_content') && $placement_settings->in_content;
 
         if (is_single()) {
-            if ($above_content) {
-                $content = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->above_content) . $content;
-            }
-
-            if ($below_content) {
-                $content = $content . Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->below_content);
-            }
 
             if ($in_content) {
+
                 /* Now handle in-content */
                 if (stristr($content, '[broadstreet zone'))
                     return $content;
@@ -209,6 +203,14 @@ class Broadstreet_Core
                 /* It's magic, :snort: :snort:
                    - Mr. Bean: https://www.youtube.com/watch?v=x0yQg8kHVcI */
                 $content = implode("\n\n", $pieces);
+            }
+
+            if ($above_content) {
+                $content = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->above_content) . $content;
+            }
+
+            if ($below_content) {
+                $content = $content . Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->below_content);
             }
         }
         
