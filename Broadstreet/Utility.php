@@ -27,7 +27,7 @@ class Broadstreet_Utility
      * @param type $id
      */
     public static function getAdCode($id) {
-        return "<div street-address=\"$id\"></div><script><script data-cfasync=\"false\" type=\"text/javascript\" src=\"//ad.broadstreetads.com/display/$id.js?sa=1\"></script>";
+        return "<div street-address=\"$id\"></div><script async data-cfasync=\"false\" type=\"text/javascript\" src=\"//ad.broadstreetads.com/display/$id.js?sa=1\"></script>";
     }
     
     /**

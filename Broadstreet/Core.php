@@ -350,7 +350,7 @@ class Broadstreet_Core
             echo "<script>if (window.broadstreet && window.broadstreet.loadNetworkJS) window.broadstreet.loadNetworkJS($network_id)</script>";
         } else {
 
-            echo "<script>broadstreet.watch($args)</script>";
+            echo "<script>if (broadstreet) broadstreet.watch($args);</script>";
         }
     }
 
