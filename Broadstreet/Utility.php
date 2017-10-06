@@ -940,7 +940,7 @@ class Broadstreet_Utility
 
         # categories
         $slugs = self::getAllAdSlugs();
-        $categories = [];
+        $categories = array ();
         foreach($slugs as $slug) {
             $categories[] = $slug;
         }
