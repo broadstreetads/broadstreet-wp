@@ -48,6 +48,21 @@
                             </div>
                             <div style="clear:both;"></div>
                         </div>
+                        <div style="margin-top: 7px;" ng-if="data.positions_zones[position.id]" ng-repeat="param in position.params track by position.params.id" class="option">
+                            <div class="control-label">
+                                <div class="name nomargin">
+                                    {{param.name}}
+                                </div>
+                                <div class="desc nomargin">
+                                    {{param.description}}
+                                </div>
+                            </div>
+
+                            <div class="control-container">
+                                <input ng-model="data.positions_zones[position.id + '_' + param.id]" type="text"  placeholder="{{param.default_value}}" />
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
                         <div class="break"></div>
                     </div>
                     <div class="option">
@@ -228,7 +243,13 @@
                 {
                     id: 'in_content',
                     name: 'Inside Content',
-                    description: 'Which zone should appear in the middle of the story? (After 4th paragraph, if it exists)'
+                    description: 'Which zone should appear in the middle of the story?',
+                    params: [{
+                        id: 'paragraph',
+                        name: 'Paragraph',
+                        description: 'After which paragraph should the zone appear? You can comma separate for multiple positions. Default is 4.',
+                        default_value: 4
+                    }]
                 },
                 {
                     id: 'before_comments',

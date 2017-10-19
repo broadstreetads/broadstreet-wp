@@ -170,6 +170,14 @@ class Broadstreet_Core
 
             if ($in_content) {
 
+                try {
+                    $in_content_paragraph = property_exists($placement_settings, 'in_content_paragraph') ? $placement_settings->in_content_paragraph : '4';
+                    $in_content_paragraph = array_map('trim', explode(',', $in_content_paragraph));
+                } catch (Exception $e) {
+                    // user error
+                    $in_content_paragraph = array(4);
+                }
+
                 /* Now handle in-content */
                 if (stristr($content, '[broadstreet zone'))
                     return $content;
@@ -196,8 +204,10 @@ class Broadstreet_Core
                     #return "$content\n\n" . $in_story_zone;
                 }
 
-                if (count($pieces) >= 4) {
-                    array_splice($pieces, 4, 0, $in_story_zone);
+                for ($i = 0; $i < count($in_content_paragraph); $i++) {
+                    if (count($pieces) >= $in_content_paragraph[$i]) {
+                        array_splice($pieces, $in_content_paragraph[$i], 0, $in_story_zone);
+                    }
                 }
 
                 /* It's magic, :snort: :snort:
