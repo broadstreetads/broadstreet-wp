@@ -24,6 +24,7 @@ class Broadstreet_Ajax
         Broadstreet_Utility::setOption(Broadstreet_Core::KEY_BIZ_ENABLED, $_POST['business_enabled'] === 'true');
         
         $api = new Broadstreet($_POST['api_key']);
+        $message = 'OK';
 
         try
         {
@@ -41,12 +42,13 @@ class Broadstreet_Ajax
         {
             $networks = array();
             $key_valid = false;
-            
+            $message = $ex->__toString();
+
             # Clear any options that aren't valid following the failed API key config
             Broadstreet_Utility::setOption(Broadstreet_Core::KEY_BIZ_ENABLED, FALSE);
         }
         
-        die(json_encode(array('success' => true, 'key_valid' => $key_valid, 'networks' => $networks)));
+        die(json_encode(array('success' => true, 'key_valid' => $key_valid, 'networks' => $networks, 'message' => $message)));
     }
 
     /**

@@ -2,8 +2,8 @@
 Contributors: Broadstreet
 Tags: broadstreet,local,publishers,hyperlocal,independent,news,business,directory
 Requires at least: 3.0
-Tested up to: 4.8.2
-Stable tag: 1.27.0
+Tested up to: 4.9
+Stable tag: 1.27.1
 
 Integrate Broadstreet business directory and adserving power into your site.
 

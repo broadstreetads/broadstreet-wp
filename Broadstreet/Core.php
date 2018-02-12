@@ -414,14 +414,14 @@ class Broadstreet_Core
                 $host = $placement_settings->cdn_whitelabel;
             }
             # except for cdn whitelabels
-            if (is_ssl() && $placement_settings->cdn_whitelabel) {
+            if (is_ssl() && property_exists($placement_settings, 'cdn_whitelabel') && $placement_settings->cdn_whitelabel) {
                 $host = 's3.amazonaws.com/street-production';
             }
             wp_enqueue_script('broadstreet-cdn', "//$host/$file");
         }
     }
     
-    public function businessIndexSidebar() 
+    public function businessIndexSidebar()
     {
         if(Broadstreet_Utility::isBusinessEnabled())
         {

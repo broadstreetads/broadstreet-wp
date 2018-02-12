@@ -53,6 +53,7 @@ jQuery(function($){
              network_id: network_id
             }, 
             function(response) {
+                if (console) console.log(response);
                 if(response.success)
                 {
                     markSaved('#save-success');
@@ -82,6 +83,7 @@ jQuery(function($){
                         $('#key-valid').hide().removeClass('visible');
                         $('#key-invalid').fadeIn().addClass('visible');
                         $('#business_enabled').attr('checked', false).attr('disabled', 'disabled');
+                        alert(response.message);
                     }
                     
                     if(needRefresh) {
