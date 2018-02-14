@@ -153,7 +153,7 @@ class Broadstreet_Core
         add_action('add_meta_boxes', array($this, 'addMetaBoxes'));
         
         # -- Below is administration AJAX functionality
-        add_action('wp_ajax_save_settings', array('Broadstreet_Ajax', 'saveSettings'));
+        add_action('wp_ajax_bs_save_settings', array('Broadstreet_Ajax', 'saveSettings'));
         add_action('wp_ajax_create_advertiser', array('Broadstreet_Ajax', 'createAdvertiser'));
         add_action('wp_ajax_import_facebook', array('Broadstreet_Ajax', 'importFacebook'));
         add_action('wp_ajax_register', array('Broadstreet_Ajax', 'register'));

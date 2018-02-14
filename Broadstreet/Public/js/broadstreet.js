@@ -47,7 +47,7 @@ jQuery(function($){
         var network_id = $('#network').val();
         
         jQuery.post(ajaxurl, {
-             action: 'save_settings', 
+             action: 'bs_save_settings',
              api_key: $('#api_key').val(),
              business_enabled: $('#business_enabled').is(':checked'),
              network_id: network_id
