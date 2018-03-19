@@ -76,8 +76,8 @@ class Broadstreet_Utility
      */
     public static function getWrappedZoneCode($config, $id) {
 
+        $disabled = false;
         if(property_exists($config, 'avoid_categories') && count($config->avoid_categories)) {
-            $disabled = false;
             for($i = 0; $i < count($config->avoid_categories); $i++) {
                 if(self::pageHasCategory($config->avoid_categories[$i]->id)) {
                     $disabled = true;
