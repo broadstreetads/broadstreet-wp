@@ -122,6 +122,23 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
+                                URLs to Avoid
+                            </div>
+                            <div class="desc nomargin">
+                                Don't place in-story ad units on pages with URLs matching these patterns.
+                                Use asterisks (*) as wilcards. Patterns will be matched against full URLs.
+                                Regular expressions supported.
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <textarea placeholder="*/example-category/*" ng-model="data.positions_zones.avoid_urls" style="width: 250px; height: 100px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="break"></div>
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">
                                 Adserver Whitelabel
                             </div>
                             <div class="desc nomargin">
