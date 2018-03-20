@@ -905,25 +905,36 @@ class Broadstreet_Utility
 
         $slugs = array();
 
-        if(is_single() || is_page()) {
+        if (is_single() || is_page()) {
 
             $id = get_the_ID();
             $cats = wp_get_post_categories($id);  
 
             if(!$cats) $cats = array();            
 
-            foreach($cats as $cat){
+            foreach($cats as $cat) {
                 $c = get_category($cat);
                 $slugs[] = $c->slug;
+
+                # If there's a parent, go up one level and get that slug too
+                if ($c->category_parent > 0) {
+                    $c = get_category($c->category_parent);
+                    $slugs[] = $c->slug;
+                }
             }
 
             $slugs[] = $post->post_name;
         }   
 
-        if(is_category() || is_archive()) {
+        if (is_category() || is_archive()) {
             $cat = get_query_var('cat');
             $cat = get_category ($cat);
             $slugs[] = $cat->slug;
+
+            if ($cat->category_parent > 0) {
+                $cat = get_category($cat->category_parent);
+                $slugs[] = $cat->slug;
+            }
         }
 
         if(is_home()) {
