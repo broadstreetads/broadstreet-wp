@@ -353,14 +353,14 @@ class Broadstreet_Core
             $args = json_encode($args);
         }
 
-        echo "<script>window.broadstreetKeywords = [" . Broadstreet_Utility::getAllAdKeywordsString() . "]</script>";
-        echo "<script>window.broadstreetTargets = " . json_encode(Broadstreet_Utility::getTargets()) . ";</script>";
+        echo "<script data-cfasync='false'>window.broadstreetKeywords = [" . Broadstreet_Utility::getAllAdKeywordsString() . "]</script>";
+        echo "<script data-cfasync='false'>window.broadstreetTargets = " . json_encode(Broadstreet_Utility::getTargets()) . ";</script>";
 
         if (property_exists($placement_settings, 'defer_configuration') && strlen($placement_settings->defer_configuration)) {
-            echo "<script>if (window.broadstreet && window.broadstreet.loadNetworkJS) window.broadstreet.loadNetworkJS($network_id)</script>";
+            echo "<script data-cfasync='false'>if (window.broadstreet && window.broadstreet.loadNetworkJS) window.broadstreet.loadNetworkJS($network_id)</script>";
         } else {
 
-            echo "<script>if (broadstreet) broadstreet.watch($args);</script>";
+            echo "<script data-cfasync='false'>if (broadstreet) broadstreet.watch($args);</script>";
         }
     }
 
@@ -369,7 +369,7 @@ class Broadstreet_Core
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
         if (property_exists($placement_settings, 'use_old_tags') && $placement_settings->use_old_tags) {
             if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->adserver_whitelabel) > 0) {
-                echo "<script>broadstreet.setWhitelabel('//{$placement_settings->adserver_whitelabel}/')</script>";
+                echo "<script data-cfasync='false'>broadstreet.setWhitelabel('//{$placement_settings->adserver_whitelabel}/')</script>";
             }
         }
     }
