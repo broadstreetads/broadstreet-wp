@@ -19,13 +19,13 @@ class Broadstreet_Config
     {
         $config = array();
         # Set config values below
-        
+
         $config['zone_cache_ttl_seconds']    = 60*10; // 15 minutes
         $config['network_cache_ttl_seconds'] = 60*30; // 30 minutes
 
         $config['log'] = array (
 
-            'level'     => Broadstreet_Log::ERROR,
+            'level'     => Broadstreet_Log::OFF,
             'directory' => dirname(__FILE__) . '/Logs'
 
         );
@@ -123,7 +123,7 @@ class Broadstreet_Config
             else
                 return $default;
         }
-        
+
         return $config;
     }
 
@@ -140,4 +140,4 @@ class Broadstreet_Config
     }
 }
 
-define('BROADSTREET_VERSION', '1.27.3');
+define('BROADSTREET_VERSION', '1.27.4');

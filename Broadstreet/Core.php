@@ -38,10 +38,10 @@ class Broadstreet_Core
     CONST BIZ_POST_TYPE           = 'bs_business';
     CONST BIZ_TAXONOMY            = 'business_category';
     CONST BIZ_SLUG                = 'businesses';
-    
+
     /**
      * Default values for the businesses meta fields
-     * @var type 
+     * @var type
      */
     public static $_businessDefaults = array (
         'bs_advertiser_id' => '',
@@ -82,9 +82,9 @@ class Broadstreet_Core
         'bs_sunday_open' => '', 'bs_sunday_close' => '',
         'bs_featured_business' => '0'
     );
-    
+
     public static $globals = null;
-    
+
     /**
      * The constructor
      */
@@ -102,14 +102,14 @@ class Broadstreet_Core
     }
 
     /**
-     * Get a Broadstreet client 
+     * Get a Broadstreet client
      */
     public function getBroadstreetClient()
     {
         $key = Broadstreet_Utility::getOption(self::KEY_API_KEY);
         return new Broadstreet($key);
     }
-    
+
     /**
      * Register Wordpress hooks required for Broadstreet
      */
@@ -136,7 +136,7 @@ class Broadstreet_Core
         #add_action('comment_form_before', array($this, 'addAdsBeforeComments'), 1);
         add_filter('comments_template', array($this, 'addAdsBeforeComments'), 100);
 
-        
+
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
         {
@@ -148,10 +148,10 @@ class Broadstreet_Core
             add_filter('comment_form_defaults', array($this, 'commentForm'));
             add_action('save_post', array($this, 'savePostMeta'));
         }
-        
+
         # - Below are partly business-related
         add_action('add_meta_boxes', array($this, 'addMetaBoxes'));
-        
+
         # -- Below is administration AJAX functionality
         add_action('wp_ajax_bs_save_settings', array('Broadstreet_Ajax', 'saveSettings'));
         add_action('wp_ajax_create_advertiser', array('Broadstreet_Ajax', 'createAdvertiser'));
@@ -223,9 +223,9 @@ class Broadstreet_Core
                 $content = $content . Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->below_content);
             }
         }
-        
+
         return $content;
-    }    
+    }
 
     public function addAdsBeforeComments($template) {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
@@ -246,7 +246,7 @@ class Broadstreet_Core
             }
         }
     }
-        
+
     /**
      * Handler used for creating the business category taxonomy
      */
@@ -277,7 +277,7 @@ class Broadstreet_Core
             ),
         ));
     }
-    
+
     /**
      * Callback for adding an extra broadstreet-friendly image size
      * @param array $sizes
@@ -288,39 +288,39 @@ class Broadstreet_Core
         $sizes['bs-biz-size'] = __('Broadstreet Business');
         return $sizes;
     }
-    
+
     /**
      * Handler for adding the Broadstreet business meta data boxes on the post
-     * create/edit page 
+     * create/edit page
      */
     public function addMetaBoxes()
     {
-        add_meta_box( 
+        add_meta_box(
             'broadstreet_sectionid',
             __( 'Broadstreet Zone Info', 'broadstreet_textdomain' ),
             array($this, 'broadstreetInfoBox'),
-            'post' 
+            'post'
         );
         add_meta_box(
             'broadstreet_sectionid',
-            __( 'Broadstreet Zone Info', 'broadstreet_textdomain'), 
+            __( 'Broadstreet Zone Info', 'broadstreet_textdomain'),
             array($this, 'broadstreetInfoBox'),
             'page'
         );
-        
+
         if(Broadstreet_Utility::isBusinessEnabled())
         {
             add_meta_box(
                 'broadstreet_sectionid',
-                __( 'Business Details', 'broadstreet_textdomain'), 
+                __( 'Business Details', 'broadstreet_textdomain'),
                 array($this, 'broadstreetBusinessBox'),
                 self::BIZ_POST_TYPE,
                 'normal',
                 'high'
-            );        
+            );
         }
     }
-    
+
     public function addPostStyles()
     {
         if(get_post_type() == self::BIZ_POST_TYPE && !is_admin())
@@ -328,9 +328,9 @@ class Broadstreet_Core
             wp_enqueue_style ('Broadstreet-styles-listings', Broadstreet_Utility::getCSSBaseURL() . 'listings.css?v=' . BROADSTREET_VERSION);
         }
     }
-    
+
     /**
-     * Add powered-by notice 
+     * Add powered-by notice
      */
     public function addPoweredBy()
     {
@@ -391,7 +391,7 @@ class Broadstreet_Core
 
         return $tag;
     }
-    
+
     public function addZoneTag()
     {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
@@ -401,7 +401,7 @@ class Broadstreet_Core
         }
 
         # Add Broadstreet ad zone CDN
-        if(!is_admin()) 
+        if(!is_admin())
         {
             $file = 'init-2.min.js';
             if ($old) {
@@ -420,7 +420,7 @@ class Broadstreet_Core
             wp_enqueue_script('broadstreet-cdn', "//$host/$file");
         }
     }
-    
+
     public function businessIndexSidebar()
     {
         if(Broadstreet_Utility::isBusinessEnabled())
@@ -443,7 +443,7 @@ class Broadstreet_Core
     public function adminCallback()
     {
         $icon_url = 'http://broadstreet-common.s3.amazonaws.com/broadstreet-blargo/broadstreet-icon.png';
-                
+
         add_menu_page('Broadstreet', 'Broadstreet', 'edit_pages', 'Broadstreet', array($this, 'adminMenuCallback'), $icon_url);
         add_submenu_page('Broadstreet', 'Settings', 'Account Setup', 'edit_pages', 'Broadstreet', array($this, 'adminMenuCallback'));
         add_submenu_page('Broadstreet', 'Zone Options', 'Zone Options', 'edit_pages', 'Broadstreet-Zone-Options', array($this, 'adminZonesMenuCallback'));
@@ -475,7 +475,7 @@ class Broadstreet_Core
     public function adminInitCallback()
     {
         add_image_size('bs-biz-size', 600, 450, true);
-        
+
         # Only register javascript and css if the Broadstreet admin page is loading
         if(isset($_SERVER['QUERY_STRING']) && strstr($_SERVER['QUERY_STRING'], 'Broadstreet'))
         {
@@ -485,7 +485,7 @@ class Broadstreet_Core
             wp_enqueue_script('isteven-multi-js', Broadstreet_Utility::getJSBaseURL().'isteven-multi-select.js');
             wp_enqueue_style ('isteven-multi-css',  Broadstreet_Utility::getCSSBaseURL() . 'isteven-multi-select.css');
         }
-        
+
         # Only register on the post editing page
         if($GLOBALS['pagenow'] == 'post.php'
                 || $GLOBALS['pagenow'] == 'post-new.php')
@@ -494,7 +494,7 @@ class Broadstreet_Core
             wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js?v='. BROADSTREET_VERSION);
             wp_enqueue_script('Broadstreet-vendorjs-time'  ,  Broadstreet_Utility::getVendorBaseURL().'timepicker/js/jquery.timePicker.min.js');
         }
-        
+
         # Include thickbox on widgets page
         if($GLOBALS['pagenow'] == 'widgets.php'
                 || (isset($_SERVER['QUERY_STRING']) && strstr($_SERVER['QUERY_STRING'], 'Broadstreet-Business')))
@@ -502,7 +502,7 @@ class Broadstreet_Core
             wp_enqueue_script('thickbox');
             wp_enqueue_style( 'thickbox' );
         }
-    }    
+    }
 
     /**
      * The callback that is executed when the user is loading the admin page.
@@ -514,7 +514,7 @@ class Broadstreet_Core
     {
         Broadstreet_Log::add('debug', "Admin page callback executed");
         Broadstreet_Utility::sendInstallReportIfNew();
-        
+
         $data = array();
 
         $data['service_tag']        = Broadstreet_Utility::getServiceTag();
@@ -525,31 +525,31 @@ class Broadstreet_Core
         $data['networks']           = array();
         $data['key_valid']          = false;
         $data['has_cc']             = false;
-        
+
         if(get_page_by_path('businesses'))
         {
             $data['errors'][] = 'You have a page named "businesses", which will interfere with the business directory if you plan to use it. You must delete that page.';
         }
-        
+
         if(get_category_by_slug('businesses'))
         {
             $data['errors'][] = 'You have a category named "businesses", which will interfere with the business directory if you plan to use it. You must delete that category.';
         }
-        
-        if(!$data['api_key']) 
+
+        if(!$data['api_key'])
         {
             $data['errors'][] = '<strong>You dont have an API key set yet!</strong><ol><li>If you already have a Broadstreet account, <a href="http://my.broadstreetads.com/access-token">get your key here</a>.</li><li>If you don\'t have an account with us, <a target="blank" id="one-click-signup" href="#">then use our one-click signup</a>.</li></ol>';
         }
-        else 
+        else
         {
             $api = new Broadstreet($data['api_key']);
-            
+
             try
             {
                 $data['networks']  = $api->getNetworks();
                 $data['key_valid'] = true;
                 $data['network']   = Broadstreet_Utility::getNetwork(true);
-                
+
                 if(!$data['network']->cc_on_file)
                     $data['errors'][] = 'Your account does not have a credit card on file for your selected network below. The premium "Magic Import" and "Updateable Message" features, <strong>although entirely optional</strong>, will not work until <a target="_blank" href="'.Broadstreet_Utility::broadstreetLink('/networks/'. $data['network']->id .'/accounts').'">you add a card here</a>. Your information is confidential, secure, and <em>never</em> shared.';
             }
@@ -571,7 +571,7 @@ class Broadstreet_Core
      */
     public function adminZonesMenuCallback()
     {
-        Broadstreet_Log::add('debug', "Admin page callback executed");        
+        Broadstreet_Log::add('debug', "Admin page callback executed");
         $data = array();
 
         $data['service_tag']        = Broadstreet_Utility::getServiceTag();
@@ -584,15 +584,15 @@ class Broadstreet_Core
         $data['key_valid']          = false;
         $data['categories']         = get_categories(array('hide_empty' => false));
         $data['tags']               = get_tags(array('hide_empty' => false));
-        
-        if(!$data['api_key']) 
+
+        if(!$data['api_key'])
         {
             $data['errors'][] = '<strong>You dont have an API key set yet!</strong><ol><li>If you already have a Broadstreet account, <a href="http://my.broadstreetads.com/access-token">get your key here</a>.</li><li>If you don\'t have an account with us, <a target="blank" id="one-click-signup" href="#">then use our one-click signup</a>.</li></ol>';
         }
-        else 
+        else
         {
             $api = new Broadstreet($data['api_key']);
-            
+
             try
             {
                 Broadstreet_Utility::refreshZoneCache();
@@ -609,85 +609,85 @@ class Broadstreet_Core
 
         Broadstreet_View::load('admin/zones', $data);
     }
-    
-    public function adminMenuBusinessCallback() {        
-        
+
+    public function adminMenuBusinessCallback() {
+
         if (isset($_POST['featured_business_image'])) {
             $featured_image = Broadstreet_Utility::featuredBusinessImage($_POST['featured_business_image']);
         } else {
             $featured_image = Broadstreet_Utility::featuredBusinessImage();
         }
-        
+
         Broadstreet_View::load('admin/businesses', array('featured_image' => $featured_image));
     }
-    
+
     public function adminMenuEditableCallback()
     {
         Broadstreet_View::load('admin/editable');
     }
-    
-    
+
+
     public function adminMenuHelpCallback()
     {
         Broadstreet_View::load('admin/help');
     }
-    
+
     public function adminMenuLayoutCallback()
     {
         Broadstreet_View::load('admin/layout');
     }
-    
+
     /**
      * Handler for the broadstreet info box below a post or page
-     * @param type $post 
+     * @param type $post
      */
-    public function broadstreetInfoBox($post) 
+    public function broadstreetInfoBox($post)
     {
         // Use nonce for verification
         wp_nonce_field(plugin_basename(__FILE__), 'broadstreetnoncename');
 
-        $zone_data = Broadstreet_Utility::getZoneCache();        
-        
+        $zone_data = Broadstreet_Utility::getZoneCache();
+
         Broadstreet_View::load('admin/infoBox', array('zones' => $zone_data));
     }
-    
+
     /**
      * Handler for the broadstreet info box below a post or page
-     * @param type $post 
+     * @param type $post
      */
-    public function broadstreetBusinessBox($post) 
+    public function broadstreetBusinessBox($post)
     {
         // Use nonce for verification
         wp_nonce_field(plugin_basename(__FILE__), 'broadstreetnoncename');
-        
+
         $meta = Broadstreet_Utility::getAllPostMeta($post->ID, self::$_businessDefaults);
-        
+
         $network_id       = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
         $advertiser_id    = Broadstreet_Utility::getPostMeta($post->ID, 'bs_advertiser_id');
         $advertisement_id = Broadstreet_Utility::getPostMeta($post->ID, 'bs_advertisement_id');
         $network_info     = Broadstreet_Utility::getNetwork();
         $show_offers      = (Broadstreet_Utility::getOption(self::KEY_SHOW_OFFERS) == 'true');
-        
+
         $api = $this->getBroadstreetClient();
-        
+
         if($network_id && $advertiser_id && $advertisement_id)
         {
             $meta['preferred_hash_tag'] = $api->getAdvertisement($network_id, $advertiser_id, $advertisement_id)
                                     ->preferred_hash_tag;
         }
-        
+
         try
         {
             $advertisers = $api->getAdvertisers($network_id);
-        } 
+        }
         catch(Exception $ex)
         {
             $advertisers = array();
         }
-        
+
         Broadstreet_View::load('admin/businessMetaBox', array(
-            'meta'        => $meta, 
-            'advertisers' => $advertisers, 
+            'meta'        => $meta,
+            'advertisers' => $advertisers,
             'network'     => $network_info,
             'show_offers' => $show_offers
         ));
@@ -697,12 +697,12 @@ class Broadstreet_Core
      * Handler used for attaching post meta data to post query results
      * @global object $wp_query
      * @param array $posts
-     * @return array 
+     * @return array
      */
-    public function businessQuery($posts) 
+    public function businessQuery($posts)
     {
         global $wp_query;
-        
+
         if(@$wp_query->query_vars['post_type'] == self::BIZ_POST_TYPE
             || @$wp_query->query_vars['taxonomy'] == self::BIZ_TAXONOMY)
         {
@@ -719,24 +719,24 @@ class Broadstreet_Core
                 }
             }
         }
-        
+
         return $posts;
     }
-    
+
     /**
      * Handler used for changing the wording of the comment form for business
      * listings.
      * @param array $defaults
-     * @return string 
+     * @return string
      */
     public function commentForm($defaults)
     {
         $defaults['title_reply'] = 'Leave a Review or Comment';
         return $defaults;
     }
-     
+
     public function createPostTypes()
-    {        
+    {
         register_post_type(self::BIZ_POST_TYPE,
             array (
                 'labels' => array(
@@ -749,7 +749,7 @@ class Broadstreet_Core
                     'view_item' => __('View This Business', 'your_text_domain'),
                     'search_items' => __('Search Businesses', 'your_text_domain'),
                     'not_found' =>  __('No businesses found', 'your_text_domain'),
-                    'not_found_in_trash' => __('No businesses found in Trash', 'your_text_domain'), 
+                    'not_found_in_trash' => __('No businesses found in Trash', 'your_text_domain'),
                     'parent_item_colon' => '',
                     'menu_name' => __('Businesses', 'your_text_domain')
                 ),
@@ -762,14 +762,14 @@ class Broadstreet_Core
             'taxonomies' => array('business_category')
             )
         );
-        
+
         $this->addBusinessTaxonomy();
         Broadstreet_Utility::flushRewrites();
     }
-    
+
     /**
      * Handler for modifying business/archive listings
-     * @param type $query 
+     * @param type $query
      */
     public function modifyPostListing($query)
     {
@@ -780,35 +780,35 @@ class Broadstreet_Core
             $query->query_vars['order'] = 'ASC';
         }
     }
-    
+
     /**
      * Handler used for modifying the way business listings are displayed
      * @param string $content The post content
      * @return string Content
      */
     public function postTemplate($content)
-    {   
+    {
         # Only do this for business posts, and don't do it
         #  for excerpts
-        if(!Broadstreet_Utility::inExcerpt() 
+        if(!Broadstreet_Utility::inExcerpt()
                 && get_post_type() == self::BIZ_POST_TYPE)
-        {   
+        {
             $meta = $GLOBALS['post']->meta;
-            
+
             # Make sure the image meta is unserialized properly
             if(isset($meta['bs_images']))
                 $meta['bs_images'] = maybe_unserialize($meta['bs_images']);
-            
+
             if(is_single())
             {
                 return Broadstreet_View::load('listings/single/default', array('content' => $content, 'meta' => $meta), true);
             }
             else
-            {   
+            {
                 return $content;
             }
         }
-        
+
         return $content;
     }
 
@@ -842,17 +842,17 @@ class Broadstreet_Core
                 elseif($key == 'bs_images')
                     Broadstreet_Utility::setPostMeta($post_id, $key, self::$_businessDefaults[$key]);
             }
-            
+
             if($_POST['bs_gplus'] == 'enableoffer')
                 Broadstreet_Utility::setOption (self::KEY_SHOW_OFFERS, 'true');
-            
+
             # Has an ad been created/set?
             if($_POST['bs_update_source'] !== '')
             {
                 # Okay, one is being set, but does it already exist?
                 $ad_id = Broadstreet_Utility::getPostMeta($post_id, 'bs_advertisement_id');
                 $api   = $this->getBroadstreetClient();
-                
+
                 $network_id    = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
                 $advertiser_id = $_POST['bs_advertiser_id'];
 
@@ -864,21 +864,21 @@ class Broadstreet_Core
                     $ad = $api->createAdvertisement($network_id, $advertiser_id, $name, $type, array(
                         'default_text' => 'Check back for updates!'
                     ));
-                    
+
                     Broadstreet_Utility::setPostMeta($post_id, 'bs_advertisement_id', $ad->id);
                     Broadstreet_Utility::setPostMeta($post_id, 'bs_advertisement_html', $ad->html);
-                    
+
                     $ad_id = $ad->id;
                 }
-                
+
                 $params   = array();
                 $hash_tag = false;
-                
+
                 if($_POST['bs_update_source'] == 'facebook')
                 {
                     $params['facebook_id'] = $_POST['bs_facebook_id'];
                     $hash_tag    = $_POST['bs_facebook_hashtag'];
-                } 
+                }
                 elseif($_POST['bs_update_source'] == 'twitter')
                 {
                     $params['twitter_id'] = $_POST['bs_twitter_id'];
@@ -888,7 +888,7 @@ class Broadstreet_Core
                 {
                     $params['phone_number'] = $_POST['bs_phone_number'];
                 }
-                
+
                 # Update the ad
                 if($hash_tag)
                 {
@@ -896,7 +896,7 @@ class Broadstreet_Core
                         'hash_tag' => $hash_tag
                     ));
                 }
-                
+
                 # Set the ad source
                 $ad = $api->setAdvertisementSource($network_id, $advertiser_id, $ad_id, $_POST['bs_update_source'], $params);
             }
@@ -906,33 +906,33 @@ class Broadstreet_Core
     /**
      * Handler for in-post shortcodes
      * @param array $attrs
-     * @return string 
+     * @return string
      */
     public function shortcode($attrs)
     {
         if(isset($attrs['ad'])) {
-            return Broadstreet_Utility::getAdCode($attrs['ad']);
-        }    
-        
+            return Broadstreet_Utility::getAdCode($attrs['ad'], $attrs);
+        }
+
         if(isset($attrs['zone'])) {
             return Broadstreet_Utility::getZoneCode($attrs['zone']);
         }
-        
+
         return '';
-    }   
-    
+    }
+
     public function businesses_shortcode($attrs)
     {
         $ordering  = 'alpha'; #$instance['w_ordering'];
         $category  = 'all'; #$instance['w_category'];
-         
+
         $args = array (
             'post_type' => Broadstreet_Core::BIZ_POST_TYPE,
             'post_status' => 'publish',
             'posts_per_page' => 10000, #($is_random == 'no' ? intval($count) : 100),
             'ignore_sticky_posts'=> 0
         );
-        
+
         if($category != 'all')
         {
             $args['tax_query'] = array(
@@ -943,19 +943,19 @@ class Broadstreet_Core
                 )
             );
         }
-        
+
         if($ordering == 'alpha')
         {
             $args['order'] = 'ASC';
             $args['orderby'] = 'title';
         }
-        
+
         if($ordering == 'mrecent')
         {
             $args['order'] = 'DESC';
             $args['orderby'] = 'ID';
         }
-        
+
         if($ordering == 'lrecent')
         {
             $args['order'] = 'ASC';
@@ -963,19 +963,19 @@ class Broadstreet_Core
         }
 
         $posts = get_posts($args);
-        
+
         $cats_to_posts = array();
         $post_ids      = array();
         $id_to_posts   = array();
-        
+
         foreach($posts as $post)
         {
             $post_ids[] = $post->ID;
             $id_to_posts[$post->ID] = $post;
         }
-        
+
         $terms = wp_get_object_terms($post_ids, Broadstreet_Core::BIZ_TAXONOMY, array('fields' => 'all_with_object_id', 'orderby' => 'name'));
-        
+
         foreach($terms as $term)
         {
             if(!isset($cats_to_posts[$term->term_id]))
@@ -985,18 +985,18 @@ class Broadstreet_Core
                 $cats_to_posts[$term->term_id]['slug'] = $term->slug;
                 $cats_to_posts[$term->term_id]['posts'] = array ();
             }
-            
-            $cats_to_posts[$term->term_id]['posts'][] = 
+
+            $cats_to_posts[$term->term_id]['posts'][] =
                 $id_to_posts[$term->object_id];
         }
-        
+
         function broadstreet_compare($a, $b) {
             return strtolower($a->post_title) > strtolower($b->post_title);
         }
-        
+
         foreach($cats_to_posts as $term_id => $data)
             usort($cats_to_posts[$term_id]['posts'], 'broadstreet_compare');
-        
+
         return Broadstreet_View::load('listings/index', array('cats_to_posts' => $cats_to_posts), true);
     }
 }
