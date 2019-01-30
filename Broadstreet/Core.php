@@ -40,6 +40,15 @@ class Broadstreet_Core
     CONST BIZ_SLUG                = 'businesses';
 
     /**
+     * Default values for sponsored meta fields
+     */
+    public static $_sponsoredDefaults = array (
+        'bs_sponsor_advertiser_id' => '',
+        'bs_sponsor_advertisement_id' => '',
+        'bs_sponsor_is_sponsored' => ''
+    );
+
+    /**
      * Default values for the businesses meta fields
      * @var type
      */
@@ -119,6 +128,7 @@ class Broadstreet_Core
 
         # -- Below is core functionality --
         add_action('admin_menu', 	array($this, 'adminCallback'     ));
+        add_action('admin_enqueue_scripts', array($this, 'adminStyles'));
         add_action('admin_init', 	array($this, 'adminInitCallback' ));
         add_action('wp_enqueue_scripts',          array($this, 'addZoneTag' ));
         add_filter('script_loader_tag',          array($this, 'finalizeZoneTag' ));
@@ -135,7 +145,7 @@ class Broadstreet_Core
         add_action('loop_end', array($this, 'addAdsLoopEnd'), 100);
         #add_action('comment_form_before', array($this, 'addAdsBeforeComments'), 1);
         add_filter('comments_template', array($this, 'addAdsBeforeComments'), 100);
-
+        add_action('save_post', array($this, 'saveSponsorPostMeta'));
 
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
@@ -158,6 +168,25 @@ class Broadstreet_Core
         add_action('wp_ajax_import_facebook', array('Broadstreet_Ajax', 'importFacebook'));
         add_action('wp_ajax_register', array('Broadstreet_Ajax', 'register'));
         add_action('wp_ajax_save_zone_settings', array('Broadstreet_Ajax', 'saveZoneSettings'));
+    }
+
+    public function getTrackerContent($content) {
+        $post_id = get_the_ID();
+        # is this a sponsored ad that needs trackng?
+        if ($post_id) {
+            $is_sponsored = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_is_sponsored');
+            $ad_id  = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_advertisement_id');
+            $code = Broadstreet_Utility::getAdCode($ad_id);
+
+            if ($is_sponsored && $ad_id) {
+                if (!is_single()) {
+                    $code = "<script>window['bsa_content_preview_only_$ad_id'] = true;</script>\n" . $code;
+                }
+                $content = $content . $code;
+            }
+        }
+
+        return $content;
     }
 
     public function addAdsContent($content) {
@@ -223,6 +252,8 @@ class Broadstreet_Core
                 $content = $content . Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->below_content);
             }
         }
+
+        $content = $this->getTrackerContent($content);
 
         return $content;
     }
@@ -301,11 +332,21 @@ class Broadstreet_Core
             array($this, 'broadstreetInfoBox'),
             'post'
         );
+
         add_meta_box(
             'broadstreet_sectionid',
             __( 'Broadstreet Zone Info', 'broadstreet_textdomain'),
             array($this, 'broadstreetInfoBox'),
             'page'
+        );
+
+        add_meta_box(
+            'broadstreet_sectionid',
+            __( '📈 Sponsored Content', 'broadstreet_textdomain'),
+            array($this, 'broadstreetSponsoredBox'),
+            'post',
+            'side',
+            'high'
         );
 
         if(Broadstreet_Utility::isBusinessEnabled())
@@ -315,8 +356,7 @@ class Broadstreet_Core
                 __( 'Business Details', 'broadstreet_textdomain'),
                 array($this, 'broadstreetBusinessBox'),
                 self::BIZ_POST_TYPE,
-                'normal',
-                'high'
+                'normal'
             );
         }
     }
@@ -327,6 +367,11 @@ class Broadstreet_Core
         {
             wp_enqueue_style ('Broadstreet-styles-listings', Broadstreet_Utility::getCSSBaseURL() . 'listings.css?v=' . BROADSTREET_VERSION);
         }
+    }
+
+    // Update CSS within in Admin
+    function adminStyles() {
+        wp_enqueue_style('broadstreet-admin-styles', Broadstreet_Utility::getCSSBaseURL() . 'admin.css');
     }
 
     /**
@@ -415,7 +460,7 @@ class Broadstreet_Core
             }
             # except for cdn whitelabels
             if (is_ssl() && property_exists($placement_settings, 'cdn_whitelabel') && $placement_settings->cdn_whitelabel) {
-                $host = 's3.amazonaws.com/street-production';
+                $host = 'street-production.s3.amazonaws.com';
             }
             wp_enqueue_script('broadstreet-cdn', "//$host/$file");
         }
@@ -542,7 +587,7 @@ class Broadstreet_Core
         }
         else
         {
-            $api = new Broadstreet($data['api_key']);
+            $api = $this->getBroadstreetClient();
 
             try
             {
@@ -591,7 +636,7 @@ class Broadstreet_Core
         }
         else
         {
-            $api = new Broadstreet($data['api_key']);
+            $api = $this->getBroadstreetClient();
 
             try
             {
@@ -825,6 +870,114 @@ class Broadstreet_Core
         register_widget('Broadstreet_Business_Categories_Widget');
         register_widget('Broadstreet_Editable_Widget');
     }
+
+    /**
+     * Handler for the broadstreet meta box to designate a post as sponsored
+     *  content
+     * @param type $post
+     */
+    public function broadstreetSponsoredBox($post)
+    {
+        // Use nonce for verification
+        wp_nonce_field(plugin_basename(__FILE__), 'broadstreetsponsored');
+
+        $meta = Broadstreet_Utility::getAllPostMeta($post->ID, self::$_sponsoredDefaults);
+
+        $network_id       = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
+        $advertiser_id    = Broadstreet_Utility::getPostMeta($post->ID, 'bs_sponsor_advertiser_id');
+        $advertisement_id = Broadstreet_Utility::getPostMeta($post->ID, 'bs_sponsor_advertisement_id');
+
+        $api = $this->getBroadstreetClient();
+
+        try
+        {
+            $advertisers = $api->getAdvertisers($network_id);
+            usort($advertisers, function($a, $b) {
+                return $a->name > $b->name;
+            });
+        }
+        catch(Exception $ex)
+        {
+            $advertisers = array();
+        }
+
+        Broadstreet_View::load('admin/sponsoredBox', array(
+            'meta'        => $meta,
+            'advertisers' => $advertisers
+        ));
+    }
+
+    /**
+     * Handler for saving sponsor-specific meta data
+     * @param type $post_id The id of the post
+     * @param type $content The post content
+     */
+    public function saveSponsorPostMeta($post_id, $content = false)
+    {
+        if(isset($_POST['bs_sponsor_submit']))
+        {
+            # hold on to this in case it changes
+            $old_advertiser_id = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_advertiser_id');
+
+            # save settings
+            foreach(self::$_sponsoredDefaults as $key => $value)
+            {
+                if(isset($_POST[$key])) {
+                    Broadstreet_Utility::setPostMeta($post_id, $key, is_string($_POST[$key]) ? trim($_POST[$key]) : $_POST[$key]);
+                }
+            }
+
+            if (!isset($_POST['bs_sponsor_is_sponsored'])) {
+                Broadstreet_Utility::setPostMeta($post_id, 'bs_sponsor_is_sponsored', '');
+            }
+
+            # Has an ad been created/set?
+            if (isset($_POST['bs_sponsor_is_sponsored'])) {
+
+                if($_POST['bs_sponsor_advertiser_id'] !== '')
+                {
+                    # Okay, one is being set, but does it already exist?
+                    $ad_id = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_advertisement_id');
+                    $api   = $this->getBroadstreetClient();
+
+                    $network_id    = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
+                    $advertiser_id = $_POST['bs_sponsor_advertiser_id'];
+
+                    if(!$ad_id)
+                    {
+                        $name          = get_the_title($post_id);
+                        $type          = 'tracker';
+
+                        $ad = $api->createAdvertisement($network_id, $advertiser_id, $name, $type, array(
+                            'stencil_inputs' => array('url' => get_the_permalink($post_id))
+                        ));
+
+                        Broadstreet_Utility::setPostMeta($post_id, 'bs_sponsor_advertisement_id', $ad->id);
+
+                        $ad_id = $ad->id;
+                    } else {
+                        $params = array (
+                            'name' => get_the_title($post_id),
+                            'stencil_inputs' => array('url' => get_the_permalink($post_id)),
+                            'type' => 'tracker'
+                        );
+
+                        #echo "$old_advertiser_id | $advertiser_id\n";
+
+                        # The case where the advertiser has switched
+                        if ($old_advertiser_id && $advertiser_id != $old_advertiser_id) {
+                            $params['new_advertiser_id'] = $advertiser_id;
+                            $advertiser_id = $old_advertiser_id;
+                            #echo "$old_advertiser_id | $advertiser_id | {$params['new_advertiser_id']}; \n";
+                        }
+
+                        $api->updateAdvertisement($network_id, $advertiser_id, $ad_id, $params);
+                    }
+                }
+            }
+        }
+    }
+
 
     /**
      * Handler for saving business-specific meta data

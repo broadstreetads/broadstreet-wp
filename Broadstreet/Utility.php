@@ -31,6 +31,7 @@ class Broadstreet_Utility
         $instance_id = md5(uniqid());
         $config = false;
 
+        //$code = "<div instance-id=\"$instance_id\" street-address=\"$id\"></div><script async data-cfasync=\"false\" type=\"text/javascript\" src=\"//localhost:9090/display/$id.js?sa=1\"></script>";
         $code = "<div instance-id=\"$instance_id\" street-address=\"$id\"></div><script async data-cfasync=\"false\" type=\"text/javascript\" src=\"//ad.broadstreetads.com/display/$id.js?sa=1\"></script>";
 
         if (@$attrs['config']) {
@@ -119,7 +120,7 @@ class Broadstreet_Utility
             $url = home_url($wp->request);
 
             for ($i = 0; $i < count($urls); $i++) {
-                $pattern = trim(str_replace('.', '.*', $urls[i]));
+                $pattern = trim(str_replace('.', '.*', $urls[$i]));
                 if (!$pattern) continue;
                 $pattern = "#$pattern#";
 
@@ -387,7 +388,7 @@ class Broadstreet_Utility
      */
     public static function fixURL($url)
     {
-        if(!strstr($url, 'http://'))
+        if(!strstr($url, '://'))
             $url = "http://$url";
 
         return $url;
@@ -955,6 +956,7 @@ class Broadstreet_Utility
             }
 
             $slugs[] = $post->post_name;
+            $slugs[] = get_post_type();
         }
 
         if (is_category() || is_archive()) {
@@ -984,9 +986,9 @@ class Broadstreet_Utility
 
         # page type
         if (is_single() && !is_page()) {
-            $targets['pagetype'] = array('post');
+            $targets['pagetype'] = array(get_post_type());
         } elseif (is_single() && is_page()) {
-            $targets['pagetype'] = array('page');
+            $targets['pagetype'] = array(get_post_type());
         } elseif (is_archive()) {
             $targets['pagetype'] = array('archive');
         } else {
