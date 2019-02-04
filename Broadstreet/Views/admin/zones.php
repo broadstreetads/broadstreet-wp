@@ -6,8 +6,8 @@
          <?php if($errors): ?>
              <div class="box">
                     <div class="shadow_column">
-                        <div class="title" style="padding-left: 27px; background: #F1F1F1 url('<?php echo Broadstreet_Utility::getImageBaseURL(); ?>info.png') no-repeat scroll 7px center;">
-                            Alerts
+                        <div class="title" style="">
+                            <span class="dashicons dashicons-warning"></span> Alerts
                         </div>
                         <div class="content">
                             <p>
@@ -24,18 +24,18 @@
                     <div class="shadow_bottom"></div>
              </div>
          <?php endif; ?>
-               <div><strong>Please note:</strong> These options will work with <em>most</em> themes, 
+               <div><strong>Please note:</strong> These options will work with <em>most</em> themes,
                but not all of them, due to non-standard behavior of some themes. Remember, you can
                create new zones specifically for these placements in our dashboard.</div>
           <div id="controls">
             <div class="box">
-                <div class="title">Additional Zone Options</div>
+                <div class="title"><span class="dashicons dashicons-admin-generic"></span> Additional Zone Options</div>
                 <div class="content">
                     <div ng-repeat="position in positions track by position.id">
                         <div class="option">
                             <div class="control-label">
                                 <div class="name nomargin">
-                                    {{position.name}}                     
+                                    {{position.name}}
                                 </div>
                                 <div class="desc nomargin">
                                     {{position.description}}
@@ -43,7 +43,7 @@
                             </div>
                             <div class="control-container">
                                 <select type="text" ng-options="zone.id as zone.name for zone in data.zones" ng-model="data.positions_zones[position.id]">
-                                    <option value="">None</option>                             
+                                    <option value="">None</option>
                                 </select>
                             </div>
                             <div style="clear:both;"></div>
@@ -78,8 +78,8 @@
                         <div class="control-container">
                            <input ng-model="data.positions_zones.show_label" type="text" />
                         </div>
-                    </div>        
-                    <div class="clearfix"></div>                    
+                    </div>
+                    <div class="clearfix"></div>
                     <div class="break"></div>
                     <div class="option">
                         <div class="control-label">
@@ -94,20 +94,20 @@
                         <div class="control-container">
                            <input ng-model="data.positions_zones.max_width" type="text" placeholder="100%" />
                         </div>
-                    </div>        
-                    <div class="clearfix"></div>                    
+                    </div>
+                    <div class="clearfix"></div>
                     <div class="break"></div>
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
-                                Categories to Avoid                     
+                                Categories to Avoid
                             </div>
                             <div class="desc nomargin">
                                 Don't place in-story ad units in these categories
                             </div>
                         </div>
                         <div class="control-container">
-                            <div     
+                            <div
                                 isteven-multi-select
                                 input-model="data.categories"
                                 output-model="data.positions_zones.avoid_categories"
@@ -196,6 +196,24 @@
                         </div>
                         <div style="clear:both;"></div>
                     </div>
+                    <?php if (defined('WP_PLUGIN_URL') && strstr(WP_PLUGIN_URL, 'localhost')): ?>
+                    <div class="clearfix"></div>
+                    <div class="break"></div>
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">
+                                Use Local Broadstreet API
+                            </div>
+                            <div class="desc nomargin">
+                                Enable if your name is Kenny and you're testing locally
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <input type="checkbox" ng-model="data.positions_zones.use_local_bsa" />
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <?php endif; ?>
                     <div class="clearfix"></div>
                     <div class="break"></div>
                     <div class="option">
@@ -232,7 +250,7 @@
             <img src="<?php echo Broadstreet_Utility::getImageBaseURL() . 'ajax-loader-bar.gif'; ?>" alt="Loading Image"/>
             <span>{{loadingMessage}}</span>
         </div>
-      </div>      
+      </div>
       <div class="right_column">
           <?php Broadstreet_View::load('admin/global/sidebar') ?>
       </div>
@@ -250,12 +268,12 @@
                 {
                     id: 'above_content',
                     name: 'Above Content',
-                    description: 'Which zone should appear above the story?' 
+                    description: 'Which zone should appear above the story?'
                 },
                 {
                     id: 'below_content',
                     name: 'Below Content',
-                    description: 'Which zone should appear below the story?' 
+                    description: 'Which zone should appear below the story?'
                 },
                 {
                     id: 'in_content',
@@ -271,12 +289,12 @@
                 {
                     id: 'before_comments',
                     name: 'Before Comments',
-                    description: 'Which zone should appear right before the comments?' 
+                    description: 'Which zone should appear right before the comments?'
                 },
                 {
                     id: 'inbetween_archive',
                     name: 'In Between Posts (Archive)',
-                    description: 'Which zone should appear in between posts on the archive page?' 
+                    description: 'Which zone should appear in between posts on the archive page?'
                 }
             ];
 
@@ -301,7 +319,7 @@
 
                     found = false;
                 } else {
-                    catList.push({name: bootstrap.categories[i].cat_name, id: bootstrap.categories[i].cat_ID, selected: false, ticked: false});                    
+                    catList.push({name: bootstrap.categories[i].cat_name, id: bootstrap.categories[i].cat_ID, selected: false, ticked: false});
                 }
             }
 

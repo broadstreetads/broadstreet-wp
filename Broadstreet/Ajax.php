@@ -23,7 +23,7 @@ class Broadstreet_Ajax
         Broadstreet_Utility::setOption(Broadstreet_Core::KEY_NETWORK_ID, $_POST['network_id']);
         Broadstreet_Utility::setOption(Broadstreet_Core::KEY_BIZ_ENABLED, $_POST['business_enabled'] === 'true');
 
-        $api = new Broadstreet($_POST['api_key']);
+        $api = Broadstreet_Utility::getBroadstreetClient();
         $message = 'OK';
 
         try
@@ -76,7 +76,7 @@ class Broadstreet_Ajax
         $api_key    = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_API_KEY);
         $network_id = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
 
-        $api        = new Broadstreet($api_key);
+        $api        = Broadstreet_Utility::getBroadstreetClient();
         $advertiser = $api->createAdvertiser($network_id, stripslashes($_POST['name']));
 
         die(json_encode(array('success' => true, 'advertiser' => $advertiser)));
@@ -97,7 +97,7 @@ class Broadstreet_Ajax
 
     public static function register()
     {
-        $api = new Broadstreet();
+        $api = Broadstreet_Utility::getBroadstreetClient(true);
 
         try
         {

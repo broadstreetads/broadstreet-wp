@@ -15,6 +15,9 @@
         <div style="clear:both;"></div>
         <div class="misc-pub-section" id="bsa_sponsor_advertiser_selection" style="display:none;">
             <div><strong>Advertiser</strong></div>
+            <?php if (isset($meta['bs_sponsor_advertiser_id'])): ?>
+                <input type="hidden" id="bs_sponsor_old_advertiser_id" name="bs_sponsor_old_advertiser_id" value="<?php echo $meta['bs_sponsor_advertiser_id'] ?>">
+            <?php endif; ?>
             <select id="bs_sponsor_advertiser_id" name="bs_sponsor_advertiser_id">
                 <?php $linked = false; ?>
                 <?php $has_match = false ?>
@@ -24,12 +27,17 @@
                     <option value="<?php echo $advertiser->id ?>" <?php if($meta['bs_sponsor_advertiser_id'] == $advertiser->id) echo ' selected="selected"' ?>><?php echo esc_html($advertiser->name) ?> (ID: <?php echo esc_html($advertiser->id) ?>)</option>
                 <?php endforeach; ?>
             </select>
+            <?php if (isset($meta['bs_sponsor_advertisement_id'])): ?>
+                <input type="hidden" id="bs_sponsor_advertisement_id" name="bs_sponsor_advertisement_id" value="<?php echo $meta['bs_sponsor_advertisement_id'] ?>">
+            <?php endif; ?>
         </div>
-        <div class="misc-pub-section">
-            <p>You can view this post's performance in
-                <a href="https://my.broadstreetads.com/networks/1/advetisers/1/advertisements/1" target="_blank">Broadstreet's dashboard</a>.
-            </p>
-        </div>
+        <?php if (@$meta['bs_sponsor_advertiser_id'] && @$meta['bs_sponsor_advertisement_id']): ?>
+            <div class="misc-pub-section">
+                <p>You can view this post's performance in
+                    <a href="https://my.broadstreetads.com/networks/<?php echo $network_id ?>/advetisers/<?php echo $meta['bs_sponsor_advertiser_id'] ?>/advertisements/<?php echo $meta['bs_sponsor_advertisement_id'] ?>" target="_blank">Broadstreet's dashboard</a>.
+                </p>
+            </div>
+        <?php endif; ?>
     </div>
 
     <script>

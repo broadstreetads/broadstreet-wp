@@ -205,6 +205,21 @@ class Broadstreet_Utility
             return $api_key;
     }
 
+    public static function getBroadstreetClient()
+    {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        $host = 'api.broadstreetads.com';
+        $secure = true;
+
+        if (property_exists($placement_settings, 'use_local_bsa') && $placement_settings->use_local_bsa) {
+            $host = 'localhost:3000';
+            $secure = false;
+        }
+
+        $key = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_API_KEY);
+        return new Broadstreet($key, $host, $secure);
+    }
+
     /**
      * Get or set the featured business image
      * @param type $image_path
@@ -249,7 +264,7 @@ class Broadstreet_Utility
 
         try
         {
-            $broadstreet = new Broadstreet(self::getApiKey());
+            $broadstreet = self::getBroadstreetClient();
             $info = $broadstreet->getNetwork(self::getNetworkId());
 
             Broadstreet_Cache::set('network_info', $info, Broadstreet_Config::get('network_cache_ttl_seconds'));
@@ -283,7 +298,7 @@ class Broadstreet_Utility
         }
         else
         {
-            $api = new Broadstreet($api_key);
+            $api = self::getBroadstreetClient();
 
             try
             {
@@ -564,7 +579,7 @@ class Broadstreet_Utility
     {
         $api_key    = self::getApiKey();
         $network_id = self::getNetworkId();
-        $broadstreet= new Broadstreet($api_key);
+        $broadstreet= self::getBroadstreetClient();
 
         $import   = $broadstreet->magicImport($url, $network_id);
 
@@ -628,7 +643,10 @@ class Broadstreet_Utility
      */
     public static function getBroadstreetBaseURL()
     {
-        return (WP_PLUGIN_URL . '/broadstreet/Broadstreet/');
+        # handle https
+        $url = (WP_PLUGIN_URL . '/broadstreet/Broadstreet/');
+        $url = str_replace('http://', '//', $url);
+        return $url;
     }
 
     /**
@@ -743,10 +761,9 @@ class Broadstreet_Utility
      */
     public static function refreshZoneCache()
     {
-        $api_key     = self::getOption(Broadstreet_Core::KEY_API_KEY);
         $network_id  = self::getOption(Broadstreet_Core::KEY_NETWORK_ID);
 
-        $api = new Broadstreet($api_key);
+        $api = self::getBroadstreetClient();
 
         try
         {

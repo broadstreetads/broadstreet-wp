@@ -115,8 +115,7 @@ class Broadstreet_Core
      */
     public function getBroadstreetClient()
     {
-        $key = Broadstreet_Utility::getOption(self::KEY_API_KEY);
-        return new Broadstreet($key);
+        return Broadstreet_Utility::getBroadstreetClient();
     }
 
     /**
@@ -145,7 +144,10 @@ class Broadstreet_Core
         add_action('loop_end', array($this, 'addAdsLoopEnd'), 100);
         #add_action('comment_form_before', array($this, 'addAdsBeforeComments'), 1);
         add_filter('comments_template', array($this, 'addAdsBeforeComments'), 100);
-        add_action('save_post', array($this, 'saveSponsorPostMeta'));
+
+        if (Broadstreet_Utility::getOption(self::KEY_API_KEY)) {
+            add_action('post_updated', array($this, 'saveSponsorPostMeta'), 100);
+        }
 
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
@@ -235,7 +237,7 @@ class Broadstreet_Core
 
                 for ($i = 0; $i < count($in_content_paragraph); $i++) {
                     if (count($pieces) >= $in_content_paragraph[$i]) {
-                        array_splice($pieces, $in_content_paragraph[$i], 0, $in_story_zone);
+                        #array_splice($pieces, $in_content_paragraph[$i], 0, $in_story_zone);
                     }
                 }
 
@@ -340,14 +342,16 @@ class Broadstreet_Core
             'page'
         );
 
-        add_meta_box(
-            'broadstreet_sectionid',
-            __( '📈 Sponsored Content', 'broadstreet_textdomain'),
-            array($this, 'broadstreetSponsoredBox'),
-            'post',
-            'side',
-            'high'
-        );
+        if (Broadstreet_Utility::getOption(self::KEY_API_KEY)) {
+            add_meta_box(
+                'broadstreet_sectionid',
+                __( '<span class="dashicons dashicons-performance"></span> Sponsored Content', 'broadstreet_textdomain'),
+                array($this, 'broadstreetSponsoredBox'),
+                'post',
+                'side',
+                'high'
+            );
+        }
 
         if(Broadstreet_Utility::isBusinessEnabled())
         {
@@ -487,7 +491,7 @@ class Broadstreet_Core
      */
     public function adminCallback()
     {
-        $icon_url = 'http://broadstreet-common.s3.amazonaws.com/broadstreet-blargo/broadstreet-icon.png';
+        $icon_url = 'none';
 
         add_menu_page('Broadstreet', 'Broadstreet', 'edit_pages', 'Broadstreet', array($this, 'adminMenuCallback'), $icon_url);
         add_submenu_page('Broadstreet', 'Settings', 'Account Setup', 'edit_pages', 'Broadstreet', array($this, 'adminMenuCallback'));
@@ -495,8 +499,9 @@ class Broadstreet_Core
         if(Broadstreet_Utility::isBusinessEnabled())
             add_submenu_page('Broadstreet', 'Business Settings', 'Business Settings', 'edit_pages', 'Broadstreet-Business', array($this, 'adminMenuBusinessCallback'));
         #add_submenu_page('Broadstreet', 'Advanced', 'Advanced', 'edit_pages', 'Broadstreet-Layout', array($this, 'adminMenuLayoutCallback'));
-        add_submenu_page('Broadstreet', 'Help', 'Business Directory Help', 'edit_pages', 'Broadstreet-Help', array($this, 'adminMenuHelpCallback'));
-        add_submenu_page('Broadstreet', 'Editable Ads', 'Editable Ads&trade;', 'edit_pages', 'Broadstreet-Editable', array($this, 'adminMenuEditableCallback'));
+        if(Broadstreet_Utility::isBusinessEnabled())
+            add_submenu_page('Broadstreet', 'Help', 'Business Directory Help', 'edit_pages', 'Broadstreet-Help', array($this, 'adminMenuHelpCallback'));
+        //add_submenu_page('Broadstreet', 'Editable Ads', 'Editable Ads&trade;', 'edit_pages', 'Broadstreet-Editable', array($this, 'adminMenuEditableCallback'));
     }
 
     /**
@@ -903,7 +908,8 @@ class Broadstreet_Core
 
         Broadstreet_View::load('admin/sponsoredBox', array(
             'meta'        => $meta,
-            'advertisers' => $advertisers
+            'advertisers' => $advertisers,
+            'network_id' => $network_id
         ));
     }
 
@@ -917,7 +923,7 @@ class Broadstreet_Core
         if(isset($_POST['bs_sponsor_submit']))
         {
             # hold on to this in case it changes
-            $old_advertiser_id = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_advertiser_id');
+            $old_advertiser_id = $_POST['bs_sponsor_old_advertiser_id'];
 
             # save settings
             foreach(self::$_sponsoredDefaults as $key => $value)
@@ -934,10 +940,10 @@ class Broadstreet_Core
             # Has an ad been created/set?
             if (isset($_POST['bs_sponsor_is_sponsored'])) {
 
-                if($_POST['bs_sponsor_advertiser_id'] !== '')
+                if(isset($_POST['bs_sponsor_advertiser_id']) && $_POST['bs_sponsor_advertiser_id'] !== '')
                 {
                     # Okay, one is being set, but does it already exist?
-                    $ad_id = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_advertisement_id');
+                    $ad_id = $_POST['bs_sponsor_advertisement_id'];
                     $api   = $this->getBroadstreetClient();
 
                     $network_id    = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
@@ -962,16 +968,24 @@ class Broadstreet_Core
                             'type' => 'tracker'
                         );
 
-                        #echo "$old_advertiser_id | $advertiser_id\n";
-
-                        # The case where the advertiser has switched
+                        # The case where the advertiser has switched on WP side
                         if ($old_advertiser_id && $advertiser_id != $old_advertiser_id) {
                             $params['new_advertiser_id'] = $advertiser_id;
                             $advertiser_id = $old_advertiser_id;
-                            #echo "$old_advertiser_id | $advertiser_id | {$params['new_advertiser_id']}; \n";
                         }
 
-                        $api->updateAdvertisement($network_id, $advertiser_id, $ad_id, $params);
+                        try {
+                            $api->updateAdvertisement($network_id, $advertiser_id, $ad_id, $params);
+                        } catch (Broadstreet_ServerException $ex) {
+                            if ($ex->code == 404) {
+                                # ad was deleted on bsa side, reset the post
+                                Broadstreet_Utility::setPostMeta($post_id, 'bs_sponsor_is_sponsored', '');
+                                Broadstreet_Utility::setPostMeta($post_id, 'bs_sponsor_advertiser_id', '');
+                                Broadstreet_Utility::setPostMeta($post_id, 'bs_sponsor_advertisement_id', '');
+                            }
+                        } catch (Exception $ex) {
+                            // hopefully a temporary server error, do nothing
+                        }
                     }
                 }
             }

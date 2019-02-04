@@ -2,7 +2,7 @@
     margin: 20px 0px;
     -moz-box-shadow: 0 0 5px #888;
     -webkit-box-shadow: 0 0 5px#888;
-    box-shadow: 0 0 5px #888;    
+    box-shadow: 0 0 5px #888;
 }
 
 #main .box .title {
@@ -31,7 +31,7 @@
 }
 
 #main .right_column p {
-    text-align: justify;
+
 }
 
 #main {
@@ -207,13 +207,13 @@
 
 /* Help section */
 img.figure {
-    
+
     padding: 4px;
     margin-right: 10px;
     border-radius: 2px;
     -moz-box-shadow: 0 0 5px #888;
     -webkit-box-shadow: 0 0 5px#888;
-    box-shadow: 0 0 5px #888;   
+    box-shadow: 0 0 5px #888;
 }
 
 .help-section {
