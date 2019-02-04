@@ -644,8 +644,7 @@ class Broadstreet_Utility
     public static function getBroadstreetBaseURL()
     {
         # handle https
-        $url = (WP_PLUGIN_URL . '/broadstreet/Broadstreet/');
-        $url = str_replace('http://', '//', $url);
+        $url = plugins_url( '/Broadstreet/', dirname(__FILE__) );
         return $url;
     }
 
