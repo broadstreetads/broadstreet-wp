@@ -95,7 +95,7 @@
     width: 100%;
 }
 
-.toplevel_page_Broadstreet .wp-menu-image {
+li.toplevel_page_Broadstreet .wp-menu-image {
 	background-image: url(http://broadstreet-common.s3.amazonaws.com/broadstreet-net/bsa-swoosh-white-vector.svg);
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -103,7 +103,7 @@
 	opacity: .7;
 }
 
-.toplevel_page_Broadstreet.wp-menu-open .wp-menu-image {
+li.toplevel_page_Broadstreet.wp-menu-open .wp-menu-image {
 	opacity: 1;
 }
 
