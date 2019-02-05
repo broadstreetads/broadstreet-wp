@@ -106,3 +106,7 @@
 .toplevel_page_Broadstreet.wp-menu-open .wp-menu-image {
 	opacity: 1;
 }
+
+#bsa_sponsor_advertiser_selection input[type="text"] {
+	width: 100%;
+}

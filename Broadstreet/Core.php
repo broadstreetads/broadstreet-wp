@@ -170,6 +170,14 @@ class Broadstreet_Core
         add_action('wp_ajax_import_facebook', array('Broadstreet_Ajax', 'importFacebook'));
         add_action('wp_ajax_register', array('Broadstreet_Ajax', 'register'));
         add_action('wp_ajax_save_zone_settings', array('Broadstreet_Ajax', 'saveZoneSettings'));
+        add_action('rest_api_init', function () {
+            register_rest_route( 'broadstreet/v1', '/targets', array(
+              'methods' => 'GET',
+              'callback' => function($request) {
+                return Broadstreet_Utility::getAvailableTargets();
+              },
+            ));
+        });
     }
 
     public function getTrackerContent($content) {
@@ -948,6 +956,18 @@ class Broadstreet_Core
 
                     $network_id    = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
                     $advertiser_id = $_POST['bs_sponsor_advertiser_id'];
+
+                    # create the advertiser if it doesn't exist yet
+                    if ($advertiser_id == 'new_advertiser') {
+                        $advertiser_name = (isset($_POST['bs_sponsor_advertiser_name']) && $_POST['bs_sponsor_advertiser_name'])
+                                            ? str_pad(stripslashes($_POST['bs_sponsor_advertiser_name']), 3, '*')
+                                            : 'Untitled Advertiser';
+
+                        $advertiser = $api->createAdvertiser($network_id, $advertiser_name);
+                        $advertiser_id = $advertiser->id;
+                        # before it was set to "new_advertiser" so let's correct that
+                        Broadstreet_Utility::setPostMeta($post_id, 'bs_sponsor_advertiser_id', $advertiser_id);
+                    }
 
                     if(!$ad_id)
                     {

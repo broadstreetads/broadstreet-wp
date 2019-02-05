@@ -205,6 +205,16 @@ class Broadstreet_Utility
             return $api_key;
     }
 
+    public static function getBroadstreetDashboardURL()
+    {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        $host = 'https://my.broadstreetads.com/';
+        if (property_exists($placement_settings, 'use_local_bsa') && $placement_settings->use_local_bsa) {
+            $host = 'http://localhost:3000/';
+        }
+        return $host;
+    }
+
     public static function getBroadstreetClient()
     {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
@@ -995,6 +1005,28 @@ class Broadstreet_Utility
         }
 
         return $slugs;
+    }
+
+    public static function getAvailableTargets() {
+        $categories = array();
+        $cats = get_categories();
+        foreach($cats as $cat) {
+            $categories[] = array('name' => $cat->name, 'slug' => $cat->slug);
+        }
+
+        $post_types = array();
+        $pts = get_post_types(array('show_ui' => true));
+        foreach($pts as $name => $slug) {
+            $post_types[] = array('name' => $name, 'slug' => $slug);
+        }
+
+        return array (
+            'categories' => $categories,
+            'post_types' => $post_types,
+            'built_in_keywords' => array (
+                'is_home_page', 'not_home_page', 'is_archive_page', 'is_article_page', 'not_article_page'
+            )
+        );
     }
 
     public static function getTargets() {
