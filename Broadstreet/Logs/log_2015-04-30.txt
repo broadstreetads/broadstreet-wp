@@ -1,6 +1,0 @@
-2015-04-30 22:56:01 - DEBUG --> Broadstreet initializing.. 
-2015-04-30 22:56:01 - DEBUG --> Registering hooks.. 
-2015-04-30 22:58:06 - DEBUG --> Broadstreet initializing.. 
-2015-04-30 22:58:06 - DEBUG --> Registering hooks.. 
-2015-04-30 23:00:08 - DEBUG --> Broadstreet initializing.. 
-2015-04-30 23:00:08 - DEBUG --> Registering hooks.. 
