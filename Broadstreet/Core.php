@@ -606,9 +606,6 @@ class Broadstreet_Core
                 $data['networks']  = $api->getNetworks();
                 $data['key_valid'] = true;
                 $data['network']   = Broadstreet_Utility::getNetwork(true);
-
-                if(!$data['network']->cc_on_file)
-                    $data['errors'][] = 'Your account does not have a credit card on file for your selected network below. The premium "Magic Import" and "Updateable Message" features, <strong>although entirely optional</strong>, will not work until <a target="_blank" href="'.Broadstreet_Utility::broadstreetLink('/networks/'. $data['network']->id .'/accounts').'">you add a card here</a>. Your information is confidential, secure, and <em>never</em> shared.';
             }
             catch(Exception $ex)
             {
