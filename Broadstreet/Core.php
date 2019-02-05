@@ -509,7 +509,6 @@ class Broadstreet_Core
         #add_submenu_page('Broadstreet', 'Advanced', 'Advanced', 'edit_pages', 'Broadstreet-Layout', array($this, 'adminMenuLayoutCallback'));
         if(Broadstreet_Utility::isBusinessEnabled())
             add_submenu_page('Broadstreet', 'Help', 'Business Directory Help', 'edit_pages', 'Broadstreet-Help', array($this, 'adminMenuHelpCallback'));
-        //add_submenu_page('Broadstreet', 'Editable Ads', 'Editable Ads&trade;', 'edit_pages', 'Broadstreet-Editable', array($this, 'adminMenuEditableCallback'));
     }
 
     /**
@@ -678,12 +677,6 @@ class Broadstreet_Core
 
         Broadstreet_View::load('admin/businesses', array('featured_image' => $featured_image));
     }
-
-    public function adminMenuEditableCallback()
-    {
-        Broadstreet_View::load('admin/editable');
-    }
-
 
     public function adminMenuHelpCallback()
     {
@@ -881,7 +874,6 @@ class Broadstreet_Core
         register_widget('Broadstreet_Business_Listing_Widget');
         register_widget('Broadstreet_Business_Profile_Widget');
         register_widget('Broadstreet_Business_Categories_Widget');
-        register_widget('Broadstreet_Editable_Widget');
     }
 
     /**

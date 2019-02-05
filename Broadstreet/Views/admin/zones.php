@@ -1,4 +1,3 @@
-<script src="https://broadstreet-common.s3.amazonaws.com/broadstreet-net/init.js"></script>
 <script>window.bs_bootstrap = <?php echo json_encode($data) ?>;</script>
 <div id="main" ng-app="bs_zones">
       <?php Broadstreet_View::load('admin/global/header') ?>

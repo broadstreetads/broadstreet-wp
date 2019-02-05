@@ -12,7 +12,7 @@
         </thead>
         <tbody>
             <?php foreach($zones as $id => $zone): ?>
-            <tr>
+            <tr> 
                 <td><?php echo htmlentities($zone->name) ?></td>
                 <td><strong>[broadstreet zone="<?php echo $zone->id ?>"]</strong></td>
             </tr>
