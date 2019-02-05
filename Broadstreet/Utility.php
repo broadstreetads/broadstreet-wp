@@ -32,7 +32,7 @@ class Broadstreet_Utility
         $config = false;
 
         //$code = "<div instance-id=\"$instance_id\" street-address=\"$id\"></div><script async data-cfasync=\"false\" type=\"text/javascript\" src=\"//localhost:9090/display/$id.js?sa=1\"></script>";
-        $code = "<div instance-id=\"$instance_id\" street-address=\"$id\"></div><script async data-cfasync=\"false\" type=\"text/javascript\" src=\"//ad.broadstreetads.com/display/$id.js?sa=1\"></script>";
+        $code = "<div instance-id=\"$instance_id\" street-address=\"$id\"></div><script async data-cfasync=\"false\" type=\"text/javascript\" src=\"". self::getAdserverURL() ."display/$id.js?sa=1\"></script>";
 
         if (@$attrs['config']) {
             $config = $attrs['config'];
@@ -211,6 +211,16 @@ class Broadstreet_Utility
         $host = 'https://my.broadstreetads.com/';
         if (property_exists($placement_settings, 'use_local_bsa') && $placement_settings->use_local_bsa) {
             $host = 'http://localhost:3000/';
+        }
+        return $host;
+    }
+
+    public static function getAdserverURL()
+    {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        $host = 'https://ad.broadstreetads.com/';
+        if (property_exists($placement_settings, 'use_local_bsa') && $placement_settings->use_local_bsa) {
+            $host = 'http://localhost:9090/';
         }
         return $host;
     }
