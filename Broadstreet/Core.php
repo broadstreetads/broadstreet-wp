@@ -1029,64 +1029,6 @@ class Broadstreet_Core
                 elseif($key == 'bs_images')
                     Broadstreet_Utility::setPostMeta($post_id, $key, self::$_businessDefaults[$key]);
             }
-
-            if($_POST['bs_gplus'] == 'enableoffer')
-                Broadstreet_Utility::setOption (self::KEY_SHOW_OFFERS, 'true');
-
-            # Has an ad been created/set?
-            if($_POST['bs_update_source'] !== '')
-            {
-                # Okay, one is being set, but does it already exist?
-                $ad_id = Broadstreet_Utility::getPostMeta($post_id, 'bs_advertisement_id');
-                $api   = $this->getBroadstreetClient();
-
-                $network_id    = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
-                $advertiser_id = $_POST['bs_advertiser_id'];
-
-                if(!$ad_id)
-                {
-                    $name          = "Wordpress Profile Ad";
-                    $type          = 'text';
-
-                    $ad = $api->createAdvertisement($network_id, $advertiser_id, $name, $type, array(
-                        'default_text' => 'Check back for updates!'
-                    ));
-
-                    Broadstreet_Utility::setPostMeta($post_id, 'bs_advertisement_id', $ad->id);
-                    Broadstreet_Utility::setPostMeta($post_id, 'bs_advertisement_html', $ad->html);
-
-                    $ad_id = $ad->id;
-                }
-
-                $params   = array();
-                $hash_tag = false;
-
-                if($_POST['bs_update_source'] == 'facebook')
-                {
-                    $params['facebook_id'] = $_POST['bs_facebook_id'];
-                    $hash_tag    = $_POST['bs_facebook_hashtag'];
-                }
-                elseif($_POST['bs_update_source'] == 'twitter')
-                {
-                    $params['twitter_id'] = $_POST['bs_twitter_id'];
-                    $hash_tag   = $_POST['bs_twitter_hashtag'];
-                }
-                elseif($_POST['bs_update_source'] == 'text_message')
-                {
-                    $params['phone_number'] = $_POST['bs_phone_number'];
-                }
-
-                # Update the ad
-                if($hash_tag)
-                {
-                    $api->updateAdvertisement($network_id, $advertiser_id, $ad_id, array (
-                        'hash_tag' => $hash_tag
-                    ));
-                }
-
-                # Set the ad source
-                $ad = $api->setAdvertisementSource($network_id, $advertiser_id, $ad_id, $_POST['bs_update_source'], $params);
-            }
         }
     }
 

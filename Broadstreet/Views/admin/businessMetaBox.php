@@ -2,19 +2,19 @@
     .bs-meta-table input,textarea {
         width: 85%;
     }
-    
+
     .bs-meta-table input.short {
         width: 50%;
     }
-    
+
     .bs-meta-table input.shorter {
         width: 25%;
     }
-    
+
     .bs-meta-table input.menu-upload-button {
         width:auto;
     }
-    
+
     #bs_image_list li {
         display: inline-block;
         margin-right: 3px;
@@ -25,55 +25,55 @@
         box-shadow: 0 0 4px #888;
         cursor: move;
     }
-    
+
     #bs_image_list li.featured {
         background-color: lightYellow;
         border-color: #E6DB55;
     }
-    
+
     #bs_image_list li a {
         text-decoration: none;
     }
-    
+
     #bs_image_list li img {
         height: 50px;
         border: 1px solid #ccc;
     }
-    
+
     .bs-meta-table select {
         width: 50%;
     }
-    
+
     .bs-meta-table textarea {
         height: 70px;
     }
-    
+
     .bs-hours input {
         width: 100px;
     }
-    
+
     .bs-hours .day {
         font-weight: bold;
         width: 30%;
     }
-    
+
     .bs-meta-table > tbody > tr > td {
         vertical-align: top;
     }
-    
+
     .bs-meta-table .label {
         font-weight: bold;
     }
-    
+
     .bs-meta-table .label em {
         font-weight: normal;
         font-size: 80%;
     }
-    
+
     .time-picker {
         width: 100px !important;
     }
-    
+
     .broadstreet-special {
         border: 1px solid #ccc;
         padding: 5px;
@@ -88,29 +88,11 @@
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
         margin-bottom: 10px;
     }
-    
+
     #import-progress {
         display: none;
     }
 </style>
-<div id="broadstreet-updates" class="broadstreet-special">
-    <table width="100%" class="bs-meta-table">
-        <tbody>
-            <tr>
-                <td width="30%" class="label">
-                    Magic Import ($<?php echo number_format($network->import_cost/100, 2) ?>) <img id="import-progress" src="<?php echo Broadstreet_Utility::getImageBaseURL() ?>ajax-loader-rotate.gif" alt="Progress!" /><br />
-                    <img align="left" width="40" class="oconf_logo" src="<?php echo Broadstreet_Utility::getImageBaseURL(); ?>marty.png" alt="" />
-                    <em>If the business has a Facebook page, we can auto-fill some fields and crawl the web for images.</em>
-                </td>
-                <td>
-                    <input class="short"  id="bs-business-id" placeholder="[paste the facebook page URL here]" type="text" />
-                    <input class="shorter" type="button" id="bs-import" value="Import" />
-                    
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
 <table width="100%" id="bs-meta-table" class="bs-meta-table">
     <tbody>
         <tr>
@@ -140,7 +122,7 @@
             <td width="30%" class="label">
                 Image Gallery<br />
                 <em>Add as many images as needed. You can rearrange
-                the images by dragging them. The first image in the list will be 
+                the images by dragging them. The first image in the list will be
                 used as the featured image.</em>
             </td>
             <td>
@@ -235,7 +217,7 @@
         </tr>
         <tr>
             <td class="label">Publisher Review URL</td>
-            <td><input placeholder="<?php echo site_url() ?>/your/review" type="text" name="bs_publisher_review" value="<?php echo $meta['bs_publisher_review'] ?>" /></td>            
+            <td><input placeholder="<?php echo site_url() ?>/your/review" type="text" name="bs_publisher_review" value="<?php echo $meta['bs_publisher_review'] ?>" /></td>
         </tr>
         <tr>
             <td class="label">Twitter URL</td>
@@ -280,63 +262,6 @@
         </tr>
     </tbody>
 </table>
-
-<div id="broadstreet-updates" class="broadstreet-special">
-    <table width="100%" class="bs-meta-table">
-        <tbody>
-            <tr>
-                <td width="30%" class="label">
-                    <div>Updatable Messages ($25 / month)</div>
-                    <img align="left" width="40" class="oconf_logo" src="<?php echo Broadstreet_Utility::getImageBaseURL(); ?>marty.png" alt="" />
-                    <em>Let businesses updates messages on their profile. This is a premium feature offered by Broadstreet.</em>
-                    <br/>
-                    <br/>
-                    <strong>How It Works</strong><br/>
-                    <em>Provide the business' social account information on the right.
-                        When the business posts social updates, they will appear
-                        in their listings on your site, giving them a platform
-                        for specials and announcements.
-                    </em>
-                </td>
-                <td>
-                    <div>
-                        <select id="bs_update_source" name="bs_update_source">
-                            <option value="" <?php if($meta['bs_update_source'] == '') echo 'selected="selected"' ?>>No Status Updates</option>
-                            <option value="facebook" <?php if($meta['bs_update_source'] == 'facebook') echo 'selected="selected"' ?>>Facebook Updates</option>
-                            <option value="twitter" <?php if($meta['bs_update_source'] == 'twitter') echo 'selected="selected"' ?>>Twitter Updates</option>
-                            <option value="text_message" <?php if($meta['bs_update_source'] == 'text_message') echo 'selected="selected"' ?>>Text Message Updates</option>
-                        </select>
-                    </div>
-                    <div id="bs_source_details">
-                        <div id="bs_source_facebook_detail">
-                            <strong>Facebook User or Page Id</strong><br/>
-                            <input type="text" name="bs_facebook_id" value="<?php echo $meta['bs_facebook_id'] ?>" /><br/>
-                            <strong>Hashtag (optional, control which updates get pulled)</strong><br/>
-                            <input type="text" name="bs_facebook_hashtag" value="<?php echo @$meta['preferred_hash_tag'] ?>" />
-                        </div>
-                        <div id="bs_source_twitter_detail">
-                            <strong>Twitter Username</strong><br/>
-                            <input type="text" name="bs_twitter_id" value="<?php echo $meta['bs_twitter_id'] ?>" /><br />
-                            <strong>Hashtag (optional, control which updates get pulled)</strong><br/>
-                            <input type="text" name="bs_twitter_hashtag" value="<?php echo @$meta['preferred_hash_tag'] ?>" />
-                        </div>
-                        <div id="bs_source_text_message_detail">
-                            <strong>Phone Number (have advertiser send updates from this # to 609-207-7067)</strong><br/>
-                            <input type="text" name="bs_phone_number" value="<?php echo $meta['bs_phone_number'] ?>" />
-                        </div>
-                    </div>
-                    
-                    <?php if($meta['bs_update_source']): ?>
-                    <div>
-                        <strong>Text Preview: </strong>
-                        <?php echo $meta['bs_advertisement_html'] ?>
-                    </div>
-                    <?php endif; ?>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
 
 <input type="hidden" name="bs_submit" value="1" />
 
