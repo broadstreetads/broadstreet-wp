@@ -351,14 +351,17 @@ class Broadstreet_Core
         );
 
         if (Broadstreet_Utility::getOption(self::KEY_API_KEY)) {
-            add_meta_box(
-                'broadstreet_sectionid',
-                __( '<span class="dashicons dashicons-performance"></span> Sponsored Content', 'broadstreet_textdomain'),
-                array($this, 'broadstreetSponsoredBox'),
-                'post',
-                'side',
-                'high'
-            );
+            $screens = get_post_types();
+            foreach ( $screens as $screen ) {
+                add_meta_box(
+                    'broadstreet_sposnor_sectionid',
+                    __( '<span class="dashicons dashicons-performance"></span> Sponsored Content', 'broadstreet_textdomain'),
+                    array($this, 'broadstreetSponsoredBox'),
+                    $screen,
+                    'side',
+                    'high'
+                );
+            }
         }
 
         if(Broadstreet_Utility::isBusinessEnabled())

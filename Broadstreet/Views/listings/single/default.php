@@ -1,12 +1,7 @@
-<?php 
-$has_thumbnail = has_post_thumbnail($GLOBALS['post']->ID); 
+<?php
+$has_thumbnail = has_post_thumbnail($GLOBALS['post']->ID);
 $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['post']->ID));
 ?>
-<?php if($meta['bs_update_source']): ?>
-    <div class="sponsored-listing">
-        <?php echo $meta['bs_advertisement_html'] ?>
-    </div>
-<?php endif; ?>
 <div id="biz-column-1">
     <?php if(count($meta['bs_images'])): ?>
         <a class="nodec" target="_blank" href="<?php echo $meta['bs_images'][0] ?>">
@@ -106,7 +101,7 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
                     <div class="hours">Closed</div>
                 <?php endif; ?>
             </li>
-            
+
         </ul>
     </div>
     <?php endif; ?>
@@ -132,7 +127,7 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
     <img style="float: right; padding: 2px 0 4px 4px;" src="<?php echo Broadstreet_Utility::featuredBusinessImage() ?>" />
     <?php endif; ?>
     <?php echo $content; ?>
-    
+
 <?php if($meta['bs_video']): ?>
 <div class="bs-video">Video</div>
 <div class="bs-videoWrapper">
