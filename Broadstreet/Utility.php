@@ -225,6 +225,12 @@ class Broadstreet_Utility
         return $host;
     }
 
+    public static function useLocalBSA()
+    {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        return property_exists($placement_settings, 'use_local_bsa') && $placement_settings->use_local_bsa;
+    }
+
     public static function getBroadstreetClient()
     {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();

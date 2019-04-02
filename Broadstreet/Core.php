@@ -209,9 +209,13 @@ class Broadstreet_Core
 
             if ($in_content) {
 
+                $in_content_paragraph = property_exists($placement_settings, 'in_content_paragraph') ? $placement_settings->in_content_paragraph : '4';
+                if (!$in_content_paragraph) {
+                    $in_content_paragraph = '4';
+                }
+
                 try {
-                    $in_content_paragraph = property_exists($placement_settings, 'in_content_paragraph') ? $placement_settings->in_content_paragraph : '4';
-                    $in_content_paragraph = array_map('trim', explode(',', $in_content_paragraph));
+                    $in_content_paragraph = array_map('intval', array_map('trim', explode(',', $in_content_paragraph)));
                 } catch (Exception $e) {
                     // user error
                     $in_content_paragraph = array(4);
@@ -243,9 +247,11 @@ class Broadstreet_Core
                     #return "$content\n\n" . $in_story_zone;
                 }
 
+                # each insertion increases the offset of the next paragraph
+                $replacements = 0;
                 for ($i = 0; $i < count($in_content_paragraph); $i++) {
                     if (count($pieces) >= $in_content_paragraph[$i]) {
-                        #array_splice($pieces, $in_content_paragraph[$i], 0, $in_story_zone);
+                        array_splice($pieces, $in_content_paragraph[$i] + $replacements++, 0, $in_story_zone);
                     }
                 }
 
@@ -397,6 +403,11 @@ class Broadstreet_Core
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
         $network_id = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
         $args = '{}';
+
+        if (Broadstreet_Utility::useLocalBSA()) {
+            $args = '{"domain": "localhost:9090"}';
+        }
+
         if (property_exists($placement_settings, 'beta_tag_arguments') && strlen($placement_settings->beta_tag_arguments)) {
             $args = $placement_settings->beta_tag_arguments;
             $args = json_decode($args);
@@ -413,15 +424,16 @@ class Broadstreet_Core
             $args = json_encode($args);
         }
 
-        echo "<script data-cfasync='false'>window.broadstreetKeywords = [" . Broadstreet_Utility::getAllAdKeywordsString() . "]</script>";
-        echo "<script data-cfasync='false'>window.broadstreetTargets = " . json_encode(Broadstreet_Utility::getTargets()) . ";</script>";
+        echo "<script data-cfasync='false'>window.broadstreetKeywords = [" . Broadstreet_Utility::getAllAdKeywordsString() . "]</script>\n";
+        echo "<script data-cfasync='false'>window.broadstreetTargets = " . json_encode(Broadstreet_Utility::getTargets()) . ";</script>\n";
 
+        echo "<script data-cfasync='false'>\nwindow.broadstreet = window.broadstreet || { run: [] };window.broadstreet.run.push(function () {\n";
         if (property_exists($placement_settings, 'defer_configuration') && strlen($placement_settings->defer_configuration)) {
-            echo "<script data-cfasync='false'>if (window.broadstreet && window.broadstreet.loadNetworkJS) window.broadstreet.loadNetworkJS($network_id)</script>";
+            echo "window.broadstreet.loadNetworkJS($network_id);\n";
         } else {
-
-            echo "<script data-cfasync='false'>if (broadstreet) broadstreet.watch($args);</script>";
+            echo "window.broadstreet.watch($args);\n";
         }
+        echo " });</script>";
     }
 
     public function setWhitelabel()
@@ -446,7 +458,7 @@ class Broadstreet_Core
     {
         // add cloudflare attrs. but seriously, f cloudflare
         if (strstr($tag, 'init-2.min.js') || strstr($tag, 'init.js')) {
-            $tag = str_replace('src', "data-cfasync='false' src", $tag);
+            $tag = str_replace('src', "data-cfasync='false' async src", $tag);
         }
 
         return $tag;
@@ -477,6 +489,7 @@ class Broadstreet_Core
             if (is_ssl() && property_exists($placement_settings, 'cdn_whitelabel') && $placement_settings->cdn_whitelabel) {
                 $host = 'street-production.s3.amazonaws.com';
             }
+
             wp_enqueue_script('broadstreet-cdn', "//$host/$file");
         }
     }
