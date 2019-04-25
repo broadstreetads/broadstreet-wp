@@ -114,18 +114,25 @@ class Broadstreet_Utility
             }
         }
 
-        if (property_exists($config, 'avoid_urls') && count($config->avoid_urls)) {
+        if (property_exists($config, 'avoid_urls')) {
             global $wp;
+
+            if (!$config->avoid_urls) {
+                $config->avoid_urls = '';
+            }
+
             $urls = preg_split ("/\r\n|\n|\r/", $config->avoid_urls);
             $url = home_url($wp->request);
 
-            for ($i = 0; $i < count($urls); $i++) {
-                $pattern = trim(str_replace('.', '.*', $urls[$i]));
-                if (!$pattern) continue;
-                $pattern = "#$pattern#";
+            if (count($urls)) {
+                for ($i = 0; $i < count($urls); $i++) {
+                    $pattern = trim(str_replace('.', '.*', $urls[$i]));
+                    if (!$pattern) continue;
+                    $pattern = "#$pattern#";
 
-                if (@preg_match($pattern, $url)) {
-                    $disabled = true;
+                    if (@preg_match($pattern, $url)) {
+                        $disabled = true;
+                    }
                 }
             }
         }
