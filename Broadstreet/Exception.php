@@ -10,7 +10,7 @@
  *  Exception dervided form it. This helps separating Wordpress exceptions from
  *  Broadstreet exceptions
  */
-class Broadstreet_Exception extends Exception
+class Broadstreet_Exception extends \Exception
 {
-    
+
 }

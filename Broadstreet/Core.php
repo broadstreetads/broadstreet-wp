@@ -429,7 +429,11 @@ class Broadstreet_Core
 
         echo "<script data-cfasync='false'>\nwindow.broadstreet = window.broadstreet || { run: [] };window.broadstreet.run.push(function () {\n";
         if (property_exists($placement_settings, 'defer_configuration') && strlen($placement_settings->defer_configuration)) {
-            echo "window.broadstreet.loadNetworkJS($network_id);\n";
+            if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->adserver_whitelabel) > 0) {
+                echo "window.broadstreet.loadNetworkJS($network_id, { domain: '$placement_settings->adserver_whitelabel'});\n";
+            } else {
+                echo "window.broadstreet.loadNetworkJS($network_id);\n";
+            }
         } else {
             echo "window.broadstreet.watch($args);\n";
         }
@@ -976,19 +980,24 @@ class Broadstreet_Core
 
                     if(!$ad_id)
                     {
-                        $name          = get_the_title($post_id);
+                        $name          = substr(str_pad(get_the_title($post_id), 5, '*'), 0, 127);
                         $type          = 'tracker';
 
-                        $ad = $api->createAdvertisement($network_id, $advertiser_id, $name, $type, array(
-                            'stencil_inputs' => array('url' => get_the_permalink($post_id))
-                        ));
+                        try {
+                            $ad = $api->createAdvertisement($network_id, $advertiser_id, $name, $type, array(
+                                'stencil_inputs' => array('url' => get_the_permalink($post_id))
+                            ));
 
-                        Broadstreet_Utility::setPostMeta($post_id, 'bs_sponsor_advertisement_id', $ad->id);
+                            Broadstreet_Utility::setPostMeta($post_id, 'bs_sponsor_advertisement_id', $ad->id);
+                            $ad_id = $ad->id;
+                        } catch (Broadstreet_ServerException $ex) {
 
-                        $ad_id = $ad->id;
+                        } catch (\Exception $ex) {
+                            // hopefully a temporary server error, do nothing
+                        }
                     } else {
                         $params = array (
-                            'name' => get_the_title($post_id),
+                            'name' => substr(str_pad(get_the_title($post_id), 5, '*'), 0, 127),
                             'stencil_inputs' => array('url' => get_the_permalink($post_id)),
                             'type' => 'tracker'
                         );
@@ -1008,7 +1017,7 @@ class Broadstreet_Core
                                 Broadstreet_Utility::setPostMeta($post_id, 'bs_sponsor_advertiser_id', '');
                                 Broadstreet_Utility::setPostMeta($post_id, 'bs_sponsor_advertisement_id', '');
                             }
-                        } catch (Exception $ex) {
+                        } catch (\Exception $ex) {
                             // hopefully a temporary server error, do nothing
                         }
                     }
