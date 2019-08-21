@@ -461,7 +461,7 @@ class Broadstreet_Core
     public function finalizeZoneTag($tag, $handle = '', $src = false)
     {
         // add cloudflare attrs. but seriously, f cloudflare
-        if (strstr($tag, 'init-2.min.js') || strstr($tag, 'init.js')) {
+        if (preg_match('#\/init(-2)?.min.js.*[\'"]></script>#', $tag)) {
             $tag = str_replace('src', "data-cfasync='false' async src", $tag);
         }
 
