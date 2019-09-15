@@ -65,6 +65,10 @@ class Broadstreet_Utility
      * @return type
      */
     public static function getZoneCode($id, $attrs = array()) {
+        if ( self::isAMPEndpoint() ) {
+            return self::getAMPZoneCode($id);
+        }
+
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
 
         $old = false;
@@ -96,6 +100,27 @@ class Broadstreet_Utility
 
             return "<broadstreet-zone $attr_string></broadstreet-zone>";
         }
+    }
+
+    /**
+     * Get AMPHTML code for a specific zone 
+     * @param type $id
+     * @return string
+     */
+    public static function getAMPZoneCode($id) {
+        $network_id = (int) self::getNetworkId();
+        $zone_id = (int) $id;
+        $keywords = esc_attr(Broadstreet_Utility::getAllAdKeywordsString(true));
+
+        /**
+         * @todo The height and width of the ad zones should be dynamic because the ad size is unknown until the ad has loaded. 
+         * Currently e.g. a 900x70 ad will display in a 300:250 ratio container which means a lot of extra white space.
+         * Something similar to amp-iframe's resizable attribute might work, but doesn't appear to be a supported feature of amp-ad.
+         */
+        $width = 300;
+        $height = 250;
+
+        return "<amp-ad type='broadstreetads' layout='responsive' width='$width' height='$height' data-network='$network_id' data-zone='$zone_id' data-keywords='$keywords'></amp-ad>";
     }
 
     /**
@@ -1126,8 +1151,15 @@ class Broadstreet_Utility
      * Return a unique identifier for the site for use with future help requests
      * @return string A unique identifier
      */
-    public static function getServiceTag()
-    {
+    public static function getServiceTag() {
         return md5($report['u'] = get_bloginfo('url'));
+    }
+
+    /**
+     * Return whether an AMP page is requested.
+     * @return bool True if AMP
+     */
+    public static function isAMPEndpoint() {
+        return function_exists( 'is_amp_endpoint' ) && is_amp_endpoint();
     }
 }
