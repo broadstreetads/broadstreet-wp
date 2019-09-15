@@ -65,7 +65,7 @@ class Broadstreet_Utility
      * @return type
      */
     public static function getZoneCode($id, $attrs = array()) {
-        if ( self::isAMPEndpoint() ) {
+        if (self::isAMPEndpoint()) {
             return self::getAMPZoneCode($id);
         }
 
@@ -1160,6 +1160,6 @@ class Broadstreet_Utility
      * @return bool True if AMP
      */
     public static function isAMPEndpoint() {
-        return function_exists( 'is_amp_endpoint' ) && is_amp_endpoint();
+        return function_exists('is_amp_endpoint') && is_amp_endpoint();
     }
 }
