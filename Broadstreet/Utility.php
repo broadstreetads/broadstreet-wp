@@ -112,13 +112,28 @@ class Broadstreet_Utility
         $zone_id = (int) $id;
         $keywords = esc_attr(Broadstreet_Utility::getAllAdKeywordsString(true));
 
-        /**
-         * @todo The height and width of the ad zones should be dynamic because the ad size is unknown until the ad has loaded. 
-         * Currently e.g. a 900x70 ad will display in a 300:250 ratio container which means a lot of extra white space.
-         * Something similar to amp-iframe's resizable attribute might work, but doesn't appear to be a supported feature of amp-ad.
-         */
+        // AMP ads require defined width and heights. Use standard 300x250 ad size as the default.
         $width = 300;
         $height = 250;
+
+        $zones = self::getZoneCache();
+        if (isset($zones[$zone_id])) {
+            $zone = $zones[$zone_id];
+
+            if (property_exists($zone, 'width') && !empty($zone->width)) {
+                $parsed_width = intval($zone->width);
+                if ($parsed_width) {
+                    $width = $parsed_width;
+                }
+            }
+
+            if (property_exists($zone, 'height') && !empty($zone->height)) {
+                $parsed_height = intval($zone->height);
+                if ($parsed_height) {
+                    $height = $parsed_height;
+                }
+            }
+        }
 
         return "<amp-ad type='broadstreetads' layout='responsive' width='$width' height='$height' data-network='$network_id' data-zone='$zone_id' data-keywords='$keywords'></amp-ad>";
     }
