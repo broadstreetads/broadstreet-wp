@@ -86,8 +86,15 @@ class Broadstreet_Utility
                 $attrs['zone-id'] = $id;
             }
 
+            $cache = self::getZoneCache();
+
             $attrs['keywords'] = $keywords;
             $attrs['soft-keywords'] = 'true';
+
+            // if we know the zone alias, add that
+            if (isset($cache[$id])) {
+                $attrs['zone-alias'] = $cache[$id]->alias;
+            }
 
             $attr_string = join(' ', array_map(function($key) use ($attrs)
                 {
@@ -103,7 +110,7 @@ class Broadstreet_Utility
     }
 
     /**
-     * Get AMPHTML code for a specific zone 
+     * Get AMPHTML code for a specific zone
      * @param type $id
      * @return string
      */

@@ -466,7 +466,7 @@ class Broadstreet_Core
 
         // add cloudflare attrs. but seriously, f cloudflare
         if (strstr($tag, 'init-2.min.js') || strstr($tag, 'init.js')) {
-            $tag = str_replace('src', "data-cfasync='false' async src", $tag);
+            $tag = str_replace('src', "data-cfasync='false' src", $tag);
         }
 
         return $tag;
