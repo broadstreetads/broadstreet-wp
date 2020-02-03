@@ -39,6 +39,8 @@ class Broadstreet_Core
     CONST BIZ_TAXONOMY            = 'business_category';
     CONST BIZ_SLUG                = 'businesses';
 
+    public static $_disableAds = false;
+
     /**
      * Default values for sponsored meta fields
      */
@@ -47,6 +49,14 @@ class Broadstreet_Core
         'bs_sponsor_advertisement_id' => '',
         'bs_sponsor_is_sponsored' => ''
     );
+
+    /**
+     * Default values for sponsored meta fields
+     */
+    public static $_visibilityDefaults = array (
+        'bs_ads_disabled' => ''
+    );
+
 
     /**
      * Default values for the businesses meta fields
@@ -149,6 +159,8 @@ class Broadstreet_Core
             add_action('post_updated', array($this, 'saveSponsorPostMeta'), 100);
         }
 
+        add_action('post_updated', array($this, 'saveAdVisibilityMeta'), 100);
+
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
         {
@@ -206,6 +218,9 @@ class Broadstreet_Core
         $in_content = property_exists($placement_settings, 'in_content') && $placement_settings->in_content;
 
         if (is_single()) {
+
+            # while we're in the post, capture the disabled status of the ads
+            self::$_disableAds = Broadstreet_Utility::getPostMeta(get_queried_object_id(), 'bs_ads_disabled') == '1';
 
             if ($in_content) {
 
@@ -356,8 +371,8 @@ class Broadstreet_Core
             'page'
         );
 
+        $screens = get_post_types();
         if (Broadstreet_Utility::getOption(self::KEY_API_KEY)) {
-            $screens = get_post_types();
             foreach ( $screens as $screen ) {
                 add_meta_box(
                     'broadstreet_sposnor_sectionid',
@@ -368,6 +383,16 @@ class Broadstreet_Core
                     'high'
                 );
             }
+        }
+
+        foreach ( $screens as $screen ) {
+            add_meta_box(
+                'broadstreet_visibility_sectionid',
+                __( '<span class="dashicons dashicons-format-image"></span> Broadstreet Options', 'broadstreet_textdomain'),
+                array($this, 'broadstreetAdVisibilityBox'),
+                $screen,
+                'side'
+            );
         }
 
         if(Broadstreet_Utility::isBusinessEnabled())
@@ -400,6 +425,10 @@ class Broadstreet_Core
      */
     public function addPoweredBy()
     {
+        if (self::$_disableAds) {
+            return;
+        }
+
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
         $network_id = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
         $args = '{}';
@@ -897,6 +926,16 @@ class Broadstreet_Core
         register_widget('Broadstreet_Business_Categories_Widget');
     }
 
+    public function broadstreetAdVisibilityBox($post) {
+        wp_nonce_field(plugin_basename(__FILE__), 'broadstreetadvisibility');
+
+        $meta = Broadstreet_Utility::getAllPostMeta($post->ID, self::$_visibilityDefaults);
+
+        Broadstreet_View::load('admin/visibilityBox', array(
+            'meta'        => $meta
+        ));
+    }
+
     /**
      * Handler for the broadstreet meta box to designate a post as sponsored
      *  content
@@ -932,6 +971,25 @@ class Broadstreet_Core
             'advertisers' => $advertisers,
             'network_id' => $network_id
         ));
+    }
+
+    /**
+     * Allow user to enable and disable ads on a given page
+     */
+    public function saveAdVisibilityMeta($post_id) {
+        if(isset($_POST['bs_ads_disabled_submit'])) {
+            # save settings
+            foreach(self::$_visibilityDefaults as $key => $value)
+            {
+                if(isset($_POST[$key])) {
+                    Broadstreet_Utility::setPostMeta($post_id, $key, is_string($_POST[$key]) ? trim($_POST[$key]) : $_POST[$key]);
+                }
+            }
+
+            if (!isset($_POST['bs_ads_disabled'])) {
+                Broadstreet_Utility::setPostMeta($post_id, 'bs_ads_disabled', '');
+            }
+        }
     }
 
     /**
