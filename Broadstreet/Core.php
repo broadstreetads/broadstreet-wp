@@ -193,7 +193,7 @@ class Broadstreet_Core
     }
 
     public function getTrackerContent($content) {
-        $post_id = get_the_ID();
+        $post_id = get_queried_object_id();
         # is this a sponsored ad that needs trackng?
         if ($post_id) {
             $is_sponsored = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_is_sponsored');

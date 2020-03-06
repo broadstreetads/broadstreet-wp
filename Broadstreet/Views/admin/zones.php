@@ -195,7 +195,7 @@
                         </div>
                         <div style="clear:both;"></div>
                     </div>
-                    <?php if (defined('WP_PLUGIN_URL') && strstr(WP_PLUGIN_URL, 'localhost')): ?>
+                    <?php if (defined('WP_PLUGIN_URL') && (strstr(WP_PLUGIN_URL, 'localhost') || strstr(WP_PLUGIN_URL, '127.0.0.1')) ): ?>
                     <div class="clearfix"></div>
                     <div class="break"></div>
                     <div class="option">
