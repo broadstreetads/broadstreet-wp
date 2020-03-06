@@ -150,16 +150,16 @@ class Broadstreet_Core
         add_action('wp_footer', array($this, 'addPoweredBy'));
         add_action('wp_head', array($this, 'setWhitelabel'));
         # -- Ad injection
-        add_filter('the_content', array($this, 'addAdsContent'), 100);
-        add_action('loop_end', array($this, 'addAdsLoopEnd'), 100);
+        add_filter('the_content', array($this, 'addAdsContent'), 20);
+        add_action('loop_end', array($this, 'addAdsLoopEnd'), 20);
         #add_action('comment_form_before', array($this, 'addAdsBeforeComments'), 1);
-        add_filter('comments_template', array($this, 'addAdsBeforeComments'), 100);
+        add_filter('comments_template', array($this, 'addAdsBeforeComments'), 20);
 
         if (Broadstreet_Utility::getOption(self::KEY_API_KEY)) {
-            add_action('post_updated', array($this, 'saveSponsorPostMeta'), 100);
+            add_action('post_updated', array($this, 'saveSponsorPostMeta'), 20);
         }
 
-        add_action('post_updated', array($this, 'saveAdVisibilityMeta'), 100);
+        add_action('post_updated', array($this, 'saveAdVisibilityMeta'), 20);
 
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
@@ -167,7 +167,7 @@ class Broadstreet_Core
             add_action('init', array($this, 'createPostTypes'));
             add_action('wp_enqueue_scripts', array($this, 'addPostStyles'));
             add_action('pre_get_posts', array($this, 'modifyPostListing'));
-            add_filter('the_content', array($this, 'postTemplate'), 100);
+            add_filter('the_content', array($this, 'postTemplate'), 20);
             add_filter('the_posts', array($this, 'businessQuery'));
             add_filter('comment_form_defaults', array($this, 'commentForm'));
             add_action('save_post', array($this, 'savePostMeta'));
@@ -237,42 +237,40 @@ class Broadstreet_Core
                 }
 
                 /* Now handle in-content */
-                if (stristr($content, '[broadstreet zone'))
-                    return $content;
+                if (!stristr($content, '[broadstreet zone') && stristr($content, '<broadstreet-zone')) {
 
-                if (stristr($content, '<broadstreet-zone'))
-                    return $content;
+                    $in_story_zone = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->in_content);
 
-                $in_story_zone = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->in_content);
+                    /* Split the content into paragraphs, clear out anything that is only whitespace */
+                    $pieces = preg_split('/(\r\n|\n|\r)+/', trim($content));
+                    $real_pieces = array();
 
-                /* Split the content into paragraphs, clear out anything that is only whitespace */
-                $pieces = preg_split('/(\r\n|\n|\r)+/', trim($content));
-                $real_pieces = array();
-
-                foreach($pieces as $piece) {
-                    $piece = str_replace('&nbsp;', '', $piece);
-                    $piece = str_replace('<p></p>', '', $piece);
-                    if (strlen($piece)) $real_pieces[] = $piece;
-                }
-
-                $pieces = $real_pieces;
-
-                if (count($pieces) <= 1 && ($above_content || $below_content)) {
-                    # One paragraph
-                    #return "$content\n\n" . $in_story_zone;
-                }
-
-                # each insertion increases the offset of the next paragraph
-                $replacements = 0;
-                for ($i = 0; $i < count($in_content_paragraph); $i++) {
-                    if (count($pieces) >= $in_content_paragraph[$i]) {
-                        array_splice($pieces, $in_content_paragraph[$i] + $replacements++, 0, $in_story_zone);
+                    foreach($pieces as $piece) {
+                        $piece = str_replace('&nbsp;', '', $piece);
+                        $piece = str_replace('<p></p>', '', $piece);
+                        if (strlen($piece)) $real_pieces[] = $piece;
                     }
+
+                    $pieces = $real_pieces;
+
+                    if (count($pieces) <= 1 && ($above_content || $below_content)) {
+                        # One paragraph
+                        #return "$content\n\n" . $in_story_zone;
+                    }
+
+                    # each insertion increases the offset of the next paragraph
+                    $replacements = 0;
+                    for ($i = 0; $i < count($in_content_paragraph); $i++) {
+                        if (count($pieces) >= $in_content_paragraph[$i]) {
+                            array_splice($pieces, $in_content_paragraph[$i] + $replacements++, 0, $in_story_zone);
+                        }
+                    }
+
+                    /* It's magic, :snort: :snort:
+                    - Mr. Bean: https://www.youtube.com/watch?v=x0yQg8kHVcI */
+                    $content = implode("\n\n", $pieces);
                 }
 
-                /* It's magic, :snort: :snort:
-                   - Mr. Bean: https://www.youtube.com/watch?v=x0yQg8kHVcI */
-                $content = implode("\n\n", $pieces);
             }
 
             if ($above_content) {
