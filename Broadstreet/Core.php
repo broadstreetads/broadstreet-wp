@@ -1193,8 +1193,10 @@ class Broadstreet_Core
                 $id_to_posts[$term->object_id];
         }
 
-        function broadstreet_compare($a, $b) {
-            return strtolower($a->post_title) > strtolower($b->post_title);
+        if (!function_exists('broadstreet_compare')) {
+            function broadstreet_compare($a, $b) {
+                return strtolower($a->post_title) > strtolower($b->post_title);
+            }
         }
 
         foreach($cats_to_posts as $term_id => $data)
