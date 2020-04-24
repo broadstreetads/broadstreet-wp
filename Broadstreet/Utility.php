@@ -186,9 +186,24 @@ class Broadstreet_Utility
 
         if($disabled) return '';
 
+        $adTagCheckFunction = 'id' . bin2hex(openssl_random_pseudo_bytes(5));
         return '<div style="margin:5px auto; margin-bottom: 15px;">'
                 .(property_exists($config, 'show_label') && trim($config->show_label)
-                    ? "<div class='broadstreet-story-ad-text' style='font-size:11px; color:#ccc; margin-bottom: 5px;'>{$config->show_label}</div>"
+                    ? "<div class='broadstreet-story-ad-text' style='font-size:11px; color:#ccc; margin-bottom: 5px;'>{$config->show_label}</div>
+                    <script id='$adTagCheckFunction' type='text/javascript'>
+                    window.$adTagCheckFunction = function() {
+                        setTimeout(function() {
+                            var scriptTag = document.querySelector('script[id=$adTagCheckFunction]');
+                            var advertisementTag = document.querySelector('div[id=broadstreet-story-ad-text-$adTagCheckFunction]');
+                            if (!scriptTag.nextElementSibling.firstChild.firstChild.firstChild) {
+                                advertisementTag.remove();
+                                }
+                            }, 500);
+                        }
+                        document.addEventListener('DOMContentLoaded', function () {
+                            window.$adTagCheckFunction();
+                        });
+                    </script>"
                     : '')
                 .self::getZoneCode($id).'</div>';
     }
