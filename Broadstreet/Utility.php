@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file contains a class for utility methods and/or wrappers for built-in
  *  Wordpress API calls
@@ -10,8 +11,10 @@
  * The class contains a number of utility methods that may be needed by various
  *  parts of Broadstreet
  */
+
 class Broadstreet_Utility
 {
+    var $counter = 1;
     const KEY_ZONE_CACHE = 'BROADSTREET_ZONE_CACHE';
     const KEY_RW_FLUSH   = 'BROADSTREET_RW_FLUSH';
     const KEY_NET_INFO   = 'BROADSTREET_NET_INFO';
@@ -26,13 +29,14 @@ class Broadstreet_Utility
      * Get ad code for a specific ad
      * @param type $id
      */
-    public static function getAdCode($id, $attrs = array()) {
+    public static function getAdCode($id, $attrs = array())
+    {
 
         $instance_id = md5(uniqid());
         $config = false;
 
         //$code = "<div instance-id=\"$instance_id\" street-address=\"$id\"></div><script async data-cfasync=\"false\" type=\"text/javascript\" src=\"//localhost:9090/display/$id.js?sa=1\"></script>";
-        $code = "<div instance-id=\"$instance_id\" street-address=\"$id\"></div><script async data-cfasync=\"false\" type=\"text/javascript\" src=\"". self::getAdserverURL() ."display/$id.js?sa=1\"></script>";
+        $code = "<div instance-id=\"$instance_id\" street-address=\"$id\"></div><script async data-cfasync=\"false\" type=\"text/javascript\" src=\"" . self::getAdserverURL() . "display/$id.js?sa=1\"></script>";
 
         if (@$attrs['config']) {
             $config = $attrs['config'];
@@ -64,7 +68,8 @@ class Broadstreet_Utility
      * @param type $id
      * @return type
      */
-    public static function getZoneCode($id, $attrs = array()) {
+    public static function getZoneCode($id, $attrs = array())
+    {
         if (self::isAMPEndpoint()) {
             return self::getAMPZoneCode($id);
         }
@@ -96,16 +101,14 @@ class Broadstreet_Utility
                 $attrs['zone-alias'] = $cache[$id]->alias;
             }
 
-            $attr_string = join(' ', array_map(function($key) use ($attrs)
-                {
-                    if(is_bool($attrs[$key]))
-                    {
-                        return $attrs[$key]?$key:'';
-                    }
-                    return $key.'="'.$attrs[$key].'"';
-                }, array_keys($attrs)));
+            $attr_string = join(' ', array_map(function ($key) use ($attrs) {
+                if (is_bool($attrs[$key])) {
+                    return $attrs[$key] ? $key : '';
+                }
+                return $key . '="' . $attrs[$key] . '"';
+            }, array_keys($attrs)));
 
-            return "<broadstreet-zone $attr_string></broadstreet-zone>";
+            return "<broadstreet-zone $attr_string ></broadstreet-zone>";
         }
     }
 
@@ -114,7 +117,8 @@ class Broadstreet_Utility
      * @param type $id
      * @return string
      */
-    public static function getAMPZoneCode($id) {
+    public static function getAMPZoneCode($id)
+    {
         $network_id = (int) self::getNetworkId();
         $zone_id = (int) $id;
         $keywords = esc_attr(Broadstreet_Utility::getAllAdKeywordsString(true));
@@ -150,12 +154,14 @@ class Broadstreet_Utility
      * @param type $id
      * @return type
      */
-    public static function getWrappedZoneCode($config, $id) {
+
+    public static function getWrappedZoneCode($config, $id)
+    {
 
         $disabled = false;
-        if(property_exists($config, 'avoid_categories') && count($config->avoid_categories)) {
-            for($i = 0; $i < count($config->avoid_categories); $i++) {
-                if(self::pageHasCategory($config->avoid_categories[$i]->id)) {
+        if (property_exists($config, 'avoid_categories') && count($config->avoid_categories)) {
+            for ($i = 0; $i < count($config->avoid_categories); $i++) {
+                if (self::pageHasCategory($config->avoid_categories[$i]->id)) {
                     $disabled = true;
                 }
             }
@@ -168,7 +174,7 @@ class Broadstreet_Utility
                 $config->avoid_urls = '';
             }
 
-            $urls = preg_split ("/\r\n|\n|\r/", $config->avoid_urls);
+            $urls = preg_split("/\r\n|\n|\r/", $config->avoid_urls);
             $url = home_url($wp->request);
 
             if (count($urls)) {
@@ -184,20 +190,36 @@ class Broadstreet_Utility
             }
         }
 
-        if($disabled) return '';
-
-        return '<div style="margin:5px auto; margin-bottom: 15px;">'
-                .(property_exists($config, 'show_label') && trim($config->show_label)
-                    ? "<div class='broadstreet-story-ad-text' style='font-size:11px; color:#ccc; margin-bottom: 5px;'>{$config->show_label}</div>"
-                    : '')
-                .self::getZoneCode($id).'</div>';
+        if ($disabled) return '';
+        $adTagCheckFunction = 'id' . bin2hex(openssl_random_pseudo_bytes(5));
+        return "<div style='margin:5px auto; margin-bottom: 15px;'>"
+            . (property_exists($config, 'show_label') && trim($config->show_label)
+                ?
+                "<div class='broadstreet-story-ad-text-$adTagCheckFunction' style='font-size:11px; color:#ccc; margin-bottom: 5px; callback='$adTagCheckFunction();'>{$config->show_label}</div>
+                    <script id='$adTagCheckFunction' type='text/javascript'>
+                        window.$adTagCheckFunction = function() {
+                            setTimeout(function() {
+                                var scriptTag = document.querySelector('script[id=$adTagCheckFunction]');
+                                var advertisementTag = document.querySelector('.broadstreet-story-ad-text-$adTagCheckFunction');
+                                if (!scriptTag.nextElementSibling.firstChild.firstChild.firstChild) {
+                                    advertisementTag.remove();
+                                }
+                            },500);
+                        };
+                        window.$adTagCheckFunction();
+                    </script>"
+                : '')
+            . self::getZoneCode($id) .
+            "
+            </div>";
     }
 
-    public static function getMaxWidthWrap($config, $content) {
-        if(!property_exists($config, 'max_width') || !$config->max_width)
+    public static function getMaxWidthWrap($config, $content)
+    {
+        if (!property_exists($config, 'max_width') || !$config->max_width)
             $config->max_width = '100%';
 
-        return "<div class='bs-max-width-wrap' style='max-width:{$config->max_width}; margin: 0 auto;'>".$content.'</div>';
+        return "<div class='bs-max-width-wrap' style='max-width:{$config->max_width}; margin: 0 auto;'>" . $content . '</div>';
     }
 
     /**
@@ -212,33 +234,30 @@ class Broadstreet_Utility
     {
         $address = '';
 
-        if($single_line)
-        {
-            if($meta['bs_address_1'])
+        if ($single_line) {
+            if ($meta['bs_address_1'])
                 $address = "{$meta['bs_address_1']}";
 
-            if($meta['bs_address_2'])
+            if ($meta['bs_address_2'])
                 $address .= ", {$meta['bs_address_2']}";
 
             $address .= ", {$meta['bs_city']}, {$meta['bs_state']}";
 
-            if($meta['bs_postal'])
+            if ($meta['bs_postal'])
                 $address .= ", {$meta['bs_postal']}";
-        }
-        else
-        {
-            if($meta['bs_address_1'])
+        } else {
+            if ($meta['bs_address_1'])
                 $address = "{$meta['bs_address_1']}";
 
-            if($meta['bs_address_2'])
+            if ($meta['bs_address_2'])
                 $address .= "\n{$meta['bs_address_2']}";
 
             $address .= "\n{$meta['bs_city']}, {$meta['bs_state']}";
 
-            if($meta['bs_postal'])
+            if ($meta['bs_postal'])
                 $address .= " {$meta['bs_postal']}";
 
-            if($multi_html)
+            if ($multi_html)
                 $address = nl2br($address);
         }
 
@@ -253,7 +272,7 @@ class Broadstreet_Utility
     {
         $api_key = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_API_KEY);
 
-        if(!$api_key)
+        if (!$api_key)
             return FALSE;
         else
             return $api_key;
@@ -305,17 +324,18 @@ class Broadstreet_Utility
      * @param type $image_path
      * @return string
      */
-    public static function featuredBusinessImage($image_path = null) {
+    public static function featuredBusinessImage($image_path = null)
+    {
         $default = Broadstreet_Utility::getImageBaseURL() . 'featured-biz.png';
 
-        if($image_path !== null) {
+        if ($image_path !== null) {
             self::setOption('featured_business_image', $image_path);
             return $image_path;
         }
 
         $img = self::getOption('featured_business_image');
 
-        if($img) return $img;
+        if ($img) return $img;
 
         return $default;
     }
@@ -337,23 +357,20 @@ class Broadstreet_Utility
     {
         $info = false;
 
-        if(!$force_refresh)
+        if (!$force_refresh)
             $info = Broadstreet_Cache::get('network_info');
 
-        if($info) return $info;
+        if ($info) return $info;
 
-        try
-        {
+        try {
             $broadstreet = self::getBroadstreetClient();
             $info = $broadstreet->getNetwork(self::getNetworkId());
 
             Broadstreet_Cache::set('network_info', $info, Broadstreet_Config::get('network_cache_ttl_seconds'));
 
-            if($info)
+            if ($info)
                 self::setOption(self::KEY_NET_INFO, $info);
-        }
-        catch(Exception $ex)
-        {
+        } catch (Exception $ex) {
             return false;
         }
 
@@ -366,32 +383,26 @@ class Broadstreet_Utility
      */
     public static function checkApiKey($return_key = FALSE)
     {
-        if(self::$_apiKeyValid !== NULL)
+        if (self::$_apiKeyValid !== NULL)
             return self::$_apiKeyValid;
 
         $api_key = self::getApiKey();
 
-        if(!$api_key)
-        {
+        if (!$api_key) {
             self::$_apiKeyValid = FALSE;
             return FALSE;
-        }
-        else
-        {
+        } else {
             $api = self::getBroadstreetClient();
 
-            try
-            {
+            try {
                 $api->getNetworks();
                 self::$_apiKeyValid = TRUE;
 
-                if($return_key)
+                if ($return_key)
                     return $api_key;
                 else
                     return TRUE;
-            }
-            catch(Exception $ex)
-            {
+            } catch (Exception $ex) {
                 self::$_apiKeyValid = TRUE;
                 return FALSE;
             }
@@ -405,16 +416,13 @@ class Broadstreet_Utility
      */
     public static function isBusinessEnabled()
     {
-        if(self::$_businessEnabled === FALSE) return FALSE;
-        if(self::$_apiKeyValid === FALSE) return FALSE;
+        if (self::$_businessEnabled === FALSE) return FALSE;
+        if (self::$_apiKeyValid === FALSE) return FALSE;
 
-        if(Broadstreet_Utility::getOption(Broadstreet_Core::KEY_BIZ_ENABLED))
-        {
+        if (Broadstreet_Utility::getOption(Broadstreet_Core::KEY_BIZ_ENABLED)) {
             self::$_businessEnabled = TRUE;
             return true;
-        }
-        else
-        {
+        } else {
             self::$_businessEnabled = FALSE;
             return false;
         }
@@ -427,12 +435,9 @@ class Broadstreet_Utility
      */
     public static function setOption($name, $value)
     {
-        if (get_option($name) !== FALSE)
-        {
+        if (get_option($name) !== FALSE) {
             update_option($name, $value);
-        }
-        else
-        {
+        } else {
             $deprecated = ' ';
             $autoload   = 'no';
             add_option($name, $value);
@@ -448,7 +453,7 @@ class Broadstreet_Utility
     public static function getOption($name, $default = FALSE)
     {
         $value = get_option($name);
-        if( $value !== FALSE ) return $value;
+        if ($value !== FALSE) return $value;
         return $default;
     }
 
@@ -456,7 +461,7 @@ class Broadstreet_Utility
     public static function getPlacementSettings()
     {
         if (self::$_placementSettingsCache === NULL) {
-            self::$_placementSettingsCache = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_PLACEMENTS, (object)array());
+            self::$_placementSettingsCache = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_PLACEMENTS, (object) array());
         }
 
         return self::$_placementSettingsCache;
@@ -469,8 +474,7 @@ class Broadstreet_Utility
      */
     public static function flushRewrites($force = FALSE)
     {
-        if($force || !self::getOption(self::KEY_RW_FLUSH))
-        {
+        if ($force || !self::getOption(self::KEY_RW_FLUSH)) {
             flush_rewrite_rules();
             self::setOption(self::KEY_RW_FLUSH, 'TRUE');
         }
@@ -483,7 +487,7 @@ class Broadstreet_Utility
      */
     public static function fixURL($url)
     {
-        if(!strstr($url, '://'))
+        if (!strstr($url, '://'))
             $url = "http://$url";
 
         return $url;
@@ -497,27 +501,20 @@ class Broadstreet_Utility
      */
     public static function setVideoWidth($snippet, $new_width, $new_height = false, $keep_proportional = true)
     {
-        if(preg_match('#width=[\\\'"](\d+)[\\\'"]#', $snippet, $matches))
-        {
+        if (preg_match('#width=[\\\'"](\d+)[\\\'"]#', $snippet, $matches)) {
             $old_width = $matches[1];
 
-            if(!$new_height && preg_match('#height=[\\\'"](\d+)[\\\'"]#', $snippet, $matches))
-            {
+            if (!$new_height && preg_match('#height=[\\\'"](\d+)[\\\'"]#', $snippet, $matches)) {
                 $height = $matches[1];
-            }
-            else
-            {
+            } else {
                 $height = $new_height;
             }
 
-            if($keep_proportional)
-            {
+            if ($keep_proportional) {
                 $ratio   = $new_width / $old_width;
-                $height  = round($height*$ratio);
+                $height  = round($height * $ratio);
                 $width   = $new_width;
-            }
-            else
-            {
+            } else {
                 $width   = $new_width;
             }
 
@@ -538,12 +535,9 @@ class Broadstreet_Utility
      */
     public static function setPostMeta($post_id, $name, $value)
     {
-        if (get_post_meta($post_id, $name, true) !== FALSE)
-        {
+        if (get_post_meta($post_id, $name, true) !== FALSE) {
             update_post_meta($post_id, $name, $value);
-        }
-        else
-        {
+        } else {
             add_post_meta($post_id, $name, $value);
         }
     }
@@ -569,11 +563,11 @@ class Broadstreet_Utility
     public static function shouldShowTimes($meta)
     {
         $days = array('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday');
-        $types= array('open', 'close');
+        $types = array('open', 'close');
 
-        foreach($days as $day)
-            foreach($types as $type)
-                if($meta["bs_{$day}_{$type}"])
+        foreach ($days as $day)
+            foreach ($types as $type)
+                if ($meta["bs_{$day}_{$type}"])
                     return true;
 
         return false;
@@ -588,7 +582,7 @@ class Broadstreet_Utility
     public static function getPostMeta($post_id, $name, $default = FALSE)
     {
         $value = get_post_meta($post_id, $name, true);
-        if( $value !== FALSE ) return maybe_unserialize($value);
+        if ($value !== FALSE) return maybe_unserialize($value);
         return $default;
     }
 
@@ -603,23 +597,21 @@ class Broadstreet_Utility
     {
         $meta = get_post_meta($post_id);
 
-        foreach($defaults as $key => $value)
-        {
-            if(!isset($meta[$key])) {
+        foreach ($defaults as $key => $value) {
+            if (!isset($meta[$key])) {
                 $meta[$key] = $value;
             }
         }
 
-        if(!$singles) return $meta;
+        if (!$singles) return $meta;
 
         $new_meta = array();
 
         # Meta fields come back nested in an array, fix that
         # unless the option is intended to be an array,
         # given the defaults
-        foreach($meta as $key => $value)
-        {
-            if(is_array(@$defaults[$key]) && count($value))
+        foreach ($meta as $key => $value) {
+            if (is_array(@$defaults[$key]) && count($value))
                 $new_meta[$key] = maybe_unserialize($value[0]);
             else
                 $new_meta[$key] = (is_array($value) && count($value)) ? $value[0] : $value;
@@ -636,8 +628,8 @@ class Broadstreet_Utility
     {
         $stacktrace = debug_backtrace();
 
-        foreach($stacktrace as $call)
-            if($call['function'] == 'get_the_excerpt')
+        foreach ($stacktrace as $call)
+            if ($call['function'] == 'get_the_excerpt')
                 return true;
 
         return false;
@@ -659,19 +651,18 @@ class Broadstreet_Utility
     {
         $api_key    = self::getApiKey();
         $network_id = self::getNetworkId();
-        $broadstreet= self::getBroadstreetClient();
+        $broadstreet = self::getBroadstreetClient();
 
         $import   = $broadstreet->magicImport($url, $network_id);
 
-        $meta         = (array)$import->detail;
-        $meta['charged'] = (bool)$import->cost;
+        $meta         = (array) $import->detail;
+        $meta['charged'] = (bool) $import->cost;
         $meta['cost']    = number_format($import->cost / 100, 2);
 
         $defaults = Broadstreet_Core::$_businessDefaults;
 
-        foreach($defaults as $key => $value)
-        {
-            if(!isset($meta[$key]) || is_null($meta[$key]))
+        foreach ($defaults as $key => $value) {
+            if (!isset($meta[$key]) || is_null($meta[$key]))
                 $meta[$key] = $value;
         }
 
@@ -679,11 +670,10 @@ class Broadstreet_Utility
         $count  = 0;
         $images = array();
 
-        foreach($meta['images'] as $image)
-        {
+        foreach ($meta['images'] as $image) {
             $img = Broadstreet_Utility::importImage($image, $attach_post_id, $meta['name'] . ' ' . ($count + 1));
 
-            if($img) $images[] = $img;
+            if ($img) $images[] = $img;
             $count++;
         }
 
@@ -702,7 +692,7 @@ class Broadstreet_Utility
      */
     public static function arrayGet($array, $key, $default = FALSE)
     {
-        if(array_key_exists($key, $array))
+        if (array_key_exists($key, $array))
             return $array[$key];
         else
             return $default;
@@ -724,7 +714,7 @@ class Broadstreet_Utility
     public static function getBroadstreetBaseURL()
     {
         # handle https
-        $url = plugins_url( '/Broadstreet/', dirname(__FILE__) );
+        $url = plugins_url('/Broadstreet/', dirname(__FILE__));
         return $url;
     }
 
@@ -791,10 +781,8 @@ class Broadstreet_Utility
         exec('ps -A -o pid', $output);
         $pid = intval($pid);
 
-        foreach($output as $running_pid)
-        {
-            if($pid == intval(trim($running_pid)))
-            {
+        foreach ($output as $running_pid) {
+            if ($pid == intval(trim($running_pid))) {
                 return TRUE;
             }
         }
@@ -808,24 +796,21 @@ class Broadstreet_Utility
      */
     public static function getZoneCache()
     {
-        if(self::$_zoneCache !== NULL) return self::$_zoneCache;
+        if (self::$_zoneCache !== NULL) return self::$_zoneCache;
 
         $zones = Broadstreet_Cache::get(self::KEY_ZONE_CACHE, FALSE, FALSE);
 
-        if($zones === FALSE)
-        {
+        if ($zones === FALSE) {
             $zones = self::refreshZoneCache();
-        }
-        else
-        {
+        } else {
             $kzones = array();
-            foreach($zones as $zone)
+            foreach ($zones as $zone)
                 $kzones[$zone->id] = $zone;
 
             $zones = $kzones;
         }
 
-        uasort($zones, function($a, $b) {
+        uasort($zones, function ($a, $b) {
             return strcasecmp($a->name, $b->name);
         });
 
@@ -844,25 +829,22 @@ class Broadstreet_Utility
 
         $api = self::getBroadstreetClient();
 
-        try
-        {
+        try {
             $zones  = $api->getNetworkZones($network_id);
 
-            if(is_array($zones))
+            if (is_array($zones))
                 Broadstreet_Cache::set(self::KEY_ZONE_CACHE, $zones, Broadstreet_Config::get('zone_cache_ttl_seconds'));
             else
                 $zones = Broadstreet_Cache::get(self::KEY_ZONE_CACHE, FALSE, TRUE);
-        }
-        catch(Exception $ex)
-        {
+        } catch (Exception $ex) {
             $zones = Broadstreet_Cache::get(self::KEY_ZONE_CACHE, FALSE, TRUE);
 
-            if(!is_array($zones))
+            if (!is_array($zones))
                 $zones = array();
         }
 
         $kzones = array();
-        foreach($zones as $zone)
+        foreach ($zones as $zone)
             $kzones[$zone->id] = $zone;
 
         return $kzones;
@@ -886,7 +868,7 @@ class Broadstreet_Utility
 
     public static function handleException(Exception $ex)
     {
-        Broadstreet_Log::add('error', "Exception: ".$ex->__toString());
+        Broadstreet_Log::add('error', "Exception: " . $ex->__toString());
     }
 
     /**
@@ -897,10 +879,10 @@ class Broadstreet_Utility
     {
 
         $report = "$message\n";
-        $report .= get_bloginfo('name'). "\n";
-        $report .= get_bloginfo('url'). "\n";
-        $report .= get_bloginfo('admin_email'). "\n";
-        $report .= 'WP Version: ' . get_bloginfo('version'). "\n";
+        $report .= get_bloginfo('name') . "\n";
+        $report .= get_bloginfo('url') . "\n";
+        $report .= get_bloginfo('admin_email') . "\n";
+        $report .= 'WP Version: ' . get_bloginfo('version') . "\n";
         $report .= 'Plugin Version: ' . BROADSTREET_VERSION . "\n";
         $report .= "$message\n";
 
@@ -915,23 +897,19 @@ class Broadstreet_Utility
     public static function sendInstallReportIfNew()
     {
         $install_key = Broadstreet_Core::KEY_INSTALL_REPORT;
-        $upgrade_key = Broadstreet_Core::KEY_INSTALL_REPORT .'_'. BROADSTREET_VERSION;
+        $upgrade_key = Broadstreet_Core::KEY_INSTALL_REPORT . '_' . BROADSTREET_VERSION;
 
         $installed = self::getOption($install_key);
         $upgraded  = self::getOption($upgrade_key);
 
         $sent = ($installed && $upgraded);
 
-        if($sent === FALSE)
-        {
-            if(!$installed)
-            {
+        if ($sent === FALSE) {
+            if (!$installed) {
                 self::sendReport("Installation");
                 self::setOption($install_key, 'true');
                 self::setOption($upgrade_key, 'true');
-            }
-            else
-            {
+            } else {
                 self::flushRewrites(true);
                 self::sendReport("Upgrade");
                 self::setOption($upgrade_key, 'true');
@@ -952,14 +930,13 @@ class Broadstreet_Utility
         # fix file filename for query strings
         preg_match('/[^\?]+\.(jpg|JPG|jpe|JPE|jpeg|JPEG|gif|GIF|png|PNG)/', $url, $matches);
 
-        if(!count($matches)) return false;
+        if (!count($matches)) return false;
 
         $file_array['name'] = basename($matches[0]);
         $file_array['tmp_name'] = $tmp;
 
         # If error storing temporarily, unlink
-        if (is_wp_error($tmp))
-        {
+        if (is_wp_error($tmp)) {
             @unlink($file_array['tmp_name']);
             $file_array['tmp_name'] = '';
         }
@@ -968,13 +945,12 @@ class Broadstreet_Utility
         $id = media_handle_sideload($file_array, $post_id, $desc);
 
         # If error storing permanently, unlink
-        if (is_wp_error($id))
-        {
+        if (is_wp_error($id)) {
             @unlink($file_array['tmp_name']);
             return false;
         }
 
-        return wp_get_attachment_url( $id );
+        return wp_get_attachment_url($id);
     }
 
     /**
@@ -987,7 +963,7 @@ class Broadstreet_Utility
         //self::setOption(Broadstreet_Core::KEY_LAST_MESSAGE_DATE, time() - 60*60*13);
         $date = self::getOption(Broadstreet_Core::KEY_LAST_MESSAGE_DATE);
 
-        if($date !== FALSE && ($date + 12*60*60) > time())
+        if ($date !== FALSE && ($date + 12 * 60 * 60) > time())
             return self::getOption(Broadstreet_Core::KEY_LAST_MESSAGE);
 
         $driver = Broadstreet_Config::get('driver');
@@ -999,22 +975,23 @@ class Broadstreet_Utility
         self::setOption(Broadstreet_Core::KEY_LAST_MESSAGE, $content);
         self::setOption(Broadstreet_Core::KEY_LAST_MESSAGE_DATE, time());
 
-        if(strlen($content) == 0 || $content == "0")
+        if (strlen($content) == 0 || $content == "0")
             return FALSE;
 
         return $content;
     }
 
-    public static function pageHasCategory($id) {
+    public static function pageHasCategory($id)
+    {
         global $post;
 
-        if(is_single() || is_page()) {
+        if (is_single() || is_page()) {
             return has_category($id, $post->ID);
         }
 
-        if(is_category() || is_archive()) {
+        if (is_category() || is_archive()) {
             $cat = get_query_var('cat');
-            $cat = get_category ($cat);
+            $cat = get_category($cat);
             return ($cat->cat_ID == $id);
         }
 
@@ -1025,7 +1002,8 @@ class Broadstreet_Utility
      * Get category slugs for use in keyword-dropping
      * @return type
      */
-    public static function getAllAdSlugs() {
+    public static function getAllAdSlugs()
+    {
         global $post;
 
         $slugs = array();
@@ -1035,9 +1013,9 @@ class Broadstreet_Utility
             $id = get_the_ID();
             $cats = wp_get_post_categories($id);
 
-            if(!$cats) $cats = array();
+            if (!$cats) $cats = array();
 
-            foreach($cats as $cat) {
+            foreach ($cats as $cat) {
                 $c = get_category($cat);
 
                 if (property_exists($c, 'slug')) {
@@ -1057,7 +1035,7 @@ class Broadstreet_Utility
 
         if (is_category() || is_archive()) {
             $cat = get_query_var('cat');
-            $cat = get_category ($cat);
+            $cat = get_category($cat);
 
             if (property_exists($cat, 'slug')) {
                 $slugs[] = $cat->slug;
@@ -1069,7 +1047,7 @@ class Broadstreet_Utility
             }
         }
 
-        if(is_home()) {
+        if (is_home()) {
             // No categories
             $slugs = array();
         }
@@ -1077,29 +1055,31 @@ class Broadstreet_Utility
         return $slugs;
     }
 
-    public static function getAvailableTargets() {
+    public static function getAvailableTargets()
+    {
         $categories = array();
         $cats = get_categories();
-        foreach($cats as $cat) {
+        foreach ($cats as $cat) {
             $categories[] = array('name' => $cat->name, 'slug' => $cat->slug);
         }
 
         $post_types = array();
         $pts = get_post_types(array('show_ui' => true));
-        foreach($pts as $name => $slug) {
+        foreach ($pts as $name => $slug) {
             $post_types[] = array('name' => $name, 'slug' => $slug);
         }
 
-        return array (
+        return array(
             'categories' => $categories,
             'post_types' => $post_types,
-            'built_in_keywords' => array (
+            'built_in_keywords' => array(
                 'is_home_page', 'not_home_page', 'is_archive_page', 'is_article_page', 'not_article_page'
             )
         );
     }
 
-    public static function getTargets() {
+    public static function getTargets()
+    {
         $targets = array();
 
         # page type
@@ -1121,8 +1101,8 @@ class Broadstreet_Utility
 
         # categories
         $slugs = self::getAllAdSlugs();
-        $categories = array ();
-        foreach($slugs as $slug) {
+        $categories = array();
+        foreach ($slugs as $slug) {
             $categories[] = $slug;
         }
 
@@ -1138,25 +1118,26 @@ class Broadstreet_Utility
      * Get all ad keyword slugs
      * @return string
      */
-    public static function getAllAdKeywordsString($omit_quotes = false) {
-         $keywords = array();
+    public static function getAllAdKeywordsString($omit_quotes = false)
+    {
+        $keywords = array();
 
-         /* Figure out which keywords are available */
-         if(is_single() || is_page()) {
-             $keywords = array('not_home_page', 'not_landing_page', 'is_article_page');
-         }
+        /* Figure out which keywords are available */
+        if (is_single() || is_page()) {
+            $keywords = array('not_home_page', 'not_landing_page', 'is_article_page');
+        }
 
-         if(is_archive() || is_category()) {
-             $keywords = array('not_home_page', 'not_landing_page', 'not_article_page');
-         }
+        if (is_archive() || is_category()) {
+            $keywords = array('not_home_page', 'not_landing_page', 'not_article_page');
+        }
 
-         if(is_home()) {
-             $keywords = array('is_home_page', 'is_landing_page', 'not_article_page');
-         }
+        if (is_home()) {
+            $keywords = array('is_home_page', 'is_landing_page', 'not_article_page');
+        }
 
         $slugs = self::getAllAdSlugs();
 
-        foreach($slugs as $slug) {
+        foreach ($slugs as $slug) {
             $keywords[] = $slug;
         }
 
@@ -1173,7 +1154,8 @@ class Broadstreet_Utility
      * Return a unique identifier for the site for use with future help requests
      * @return string A unique identifier
      */
-    public static function getServiceTag() {
+    public static function getServiceTag()
+    {
         return md5($report['u'] = get_bloginfo('url'));
     }
 
@@ -1181,7 +1163,8 @@ class Broadstreet_Utility
      * Return whether an AMP page is requested.
      * @return bool True if AMP
      */
-    public static function isAMPEndpoint() {
+    public static function isAMPEndpoint()
+    {
         return function_exists('is_amp_endpoint') && is_amp_endpoint();
     }
 }
