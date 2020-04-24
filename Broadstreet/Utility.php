@@ -14,7 +14,6 @@
 
 class Broadstreet_Utility
 {
-    var $counter = 1;
     const KEY_ZONE_CACHE = 'BROADSTREET_ZONE_CACHE';
     const KEY_RW_FLUSH   = 'BROADSTREET_RW_FLUSH';
     const KEY_NET_INFO   = 'BROADSTREET_NET_INFO';
