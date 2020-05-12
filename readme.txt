@@ -2,33 +2,23 @@
 Contributors: Broadstreet
 Tags: broadstreet,local,publishers,hyperlocal,independent,news,business,directory
 Requires at least: 3.0
-Tested up to: 5.3
-Stable tag: 1.31.4
+Tested up to: 5.4
+Stable tag: 1.32.0
 
-Integrate Broadstreet business directory and adserving power into your site.
+Integrate Broadstreet adserving power into your site.
 
 == Description ==
 
-For Broadstreet users. If you aren't a user, you can sign up after installing.
+For [Broadstreet Ad Manager](https://broadstreetads.com/) users.
 
-Introducing first business directory of it's kind, this Broadstreet-powered
-plug-in is the first practical and portable business directory for Wordpress.
+Integrate Broadstreet's Ad Manager for Hyperlocal News, Magazine, and Niche
+Publishers into your Broadstreet site.
 
-This was built for local publishers.
-
-* Magic import: Automatically crawl the web to fill in business details and photos
-* Business updates: Allow businesses to post a message on their profile via text message, Facebook, or Twitter
-* Easily create a photo gallery for each business
-
-... And everything else you would expect of a business directory.
-
-Broadstreet was build by the developers of a local, independent news blog in
-Red Bank, NJ. We built it to help monetize our much-loved community site.
-If you're a local publisher struggling to monetize your site, Broadstreet is
-for you.
-
-PS: You can easily integrate your Broadstreet adserver zones with this
-plugin too.
+* Install Broadstreet configuration with best practices automatically
+* Drop zones into widget areas or via shortcode
+* Place zones in-story ad-hoc or after certain paragraphs
+* Automatically send category names as keywords to the adserver
+* Restrict ads from appearing on certain pages or categories
 
 **How to:**
 
