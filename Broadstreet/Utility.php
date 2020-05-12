@@ -230,11 +230,14 @@ class Broadstreet_Utility
 
         if($disabled) return '';
 
-        return '<div style="margin:5px auto; margin-bottom: 15px;">'
+        $rand_fn = 'zone_load_' . rand();
+        $js = "<script>window.$rand_fn = function(z, d) { console.log('loaded zone', z, d); if (!d.count) document.getElementById('$rand_fn').style.display = 'none'; };</script>";
+
+        return "<div style='margin:5px auto; margin-bottom: 15px;' id='$rand_fn'>"
                 .(property_exists($config, 'show_label') && trim($config->show_label)
                     ? "<div class='broadstreet-story-ad-text' style='font-size:11px; color:#ccc; margin-bottom: 5px;'>{$config->show_label}</div>"
                     : '')
-                .self::getZoneCode($id).'</div>';
+                .self::getZoneCode($id, array('callback' => $rand_fn)).'</div>'.$js;
     }
 
     public static function getMaxWidthWrap($config, $content) {
@@ -1076,7 +1079,7 @@ class Broadstreet_Utility
 
         if (is_single() || is_page()) {
 
-            $id = get_the_ID();
+            $id = get_queried_object_id();
             $cats = wp_get_post_categories($id);
 
             if(!$cats) $cats = array();

@@ -237,10 +237,7 @@ class Broadstreet_Core
                 }
 
                 /* Now handle in-content */
-                if (!stristr($content, '[broadstreet zone') && stristr($content, '<broadstreet-zone')) {
-
-                    $in_story_zone = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->in_content);
-
+                if (!stristr($content, '[broadstreet zone') && !stristr($content, '<broadstreet-zone')) {
                     /* Split the content into paragraphs, clear out anything that is only whitespace */
                     $pieces = preg_split('/(\r\n|\n|\r)+/', trim($content));
                     $real_pieces = array();
@@ -261,11 +258,12 @@ class Broadstreet_Core
                     # each insertion increases the offset of the next paragraph
                     $replacements = 0;
                     for ($i = 0; $i < count($in_content_paragraph); $i++) {
+                        $in_story_zone = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->in_content);
+
                         if (count($pieces) >= $in_content_paragraph[$i]) {
                             array_splice($pieces, $in_content_paragraph[$i] + $replacements++, 0, $in_story_zone);
                         }
                     }
-
                     /* It's magic, :snort: :snort:
                     - Mr. Bean: https://www.youtube.com/watch?v=x0yQg8kHVcI */
                     $content = implode("\n\n", $pieces);
