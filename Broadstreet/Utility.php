@@ -23,6 +23,50 @@ class Broadstreet_Utility
     protected static $_placementSettingsCache = NULL;
 
     /**
+     * Write the initialization code (init.js)
+     */
+    public static function writeInitCode() {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        $network_id = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
+        $args = '{}';
+
+        if (Broadstreet_Utility::useLocalBSA()) {
+            $args = '{"domain": "localhost:9090"}';
+        }
+
+        if (property_exists($placement_settings, 'beta_tag_arguments') && strlen($placement_settings->beta_tag_arguments)) {
+            $args = $placement_settings->beta_tag_arguments;
+            $args = json_decode($args);
+            if (!$args) {
+                $args = new stdClass();
+            }
+
+            $args->networkId = $network_id;
+            $args->targets = Broadstreet_Utility::getTargets();
+
+            if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->adserver_whitelabel) > 0) {
+                $args->domain = $placement_settings->adserver_whitelabel;
+            }
+            $args = json_encode($args);
+        }
+
+        echo "<script data-cfasync='false'>window.broadstreetKeywords = [" . Broadstreet_Utility::getAllAdKeywordsString() . "]</script>\n";
+        echo "<script data-cfasync='false'>window.broadstreetTargets = " . json_encode(Broadstreet_Utility::getTargets()) . ";</script>\n";
+
+        echo "<script data-cfasync='false'>\nwindow.broadstreet = window.broadstreet || { run: [] };window.broadstreet.run.push(function () {\n";
+        if (property_exists($placement_settings, 'defer_configuration') && strlen($placement_settings->defer_configuration)) {
+            if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->adserver_whitelabel) > 0) {
+                echo "window.broadstreet.loadNetworkJS($network_id, { domain: '$placement_settings->adserver_whitelabel'});\n";
+            } else {
+                echo "window.broadstreet.loadNetworkJS($network_id);\n";
+            }
+        } else {
+            echo "window.broadstreet.watch($args);\n";
+        }
+        echo " });</script>";
+    }
+
+    /**
      * Get ad code for a specific ad
      * @param type $id
      */

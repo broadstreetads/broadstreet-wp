@@ -184,6 +184,23 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
+                                Load Initialization Script in &lt;head&gt;
+                            </div>
+                            <div class="desc nomargin">
+                                Load <code>init</code> tags in the header of the page.
+                                This is Useful for situations where other scripts "hang" ad loading.</small>
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <input type="checkbox" ng-model="data.positions_zones.load_in_head" />
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="break"></div>
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">
                                 Defer Configuration
                             </div>
                             <div class="desc nomargin">
