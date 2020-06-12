@@ -231,7 +231,7 @@ class Broadstreet_Utility
         if($disabled) return '';
 
         $rand_fn = 'zone_load_' . rand();
-        $js = "<script>window.$rand_fn = function(z, d) { console.log('loaded zone', z, d); if (!d.count) document.getElementById('$rand_fn').style.display = 'none'; };</script>";
+        $js = "<script>window.$rand_fn = function(z, d) { if (!d.count) document.getElementById('$rand_fn').style.display = 'none'; };</script>";
 
         return "<div style='margin:5px auto; margin-bottom: 15px;' id='$rand_fn'>"
                 .(property_exists($config, 'show_label') && trim($config->show_label)

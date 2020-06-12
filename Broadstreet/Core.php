@@ -219,9 +219,6 @@ class Broadstreet_Core
 
         if (is_single()) {
 
-            # while we're in the post, capture the disabled status of the ads
-            self::$_disableAds = Broadstreet_Utility::getPostMeta(get_queried_object_id(), 'bs_ads_disabled') == '1';
-
             if ($in_content) {
 
                 $in_content_paragraph = property_exists($placement_settings, 'in_content_paragraph') ? $placement_settings->in_content_paragraph : '4';
@@ -434,6 +431,9 @@ class Broadstreet_Core
 
     public function setWhitelabel()
     {
+        # while we're in the post, capture the disabled status of the ads
+        self::$_disableAds = Broadstreet_Utility::getPostMeta(get_queried_object_id(), 'bs_ads_disabled') == '1';
+
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
         if (property_exists($placement_settings, 'use_old_tags') && $placement_settings->use_old_tags) {
             if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->adserver_whitelabel) > 0) {
