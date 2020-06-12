@@ -432,7 +432,9 @@ class Broadstreet_Core
     public function setWhitelabel()
     {
         # while we're in the post, capture the disabled status of the ads
-        self::$_disableAds = Broadstreet_Utility::getPostMeta(get_queried_object_id(), 'bs_ads_disabled') == '1';
+        if (is_single()) {
+            self::$_disableAds = Broadstreet_Utility::getPostMeta(get_queried_object_id(), 'bs_ads_disabled') == '1';
+        }
 
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
         if (property_exists($placement_settings, 'use_old_tags') && $placement_settings->use_old_tags) {
