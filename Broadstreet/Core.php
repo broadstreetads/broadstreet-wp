@@ -182,6 +182,8 @@ class Broadstreet_Core
         add_action('wp_ajax_import_facebook', array('Broadstreet_Ajax', 'importFacebook'));
         add_action('wp_ajax_register', array('Broadstreet_Ajax', 'register'));
         add_action('wp_ajax_save_zone_settings', array('Broadstreet_Ajax', 'saveZoneSettings'));
+        add_action('wp_ajax_get_sponsored_meta', array('Broadstreet_Ajax', 'getSponsorPostMeta'));
+
         add_action('rest_api_init', function () {
             register_rest_route( 'broadstreet/v1', '/targets', array(
               'methods' => 'GET',

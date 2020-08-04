@@ -64,6 +64,49 @@
 
         window.bsaSponsorToggle();
         window.sponsorSelect();
+
+        window.bsaSaveTimeout = null;
+
+        // for gutenberg, after saving we need to update the form values with the
+        // latest meta info
+        jQuery(function() {
+            if (wp) {
+                wp.data.subscribe(function (a,b,c) {
+                    var isSavingPost = wp.data.select('core/editor').isSavingPost();
+                    var isAutosavingPost = wp.data.select('core/editor').isAutosavingPost();
+                    
+                    if (isSavingPost && !isAutosavingPost) {
+                        if (window.bsaSaveTimeout) {
+                            clearTimeout(window.bsaSaveTimeout);
+                        }
+
+                        window.bsaSaveTimeout = setTimeout(function () {
+                            var el = document.getElementById('bs_sponsor_old_advertisement_id');
+                            var post_id = wp.data.select('core/editor').getCurrentPostId();
+
+                            jQuery.get(window.ajaxurl + '?action=get_sponsored_meta&post_id=' + post_id, function (data) {
+                                var meta = data.meta;
+                                console.info('Broadstreet Meta Update ...', meta);
+                                if (meta.bs_sponsor_is_sponsored == '1') {
+                                    jQuery('#bsa_is_sponsored').prop('checked', true);                                    
+                                    jQuery('#bs_sponsor_advertisement_id').val(meta.bs_sponsor_advertisement_id);
+                                    var sel = jQuery('#bsa_sponsor_advertiser_selection option[value="' + meta.bs_sponsor_advertiser_id+ '"]');
+                                    if (sel.length == 0) {
+                                        jQuery('#bsa_sponsor_advertiser_selection select').append(
+                                            jQuery('<option value="' + meta.bs_sponsor_advertiser_id + '"></option>').text(jQuery('#bs_sponsor_advertiser_name').val())
+                                        );
+                                    }
+                                    sel = jQuery('#bsa_sponsor_advertiser_selection option[value="' + meta.bs_sponsor_advertiser_id + '"]').prop('selected', true);
+                                    jQuery('#bs_sponsor_old_advertiser_id', meta.bs_sponsor_advertiser_id);
+                                }
+                                bsaSponsorToggle();
+                                sponsorSelect();
+                            }, 'json');
+                        }, 500)                
+                    }            
+                })  
+            }
+        })      
     </script>
 <?php else: ?>
         <p style="color: green; font-weight: bold;">You either have no zones or
