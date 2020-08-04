@@ -70,7 +70,7 @@
         // for gutenberg, after saving we need to update the form values with the
         // latest meta info
         jQuery(function() {
-            if (wp) {
+            if (wp && wp.data && wp.data.subscribe) {
                 wp.data.subscribe(function (a,b,c) {
                     var isSavingPost = wp.data.select('core/editor').isSavingPost();
                     var isAutosavingPost = wp.data.select('core/editor').isAutosavingPost();
