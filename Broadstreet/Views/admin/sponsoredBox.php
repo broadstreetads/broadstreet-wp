@@ -72,17 +72,24 @@
         jQuery(function() {
             if (wp && wp.data && wp.data.subscribe) {
                 wp.data.subscribe(function (a,b,c) {
-                    var isSavingPost = wp.data.select('core/editor').isSavingPost();
-                    var isAutosavingPost = wp.data.select('core/editor').isAutosavingPost();
+                    var editor = wp.data.select('core/editor');
+
+                    if (!editor) {
+                        console.info('Broadstreet could not get editor from promise');
+                        return;
+                    }
+
+                    var isSavingPost = editor.isSavingPost();
+                    var isAutosavingPost = editor.isAutosavingPost();
                     
-                    if (isSavingPost && !isAutosavingPost) {
+                    if (isSavingPost) {
                         if (window.bsaSaveTimeout) {
                             clearTimeout(window.bsaSaveTimeout);
                         }
 
                         window.bsaSaveTimeout = setTimeout(function () {
                             var el = document.getElementById('bs_sponsor_old_advertisement_id');
-                            var post_id = wp.data.select('core/editor').getCurrentPostId();
+                            var post_id = editor.getCurrentPostId();
 
                             jQuery.get(window.ajaxurl + '?action=get_sponsored_meta&post_id=' + post_id, function (data) {
                                 var meta = data.meta;
