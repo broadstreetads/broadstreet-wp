@@ -185,12 +185,22 @@ class Broadstreet_Core
         add_action('wp_ajax_get_sponsored_meta', array('Broadstreet_Ajax', 'getSponsorPostMeta'));
 
         add_action('rest_api_init', function () {
-            register_rest_route( 'broadstreet/v1', '/targets', array(
+            register_rest_route('broadstreet/v1', '/targets', array(
               'methods' => 'GET',
               'callback' => function($request) {
                 return Broadstreet_Utility::getAvailableTargets();
               },
             ));
+
+            register_rest_route('broadstreet/v1', '/refresh', array(
+                'methods' => 'GET',
+                'callback' => function($request) {
+                  $info = Broadstreet_Utility::getNetwork(true);
+                  return [
+                      'success' => $info ? true : false
+                  ];
+                },
+              ));            
         });
     }
 

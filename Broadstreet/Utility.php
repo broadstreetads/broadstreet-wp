@@ -12,9 +12,10 @@
  */
 class Broadstreet_Utility
 {
-    const KEY_ZONE_CACHE = 'BROADSTREET_ZONE_CACHE';
-    const KEY_RW_FLUSH   = 'BROADSTREET_RW_FLUSH';
-    const KEY_NET_INFO   = 'BROADSTREET_NET_INFO';
+    const KEY_ZONE_CACHE        = 'BROADSTREET_ZONE_CACHE';
+    const KEY_RW_FLUSH          = 'BROADSTREET_RW_FLUSH';
+    const KEY_NET_INFO          = 'BROADSTREET_NET_INFO';
+    const KEY_ADS_TXT_BACKUP    = 'BROADSTREET_ADS_TXT_BACKUP';
 
     protected static $_zoneCache = NULL;
     protected static $_apiKeyValid = NULL;
@@ -391,13 +392,30 @@ class Broadstreet_Utility
 
         try
         {
+            $network_id = self::getNetworkId();
+
+            if (!$network_id) {
+                return false;
+            }
+
             $broadstreet = self::getBroadstreetClient();
-            $info = $broadstreet->getNetwork(self::getNetworkId());
+            $info = $broadstreet->getNetwork($network_id);
 
             Broadstreet_Cache::set('network_info', $info, Broadstreet_Config::get('network_cache_ttl_seconds'));
 
-            if($info)
+            if($info) {
                 self::setOption(self::KEY_NET_INFO, $info);
+            }
+
+            # if there's a demand partner on the account, make sure load_in_head is enabled for header bidding
+            # and also defer_configuration so we can load the head bidding code
+            if (property_exists($info, 'demand_partner') && property_exists($info->demand_partner, 'ads_txt')) {
+                $placement_settings = self::getPlacementSettings();
+                self::writeAdsTxt($info->demand_partner->ads_txt);
+                $placement_settings->load_in_head = true;
+                $placement_settings->defer_configuration = true;
+                Broadstreet_Utility::setOption(Broadstreet_Core::KEY_PLACEMENTS, $placement_settings);
+            }
         }
         catch(Exception $ex)
         {
@@ -1271,5 +1289,102 @@ class Broadstreet_Utility
 
         return false;
     }        
+
+    public static function getAdsTxt() {
+        $info = (object)['found' => false, 'type' => null, 'file' => null, 'content' => null, 'expected_location' => ''];
+
+        # ads-txt by 10 gen installs https://plugins.trac.wordpress.org/browser/ads-txt/trunk/ads-txt.php
+        # 10Gen's plugin: ADS_TXT_MANAGER_POST_OPTION = adstxt_post (currently, anyway)
+        # make sure the plugin is actualy active
+        if (defined('ADS_TXT_MANAGER_POST_OPTION')) {
+            $post_id = get_option(ADS_TXT_MANAGER_POST_OPTION);
+            if (!empty($post_id)) {
+                $post = get_post($post_id);
+                if ($post instanceof WP_Post) {
+                    $info->found = true;
+                    $info->type = 'post';
+                    $info->post = $post;
+                    $info->content = $post->post_content;
+                }
+            }
+        }
+                
+        # physical files will override 10gen's plugin, so look for those next
+        # first traverse from current directory down - traditional installs
+        $dirs = explode('/', dirname(__FILE__));
+        while (count($dirs) > 0) {
+          $dir = implode('/', $dirs);
+          $file = $dir . '/ads.txt';
+          if (file_exists($file)) {
+            $info->found = true;
+            $info->type = 'file';
+            $info->file = $file;
+            $info->content = file_get_contents($file);
+          }
+          if (is_dir($dir . '/wp-content')) {
+            $info->expected_location = $dir;
+          }
+          array_pop($dirs);
+        }
+
+        # next try from the wordpress root - useful for symlinked installs
+        $dirs = explode('/', ABSPATH);
+        while (count($dirs) > 0) {
+          $dir = implode('/', $dirs);
+          $file = $dir . '/ads.txt';
+          if (file_exists($file)) {
+            $info->found = true;
+            $info->type = 'file';
+            $info->file = $file;
+            $info->content = file_get_contents($file);
+          }   
+          if (is_dir($dir . '/wp-content')) {
+            $info->expected_location = $dir;
+          }                 
+          array_pop($dirs);
+        }
+
+        return $info;
+    }
+
+    public static function writeAdsTxt($content) {
+        $comment = "broadstreetadstxt";
+        $comment_start = "# {$comment}start";
+        $comment_end = "# {$comment}end";
+        $timestamp = date('Y-m-d H:i:s');
+        $content_to_insert = "$comment_start $timestamp\n$content\n$comment_end";
+
+        $ads_txt = self::getAdsTxt();
+
+        # if there's no ads.txt, make one and bail
+        if (!$ads_txt->found) {
+            file_put_contents("{$ads_txt->expected_location}/ads.txt", $content_to_insert);
+            return;
+        }
+
+        # let's backup a previous ads_txt if we're going to write it... just in case
+        $ads_txt_backup = get_option(self::KEY_ADS_TXT_BACKUP);
+        if (!$ads_txt_backup) {
+            update_option(self::KEY_ADS_TXT_BACKUP, $ads_txt->content);
+        }        
+
+        # if one exists, modify the content
+        # first check if broadstreet adstxt is already in there, and modify it if needed
+        if (preg_match("/$comment_start/", $ads_txt->content)) {
+            $content = preg_replace("/$comment_start.*$comment_end/s", $content_to_insert, $ads_txt->content);            
+        } else {
+            # if broadstreet isn't in there, just add it
+            $content = "{$ads_txt->content}\n\n" . $content_to_insert;
+        }
+
+        # and save it
+        if ($ads_txt->type == 'file') {
+            file_put_contents($ads_txt->file, $content);
+        } else if ($ads_txt->type == 'post') {
+            $ads_txt->post->post_content = $content;
+            wp_update_post($ads_txt->post);
+        }
+
+    }
 
 }
