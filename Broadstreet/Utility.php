@@ -1295,7 +1295,7 @@ class Broadstreet_Utility
 
         # ads-txt by 10 gen installs https://plugins.trac.wordpress.org/browser/ads-txt/trunk/ads-txt.php
         # 10Gen's plugin: ADS_TXT_MANAGER_POST_OPTION = adstxt_post (currently, anyway)
-        # make sure the plugin is actualy active
+        # make sure the plugin is actually active
         if (defined('ADS_TXT_MANAGER_POST_OPTION')) {
             $post_id = get_option(ADS_TXT_MANAGER_POST_OPTION);
             if (!empty($post_id)) {
