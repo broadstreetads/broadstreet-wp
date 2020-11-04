@@ -190,6 +190,7 @@ class Broadstreet_Core
               'callback' => function($request) {
                 return Broadstreet_Utility::getAvailableTargets();
               },
+              'permission_callback' => '__return_true', # public
             ));
 
             register_rest_route('broadstreet/v1', '/refresh', array(
@@ -200,6 +201,7 @@ class Broadstreet_Core
                       'success' => $info ? true : false
                   ];
                 },
+                'permission_callback' => '__return_true', #public
               ));            
         });
     }
@@ -1033,7 +1035,8 @@ class Broadstreet_Core
 
                         try {
                             $ad = $api->createAdvertisement($network_id, $advertiser_id, $name, $type, array(
-                                'stencil_inputs' => array('url' => get_the_permalink($post_id))
+                                'stencil_inputs' => array('url' => get_the_permalink($post_id)),
+                                'post_id' => $post_id,
                             ));
 
                             Broadstreet_Utility::setPostMeta($post_id, 'bs_sponsor_advertisement_id', $ad->id);
