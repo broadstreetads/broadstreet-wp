@@ -511,9 +511,9 @@ class Broadstreet_Core
                 $host = $placement_settings->cdn_whitelabel;
             }
             # except for cdn whitelabels
-            if (is_ssl() && property_exists($placement_settings, 'cdn_whitelabel') && $placement_settings->cdn_whitelabel) {
-                $host = 'street-production.s3.amazonaws.com';
-            }
+            # if (is_ssl() && property_exists($placement_settings, 'cdn_whitelabel') && $placement_settings->cdn_whitelabel) {
+            #     $host = 'street-production.s3.amazonaws.com';
+            # }
 
             wp_enqueue_script('broadstreet-cdn', "//$host/$file");
         }
@@ -1001,7 +1001,13 @@ class Broadstreet_Core
             }
 
             if (!isset($_POST['bs_sponsor_is_sponsored'])) {
-                Broadstreet_Utility::setPostMeta($post_id, 'bs_sponsor_is_sponsored', '');
+                /**
+                 * You can check-in any time you like, but you can never leave.
+                 * Trying to see if this fixes a client bug where this setting "turns off"
+                 * Maybe it's two editors conflicting?
+                 */
+                return;
+                # Broadstreet_Utility::setPostMeta($post_id, 'bs_sponsor_is_sponsored', '');
             }
 
             # Has an ad been created/set?
