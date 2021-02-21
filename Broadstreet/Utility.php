@@ -111,7 +111,7 @@ class Broadstreet_Utility
      */
     public static function getZoneCode($id, $attrs = array()) {
         if (self::isAMPEndpoint()) {
-            return self::getAMPZoneCode($id);
+            return self::getAMPZoneCode($id, $attrs);
         }
 
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
@@ -159,7 +159,7 @@ class Broadstreet_Utility
      * @param type $id
      * @return string
      */
-    public static function getAMPZoneCode($id) {
+    public static function getAMPZoneCode($id, $attrs = array()) {
         $network_id = (int) self::getNetworkId();
         $zone_id = (int) $id;
         $keywords = esc_attr(Broadstreet_Utility::getAllAdKeywordsString(true));
@@ -187,7 +187,12 @@ class Broadstreet_Utility
             }
         }
 
-        return "<amp-ad type='broadstreetads' layout='responsive' width='$width' height='$height' data-network='$network_id' data-zone='$zone_id' data-keywords='$keywords'></amp-ad>";
+        $addl_attrs = '';
+        if (isset($attrs['place'])) {
+            $addl_attrs .= "data-place='{$attrs['place']}'";
+        }
+
+        return "<amp-ad type='broadstreetads' layout='responsive' width='$width' height='$height' data-network='$network_id' data-zone='$zone_id' data-keywords='$keywords' $addl_attrs></amp-ad>";
     }
 
     /**
@@ -195,7 +200,7 @@ class Broadstreet_Utility
      * @param type $id
      * @return type
      */
-    public static function getWrappedZoneCode($config, $id) {
+    public static function getWrappedZoneCode($config, $id, $attrs = array()) {
 
         $disabled = false;
         if(property_exists($config, 'avoid_categories') && count($config->avoid_categories)) {
@@ -233,12 +238,13 @@ class Broadstreet_Utility
 
         $rand_fn = 'zone_load_' . rand();
         $js = "<script>window.$rand_fn = function(z, d) { if (!d.count) document.getElementById('$rand_fn').style.display = 'none'; };</script>";
-
+        $attrs['callback'] = $rand_fn;
+        
         return "<div style='margin:5px auto; margin-bottom: 15px;' id='$rand_fn'>"
                 .(property_exists($config, 'show_label') && trim($config->show_label)
                     ? "<div class='broadstreet-story-ad-text' style='font-size:11px; color:#ccc; margin-bottom: 5px;'>{$config->show_label}</div>"
                     : '')
-                .self::getZoneCode($id, array('callback' => $rand_fn)).'</div>'.$js;
+                .self::getZoneCode($id, $attrs).'</div>'.$js;
     }
 
     public static function getMaxWidthWrap($config, $content) {

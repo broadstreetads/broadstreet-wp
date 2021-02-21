@@ -185,6 +185,7 @@ class Broadstreet_Core
         add_action('wp_ajax_get_sponsored_meta', array('Broadstreet_Ajax', 'getSponsorPostMeta'));
 
         add_action('rest_api_init', function () {
+            # /wp-json/broadstreet/v1/targets
             register_rest_route('broadstreet/v1', '/targets', array(
               'methods' => 'GET',
               'callback' => function($request) {
@@ -193,6 +194,7 @@ class Broadstreet_Core
               'permission_callback' => '__return_true', # public
             ));
 
+            # /wp-json/broadstreet/v1/refresh
             register_rest_route('broadstreet/v1', '/refresh', array(
                 'methods' => 'GET',
                 'callback' => function($request) {
@@ -269,7 +271,7 @@ class Broadstreet_Core
                     # each insertion increases the offset of the next paragraph
                     $replacements = 0;
                     for ($i = 0; $i < count($in_content_paragraph); $i++) {
-                        $in_story_zone = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->in_content);
+                        $in_story_zone = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->in_content, array('place' => $i));
 
                         if (count($pieces) >= $in_content_paragraph[$i]) {
                             array_splice($pieces, $in_content_paragraph[$i] + $replacements++, 0, $in_story_zone);
@@ -1115,7 +1117,11 @@ class Broadstreet_Core
         }
 
         if(isset($attrs['zone'])) {
-            return Broadstreet_Utility::getZoneCode($attrs['zone']);
+            $addl_attrs = array();
+            if (isset($attrs['place'])) {
+                $addl_attrs['place'] = $attrs['place'];
+            }
+            return Broadstreet_Utility::getZoneCode($attrs['zone'], $addl_attrs);
         }
 
         return '';
