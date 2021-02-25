@@ -26,13 +26,19 @@ class Broadstreet_Zone_Widget extends WP_Widget
          
          $title     = apply_filters('widget_title', $instance['w_title']);
          $zone_id   = $instance['w_zone'];
+         $place_id  = $instance['w_place'];
+         $attrs     = array();
          
          echo $before_widget;
 
          if(trim($title))
              echo $before_title . $title. $after_title;
 
-         echo '<div>' . Broadstreet_Utility::getZoneCode($zone_id) . '</div>';
+         if ($place_id) {
+            $attrs = array('place' => $place_id);
+         }
+
+         echo '<div>' . Broadstreet_Utility::getZoneCode($zone_id, $attrs) . '</div>';
 
          echo $after_widget;
      }
@@ -49,6 +55,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
         
         $instance['w_zone'] = $new_instance['w_zone'];
         $instance['w_title'] = $new_instance['w_title'];
+        $instance['w_place'] = $new_instance['w_place'];
 
         return $instance;
      }
@@ -59,7 +66,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
       */
      function form($instance) 
      {
-        $defaults = array('w_title' => '', 'w_info_string' => '', 'w_opener' => '', 'w_closer' => '', 'w_zone' => '');
+        $defaults = array('w_title' => '', 'w_info_string' => '', 'w_opener' => '', 'w_closer' => '', 'w_zone' => '', 'w_place' => '');
 		$instance = wp_parse_args((array) $instance, $defaults);
 
         $zones = Broadstreet_Utility::getZoneCache();
@@ -84,6 +91,12 @@ class Broadstreet_Zone_Widget extends WP_Widget
                 <?php endforeach; ?>
             </select>
         </p>
+
+        <p>
+            <label for="<?php echo $this->get_field_id('w_title'); ?>">Place (For AMP, the position number of this zone):</label>
+            <input class="widefat" type="input" id="<?php echo $this->get_field_id('w_place'); ?>" name="<?php echo $this->get_field_name('w_place'); ?>" value="<?php echo $instance['w_place'] ?>" />
+        </p>
+
         <?php endif; ?>
         </div>
        <?php
