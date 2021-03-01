@@ -26,7 +26,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
          
          $title     = apply_filters('widget_title', $instance['w_title']);
          $zone_id   = $instance['w_zone'];
-         $place_id  = $instance['w_place'];
+         $place_id  = isset($instance['w_place']) ? $instance['w_place'] : null;
          $attrs     = array();
          
          echo $before_widget;
@@ -55,7 +55,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
         
         $instance['w_zone'] = $new_instance['w_zone'];
         $instance['w_title'] = $new_instance['w_title'];
-        $instance['w_place'] = $new_instance['w_place'];
+        $instance['w_place'] = isset($new_instance['w_place']) ? $new_instance['w_place'] : null;
 
         return $instance;
      }
@@ -94,7 +94,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
 
         <p>
             <label for="<?php echo $this->get_field_id('w_title'); ?>">Place (For AMP, the position number of this zone):</label>
-            <input class="widefat" type="input" id="<?php echo $this->get_field_id('w_place'); ?>" name="<?php echo $this->get_field_name('w_place'); ?>" value="<?php echo $instance['w_place'] ?>" />
+            <input class="widefat" type="input" id="<?php echo $this->get_field_id('w_place'); ?>" name="<?php echo $this->get_field_name('w_place'); ?>" value="<?php echo isset($instance['w_place']) ? $instance['w_place'] : null; ?>" />
         </p>
 
         <?php endif; ?>
