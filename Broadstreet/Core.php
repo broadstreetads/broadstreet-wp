@@ -138,7 +138,7 @@ class Broadstreet_Core
         # -- Below is core functionality --
         add_action('admin_menu', 	array($this, 'adminCallback'     ));
         add_action('admin_enqueue_scripts', array($this, 'adminStyles'));
-        add_action('admin_init', 	array($this, 'adminInitCallback' ));
+        add_action('admin_init', 	array($this, 'adminInitCallback' ));        
         add_action('wp_enqueue_scripts',          array($this, 'addZoneTag' ));
         add_filter('script_loader_tag',          array($this, 'finalizeZoneTag' ));
         add_action('init',          array($this, 'businessIndexSidebar' ));
@@ -150,6 +150,7 @@ class Broadstreet_Core
         add_action('wp_footer', array($this, 'addPoweredBy'));
         add_action('wp_head', array($this, 'setWhitelabel'));
         # -- Ad injection
+        add_action('wp_body_open', array($this, 'addAdsPageTop' ));
         add_filter('the_content', array($this, 'addAdsContent'), 20);
         add_action('loop_end', array($this, 'addAdsLoopEnd'), 20);
         #add_action('comment_form_before', array($this, 'addAdsBeforeComments'), 1);
@@ -225,6 +226,13 @@ class Broadstreet_Core
         }
 
         return $content;
+    }
+
+    public function addAdsPageTop() {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        if (property_exists($placement_settings, 'above_page') && $placement_settings->above_page) {
+            echo Broadstreet_Utility::getZoneCode($placement_settings->above_page);
+        }
     }
 
     public function addAdsContent($content) {

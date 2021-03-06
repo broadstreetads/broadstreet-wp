@@ -282,6 +282,11 @@
 
             $scope.positions = [
                 {
+                    id: 'above_page',
+                    name: 'Above Page',
+                    description: 'Which zone should at the very top of the page, full width?'
+                },                
+                {
                     id: 'above_content',
                     name: 'Above Content',
                     description: 'Which zone should appear above the story?'
