@@ -189,10 +189,19 @@ class Broadstreet_Utility
 
         $addl_attrs = '';
         if (isset($attrs['place'])) {
-            $addl_attrs .= "data-place='{$attrs['place']}'";
+            $addl_attrs .= " data-place='{$attrs['place']}'";
         }
 
-        return "<amp-ad type='broadstreetads' layout='responsive' width='$width' height='$height' data-network='$network_id' data-zone='$zone_id' data-keywords='$keywords' $addl_attrs></amp-ad>";
+        // by default, the layout is responsive. But if we get a value, use that. If we don't, omit the layout.
+        if (isset($attrs['layout'])) {
+            if ($attrs['layout']) {
+                $addl_attrs .= " layout='{$attrs['layout']}' ";
+            }
+        } else {
+            $addl_attrs .= " layout='responsive' ";
+        }
+
+        return "<amp-ad type='broadstreetads' media='(max-width: 100%)' width='$width' height='$height' data-network='$network_id' data-zone='$zone_id' data-keywords='$keywords' $addl_attrs></amp-ad>";
     }
 
     /**
@@ -1246,6 +1255,10 @@ class Broadstreet_Utility
      */
     public static function getServiceTag() {
         return md5($report['u'] = get_bloginfo('url'));
+    }
+
+    public static function isNewspack() {
+        return function_exists('newspack_setup');
     }
 
     /**

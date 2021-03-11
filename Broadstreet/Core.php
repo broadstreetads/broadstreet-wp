@@ -162,6 +162,10 @@ class Broadstreet_Core
 
         add_action('post_updated', array($this, 'saveAdVisibilityMeta'), 20);
 
+        
+        // only fires on newspack
+        add_action('get_template_part_template-parts/header/entry', array($this, 'addNewspackHeaderAd'));
+
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
         {
@@ -228,11 +232,24 @@ class Broadstreet_Core
         return $content;
     }
 
+    public function addNewspackHeaderAd($slug) {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        if (property_exists($placement_settings, 'newspack_before_title') && $placement_settings->newspack_before_title) {
+            echo Broadstreet_Utility::getZoneCode($placement_settings->newspack_before_title);
+            echo "<div style='margin-bottom: 50px;'></div>";
+        }
+    }    
+
     public function addAdsPageTop() {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
         if (property_exists($placement_settings, 'above_page') && $placement_settings->above_page) {
             echo Broadstreet_Utility::getZoneCode($placement_settings->above_page);
         }
+
+        if (property_exists($placement_settings, 'amp_sticky') && $placement_settings->amp_sticky) {
+            echo "<amp-sticky-ad layout='nodisplay'>" . Broadstreet_Utility::getZoneCode($placement_settings->amp_sticky, array('layout' => false)) . "</amp-sticky-ad>";
+        }
+        
     }
 
     public function addAdsContent($content) {
@@ -502,6 +519,7 @@ class Broadstreet_Core
     public function addZoneTag()
     {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
+
         $old = false;
         if (property_exists($placement_settings, 'use_old_tags') && $placement_settings->use_old_tags) {
             $old = true;

@@ -316,7 +316,18 @@
                     id: 'inbetween_archive',
                     name: 'In Between Posts (Archive)',
                     description: 'Which zone should appear in between posts on the archive page?'
+                }<?php if (Broadstreet_Utility::isNewspack()) :?>,
+                {
+                    id: 'newspack_before_title',
+                    name: 'Newspack: Before Article Title',
+                    description: 'A zone to go above the title on articles without featured images'
+                },
+                {
+                    id: 'amp_sticky',
+                    name: 'Newspack: AMP Sticky Zone',
+                    description: 'A zone (displayed at 300x100) to appear at the footer of a page'
                 }
+                <?php endif; ?>
             ];
 
             var zoneList = Object.values(bootstrap.zones);
