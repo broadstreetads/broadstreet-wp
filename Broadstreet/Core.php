@@ -165,6 +165,7 @@ class Broadstreet_Core
         
         // only fires on newspack
         add_action('get_template_part_template-parts/header/entry', array($this, 'addNewspackHeaderAd'));
+        add_action('get_template_part_template-parts/post/large-featured-image', array($this, 'addNewspackHeaderAd'));
 
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
