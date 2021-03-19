@@ -164,8 +164,8 @@ class Broadstreet_Core
 
         
         // only fires on newspack
-        add_action('get_template_part_template-parts/header/entry', array($this, 'addNewspackHeaderAd'));
-        add_action('get_template_part_template-parts/post/large-featured-image', array($this, 'addNewspackHeaderAd'));
+        // add_action('get_template_part_template-parts/header/entry', array($this, 'addNewspackHeaderAd'));
+        add_action('after_header', array($this, 'addNewspackHeaderAd'));
 
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
@@ -236,8 +236,9 @@ class Broadstreet_Core
     public function addNewspackHeaderAd($slug) {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
         if (property_exists($placement_settings, 'newspack_before_title') && $placement_settings->newspack_before_title) {
+            echo "<div class='wrapper'>";
             echo Broadstreet_Utility::getZoneCode($placement_settings->newspack_before_title);
-            echo "<div style='margin-bottom: 50px;'></div>";
+            echo "</div>";
         }
     }    
 
