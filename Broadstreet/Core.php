@@ -184,8 +184,11 @@ class Broadstreet_Core
         # - Below are partly business-related
         add_action('add_meta_boxes', array($this, 'addMetaBoxes'));
 
-        # RSS Zones
+        # RSS Zones, 1.0 and 2.0
         add_action('rss2_item', array($this, 'addRSSZone'));
+        add_action('rss_item', array($this, 'addRSSZone'));
+
+
 
         # -- Below is administration AJAX functionality
         add_action('wp_ajax_bs_save_settings', array('Broadstreet_Ajax', 'saveSettings'));
