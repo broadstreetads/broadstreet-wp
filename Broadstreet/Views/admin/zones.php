@@ -326,7 +326,12 @@
                     id: 'amp_sticky',
                     name: 'Newspack: AMP Sticky Zone',
                     description: 'A zone (displayed at 300x100) to appear at the footer of a page'
-                }
+                },
+                {
+                    id: 'in_rss_feed',
+                    name: 'In RSS Feed',
+                    description: 'Embed zone position information in the <source> tag in your RSS feed. This may have an adverse impact on your feed if not used correctly.'
+                },
                 <?php endif; ?>
             ];
 

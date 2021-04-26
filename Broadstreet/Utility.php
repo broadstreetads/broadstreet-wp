@@ -104,6 +104,12 @@ class Broadstreet_Utility
         return $code;
     }
 
+    public static function getStaticZoneCode($id, $index = 0) {
+        $base = self::getAdserverURL();
+        $cb = time();
+        return "<a href=\"{$base}zone_static/{$id}/click/{$index}?ds=true&seed={$cb}\"><img src=\"{$base}zone_static/{$id}/image/{$index}?ds=true&seed={$cb}\" style=\"max-width: 100%;\" /></a>";
+    }
+
     /**
      * Get code for a specific zone
      * @param type $id

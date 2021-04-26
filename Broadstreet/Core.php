@@ -40,6 +40,8 @@ class Broadstreet_Core
     CONST BIZ_SLUG                = 'businesses';
 
     public static $_disableAds = false;
+    public static $_rssCount = 0;
+    public static $_rssIndex = 0;
 
     /**
      * Default values for sponsored meta fields
@@ -182,6 +184,9 @@ class Broadstreet_Core
         # - Below are partly business-related
         add_action('add_meta_boxes', array($this, 'addMetaBoxes'));
 
+        # RSS Zones
+        add_action('rss2_item', array($this, 'addRSSZone'));
+
         # -- Below is administration AJAX functionality
         add_action('wp_ajax_bs_save_settings', array('Broadstreet_Ajax', 'saveSettings'));
         add_action('wp_ajax_create_advertiser', array('Broadstreet_Ajax', 'createAdvertiser'));
@@ -231,6 +236,32 @@ class Broadstreet_Core
         }
 
         return $content;
+    }
+
+    public function addRSSZone() {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        $home_url = get_home_url();
+
+        $in_rss_feed = property_exists($placement_settings, 'in_rss_feed') && $placement_settings->in_rss_feed;
+        if ($in_rss_feed) {
+            $rss_interval = intval($placement_settings->in_rss_feed_interval);
+            if (!$rss_interval) {
+                $rss_interval = 1;
+            }
+
+            $index = self::$_rssIndex;
+            $time = time();
+
+            if ((self::$_rssCount + 1) % $rss_interval == 0) {
+                echo "<source url=\"$home_url\">{$index}?ds=true&seed=$time</source>";
+                self::$_rssIndex++;
+            } else {
+                $index = '-1';
+                echo "<source url=\"$home_url\">{$index}?ds=true&seed=$time</source>";
+            }
+
+            self::$_rssCount++;
+        }
     }
 
     public function addNewspackHeaderAd($slug) {
