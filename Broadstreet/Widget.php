@@ -23,6 +23,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
      function widget($args, $instance)
      {
         if (Broadstreet_Core::$_disableAds) {
+            echo '<!-- Broadstreet plugin: Ads disabled on this post -->';
             return;
         }
 
