@@ -87,7 +87,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
             <label for="<?php echo $this->get_field_id('w_info_string'); ?>">Zone</label>
             <select class="widefat" id="<?php echo $this->get_field_id( 'w_zone' ); ?>" name="<?php echo $this->get_field_name('w_zone'); ?>" >
                 <?php foreach($zones as $id => $zone): ?>
-                <option <?php if(isset($instance['w_zone']) && $instance['w_zone'] == $zone->id) echo "selected" ?> value="<?php echo $zone->id ?>"><?php echo $zone->name ?></option>
+                <option <?php if(isset($instance['w_zone']) && $instance['w_zone'] == $zone->id) echo "selected" ?> value="<?php echo $zone->id ?>"><?php echo $zone->name . ' (ID: ' . $zone->id . ')' ?></option>
                 <?php endforeach; ?>
             </select>
         </p>
