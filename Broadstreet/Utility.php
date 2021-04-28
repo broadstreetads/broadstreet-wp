@@ -116,6 +116,10 @@ class Broadstreet_Utility
      * @return type
      */
     public static function getZoneCode($id, $attrs = array()) {
+        if (Broadstreet_Core::$_disableAds) {
+            return '<!-- Broadstreet plugin: Ads disabled on this post -->';
+        }
+
         if (self::isAMPEndpoint()) {
             return self::getAMPZoneCode($id, $attrs);
         }

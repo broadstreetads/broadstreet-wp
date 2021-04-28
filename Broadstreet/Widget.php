@@ -22,25 +22,29 @@ class Broadstreet_Zone_Widget extends WP_Widget
       */
      function widget($args, $instance)
      {
-         extract($args);
-         
-         $title     = apply_filters('widget_title', $instance['w_title']);
-         $zone_id   = $instance['w_zone'];
-         $place_id  = isset($instance['w_place']) ? $instance['w_place'] : null;
-         $attrs     = array();
-         
-         echo $before_widget;
+        if (Broadstreet_Core::$_disableAds) {
+            return;
+        }
 
-         if(trim($title))
-             echo $before_title . $title. $after_title;
+        extract($args);
 
-         if ($place_id) {
-            $attrs = array('place' => $place_id);
-         }
+        $title     = apply_filters('widget_title', $instance['w_title']);
+        $zone_id   = $instance['w_zone'];
+        $place_id  = isset($instance['w_place']) ? $instance['w_place'] : null;
+        $attrs     = array();
 
-         echo '<div>' . Broadstreet_Utility::getZoneCode($zone_id, $attrs) . '</div>';
+        echo $before_widget;
 
-         echo $after_widget;
+        if(trim($title))
+            echo $before_title . $title. $after_title;
+
+        if ($place_id) {
+        $attrs = array('place' => $place_id);
+        }
+
+        echo '<div>' . Broadstreet_Utility::getZoneCode($zone_id, $attrs) . '</div>';
+
+        echo $after_widget;
      }
 
      /**
