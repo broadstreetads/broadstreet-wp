@@ -256,11 +256,11 @@ class Broadstreet_Core
             $time = time();
 
             if ((self::$_rssCount + 1) % $rss_interval == 0) {
-                echo "<source url=\"$home_url\">{$index}?ds=true&seed=$time</source>";
+                echo "<source url=\"$home_url\"><![CDATA[{$index}?ds=true&seed=$time]]></source>";
                 self::$_rssIndex++;
             } else {
                 $index = '-1';
-                echo "<source url=\"$home_url\">{$index}?ds=true&seed=$time</source>";
+                echo "<source url=\"$home_url\"><![CDATA[{$index}?ds=true&seed=$time]]></source>";
             }
 
             self::$_rssCount++;
