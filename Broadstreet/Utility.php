@@ -1159,7 +1159,7 @@ class Broadstreet_Utility
             }
         }
 
-        if(is_home()) {
+        if(is_front_page()) {
             // No categories
             $slugs = array();
         }
@@ -1203,7 +1203,7 @@ class Broadstreet_Utility
             $targets['pagetype'] = array();
         }
 
-        if (is_home()) {
+        if (is_front_page()) {
             $targets['pagetype'][] = 'is_home_page';
         } else {
             $targets['pagetype'][] = 'not_home_page';
@@ -1240,7 +1240,7 @@ class Broadstreet_Utility
              $keywords = array('not_home_page', 'not_landing_page', 'not_article_page');
          }
 
-         if(is_home()) {
+         if(is_front_page()) {
              $keywords = array('is_home_page', 'is_landing_page', 'not_article_page');
          }
 
