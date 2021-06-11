@@ -855,44 +855,6 @@ class Broadstreet_Utility
     }
 
     /**
-     * Close a connection with the client, but keep PHP execution alive.
-     * @param string $data Any data to send to the client/browser.
-     * @param int $time_limit
-     */
-    public static function killConnectionAndContinue($data = '', $time_limit = 0)
-    {
-        ignore_user_abort(true);
-        set_time_limit($time_limit);
-
-        header("Connection: close");
-        header("Content-Length: " . strlen($data));
-        echo $data;
-        flush();
-    }
-
-    /**
-     * Check to see if a process with a given PID is running
-     * @param int $pid The PID of the process in question
-     * @return bool True if the process is running, false if not
-     */
-    public static function isProcessRunning($pid)
-    {
-        $output = array();
-        exec('ps -A -o pid', $output);
-        $pid = intval($pid);
-
-        foreach($output as $running_pid)
-        {
-            if($pid == intval(trim($running_pid)))
-            {
-                return TRUE;
-            }
-        }
-
-        return FALSE;
-    }
-
-    /**
      * Get the broadstreet zone cache
      * @return array
      */
