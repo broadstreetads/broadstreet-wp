@@ -166,8 +166,8 @@ class Broadstreet_Core
 
         
         // only fires on newspack
-        add_action('get_template_part_template-parts/header/entry', array($this, 'addNewspackHeaderAd'));
-        //add_action('after_header', array($this, 'addNewspackHeaderAd'));
+        add_action('get_template_part_template-parts/header/entry', array($this, 'addNewspackAfterTitleAd'));
+        add_action('after_header', array($this, 'addNewspackHeaderAd'));
 
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
@@ -267,12 +267,24 @@ class Broadstreet_Core
         }
     }
 
-    public function addNewspackHeaderAd($slug) {
+    public function addNewspackAfterTitleAd() {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
         if (property_exists($placement_settings, 'newspack_before_title') && $placement_settings->newspack_before_title) {
             echo Broadstreet_Utility::getZoneCode($placement_settings->newspack_before_title);
         }
     }    
+
+    public function addNewspackHeaderAd($slug) {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        if (property_exists($placement_settings, 'newspack_after_header') && $placement_settings->newspack_after_header) {
+            $padding = '25';
+            if (property_exists($placement_settings, 'newspack_after_header_padding') && $placement_settings->newspack_after_header_padding) {
+                $padding = $placement_settings->newspack_after_header_padding;
+            }
+            echo '<section class="newspack-broadstreet-header" style="text-align:center; padding: ' . $padding . 'px;">' . Broadstreet_Utility::getZoneCode($placement_settings->newspack_after_header) . '</section>';
+        }
+    }
+
 
     public function addAdsPageTop() {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();

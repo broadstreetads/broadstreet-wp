@@ -318,6 +318,17 @@
                     description: 'Which zone should appear in between posts on the archive page?'
                 }<?php if (Broadstreet_Utility::isNewspack()) :?>,
                 {
+                    id: 'newspack_after_header',
+                    name: 'Newspack: After Header',
+                    description: 'A zone to go after the header section and nav section',
+                    params: [{
+                        id: 'padding',
+                        name: 'Padding',
+                        description: 'Padding to apply to the area around this ad.',
+                        default_value: 25
+                    }]
+                },
+                {
                     id: 'newspack_before_title',
                     name: 'Newspack: Before Article Title',
                     description: 'A zone to go above the title on articles without featured images'
