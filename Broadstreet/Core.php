@@ -153,6 +153,7 @@ class Broadstreet_Core
         # -- Ad injection
         add_action('wp_body_open', array($this, 'addAdsPageTop' ));
         add_filter('the_content', array($this, 'addAdsContent'), 20);
+        add_filter('the_content_feed', array($this, 'addRSSMacros'), 20);
         add_action('loop_end', array($this, 'addAdsLoopEnd'), 20);
         #add_action('comment_form_before', array($this, 'addAdsBeforeComments'), 1);
         add_filter('comments_template', array($this, 'addAdsBeforeComments'), 20);
@@ -316,11 +317,18 @@ class Broadstreet_Core
         
     }
 
+    public function addRSSMacros($content) {
+        $content = str_replace('%%timestamp%%', time(), $content);
+        return $content;
+    }
+
     public function addAdsContent($content) {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
         $above_content = property_exists($placement_settings, 'above_content') && $placement_settings->above_content;
         $below_content = property_exists($placement_settings, 'below_content') && $placement_settings->below_content;
         $in_content = property_exists($placement_settings, 'in_content') && $placement_settings->in_content;
+
+        $content = str_replace('%%timestamp%%', time(), $content);
 
         if (is_single()) {
 
