@@ -322,7 +322,7 @@ class Broadstreet_Core
         $below_content = property_exists($placement_settings, 'below_content') && $placement_settings->below_content;
         $in_content = property_exists($placement_settings, 'in_content') && $placement_settings->in_content;
 
-        if (is_singular()) {
+        if (is_single()) {
 
             if ($in_content) {
 
