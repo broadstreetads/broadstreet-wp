@@ -329,6 +329,17 @@
                     }]
                 },
                 {
+                    id: 'newspack_before_footer',
+                    name: 'Newspack: Before Footer',
+                    description: 'A zone to go before the footer area',
+                    params: [{
+                        id: 'padding',
+                        name: 'Padding',
+                        description: 'Padding to apply to the area around this ad.',
+                        default_value: 25
+                    }]
+                },
+                {
                     id: 'newspack_before_title',
                     name: 'Newspack: Before Article Title',
                     description: 'A zone to go above the title on articles without featured images'
