@@ -147,13 +147,13 @@ class Broadstreet_Core
         add_action('admin_notices',     array($this, 'adminWarningCallback'));
         add_action('widgets_init', array($this, 'registerWidget'));
         add_shortcode('broadstreet', array($this, 'shortcode'));
-        add_shortcode('businesses', array($this, 'businesses_shortcode'));
         add_filter('image_size_names_choose', array($this, 'addImageSizes'));
         add_action('wp_footer', array($this, 'addPoweredBy'));
         add_action('wp_head', array($this, 'setWhitelabel'));
         # -- Ad injection
         add_action('wp_body_open', array($this, 'addAdsPageTop' ));
         add_filter('the_content', array($this, 'addAdsContent'), 20);
+        add_filter('the_content_feed', array($this, 'addRSSMacros'), 20);
         add_action('loop_end', array($this, 'addAdsLoopEnd'), 20);
         #add_action('comment_form_before', array($this, 'addAdsBeforeComments'), 1);
         add_filter('comments_template', array($this, 'addAdsBeforeComments'), 20);
@@ -166,8 +166,9 @@ class Broadstreet_Core
 
         
         // only fires on newspack
-        add_action('get_template_part_template-parts/header/entry', array($this, 'addNewspackHeaderAd'));
-        //add_action('after_header', array($this, 'addNewspackHeaderAd'));
+        add_action('get_template_part_template-parts/header/entry', array($this, 'addNewspackAfterTitleAd'));
+        add_action('after_header', array($this, 'addNewspackHeaderAd'));
+        add_action('before_footer', array($this, 'addNewspackFooterAd'));
 
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
@@ -179,6 +180,7 @@ class Broadstreet_Core
             add_filter('the_posts', array($this, 'businessQuery'));
             add_filter('comment_form_defaults', array($this, 'commentForm'));
             add_action('save_post', array($this, 'savePostMeta'));
+            add_shortcode('businesses', array($this, 'businesses_shortcode'));
         }
 
         # - Below are partly business-related
@@ -223,22 +225,29 @@ class Broadstreet_Core
     }
 
     public function getTrackerContent($content) {
-        $post_id = get_queried_object_id();
-        # is this a sponsored ad that needs trackng?
-        if ($post_id) {
-            $is_sponsored = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_is_sponsored');
-            $ad_id  = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_advertisement_id');
-            $code = Broadstreet_Utility::getAdCode($ad_id);
+        $code = '';
+        $post_id = null;
+        $ad_id = null;
 
-            if ($is_sponsored && $ad_id) {
-                if (!is_single()) {
-                    $code = "<script>window['bsa_content_preview_only_$ad_id'] = true;</script>\n" . $code;
-                }
-                $content = $content . $code;
+        # check to see if this is a query for a post page and for the primary content
+        if (is_singular() && is_main_query()) {
+            $post_id = get_queried_object_id();
+            $ad_id  = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_advertisement_id');
+        } else if (in_the_loop()) { # or if we're in some loop somewhere
+            $post_id = get_the_ID();
+            $ad_id  = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_advertisement_id');
+            $code .= "<script>window['bsa_content_preview_only_$ad_id'] = true;</script>\n";
+        }
+
+        if ($post_id && $ad_id) {
+            $is_sponsored = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_is_sponsored');
+
+            if ($is_sponsored) {
+                $code .= Broadstreet_Utility::getAdCode($ad_id);
             }
         }
 
-        return $content;
+        return $content . $code;
     }
 
     public function addRSSZone() {
@@ -267,12 +276,34 @@ class Broadstreet_Core
         }
     }
 
-    public function addNewspackHeaderAd($slug) {
+    public function addNewspackAfterTitleAd() {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
         if (property_exists($placement_settings, 'newspack_before_title') && $placement_settings->newspack_before_title) {
             echo Broadstreet_Utility::getZoneCode($placement_settings->newspack_before_title);
         }
     }    
+
+    public function addNewspackHeaderAd($slug) {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        if (property_exists($placement_settings, 'newspack_after_header') && $placement_settings->newspack_after_header) {
+            $padding = '25';
+            if (property_exists($placement_settings, 'newspack_after_header_padding') && $placement_settings->newspack_after_header_padding) {
+                $padding = $placement_settings->newspack_after_header_padding;
+            }
+            echo '<section class="newspack-broadstreet-header" style="text-align:center; padding: ' . $padding . 'px;">' . Broadstreet_Utility::getZoneCode($placement_settings->newspack_after_header) . '</section>';
+        }
+    }
+
+    public function addNewspackFooterAd($slug) {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+        if (property_exists($placement_settings, 'newspack_before_footer') && $placement_settings->newspack_before_footer) {
+            $padding = '25';
+            if (property_exists($placement_settings, 'newspack_before_footer_padding') && $placement_settings->newspack_before_footer_padding) {
+                $padding = $placement_settings->newspack_before_footer_padding;
+            }
+            echo '<section class="newspack-broadstreet-footer" style="text-align:center; padding: ' . $padding . 'px;">' . Broadstreet_Utility::getZoneCode($placement_settings->newspack_before_footer) . '</section>';
+        }
+    }
 
     public function addAdsPageTop() {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
@@ -286,11 +317,18 @@ class Broadstreet_Core
         
     }
 
+    public function addRSSMacros($content) {
+        $content = str_replace('%%timestamp%%', time(), $content);
+        return $content;
+    }
+
     public function addAdsContent($content) {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
         $above_content = property_exists($placement_settings, 'above_content') && $placement_settings->above_content;
         $below_content = property_exists($placement_settings, 'below_content') && $placement_settings->below_content;
         $in_content = property_exists($placement_settings, 'in_content') && $placement_settings->in_content;
+
+        $content = str_replace('%%timestamp%%', time(), $content);
 
         if (is_single()) {
 
