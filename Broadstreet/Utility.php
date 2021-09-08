@@ -855,44 +855,6 @@ class Broadstreet_Utility
     }
 
     /**
-     * Close a connection with the client, but keep PHP execution alive.
-     * @param string $data Any data to send to the client/browser.
-     * @param int $time_limit
-     */
-    public static function killConnectionAndContinue($data = '', $time_limit = 0)
-    {
-        ignore_user_abort(true);
-        set_time_limit($time_limit);
-
-        header("Connection: close");
-        header("Content-Length: " . strlen($data));
-        echo $data;
-        flush();
-    }
-
-    /**
-     * Check to see if a process with a given PID is running
-     * @param int $pid The PID of the process in question
-     * @return bool True if the process is running, false if not
-     */
-    public static function isProcessRunning($pid)
-    {
-        $output = array();
-        exec('ps -A -o pid', $output);
-        $pid = intval($pid);
-
-        foreach($output as $running_pid)
-        {
-            if($pid == intval(trim($running_pid)))
-            {
-                return TRUE;
-            }
-        }
-
-        return FALSE;
-    }
-
-    /**
      * Get the broadstreet zone cache
      * @return array
      */
@@ -1065,34 +1027,6 @@ class Broadstreet_Utility
         }
 
         return wp_get_attachment_url( $id );
-    }
-
-    /**
-     * Get any reports / warnings / messages from the Broadstreet server.
-     * @return mized A string if a message was found, FALSE if not
-     */
-    public static function getBroadstreetMessage()
-    {
-        return false;
-        //self::setOption(Broadstreet_Core::KEY_LAST_MESSAGE_DATE, time() - 60*60*13);
-        $date = self::getOption(Broadstreet_Core::KEY_LAST_MESSAGE_DATE);
-
-        if($date !== FALSE && ($date + 12*60*60) > time())
-            return self::getOption(Broadstreet_Core::KEY_LAST_MESSAGE);
-
-        $driver = Broadstreet_Config::get('driver');
-        $count  = Broadstreet_Model::getPublishedPostCount();
-
-        $url     = "http://broadstreetads.com/messages?d=$driver&c=$count";
-        $content = file_get_contents($url);
-
-        self::setOption(Broadstreet_Core::KEY_LAST_MESSAGE, $content);
-        self::setOption(Broadstreet_Core::KEY_LAST_MESSAGE_DATE, time());
-
-        if(strlen($content) == 0 || $content == "0")
-            return FALSE;
-
-        return $content;
     }
 
     public static function pageHasCategory($id) {
