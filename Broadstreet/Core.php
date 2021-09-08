@@ -42,6 +42,7 @@ class Broadstreet_Core
     public static $_disableAds = false;
     public static $_rssCount = 0;
     public static $_rssIndex = 0;
+    public static $_trackedContentIds = array();
 
     /**
      * Default values for sponsored meta fields
@@ -236,15 +237,16 @@ class Broadstreet_Core
         } else if (in_the_loop()) { # or if we're in some loop somewhere
             $post_id = get_the_ID();
             $ad_id  = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_advertisement_id');
-            $code .= "<script>window['bsa_content_preview_only_$ad_id'] = true;</script>\n";
         }
 
-        if ($post_id && $ad_id) {
+        if ($post_id && $ad_id && !isset(self::$_trackedContentIds[$ad_id])) { // this last bit prevents tracker from being prevents a tracker from going on a page mroe than once
             $is_sponsored = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_is_sponsored');
 
             if ($is_sponsored) {
                 $code .= Broadstreet_Utility::getAdCode($ad_id);
             }
+
+            self::$_trackedContentIds[$ad_id] = true;
         }
 
         return $content . $code;
