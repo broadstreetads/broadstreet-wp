@@ -42,7 +42,6 @@ class Broadstreet_Core
     public static $_disableAds = false;
     public static $_rssCount = 0;
     public static $_rssIndex = 0;
-    public static $_trackedContentIds = array();
 
     /**
      * Default values for sponsored meta fields
@@ -239,14 +238,12 @@ class Broadstreet_Core
             $ad_id  = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_advertisement_id');
         }
 
-        if ($post_id && $ad_id && !isset(self::$_trackedContentIds[$ad_id])) { // this last bit prevents tracker from being prevents a tracker from going on a page mroe than once
+        if ($post_id && $ad_id) {
             $is_sponsored = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_is_sponsored');
 
             if ($is_sponsored) {
                 $code .= Broadstreet_Utility::getAdCode($ad_id);
             }
-
-            self::$_trackedContentIds[$ad_id] = true;
         }
 
         return $content . $code;
