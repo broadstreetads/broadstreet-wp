@@ -39,8 +39,8 @@ class Broadstreet_Zone_Widget extends WP_Widget
         if(trim($title))
             echo $before_title . $title. $after_title;
 
-        if ($place_id) {
-        $attrs = array('place' => $place_id);
+        if (!is_null($place_id)) {
+            $attrs = array('place' => $place_id);
         }
 
         echo '<div>' . Broadstreet_Utility::getZoneCode($zone_id, $attrs) . '</div>';
