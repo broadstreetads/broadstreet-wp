@@ -250,7 +250,7 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
-                                <a target="_blank" href="http://broadstreetads.com/ad-platform/ad-formats/">Not sure what this? Broadstreet is also an adserver.</a>
+                                <a target="_blank" href="https://broadstreetads.com/ad-platform/ad-formats/">Not sure what this is? Broadstreet is also an adserver.</a>
                             </div>
                         </div>
                         <div class="save-container">
