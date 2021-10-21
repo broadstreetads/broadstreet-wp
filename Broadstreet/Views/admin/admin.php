@@ -85,7 +85,7 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
-                                <a href="?page=Broadstreet-Help">How to Get Started</a>
+                                <a href="https://information.broadstreetads.com/wordpress-site-set-up-broadstreet/">How to Get Started</a>
                             </div>
                         </div>
                         <div class="save-container">
