@@ -85,7 +85,7 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
-                                <a href="https://information.broadstreetads.com/wordpress-site-set-up-broadstreet/">How to Get Started</a>
+                                <?php if($business_enabled) echo '<a href="?page=Broadstreet-Help">How to Get Started with the Business Directory</a>' ?>
                             </div>
                         </div>
                         <div class="save-container">
