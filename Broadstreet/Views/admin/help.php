@@ -7,7 +7,7 @@
               This plugin uses special functionality that isn't typically
               available to Wordpress users, and an account with us provides
               that. To get set up, send a quick email to
-              <a href="mailto:kenny@broadstreetads.com">kenny@broadstreetads.com</a>
+              <a href="mailto:frontdesk@broadstreetads.com">frontdesk@broadstreetads.com</a>
               and we'll get you set up. If you have more general questions on
               who Broadstreet is or how to make money with this plugin, see the
               <a href="#faq">FAQ</a> section.
@@ -213,7 +213,7 @@
 
           <p>Here are some answers to frequently asked questions regarding
               our plugin. If you don't see the answer you're looking for,
-              reach out to <a href="mailto:kenny@broadstreetads.com">kenny@broadstreetads.com</a>.
+              reach out to <a href="mailto:frontdesk@broadstreetads.com">frontdesk@broadstreetads.com</a>.
           </p>
 
           <h3>Why do I need an account with Broadstreet to use this plugin?</h3>
@@ -285,7 +285,7 @@
           <h3>Who can I talk to if I get stuck?</h3>
 
           <p>
-              <a href="mailto:kenny@broadstreetads.com">kenny@broadstreetads.com</a>
+              <a href="mailto:frontdesk@broadstreetads.com">frontdesk@broadstreetads.com</a>
           </p>
 
       </div>
