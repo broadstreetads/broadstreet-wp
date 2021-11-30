@@ -544,7 +544,7 @@ class Broadstreet_Core
     public function setWhitelabel()
     {
         # while we're in the post, capture the disabled status of the ads
-        if (is_single()) {
+        if (is_singular()) {
             self::$_disableAds = Broadstreet_Utility::getPostMeta(get_queried_object_id(), 'bs_ads_disabled') == '1';
         }
 
