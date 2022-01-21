@@ -164,7 +164,6 @@ class Broadstreet_Core
 
         add_action('post_updated', array($this, 'saveAdVisibilityMeta'), 20);
 
-        
         // only fires on newspack
         add_action('get_template_part_template-parts/header/entry', array($this, 'addNewspackAfterTitleAd'));
         add_action('after_header', array($this, 'addNewspackHeaderAd'));
@@ -224,7 +223,7 @@ class Broadstreet_Core
         });
     }
 
-    public function getTrackerContent($content) {
+    public function getTrackerContent($content = '') {
         $code = '';
         $post_id = null;
         $ad_id = null;
@@ -246,7 +245,12 @@ class Broadstreet_Core
             }
         }
 
-        return $content . $code;
+        if (!strstr($content, 'template-parts/')) {
+            return $content . $code;
+        } else {
+            echo $code;
+            return;
+        }
     }
 
     public function addRSSZone() {
@@ -1211,7 +1215,11 @@ class Broadstreet_Core
     public function shortcode($attrs)
     {
         if(isset($attrs['ad'])) {
-            return Broadstreet_Utility::getAdCode($attrs['ad'], $attrs);
+            if(isset($attrs['static'])) {
+                return Broadstreet_Utility::getStaticAdCode($attrs['ad']);
+            } else {
+                return Broadstreet_Utility::getAdCode($attrs['ad'], $attrs);
+            }
         }
 
         if(isset($attrs['zone'])) {
@@ -1219,7 +1227,12 @@ class Broadstreet_Core
             if (isset($attrs['place'])) {
                 $addl_attrs['place'] = $attrs['place'];
             }
-            return Broadstreet_Utility::getZoneCode($attrs['zone'], $addl_attrs);
+
+            if(isset($attrs['static'])) {
+                return Broadstreet_Utility::getStaticZoneCode($attrs['zone']);
+            } else {
+                return Broadstreet_Utility::getZoneCode($attrs['zone'], $addl_attrs);
+            }
         }
 
         return '';

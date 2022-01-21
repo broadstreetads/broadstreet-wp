@@ -104,6 +104,13 @@ class Broadstreet_Utility
         return $code;
     }
 
+    public static function getStaticAdCode($id) {
+        $base = self::getAdserverURL();
+        $cb = time();
+        return "<a href=\"{$base}click/{$id}\"><img src=\"{$base}display/{$id}?{$cb}\" style=\"max-width: 100%;\" /></a>";
+    }
+
+
     public static function getStaticZoneCode($id, $index = 0) {
         $base = self::getAdserverURL();
         $cb = time();
@@ -430,16 +437,16 @@ class Broadstreet_Utility
 
             if($info) {
                 self::setOption(self::KEY_NET_INFO, $info);
-            }
 
-            # if there's a demand partner on the account, make sure load_in_head is enabled for header bidding
-            # and also defer_configuration so we can load the head bidding code
-            if (property_exists($info, 'demand_partner') && property_exists($info->demand_partner, 'ads_txt')) {
-                $placement_settings = self::getPlacementSettings();
-                self::writeAdsTxt($info->demand_partner->ads_txt);
-                $placement_settings->load_in_head = true;
-                $placement_settings->defer_configuration = true;
-                Broadstreet_Utility::setOption(Broadstreet_Core::KEY_PLACEMENTS, $placement_settings);
+                # if there's a demand partner on the account, make sure load_in_head is enabled for header bidding
+                # and also defer_configuration so we can load the head bidding code
+                if (property_exists($info, 'demand_partner') && property_exists($info->demand_partner, 'ads_txt')) {
+                    $placement_settings = self::getPlacementSettings();
+                    self::writeAdsTxt($info->demand_partner->ads_txt);
+                    $placement_settings->load_in_head = true;
+                    $placement_settings->defer_configuration = true;
+                    Broadstreet_Utility::setOption(Broadstreet_Core::KEY_PLACEMENTS, $placement_settings);
+                }
             }
         }
         catch(Exception $ex)
