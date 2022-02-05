@@ -168,6 +168,7 @@ class Broadstreet_Core
         add_action('get_template_part_template-parts/header/entry', array($this, 'addNewspackAfterTitleAd'));
         add_action('after_header', array($this, 'addNewspackHeaderAd'));
         add_action('before_footer', array($this, 'addNewspackFooterAd'));
+        add_filter('rest_pre_echo_response', array($this, 'addNewspackNewsletterMeta'));
 
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
@@ -277,6 +278,14 @@ class Broadstreet_Core
 
             self::$_rssCount++;
         }
+    }
+
+    public function addNewspackNewsletterMeta($data) {
+        if (is_array($data) && isset($data['mjml'])) {
+            $cachebuster = time();
+            $data['mjml'] = preg_replace('/BROADSTREET_RANDOM/i', $cachebuster, $data['mjml']);
+        }
+        return $data;
     }
 
     public function addNewspackAfterTitleAd() {
@@ -1214,6 +1223,12 @@ class Broadstreet_Core
      */
     public function shortcode($attrs)
     {
+        if(isset($attrs['mobile'])) {
+            if (($attrs['mobile'] == 'true' && !wp_is_mobile()) || ($attrs['mobile'] == 'false' && wp_is_mobile())) {
+                return '';
+            }
+        }
+
         if(isset($attrs['ad'])) {
             if(isset($attrs['static'])) {
                 return Broadstreet_Utility::getStaticAdCode($attrs['ad']);
