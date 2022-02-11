@@ -361,16 +361,7 @@ class Broadstreet_Core
                 /* Now handle in-content */
                 if (!stristr($content, '[broadstreet zone') && !stristr($content, '<broadstreet-zone')) {
                     /* Split the content into paragraphs, clear out anything that is only whitespace */
-                    $pieces = preg_split('/(\r\n|\n|\r)+/', trim($content));
-                    $real_pieces = array();
-
-                    foreach($pieces as $piece) {
-                        $piece = str_replace('&nbsp;', '', $piece);
-                        $piece = str_replace('<p></p>', '', $piece);
-                        if (strlen($piece)) $real_pieces[] = $piece;
-                    }
-
-                    $pieces = $real_pieces;
+                    $pieces = explode('</p>', $content);
 
                     if (count($pieces) <= 1 && ($above_content || $below_content)) {
                         # One paragraph
@@ -383,7 +374,7 @@ class Broadstreet_Core
                         $in_story_zone = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->in_content, array('place' => $i));
 
                         if (count($pieces) >= $in_content_paragraph[$i]) {
-                            array_splice($pieces, $in_content_paragraph[$i] + $replacements++, 0, $in_story_zone);
+                            array_splice($pieces, $in_content_paragraph[$i] + $replacements++, 0, "</p>" . $in_story_zone);
                         }
                     }
                     /* It's magic, :snort: :snort:

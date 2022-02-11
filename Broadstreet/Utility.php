@@ -218,7 +218,7 @@ class Broadstreet_Utility
             $addl_attrs .= " layout='responsive' ";
         }
 
-        return "<amp-ad type='broadstreetads' media='(max-width: 100%)' style='max-width: {$width}px; margin: 0 auto;' width='$width' height='$height' data-network='$network_id' data-zone='$zone_id' data-keywords='$keywords' $addl_attrs></amp-ad>";
+        return "<amp-ad type='broadstreetads' data-network='$network_id' data-zone='$zone_id' data-keywords='$keywords' $addl_attrs width='$width' height='$height'></amp-ad>";
     }
 
     /**
