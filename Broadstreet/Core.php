@@ -1218,7 +1218,7 @@ class Broadstreet_Core
         }
 
         if(isset($attrs['mobile'])) {
-            if (($attrs['mobile'] == 'true' && !is_mobile()) || ($attrs['mobile'] == 'false' && is_mobile())) {
+            if (($attrs['mobile'] == 'true' && !$is_mobile) || ($attrs['mobile'] == 'false' && $is_mobile)) {
                 return '';
             }
         }
