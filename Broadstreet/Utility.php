@@ -218,6 +218,9 @@ class Broadstreet_Utility
             $addl_attrs .= " layout='responsive' ";
         }
 
+        $initurl = "https://cdn.broadstreetads.com/init-2.min.js?v=".BROADSTREET_VERSION;
+        $addl_attrs .= " initurl='$initurl' ";
+
         return "<amp-ad type='broadstreetads' data-network='$network_id' data-zone='$zone_id' data-keywords='$keywords' $addl_attrs width='$width' height='$height'></amp-ad>";
     }
 

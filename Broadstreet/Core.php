@@ -59,7 +59,6 @@ class Broadstreet_Core
         'bs_ads_disabled' => ''
     );
 
-
     /**
      * Default values for the businesses meta fields
      * @var type
@@ -372,8 +371,7 @@ class Broadstreet_Core
                     $replacements = 0;
                     for ($i = 0; $i < count($in_content_paragraph); $i++) {
                         $in_story_zone = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->in_content, array('place' => $i));
-
-                        if (count($pieces) >= $in_content_paragraph[$i]) {
+                        if ((count($pieces) - $replacements) > $in_content_paragraph[$i]) {
                             array_splice($pieces, $in_content_paragraph[$i] + $replacements++, 0, "</p>" . $in_story_zone);
                         }
                     }
@@ -603,7 +601,7 @@ class Broadstreet_Core
         # Add Broadstreet ad zone CDN
         if(!is_admin())
         {
-            $file = 'init-2.min.js';
+            $file = 'init-2.min.js?v=' . BROADSTREET_VERSION;
             if ($old) {
                 $file = 'init.js';
             }
@@ -682,7 +680,7 @@ class Broadstreet_Core
         {
             wp_enqueue_style ('Broadstreet-styles',  Broadstreet_Utility::getCSSBaseURL() . 'broadstreet.css?v='. BROADSTREET_VERSION);
             wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js?v='. BROADSTREET_VERSION);
-            wp_enqueue_script('angular-js', Broadstreet_Utility::getJSBaseURL().'angular.min.js');
+            wp_enqueue_script('angular-js', Broadstreet_Utility::getJSBaseURL().'angular.min.js?v='. BROADSTREET_VERSION);
             wp_enqueue_script('isteven-multi-js', Broadstreet_Utility::getJSBaseURL().'isteven-multi-select.js');
             wp_enqueue_style ('isteven-multi-css',  Broadstreet_Utility::getCSSBaseURL() . 'isteven-multi-select.css');
         }
@@ -1214,8 +1212,13 @@ class Broadstreet_Core
      */
     public function shortcode($attrs)
     {
+        $is_mobile = wp_is_mobile();
+        if (function_exists('jetpack_is_mobile')) {
+            $is_mobile = jetpack_is_mobile();
+        }
+
         if(isset($attrs['mobile'])) {
-            if (($attrs['mobile'] == 'true' && !wp_is_mobile()) || ($attrs['mobile'] == 'false' && wp_is_mobile())) {
+            if (($attrs['mobile'] == 'true' && !is_mobile()) || ($attrs['mobile'] == 'false' && is_mobile())) {
                 return '';
             }
         }

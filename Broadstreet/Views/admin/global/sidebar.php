@@ -1,6 +1,6 @@
     <h3 style="margin-top: 0; padding-top: 0;">About Broadstreet</h3>
     <p>
-        Broadstreet is a sales-first advserving platform built for publishers
+        Broadstreet is a sales-first adserving platform built for publishers
         with direct sales teams. City and regional magazines, hyperlocal newspapers,
         trade publications, and radio broadcasters choose Broadstreet to help
         succeed in their sales efforts.
