@@ -358,9 +358,11 @@ class Broadstreet_Core
                 }
 
                 /* Now handle in-content */
-                if (!stristr($content, '[broadstreet zone') && !stristr($content, '<broadstreet-zone')) {
+                if (!stristr($content, '[broadstreet zone') && !stristr($content, '<broadstreet-zone') && !stristr($content, 'broadstreetads')) { # last one is for <amp-ad>
                     /* Split the content into paragraphs, clear out anything that is only whitespace */
-                    $pieces = explode('</p>', $content);
+                    /* The first lookbehind makes sure we don't match empty paragraphs,
+                        the last lookahead makes sure we don't match special blocks that wrap a paragraph */
+                    $pieces = preg_split('#(?<!<p>)</p>(?!\s*</div>)#', $content);
 
                     if (count($pieces) <= 1 && ($above_content || $below_content)) {
                         # One paragraph
