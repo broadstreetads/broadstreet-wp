@@ -243,6 +243,11 @@ class Broadstreet_SBSZone_Widget extends WP_Widget
       */
      function widget($args, $instance)
      {
+        if (Broadstreet_Core::$_disableAds) {
+            echo '<!-- Broadstreet plugin: Ads disabled on this post -->';
+            return;
+        }
+
          extract($args);
          
          $zone_id_1 = $instance['w_zone1'];

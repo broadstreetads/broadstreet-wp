@@ -1239,6 +1239,10 @@ class Broadstreet_Core
                 $addl_attrs['place'] = $attrs['place'];
             }
 
+            if (isset($attrs['class'])) {
+                $addl_attrs['class'] = $attrs['class'];
+            }
+
             if(isset($attrs['static'])) {
                 return Broadstreet_Utility::getStaticZoneCode($attrs['zone']);
             } else {
