@@ -169,6 +169,9 @@ class Broadstreet_Core
         add_action('before_footer', array($this, 'addNewspackFooterAd'));
         add_filter('rest_pre_echo_response', array($this, 'addNewspackNewsletterMeta'));
 
+        // only fires on wpp
+        // add_action('get_template_part_loop-templates/content-single-camp', array($this, 'getTrackerContent'));
+
         # -- Below are all business-related hooks
         if(Broadstreet_Utility::isBusinessEnabled())
         {
@@ -223,27 +226,9 @@ class Broadstreet_Core
         });
     }
 
+
     public function getTrackerContent($content = '') {
-        $code = '';
-        $post_id = null;
-        $ad_id = null;
-
-        # check to see if this is a query for a post page and for the primary content
-        if (is_singular() && is_main_query()) {
-            $post_id = get_queried_object_id();
-            $ad_id  = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_advertisement_id');
-        } else if (in_the_loop()) { # or if we're in some loop somewhere
-            $post_id = get_the_ID();
-            $ad_id  = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_advertisement_id');
-        }
-
-        if ($post_id && $ad_id) {
-            $is_sponsored = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_is_sponsored');
-
-            if ($is_sponsored) {
-                $code .= Broadstreet_Utility::getAdCode($ad_id);
-            }
-        }
+        $code = Broadstreet_Utility::getTrackerCode();
 
         if (!strstr($content, 'template-parts/')) {
             return $content . $code;
@@ -534,7 +519,7 @@ class Broadstreet_Core
      */
     public function addPoweredBy()
     {
-        if (self::$_disableAds) {
+        if (self::$_disableAds || Broadstreet_Utility::isAMPEndpoint()) {
             return;
         }
 
@@ -601,7 +586,7 @@ class Broadstreet_Core
         }
 
         # Add Broadstreet ad zone CDN
-        if(!is_admin())
+        if(!is_admin() && !Broadstreet_Utility::isAMPEndpoint())
         {
             $file = 'init-2.min.js?v=' . BROADSTREET_VERSION;
             if ($old) {

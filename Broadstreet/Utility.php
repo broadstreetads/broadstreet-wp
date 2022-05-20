@@ -27,6 +27,8 @@ class Broadstreet_Utility
      * Write the initialization code (init.js)
      */
     public static function writeInitCode() {
+        if (Broadstreet_Utility::isAMPEndpoint()) return;
+
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
         $network_id = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
         $args = '{}';
@@ -65,6 +67,31 @@ class Broadstreet_Utility
             echo "window.broadstreet.watch($args);\n";
         }
         echo " });</script>";
+    }
+
+    public static function getTrackerCode() {
+        $code = '';
+        $post_id = null;
+        $ad_id = null;
+
+        # check to see if this is a query for a post page and for the primary content
+        if (is_singular() && is_main_query()) {
+            $post_id = get_queried_object_id();
+            $ad_id  = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_advertisement_id');
+        } else if (in_the_loop()) { # or if we're in some loop somewhere
+            $post_id = get_the_ID();
+            $ad_id  = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_advertisement_id');
+        }
+
+        if ($post_id && $ad_id) {
+            $is_sponsored = Broadstreet_Utility::getPostMeta($post_id, 'bs_sponsor_is_sponsored');
+
+            if ($is_sponsored) {
+                $code .= Broadstreet_Utility::getAdCode($ad_id);
+            }
+        }
+
+        return $code;
     }
 
     /**
