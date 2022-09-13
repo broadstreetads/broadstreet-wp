@@ -1247,7 +1247,16 @@ class Broadstreet_Utility
      * @return bool True if AMP
      */
     public static function isAMPEndpoint() {
-        return function_exists('is_amp_endpoint') && is_amp_endpoint();
+        $is_amp = function_exists('is_amp_endpoint') && is_amp_endpoint();
+
+        if (self::isNewspack()) {
+            $placement_settings = Broadstreet_Utility::getPlacementSettings();
+            if (property_exists($placement_settings, 'newspack_ignore_amp') && $placement_settings->newspack_ignore_amp) {
+                $is_amp = false;
+            }
+        }
+
+        return $is_amp;
     }
 
     /**

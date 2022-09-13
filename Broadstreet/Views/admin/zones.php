@@ -163,6 +163,24 @@
                             <input ng-model="data.positions_zones.cdn_whitelabel" type="text" placeholder="assets.yourdomain.com" />
                         </div>
                     </div>
+                    <?php if (Broadstreet_Utility::isNewspack()) :?>,
+                        <div class="clearfix"></div>
+                        <div class="break"></div>
+                        <div class="option">
+                            <div class="control-label">
+                                <div class="name nomargin">
+                                    Newspack: Ignore AMP Settings
+                                </div>
+                                <div class="desc nomargin">
+                                    Use normal zone tags instead of AMP-specific tags, even if loaded in an AMP context.
+                                </div>
+                            </div>
+                            <div class="control-container">
+                                <input type="checkbox" ng-model="data.positions_zones.newspack_ignore_amp" />
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    <?php endif; ?>
                     <div class="clearfix"></div>
                     <div class="break"></div>
                     <div class="option">
@@ -348,13 +366,12 @@
                     id: 'amp_sticky',
                     name: 'Newspack: AMP Sticky Zone',
                     description: 'A zone (displayed at 300x100) to appear at the footer of a page'
-                },
+                }<?php endif; ?>,
                 {
                     id: 'in_rss_feed',
                     name: 'In RSS Feed',
                     description: 'Embed zone position information in the <source> tag in your RSS feed. This may have an adverse impact on your feed if not used correctly.'
-                },
-                <?php endif; ?>
+                }
             ];
 
             var zoneList = Object.values(bootstrap.zones);
