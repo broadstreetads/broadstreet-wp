@@ -1033,7 +1033,8 @@ class Broadstreet_Core
 
         try
         {
-            $advertisers = $api->getAdvertisers($network_id);
+            $advertisers = $api->getAdvertisers($network_id) ?? array();
+
             usort($advertisers, function($a, $b) {
                 return $a->name > $b->name;
             });
