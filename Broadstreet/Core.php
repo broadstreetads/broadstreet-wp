@@ -555,7 +555,7 @@ class Broadstreet_Core
             $code .= Broadstreet_Utility::getInitCode();
         }
 
-        wp_add_inline_script('broadstreet-init', "<script data-cfasync='false'>$code</script>", 'after');
+        wp_add_inline_script('broadstreet-init', "$code", 'after');
     }
 
     /**
