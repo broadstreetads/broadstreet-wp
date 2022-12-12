@@ -140,7 +140,7 @@ class Broadstreet_Core
         add_action('admin_menu', 	array($this, 'adminCallback'     ));
         add_action('admin_enqueue_scripts', array($this, 'adminStyles'));
         add_action('admin_init', 	array($this, 'adminInitCallback' ));        
-        add_action('wp_enqueue_scripts',          array($this, 'addZoneTag' ));
+        add_action('wp_enqueue_scripts',          array($this, 'addCDNScript' ));
         add_filter('script_loader_tag',          array($this, 'finalizeZoneTag' ));
         add_action('init',          array($this, 'businessIndexSidebar' ));
         add_action('admin_notices',     array($this, 'adminWarningCallback'));
@@ -148,7 +148,6 @@ class Broadstreet_Core
         add_shortcode('broadstreet', array($this, 'shortcode'));
         add_filter('image_size_names_choose', array($this, 'addImageSizes'));
         add_action('wp_footer', array($this, 'addPoweredBy'));
-        add_action('wp_head', array($this, 'setWhitelabel'));
         # -- Ad injection
         add_action('wp_body_open', array($this, 'addAdsPageTop' ));
         add_filter('the_content', array($this, 'addAdsContent'), 20);
@@ -526,12 +525,15 @@ class Broadstreet_Core
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
         if (!property_exists($placement_settings, 'load_in_head')
             || !$placement_settings->load_in_head) {
-            Broadstreet_Utility::writeInitCode();
+            $code = Broadstreet_Utility::getInitCode();
+            echo "<script data-cfasync='false'>$code</script>";
         }
     }
 
-    public function setWhitelabel()
+    public function writeInitCode()
     {
+        $code = '';
+
         # while we're in the post, capture the disabled status of the ads
         if (is_singular()) {
             self::$_disableAds = Broadstreet_Utility::getPostMeta(get_queried_object_id(), 'bs_ads_disabled') == '1';
@@ -540,7 +542,7 @@ class Broadstreet_Core
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
         if (property_exists($placement_settings, 'use_old_tags') && $placement_settings->use_old_tags) {
             if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->adserver_whitelabel) > 0) {
-                echo "<script data-cfasync='false'>broadstreet.setWhitelabel('//{$placement_settings->adserver_whitelabel}/')</script>";
+                $code .= "broadstreet.setWhitelabel('//{$placement_settings->adserver_whitelabel}/');";
             }
         }
 
@@ -550,8 +552,10 @@ class Broadstreet_Core
 
         if (property_exists($placement_settings, 'load_in_head')
             && $placement_settings->load_in_head) {
-            Broadstreet_Utility::writeInitCode();
+            $code .= Broadstreet_Utility::getInitCode();
         }
+
+        wp_add_inline_script('broadstreet-init', "<script data-cfasync='false'>$code</script>", 'after');
     }
 
     /**
@@ -569,14 +573,14 @@ class Broadstreet_Core
         }
 
         // add cloudflare attrs. but seriously, f cloudflare
-        if (strstr($tag, 'init-2.min.js') || strstr($tag, 'init.js')) {
-            $tag = str_replace('src', "data-cfasync='false' src", $tag);
+        if (strstr($tag, 'broadstreet-init')) {
+            $tag = str_replace('<script', "<script data-cfasync='false'", $tag);
         }
 
         return $tag;
     }
 
-    public function addZoneTag()
+    public function addCDNScript()
     {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();
 
@@ -603,7 +607,9 @@ class Broadstreet_Core
             #     $host = 'street-production.s3.amazonaws.com';
             # }
 
-            wp_enqueue_script('broadstreet-cdn', "//$host/$file");
+            wp_register_script('broadstreet-init', "//$host/$file");
+            $this->writeInitCode();
+            wp_enqueue_script('broadstreet-init');
         }
     }
 
