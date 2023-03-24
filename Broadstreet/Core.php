@@ -356,7 +356,7 @@ class Broadstreet_Core
                     # each insertion increases the offset of the next paragraph
                     $replacements = 0;
                     for ($i = 0; $i < count($in_content_paragraph); $i++) {
-                        $in_story_zone = Broadstreet_Utility::getWrappedZoneCode($placement_settings, $placement_settings->in_content, array('place' => $i));
+                        $in_story_zone = Broadstreet_Utility::getWrappedZoneCode($placement_settings, apply_filters('bs_ads_in_content_zone_id', $placement_settings->in_content), array('place' => $i));
                         if ((count($pieces) - $replacements) > $in_content_paragraph[$i]) {
                             array_splice($pieces, $in_content_paragraph[$i] + $replacements++, 0, "</p>" . $in_story_zone);
                         }
