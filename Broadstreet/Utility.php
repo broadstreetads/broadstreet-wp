@@ -387,6 +387,8 @@ class Broadstreet_Utility
         $host = 'https://ad.broadstreetads.com/';
         if (property_exists($placement_settings, 'use_local_bsa') && $placement_settings->use_local_bsa) {
             $host = 'http://localhost:9090/';
+        } else if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->adserver_whitelabel)) {
+            $host = "https://" . $placement_settings->adserver_whitelabel . "/";
         }
         return $host;
     }
