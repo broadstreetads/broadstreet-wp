@@ -607,6 +607,17 @@ class Broadstreet_Core
             #     $host = 'street-production.s3.amazonaws.com';
             # }
 
+	        # For site-wide analytics.
+	        $adserver_host = 'ad.broadstreetads.com';
+	        if (property_exists($placement_settings, 'adserver_whitelabel') && strlen($placement_settings->adserver_whitelabel) > 0) {
+		        $adserver_host = $placement_settings->adserver_whitelabel;
+	        }
+	        if (property_exists($placement_settings, 'enable_analytics') && strlen($placement_settings->enable_analytics)) {
+		        $network_id = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
+		        wp_register_script('broadstreet-analytics', "//$adserver_host/analytics/$network_id.js");
+		        wp_enqueue_script('broadstreet-analytics');
+	        }
+
             wp_register_script('broadstreet-init', "//$host/$file");
             $this->writeInitCode();
             wp_enqueue_script('broadstreet-init');

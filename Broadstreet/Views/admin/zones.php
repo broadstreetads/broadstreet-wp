@@ -230,6 +230,22 @@
                         </div>
                         <div style="clear:both;"></div>
                     </div>
+                    <div class="clearfix"></div>
+                    <div class="break"></div>
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">
+                                Sitewide Analytics
+                            </div>
+                            <div class="desc nomargin">
+                                Enable this for site-wide analytic tracking. Contact frontdesk@broadstreetads.com to learn more.
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <input type="checkbox" ng-model="data.positions_zones.enable_analytics" />
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
                     <?php if (defined('WP_PLUGIN_URL') && (strstr(WP_PLUGIN_URL, 'localhost') || strstr(WP_PLUGIN_URL, '127.0.0.1')) ): ?>
                     <div class="clearfix"></div>
                     <div class="break"></div>
