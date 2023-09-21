@@ -235,10 +235,10 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
-                                Site Analytics (Beta)
+                                Web Analytics (Beta)
                             </div>
                             <div class="desc nomargin">
-                                Enable this for site analytics, a simple alternative to Google Analytics.
+                                Enable this for website analytics, a simple and free alternative to Google Analytics. This can safely run alongside Google Analytics too.
                             </div>
                         </div>
                         <div class="control-container">
