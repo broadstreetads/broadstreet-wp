@@ -235,10 +235,10 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
-                                Sitewide Analytics (Beta)
+                                Site Analytics (Beta)
                             </div>
                             <div class="desc nomargin">
-                                Enable this for site-wide analytic tracking. Contact frontdesk@broadstreetads.com to learn more.
+                                Enable this for site analytics, a simple alternative to Google Analytics.
                             </div>
                         </div>
                         <div class="control-container">
