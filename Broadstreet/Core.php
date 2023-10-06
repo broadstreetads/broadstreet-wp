@@ -614,7 +614,7 @@ class Broadstreet_Core
 	        }
 	        if (property_exists($placement_settings, 'enable_analytics') && strlen($placement_settings->enable_analytics)) {
 		        $network_id = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
-		        wp_register_script('broadstreet-analytics', "//$adserver_host/analytics/$network_id.js");
+		        wp_register_script('broadstreet-analytics', "//$adserver_host/analytics/$network_id.js", array(), '1.0.0', array('strategy'  => 'async'));
 		        wp_enqueue_script('broadstreet-analytics');
 	        }
 
