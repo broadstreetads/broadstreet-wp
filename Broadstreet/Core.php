@@ -157,7 +157,8 @@ class Broadstreet_Core
         add_filter('comments_template', array($this, 'addAdsBeforeComments'), 20);
 
         if (Broadstreet_Utility::getOption(self::KEY_API_KEY)) {
-            add_action('post_updated', array($this, 'saveSponsorPostMeta'), 20);
+			add_action('post_updated', array($this, 'saveSponsorPostMeta'), 20);
+			add_action('transition_post_status', array($this, 'monitorForScheduledPostStatus'), 20, 10, 3);
         }
 
         add_action('post_updated', array($this, 'saveAdVisibilityMeta'), 20);
@@ -1086,6 +1087,19 @@ class Broadstreet_Core
             }
         }
     }
+
+	/**
+	 * Handler for saving sponsor-specific meta data for scheduled posts. Scheduled posts sometimes don't have the correct permalink
+	 * so this checks everytime a post's status is updated to `published` and executes an update to reflect the proper permalink in Broadstreet.
+	 * @param type $new_status The new status of the post
+	 * @param type $old_status The previous status of the post
+	 * @param type $post The post
+	 */
+	public function monitorForScheduledPostStatus($new_status, $old_status, $post) {
+        if (($old_status != 'publish') && ($new_status == 'publish')) {
+            $this->saveSponsorPostMeta($post->ID);
+        }
+	}
 
     /**
      * Handler for saving sponsor-specific meta data
