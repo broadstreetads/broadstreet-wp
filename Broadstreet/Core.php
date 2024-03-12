@@ -1146,6 +1146,12 @@ class Broadstreet_Core
                         $name          = substr(str_pad(get_the_title($post_id), 5, '*'), 0, 127);
                         $type          = 'tracker';
 
+						// analytics_tracker if network has preference for sponsored_content_v3
+	                    $use_tracker_v3 = $api->getNetwork($network_id)->use_tracker_v3;
+	                    if ($use_tracker_v3) {
+							$type = 'analytics_tracker';
+	                    }
+
                         try {
                             $ad = $api->createAdvertisement($network_id, $advertiser_id, $name, $type, array(
                                 'stencil_inputs' => array('url' => get_the_permalink($post_id)),
