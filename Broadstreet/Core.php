@@ -1100,25 +1100,26 @@ class Broadstreet_Core
 			$meta = Broadstreet_Utility::getAllPostMeta($post->ID, self::$_businessDefaults);
 			$ad_id = $meta['bs_sponsor_advertisement_id'];
 			$advertiser_id = $meta['bs_sponsor_advertiser_id'];
+			if (isset($ad_id) && isset($advertiser_id)) {
+				$api   = $this->getBroadstreetClient();
+				$network_id    = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
 
-			$api   = $this->getBroadstreetClient();
-			$network_id    = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
+				$params = array (
+					'stencil_inputs' => array('url' => get_permalink($post->ID)),
+				);
 
-			$params = array (
-				'stencil_inputs' => array('url' => get_permalink($post->ID)),
-			);
-
-			try {
-				$api->updateAdvertisement($network_id, $advertiser_id, $ad_id, $params);
-			} catch (Broadstreet_ServerException $ex) {
-				if ($ex->code == 404) {
-					# ad was deleted on bsa side, reset the post
-					Broadstreet_Utility::setPostMeta($post->ID, 'bs_sponsor_is_sponsored', '');
-					Broadstreet_Utility::setPostMeta($post->ID, 'bs_sponsor_advertiser_id', '');
-					Broadstreet_Utility::setPostMeta($post->ID, 'bs_sponsor_advertisement_id', '');
+				try {
+					$api->updateAdvertisement($network_id, $advertiser_id, $ad_id, $params);
+				} catch (Broadstreet_ServerException $ex) {
+					if ($ex->code == 404) {
+						# ad was deleted on bsa side, reset the post
+						Broadstreet_Utility::setPostMeta($post->ID, 'bs_sponsor_is_sponsored', '');
+						Broadstreet_Utility::setPostMeta($post->ID, 'bs_sponsor_advertiser_id', '');
+						Broadstreet_Utility::setPostMeta($post->ID, 'bs_sponsor_advertisement_id', '');
+					}
+				} catch (\Exception $ex) {
+					// hopefully a temporary server error, do nothing
 				}
-			} catch (\Exception $ex) {
-				// hopefully a temporary server error, do nothing
 			}
 		}
 	}
