@@ -1096,9 +1096,31 @@ class Broadstreet_Core
 	 * @param type $post The post
 	 */
 	public function monitorForScheduledPostStatus($new_status, $old_status, $post) {
-        if (($old_status != 'publish') && ($new_status == 'publish')) {
-            $this->saveSponsorPostMeta($post->ID);
-        }
+		if (($old_status != 'publish') && ($new_status == 'publish')) {
+			$meta = Broadstreet_Utility::getAllPostMeta($post->ID, self::$_businessDefaults);
+			$ad_id = $meta['bs_sponsor_advertisement_id'];
+			$advertiser_id = $meta['bs_sponsor_advertiser_id'];
+
+			$api   = $this->getBroadstreetClient();
+			$network_id    = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
+
+			$params = array (
+				'stencil_inputs' => array('url' => get_permalink($post->ID)),
+			);
+
+			try {
+				$api->updateAdvertisement($network_id, $advertiser_id, $ad_id, $params);
+			} catch (Broadstreet_ServerException $ex) {
+				if ($ex->code == 404) {
+					# ad was deleted on bsa side, reset the post
+					Broadstreet_Utility::setPostMeta($post->ID, 'bs_sponsor_is_sponsored', '');
+					Broadstreet_Utility::setPostMeta($post->ID, 'bs_sponsor_advertiser_id', '');
+					Broadstreet_Utility::setPostMeta($post->ID, 'bs_sponsor_advertisement_id', '');
+				}
+			} catch (\Exception $ex) {
+				// hopefully a temporary server error, do nothing
+			}
+		}
 	}
 
     /**
@@ -1185,7 +1207,7 @@ class Broadstreet_Core
                             'stencil_inputs' => array('url' => get_the_permalink($post_id)),
                             'type' => 'tracker'
                         );
-						
+
 	                    # The case where they are using the new version of the sponsored content tracker
 	                    $use_tracker_v3 = $api->getNetwork($network_id)->use_tracker_v3;
 	                    if ($use_tracker_v3) {
