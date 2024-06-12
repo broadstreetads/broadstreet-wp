@@ -1185,8 +1185,14 @@ class Broadstreet_Core
                             'stencil_inputs' => array('url' => get_the_permalink($post_id)),
                             'type' => 'tracker'
                         );
+						
+	                    # The case where they are using the new version of the sponsored content tracker
+	                    $use_tracker_v3 = $api->getNetwork($network_id)->use_tracker_v3;
+	                    if ($use_tracker_v3) {
+		                    $params['type'] = 'analytics_tracker';
+	                    }
 
-                        # The case where the advertiser has switched on WP side
+						# The case where the advertiser has switched on WP side
                         if ($old_advertiser_id && $advertiser_id != $old_advertiser_id) {
                             $params['new_advertiser_id'] = $advertiser_id;
                             $advertiser_id = $old_advertiser_id;
