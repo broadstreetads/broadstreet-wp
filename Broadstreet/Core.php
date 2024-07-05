@@ -1054,7 +1054,7 @@ class Broadstreet_Core
             $advertisers = $api->getAdvertisers($network_id) ?? array();
 
             usort($advertisers, function($a, $b) {
-                return $a->name > $b->name;
+                return strcmp($a->name, $b->name);
             });
         }
         catch(Exception $ex)
