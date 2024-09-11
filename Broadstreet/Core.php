@@ -575,7 +575,7 @@ class Broadstreet_Core
 
         // add cloudflare attrs. but seriously, f cloudflare
         if (strstr($tag, 'broadstreet-init')) {
-            $tag = str_replace('<script', "<script data-cfasync='false'", $tag);
+            $tag = str_replace('<script', "<script async data-cfasync='false'", $tag);
         }
 
         return $tag;
