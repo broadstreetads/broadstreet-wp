@@ -348,7 +348,7 @@ class Broadstreet
     {
         $params = array (
             'method'      => 'GET',
-            'timeout'     => 2,
+            'timeout'     => 10,
             'redirection' => 5,
             'httpversion' => '1.0',
             'blocking'    => true
@@ -400,7 +400,7 @@ class Broadstreet
         $options    += array(
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CONNECTTIMEOUT => 1,
-            CURLOPT_TIMEOUT => 2
+            CURLOPT_TIMEOUT => 10
         );
 
         curl_setopt_array($curl_handle, $options);
