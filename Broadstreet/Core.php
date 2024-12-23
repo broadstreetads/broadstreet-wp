@@ -1103,9 +1103,16 @@ class Broadstreet_Core
 			if (isset($ad_id) && isset($advertiser_id)) {
 				$api   = $this->getBroadstreetClient();
 				$network_id    = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
+                // Check if this post is a Yoast Republish
+                $original_post_id = get_post_meta($post->ID, '_dp_original', true);
+                $post_link = get_permalink($post->ID);
 
-				$params = array (
-					'stencil_inputs' => array('url' => get_permalink($post->ID)),
+                if ($original_post_id) {
+                    $post_link = get_permalink($original_post_id);
+                }
+
+                $params = array (
+					'stencil_inputs' => array('url' => $post_link),
 				);
 
 				try {
@@ -1166,6 +1173,20 @@ class Broadstreet_Core
                     $network_id    = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
                     $advertiser_id = $_POST['bs_sponsor_advertiser_id'];
 
+                    $status = get_post_status($post_id);
+                    $post_link = get_the_permalink($post_id);
+
+                    // Since the permalink is not registered for unpublished posts, we simulate what it should be
+                    if (in_array($status, array("draft", "future", "pending"))) {
+                        $post_link = preg_replace('/\%postname\%/', get_sample_permalink($post_id)[1], get_sample_permalink($post_id)[0]);
+                    }
+
+                    // Check if this post is a Yoast Republish
+                    $original_post_id = get_post_meta($post_id, '_dp_original', true);
+                    if ($original_post_id) {
+                        $post_link = get_permalink($original_post_id);
+                    }
+
                     # create the advertiser if it doesn't exist yet
                     if ($advertiser_id == 'new_advertiser') {
                         $advertiser_name = (isset($_POST['bs_sponsor_advertiser_name']) && $_POST['bs_sponsor_advertiser_name'])
@@ -1191,7 +1212,7 @@ class Broadstreet_Core
 
                         try {
                             $ad = $api->createAdvertisement($network_id, $advertiser_id, $name, $type, array(
-                                'stencil_inputs' => array('url' => get_the_permalink($post_id)),
+                                'stencil_inputs' => array('url' => $post_link),
                                 'post_id' => $post_id,
                             ));
 
@@ -1205,7 +1226,7 @@ class Broadstreet_Core
                     } else {
                         $params = array (
                             'name' => substr(str_pad(get_the_title($post_id), 5, '*'), 0, 127),
-                            'stencil_inputs' => array('url' => get_the_permalink($post_id)),
+                            'stencil_inputs' => array('url' => $post_link),
                             'type' => 'tracker'
                         );
 
