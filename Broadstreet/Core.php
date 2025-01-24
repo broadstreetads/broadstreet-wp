@@ -1287,6 +1287,9 @@ class Broadstreet_Core
      */
     public function shortcode($attrs)
     {
+        // treat all shortcode attributes as user inputs and therefore escape for potential security issues
+        $attrs = array_map('esc_attr', $attrs);
+
         $is_mobile = wp_is_mobile();
         if (function_exists('jetpack_is_mobile')) {
             $is_mobile = jetpack_is_mobile();
