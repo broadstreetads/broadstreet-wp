@@ -102,6 +102,7 @@ class Broadstreet_Utility
      */
     public static function getAdCode($id, $attrs = array()) {
 
+        $id = (int) $id;
         $instance_id = md5(uniqid());
         $config = false;
 
@@ -109,7 +110,8 @@ class Broadstreet_Utility
         $code = "<div instance-id=\"$instance_id\" street-address=\"$id\"></div><script async data-cfasync=\"false\" type=\"text/javascript\" src=\"". self::getAdserverURL() ."display/$id.js?sa=1\"></script>";
 
         if (isset($attrs['config'])) {
-            $config = $attrs['config'];
+            // this can be passed as a shortcode param, so make sure it's proper JSON before inserting it into the script below
+            $config = json_encode(json_decode($attrs['config']));
         }
 
         if ($config) {
@@ -193,7 +195,7 @@ class Broadstreet_Utility
                     {
                         return $attrs[$key]?$key:'';
                     }
-                    return $key.'="'.$attrs[$key].'"';
+                    return $key.'="'.esc_attr($attrs[$key]).'"';
                 }, array_keys($attrs)));
 
             return "<broadstreet-zone $attr_string></broadstreet-zone>";
@@ -235,13 +237,13 @@ class Broadstreet_Utility
 
         $addl_attrs = '';
         if (isset($attrs['place'])) {
-            $addl_attrs .= " data-place='{$attrs['place']}'";
+            $addl_attrs .= " data-place='". esc_attr($attrs['place']) . "'";
         }
 
         // by default, the layout is responsive. But if we get a value, use that. If we don't, omit the layout.
         if (isset($attrs['layout'])) {
             if ($attrs['layout']) {
-                $addl_attrs .= " layout='{$attrs['layout']}' ";
+                $addl_attrs .= " layout='". esc_attr($attrs['layout']) ."' ";
             }
         } else {
             $addl_attrs .= " layout='responsive' ";

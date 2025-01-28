@@ -1287,9 +1287,6 @@ class Broadstreet_Core
      */
     public function shortcode($attrs)
     {
-        // treat all shortcode attributes as user inputs and therefore escape for potential security issues
-        $attrs = array_map('esc_attr', $attrs);
-
         $is_mobile = wp_is_mobile();
         if (function_exists('jetpack_is_mobile')) {
             $is_mobile = jetpack_is_mobile();
@@ -1302,15 +1299,18 @@ class Broadstreet_Core
         }
 
         if(isset($attrs['ad'])) {
+            $ad_id = (int) $attrs['ad'];
             if(isset($attrs['static'])) {
-                return Broadstreet_Utility::getStaticAdCode($attrs['ad']);
+                return Broadstreet_Utility::getStaticAdCode($ad_id);
             } else {
-                return Broadstreet_Utility::getAdCode($attrs['ad'], $attrs);
+                return Broadstreet_Utility::getAdCode($ad_id, $attrs);
             }
         }
 
         if(isset($attrs['zone'])) {
+            $zone_id = (int) $attrs['zone'];
             $addl_attrs = array();
+
             if (isset($attrs['place'])) {
                 $addl_attrs['place'] = $attrs['place'];
             }
@@ -1320,9 +1320,9 @@ class Broadstreet_Core
             }
 
             if(isset($attrs['static'])) {
-                return Broadstreet_Utility::getStaticZoneCode($attrs['zone']);
+                return Broadstreet_Utility::getStaticZoneCode($zone_id);
             } else {
-                return Broadstreet_Utility::getZoneCode($attrs['zone'], $addl_attrs);
+                return Broadstreet_Utility::getZoneCode($zone_id, $addl_attrs);
             }
         }
 
