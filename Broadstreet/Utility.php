@@ -169,14 +169,16 @@ class Broadstreet_Utility
             $old = true;
         }
 
-
         if ($old) {
             $keywords = Broadstreet_Utility::getAllAdKeywordsString();
+            // Ensure the zone ID is properly sanitized as an integer
+            $id = intval($id);
             return '<script data-cfasync="false" type="text/javascript">broadstreet.zone(' . $id . ', {responsive: true, softKeywords: true, keywords: [' . $keywords . ']});</script>';
         } else {
             $keywords = Broadstreet_Utility::getAllAdKeywordsString(true);
             if (!isset($attrs['zone-id']) && !isset($attrs['alt-zone-id'])) {
-                $attrs['zone-id'] = $id;
+                // Ensure the zone ID is properly sanitized as an integer
+                $attrs['zone-id'] = intval($id);
             }
 
             $cache = self::getZoneCache();
