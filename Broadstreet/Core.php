@@ -1272,6 +1272,45 @@ class Broadstreet_Core
         {
             foreach(self::$_businessDefaults as $key => $value)
             {
+                // Special handling for video content - only allow video and iframe tags to prevent XSS attacks
+                if(isset($_POST[$key]) && $key == 'bs_video') {
+                    // Create a whitelist of allowed tags
+                    $allowed_tags = array(
+                        'video' => array(
+                            'width' => true,
+                            'height' => true,
+                            'controls' => true,
+                            'autoplay' => true,
+                            'loop' => true,
+                            'muted' => true,
+                            'poster' => true,
+                            'preload' => true,
+                            'src' => true
+                        ),
+                        'source' => array(
+                            'src' => true,
+                            'type' => true
+                        ),
+                        'iframe' => array(
+                            'src' => true,
+                            'width' => true,
+                            'height' => true,
+                            'frameborder' => true,
+                            'allowfullscreen' => true,
+                            'allow' => true
+                        )
+                    );
+                    
+                    // Strip all tags except those in the whitelist
+                    $video_content = wp_kses($_POST[$key], $allowed_tags);
+                    
+                    // Save the sanitized video content
+                    Broadstreet_Utility::setPostMeta($post_id, $key, $video_content);
+                    
+                    // Skip the default handling for this field
+                    continue;
+                }
+
                 if(isset($_POST[$key]))
                     Broadstreet_Utility::setPostMeta($post_id, $key, is_string($_POST[$key]) ? trim($_POST[$key]) : $_POST[$key]);
                 elseif($key == 'bs_images')
