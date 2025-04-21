@@ -50,6 +50,11 @@ class Broadstreet_Utility
             if (property_exists($placement_settings, 'cdn_whitelabel') && strlen($placement_settings->adserver_whitelabel) > 0) {
                 $args->domain = $placement_settings->adserver_whitelabel;
             }
+
+            if (property_exists($placement_settings, 'custom_selector') && strlen($placement_settings->custom_selector) > 0) {
+                $args->selector = $placement_settings->custom_selector;
+            }
+            
             $args = json_encode($args);
         }
 
@@ -200,7 +205,13 @@ class Broadstreet_Utility
                     return $key.'="'.esc_attr($attrs[$key]).'"';
                 }, array_keys($attrs)));
 
-            return "<broadstreet-zone $attr_string></broadstreet-zone>";
+            // Check if a custom selector is defined in placement settings
+            $selector = 'broadstreet-zone';
+            if (property_exists($placement_settings, 'custom_selector') && !empty($placement_settings->custom_selector)) {
+                $selector = esc_attr($placement_settings->custom_selector);
+            }
+
+            return "<$selector $attr_string></$selector>";
         }
     }
 

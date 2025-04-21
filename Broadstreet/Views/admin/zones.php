@@ -269,6 +269,21 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
+                                Custom Selector
+                            </div>
+                            <div class="desc nomargin">
+                                If provided, this will replace the default 'broadstreet-zone' tag in ad code.
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <input ng-model="data.positions_zones.custom_selector" type="text" placeholder="broadstreet-zone" />
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="break"></div>
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">
                                 Ad Tag Init Arguments (Optional, JSON)
                             </div>
                             <div class="desc nomargin">
