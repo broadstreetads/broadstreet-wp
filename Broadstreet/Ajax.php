@@ -19,9 +19,17 @@ class Broadstreet_Ajax
      */
     public static function saveSettings()
     {
-        Broadstreet_Utility::setOption(Broadstreet_Core::KEY_API_KEY, $_POST['api_key']);
-        Broadstreet_Utility::setOption(Broadstreet_Core::KEY_NETWORK_ID, $_POST['network_id']);
-        Broadstreet_Utility::setOption(Broadstreet_Core::KEY_BIZ_ENABLED, $_POST['business_enabled'] === 'true');
+        // Sanitize the API key before storing it
+        $api_key = sanitize_text_field($_POST['api_key']);
+        Broadstreet_Utility::setOption(Broadstreet_Core::KEY_API_KEY, $api_key);
+        
+        // Sanitize network_id as an integer
+        $network_id = isset($_POST['network_id']) ? intval($_POST['network_id']) : -1;
+        Broadstreet_Utility::setOption(Broadstreet_Core::KEY_NETWORK_ID, $network_id);
+        
+        // Sanitize business_enabled as a boolean
+        $business_enabled = ($_POST['business_enabled'] === 'true');
+        Broadstreet_Utility::setOption(Broadstreet_Core::KEY_BIZ_ENABLED, $business_enabled);
 
         $api = Broadstreet_Utility::getBroadstreetClient();
         $message = 'OK';
@@ -31,7 +39,7 @@ class Broadstreet_Ajax
             $networks  = $api->getNetworks();
             $key_valid = true;
 
-            if($_POST['network_id'] == '-1')
+            if($network_id == -1)
             {
                 Broadstreet_Utility::setOption(Broadstreet_Core::KEY_NETWORK_ID, $networks[0]->id);
             }
