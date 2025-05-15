@@ -785,7 +785,6 @@ class Broadstreet_Core
         $data['placements']              = array();
         $data['key_valid']          = false;
         $data['categories']         = get_categories(array('hide_empty' => false));
-        $data['tags']               = get_tags(array('hide_empty' => false));
 
         if(!$data['api_key'])
         {
