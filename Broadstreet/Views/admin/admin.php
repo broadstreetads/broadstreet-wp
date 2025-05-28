@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <div class="control-container">
-                            <input id="api_key" type="text" value="<?php echo $api_key ?>" />
+                            <input id="api_key" type="text" value="<?php echo esc_attr($api_key) ?>" />
                         </div>
                         <div style="clear:both;"></div>
                     </div>
