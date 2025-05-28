@@ -1097,14 +1097,17 @@ class Broadstreet_Core
 	public function monitorForScheduledPostStatus($new_status, $old_status, $post) {
 		if (($old_status != 'publish') && ($new_status == 'publish')) {
 			$meta = Broadstreet_Utility::getAllPostMeta($post->ID, self::$_businessDefaults);
-			$ad_id = $meta['bs_sponsor_advertisement_id'];
-			$advertiser_id = $meta['bs_sponsor_advertiser_id'];
-			if (isset($ad_id) && isset($advertiser_id)) {
-				$api   = $this->getBroadstreetClient();
-				$network_id    = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
-                // Check if this post is a Yoast Republish
-                $original_post_id = get_post_meta($post->ID, '_dp_original', true);
-                $post_link = get_permalink($post->ID);
+			
+			// Check if the keys exist in the meta array before accessing them
+			$ad_id = isset($meta['bs_sponsor_advertisement_id']) ? $meta['bs_sponsor_advertisement_id'] : null;
+			$advertiser_id = isset($meta['bs_sponsor_advertiser_id']) ? $meta['bs_sponsor_advertiser_id'] : null;
+			
+			if ($ad_id && $advertiser_id) {
+				$api = $this->getBroadstreetClient();
+				$network_id = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
+				// Check if this post is a Yoast Republish
+				$original_post_id = get_post_meta($post->ID, '_dp_original', true);
+				$post_link = get_permalink($post->ID);
 
                 if ($original_post_id) {
                     $post_link = get_permalink($original_post_id);
