@@ -28,7 +28,15 @@ Publishers into your Broadstreet site.
 4. Go to Appearance->Widgets, and use the new 'Broadstreet Ad Zone' widget
 
 To learn more about Broadstreet, and how it can help you as a local publisher,
-send an email to [kenny@broadstreetads.com](kenny@broadstreetads.com).
+send an email to [frontdesk@broadstreetads.com](frontdesk@broadstreetads.com).
+
+**How can I report security bugs?**
+
+You can report security bugs through the Patchstack Vulnerability Disclosure
+Program. The Patchstack team help validate, triage and handle any security
+vulnerabilities.
+
+[Report a security vulnerability.](https://patchstack.com/database/vdp/broadstreet)
 
 == Fix Log ==
 
