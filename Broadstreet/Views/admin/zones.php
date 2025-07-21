@@ -1,8 +1,20 @@
-<script>window.bs_bootstrap = <?php echo json_encode($data) ?>;</script>
+<?php
+// File: Broadstreet/Views/admin/zones.php
+
+// Initialize a variable to hold any caught error message during rendering.
+$zones_page_render_error = null;
+
+try {
+    // --- START OF ORIGINAL PAGE CONTENT ---
+?>
+<script>window.bs_bootstrap = <?php echo json_encode($data); ?>;</script>
 <div id="main" ng-app="bs_zones">
       <?php Broadstreet_View::load('admin/global/header') ?>
       <div class="left_column" ng-controller="ZoneCtrl">
-         <?php if($errors): ?>
+         <?php
+         // Display pre-existing errors passed to the view
+         if (!empty($errors) && is_array($errors)):
+         ?>
              <div class="box">
                     <div class="shadow_column">
                         <div class="title" style="">
@@ -10,12 +22,11 @@
                         </div>
                         <div class="content">
                             <p>
-                                Nice to have you! We've noticed some things you may want to take
-                                care of:
+                                We've noticed some things you may want to take care of:
                             </p>
                             <ol>
-                                <?php foreach($errors as $error): ?>
-                                    <li><?php echo $error; ?></li>
+                                <?php foreach($errors as $error_item): ?>
+                                    <li><?php echo htmlspecialchars((string)$error_item); ?></li>
                                 <?php endforeach; ?>
                             </ol>
                         </div>
@@ -269,6 +280,21 @@
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
+                                Custom Selector
+                            </div>
+                            <div class="desc nomargin">
+                                If provided, this will replace the default 'broadstreet-zone' tag in ad code.
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <input ng-model="data.positions_zones.custom_selector" type="text" placeholder="broadstreet-zone" />
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="break"></div>
+                    <div class="option">
+                        <div class="control-label">
+                            <div class="name nomargin">
                                 Ad Tag Init Arguments (Optional, JSON)
                             </div>
                             <div class="desc nomargin">
@@ -288,7 +314,7 @@
                             </div>
                         </div>
                         <div class="save-container">
-                            <span class="success" id="save-success">Saved!</span>
+                            <span class="success" id="save-success" style="display:none;">Saved!</span>
                             <input type="button" value="Save" name="" ng-click="save()" />
                         </div>
                     </div>
@@ -311,7 +337,7 @@
         var app = angular.module('bs_zones', ['isteven-multi-select']);
 
         app.controller('ZoneCtrl', function($scope, $http) {
-            var bootstrap = window.bs_bootstrap;
+            var bootstrap = window.bs_bootstrap || {}; // Ensure bootstrap is an object
             $scope.loadingMessage = null;
 
             $scope.positions = [
@@ -390,48 +416,87 @@
                 }
             ];
 
-            var zoneList = Object.values(bootstrap.zones);
+            var zoneList = [];
+            if (bootstrap.zones && typeof bootstrap.zones === 'object') {
+                zoneList = Object.values(bootstrap.zones);
+            }
+            
             $scope.data = {
                 zones: zoneList.sort(function(a, b) {
-                    return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+                    var nameA = (a.name || "").toLowerCase();
+                    var nameB = (b.name || "").toLowerCase();
+                    return nameA.localeCompare(nameB);
                 }),
-                positions_zones: bootstrap.placements
+                positions_zones: bootstrap.placements || {}
             };
 
             var catList = [], found = false;
-            for(var i = 0; i < bootstrap.categories.length; i++) {
-                if (angular.isArray($scope.data.positions_zones.avoid_categories)) {
-                    for(var j = 0; j < $scope.data.positions_zones.avoid_categories.length; j++) {
-                        if (bootstrap.categories[i].cat_ID == $scope.data.positions_zones.avoid_categories[j].id) {
-                            found = true;
+            if (bootstrap.categories && angular.isArray(bootstrap.categories)) {
+                for(var i = 0; i < bootstrap.categories.length; i++) {
+                    found = false; // Reset found for each category
+                    if ($scope.data.positions_zones && angular.isArray($scope.data.positions_zones.avoid_categories)) {
+                        for(var j = 0; j < $scope.data.positions_zones.avoid_categories.length; j++) {
+                            // Ensure properties exist before comparison
+                            if (bootstrap.categories[i] && bootstrap.categories[i].cat_ID !== undefined &&
+                                $scope.data.positions_zones.avoid_categories[j] && $scope.data.positions_zones.avoid_categories[j].id !== undefined &&
+                                bootstrap.categories[i].cat_ID == $scope.data.positions_zones.avoid_categories[j].id) {
+                                found = true;
+                                break; // Found a match, no need to check further for this category
+                            }
                         }
                     }
-
-                    catList.push({name: bootstrap.categories[i].cat_name, id: bootstrap.categories[i].cat_ID, selected: found, ticked: found});
-
-                    found = false;
-                } else {
-                    catList.push({name: bootstrap.categories[i].cat_name, id: bootstrap.categories[i].cat_ID, selected: false, ticked: false});
+                    // Ensure category item has necessary properties
+                    var catName = (bootstrap.categories[i] && bootstrap.categories[i].cat_name) ? bootstrap.categories[i].cat_name : 'Unknown Category';
+                    var catID = (bootstrap.categories[i] && bootstrap.categories[i].cat_ID !== undefined) ? bootstrap.categories[i].cat_ID : null;
+                    if (catID !== null) {
+                       catList.push({name: catName, id: catID, selected: found, ticked: found});
+                    }
                 }
             }
 
             $scope.data.categories = catList;
 
             $scope.save = function() {
-                console.log($scope.data.positions_zones);
+                console.log('Saving settings:', $scope.data.positions_zones);
                 $scope.loadingMessage = 'Saving ...';
                 var params = $scope.data.positions_zones;
                 $http.post(window.ajaxurl + '?action=save_zone_settings', params)
                     .success(function(response) {
                         $scope.loadingMessage = null;
+                        var saveSuccessEl = document.getElementById('save-success');
+                        if (saveSuccessEl) {
+                            saveSuccessEl.style.display = 'inline';
+                            setTimeout(function() { saveSuccessEl.style.display = 'none'; }, 3000);
+                        }
                    }).error(function(response) {
                         $scope.loadingMessage = null;
-                        alert('There was an error saving the zone information! Try again.');
+                        alert('There was an error saving the zone information! Please try again.');
                    });
-            }
-
-            console.log();
+            };
         });
     })()
-
 </script>
+<?php
+    // --- END OF ORIGINAL PAGE CONTENT ---
+} catch (Throwable $e) { // Catch any throwable error or exception (PHP 7+)
+    $zones_page_render_error = "<strong>A critical error occurred while rendering the page content:</strong><br>"
+                             . htmlspecialchars($e->getMessage())
+                             . "<br><br><strong>File:</strong> " . htmlspecialchars($e->getFile())
+                             . "<br><strong>Line:</strong> " . htmlspecialchars($e->getLine())
+                             . "<br><br><pre><strong>Trace:</strong>\n" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
+
+    // Log this error to the server's error log for backend debugging
+    if (function_exists('error_log')) {
+        error_log("Broadstreet Plugin Error in Broadstreet/Views/admin/zones.php: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine());
+    }
+}
+
+// If a rendering error occurred, display it.
+// This will be shown even if part of the page above the error point was already output.
+if ($zones_page_render_error) {
+    echo '<div style="border: 3px solid red; padding: 15px; margin: 15px; background-color: #fff0f0; color: #a00; font-family: sans-serif;">';
+    echo '<h2><span class="dashicons dashicons-warning" style="vertical-align: middle;"></span> Page Rendering Error</h2>';
+    echo '<p>' . $zones_page_render_error . '</p>';
+    echo '</div>';
+}
+?>

@@ -785,7 +785,6 @@ class Broadstreet_Core
         $data['placements']              = array();
         $data['key_valid']          = false;
         $data['categories']         = get_categories(array('hide_empty' => false));
-        $data['tags']               = get_tags(array('hide_empty' => false));
 
         if(!$data['api_key'])
         {
@@ -1098,14 +1097,17 @@ class Broadstreet_Core
 	public function monitorForScheduledPostStatus($new_status, $old_status, $post) {
 		if (($old_status != 'publish') && ($new_status == 'publish')) {
 			$meta = Broadstreet_Utility::getAllPostMeta($post->ID, self::$_businessDefaults);
-			$ad_id = $meta['bs_sponsor_advertisement_id'];
-			$advertiser_id = $meta['bs_sponsor_advertiser_id'];
-			if (isset($ad_id) && isset($advertiser_id)) {
-				$api   = $this->getBroadstreetClient();
-				$network_id    = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
-                // Check if this post is a Yoast Republish
-                $original_post_id = get_post_meta($post->ID, '_dp_original', true);
-                $post_link = get_permalink($post->ID);
+			
+			// Check if the keys exist in the meta array before accessing them
+			$ad_id = isset($meta['bs_sponsor_advertisement_id']) ? $meta['bs_sponsor_advertisement_id'] : null;
+			$advertiser_id = isset($meta['bs_sponsor_advertiser_id']) ? $meta['bs_sponsor_advertiser_id'] : null;
+			
+			if ($ad_id && $advertiser_id) {
+				$api = $this->getBroadstreetClient();
+				$network_id = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
+				// Check if this post is a Yoast Republish
+				$original_post_id = get_post_meta($post->ID, '_dp_original', true);
+				$post_link = get_permalink($post->ID);
 
                 if ($original_post_id) {
                     $post_link = get_permalink($original_post_id);
@@ -1272,6 +1274,45 @@ class Broadstreet_Core
         {
             foreach(self::$_businessDefaults as $key => $value)
             {
+                // Special handling for video content - only allow video and iframe tags to prevent XSS attacks
+                if(isset($_POST[$key]) && $key == 'bs_video') {
+                    // Create a whitelist of allowed tags
+                    $allowed_tags = array(
+                        'video' => array(
+                            'width' => true,
+                            'height' => true,
+                            'controls' => true,
+                            'autoplay' => true,
+                            'loop' => true,
+                            'muted' => true,
+                            'poster' => true,
+                            'preload' => true,
+                            'src' => true
+                        ),
+                        'source' => array(
+                            'src' => true,
+                            'type' => true
+                        ),
+                        'iframe' => array(
+                            'src' => true,
+                            'width' => true,
+                            'height' => true,
+                            'frameborder' => true,
+                            'allowfullscreen' => true,
+                            'allow' => true
+                        )
+                    );
+                    
+                    // Strip all tags except those in the whitelist
+                    $video_content = wp_kses($_POST[$key], $allowed_tags);
+                    
+                    // Save the sanitized video content
+                    Broadstreet_Utility::setPostMeta($post_id, $key, $video_content);
+                    
+                    // Skip the default handling for this field
+                    continue;
+                }
+
                 if(isset($_POST[$key]))
                     Broadstreet_Utility::setPostMeta($post_id, $key, is_string($_POST[$key]) ? trim($_POST[$key]) : $_POST[$key]);
                 elseif($key == 'bs_images')
