@@ -131,7 +131,7 @@ class Broadstreet_Utility
                             clearInterval(to);
                             el.contentWindow.postMessage({type: 'bsa.ad.configure', config: $config}, '*')
                         }
-                    }, 100);
+                    }, 250);
                 })()
             </script>
             ";
