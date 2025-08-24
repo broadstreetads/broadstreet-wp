@@ -1131,7 +1131,13 @@ class Broadstreet_Utility
                 }
             }
 
-            $slugs[] = $post->post_name;
+            if (is_a($post, 'WP_Post')) {
+                $slugs[] = $post->post_name;
+            } elseif (is_array($post)) {
+                if (isset($post['post_name'])){
+                    $slugs[] = $post['post_name'];
+                }
+            }
             $slugs[] = get_post_type();
         }
 
