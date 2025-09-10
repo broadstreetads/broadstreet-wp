@@ -19,9 +19,9 @@
     
 </style>
 
-<?php echo $content ?>
+<?php echo wp_kses_post($content) ?>
 <?php if($meta['bs_update_source']): ?>
     <div class="sponsored-listing">
-        <?php echo $meta['bs_advertisement_html'] ?>
+        <?php echo wp_kses_post($meta['bs_advertisement_html']) ?>
     </div>
 <?php endif; ?>

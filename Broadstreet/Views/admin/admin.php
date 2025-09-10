@@ -14,7 +14,7 @@
                             </p>
                             <ol>
                                 <?php foreach($errors as $error): ?>
-                                    <li><?php echo $error; ?></li>
+                                    <li><?php echo esc_html($error); ?></li>
                                 <?php endforeach; ?>
                             </ol>
                         </div>
@@ -57,7 +57,7 @@
                         <div class="control-container">
                             <select id="network" type="text">
                                 <?php foreach($networks as $network): ?>
-                                <option <?php if($network_id == $network->id) echo "selected"; ?> value="<?php echo $network->id ?>"><?php echo htmlentities($network->name) . ' (' . $network->id . ')' ?></option>
+                                <option <?php if($network_id == $network->id) echo "selected"; ?> value="<?php echo esc_attr($network->id) ?>"><?php echo esc_html($network->name) . ' (' . esc_html($network->id) . ')' ?></option>
                                 <?php endforeach; ?>
                                 <?php if(count($networks) == 0): ?>
                                 <option value="-1">Enter a valid token above</option>
