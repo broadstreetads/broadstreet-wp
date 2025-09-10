@@ -4,42 +4,42 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
 ?>
 <div id="biz-column-1">
     <?php if(count($meta['bs_images'])): ?>
-        <a class="nodec" target="_blank" href="<?php echo $meta['bs_images'][0] ?>">
-            <img class="profile-pic boxed-sizing" src="<?php echo $meta['bs_images'][0] ?>" alt="" width="100%" />
+        <a class="nodec" target="_blank" href="<?php echo esc_url($meta['bs_images'][0]) ?>">
+            <img class="profile-pic boxed-sizing" src="<?php echo esc_url($meta['bs_images'][0]) ?>" alt="" width="100%" />
         </a>
     <div></div>
     <?php endif; ?>
     <?php if(count($meta['bs_images']) > 1): ?>
         <?php for($i = 1; $i < count($meta['bs_images']); $i++): ?>
-            <a class="nodec" target="_blank" href="<?php echo $meta['bs_images'][$i] ?>">
-                <img class="thumb boxed-sizing" src="<?php echo $meta['bs_images'][$i] ?>" alt=""  />
+            <a class="nodec" target="_blank" href="<?php echo esc_url($meta['bs_images'][$i]) ?>">
+                <img class="thumb boxed-sizing" src="<?php echo esc_url($meta['bs_images'][$i]) ?>" alt=""  />
             </a>
         <?php endfor; ?>
     <?php endif; ?>
     <div class="basic-info">
         <?php if($meta['bs_address_1']): ?>
-        <?php echo Broadstreet_Utility::buildAddressFromMeta($meta); ?>
+        <?php echo esc_html(Broadstreet_Utility::buildAddressFromMeta($meta)); ?>
         <?php endif; ?>
         <br />
         <?php if($meta['bs_address_1']): ?>
         <a target="_blank" href="https://maps.google.com/?q=<?php echo urlencode(Broadstreet_Utility::buildAddressFromMeta($meta, true)) ?>">View map</a><br />
         <?php endif; ?>
         <?php if($meta['bs_phone']): ?>
-        <?php echo $meta['bs_phone'] ?><br />
+        <?php echo esc_html($meta['bs_phone']) ?><br />
         <?php endif; ?>
         <?php if($meta['bs_website']): ?>
-        <a target="_blank"  href="<?php echo $meta['bs_website'] ?>">View website</a>
+        <a target="_blank"  href="<?php echo esc_url($meta['bs_website']) ?>">View website</a>
         <?php endif; ?>
     </div>
     <div class="basic-info">
     <?php if($meta['bs_menu']): ?>
         <div class="section-label"><strong>Menu</strong></div>
-        <div><a target="_blank" href="<?php echo $meta['bs_menu'] ?>">View or download a menu </a></div>
+        <div><a target="_blank" href="<?php echo esc_url($meta['bs_menu']) ?>">View or download a menu </a></div>
     <?php endif; ?>
     </div>
     <?php if($meta['bs_publisher_review']): ?>
     <div class="section-label"><strong>Our Review</strong></div>
-    <div><a href="<?php echo $meta['bs_publisher_review'] ?>">Read a <?php bloginfo('name') ?> Review</a></div>
+    <div><a href="<?php echo esc_url($meta['bs_publisher_review']) ?>">Read a <?php echo esc_html(get_bloginfo('name')) ?> Review</a></div>
     <?php endif; ?>
     <?php if(Broadstreet_Utility::shouldShowTimes($meta)): ?>
     <div class="section-label"><strong>Hours</strong></div>
@@ -48,7 +48,7 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
             <li>
                 <div class="day">Monday</div>
                 <?php if($meta['bs_monday_open'] && $meta['bs_monday_close']): ?>
-                <div class="hours"><?php echo $meta['bs_monday_open'] ?></td><td> - </td><td><?php echo $meta['bs_monday_close'] ?></div>
+                <div class="hours"><?php echo esc_html($meta['bs_monday_open']) ?> - <?php echo esc_html($meta['bs_monday_close']) ?></div>
                 <?php else: ?>
                     <div class="hours">Closed</div>
                 <?php endif; ?>
@@ -56,7 +56,7 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
             <li>
                 <div class="day">Tuesday</div>
                 <?php if($meta['bs_tuesday_open'] && $meta['bs_tuesday_close']): ?>
-                    <div class="hours"><?php echo $meta['bs_tuesday_open'] ?></td><td> - </td><td><?php echo $meta['bs_tuesday_close'] ?></div>
+                    <div class="hours"><?php echo esc_html($meta['bs_tuesday_open']) ?> - <?php echo esc_html($meta['bs_tuesday_close']) ?></div>
                 <?php else: ?>
                     <div class="hours">Closed</div>
                 <?php endif; ?>
@@ -64,7 +64,7 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
             <li>
                 <div class="day">Wednesday</div>
                 <?php if($meta['bs_wednesday_open'] && $meta['bs_wednesday_close']): ?>
-                    <div class="hours"><?php echo $meta['bs_wednesday_open'] ?></td><td> - </td><td><?php echo $meta['bs_wednesday_close'] ?></div>
+                    <div class="hours"><?php echo esc_html($meta['bs_wednesday_open']) ?> - <?php echo esc_html($meta['bs_wednesday_close']) ?></div>
                 <?php else: ?>
                     <div class="hours">Closed</div>
                 <?php endif; ?>
@@ -72,7 +72,7 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
             <li>
                 <div class="day">Thursday</div>
                 <?php if($meta['bs_thursday_open'] && $meta['bs_thursday_close']): ?>
-                    <div class="hours"><?php echo $meta['bs_thursday_open'] ?></td><td> - </td><td><?php echo $meta['bs_thursday_close'] ?></div>
+                    <div class="hours"><?php echo esc_html($meta['bs_thursday_open']) ?> - <?php echo esc_html($meta['bs_thursday_close']) ?></div>
                 <?php else: ?>
                     <div class="hours">Closed</div>
                 <?php endif; ?>
@@ -80,7 +80,7 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
             <li>
                 <div class="day">Friday</div>
                 <?php if($meta['bs_friday_open'] && $meta['bs_friday_close']): ?>
-                    <div class="hours"><?php echo $meta['bs_friday_open'] ?></td><td> - </td><td><?php echo $meta['bs_friday_close'] ?></div>
+                    <div class="hours"><?php echo esc_html($meta['bs_friday_open']) ?> - <?php echo esc_html($meta['bs_friday_close']) ?></div>
                 <?php else: ?>
                     <div class="hours">Closed</div>
                 <?php endif; ?>
@@ -88,7 +88,7 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
             <li>
                 <div class="day">Saturday</div>
                 <?php if($meta['bs_saturday_open'] && $meta['bs_saturday_close']): ?>
-                    <div class="hours"><?php echo $meta['bs_saturday_open'] ?></td><td> - </td><td><?php echo $meta['bs_saturday_close'] ?></div>
+                    <div class="hours"><?php echo esc_html($meta['bs_saturday_open']) ?> - <?php echo esc_html($meta['bs_saturday_close']) ?></div>
                 <?php else: ?>
                     <div class="hours">Closed</div>
                 <?php endif; ?>
@@ -96,7 +96,7 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
             <li>
                 <div class="day">Sunday</div>
                 <?php if($meta['bs_sunday_open'] && $meta['bs_sunday_close']): ?>
-                    <div class="hours"><?php echo $meta['bs_sunday_open'] ?></td><td> - </td><td><?php echo $meta['bs_sunday_close'] ?></div>
+                    <div class="hours"><?php echo esc_html($meta['bs_sunday_open']) ?> - <?php echo esc_html($meta['bs_sunday_close']) ?></div>
                 <?php else: ?>
                     <div class="hours">Closed</div>
                 <?php endif; ?>
@@ -108,30 +108,30 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
         <?php if($meta['bs_twitter'] || $meta['bs_twitter'] || $meta['bs_yelp']): ?>
         <div class="section-label"><strong>Web</strong></div>
             <?php if($meta['bs_twitter']): ?>
-            <a class="nodec" target="_blank" href="<?php echo $meta['bs_twitter'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'twitter.png' ?>" alt="Twitter" width="20" /></a>
+            <a class="nodec" target="_blank" href="<?php echo esc_url($meta['bs_twitter']) ?>"><img src="<?php echo esc_url(Broadstreet_Utility::getImageBaseURL().'twitter.png') ?>" alt="Twitter" width="20" /></a>
             <?php endif; ?>
             <?php if($meta['bs_facebook']): ?>
-            <a class="nodec" target="_blank" href="<?php echo $meta['bs_facebook'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'facebook.png' ?>" alt="Facebook" width="20" /></a>
+            <a class="nodec" target="_blank" href="<?php echo esc_url($meta['bs_facebook']) ?>"><img src="<?php echo esc_url(Broadstreet_Utility::getImageBaseURL().'facebook.png') ?>" alt="Facebook" width="20" /></a>
             <?php endif; ?>
             <?php if($meta['bs_gplus']): ?>
-            <a class="nodec" target="_blank" href="<?php echo $meta['bs_gplus'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'google.png' ?>" alt="Google Plus" width="20" /></a>
+            <a class="nodec" target="_blank" href="<?php echo esc_url($meta['bs_gplus']) ?>"><img src="<?php echo esc_url(Broadstreet_Utility::getImageBaseURL().'google.png') ?>" alt="Google Plus" width="20" /></a>
             <?php endif; ?>
             <?php if($meta['bs_yelp']): ?>
-            <a class="nodec" target="_blank" href="<?php echo $meta['bs_yelp'] ?>"><img src="<?php echo Broadstreet_Utility::getImageBaseURL().'yelp.png' ?>" alt="Yelp" width="20" /></a>
+            <a class="nodec" target="_blank" href="<?php echo esc_url($meta['bs_yelp']) ?>"><img src="<?php echo esc_url(Broadstreet_Utility::getImageBaseURL().'yelp.png') ?>" alt="Yelp" width="20" /></a>
             <?php endif; ?>
         <?php endif; ?>
 
 </div>
 <div id="biz-column-2" class="boxed-sizing">
     <?php if($meta['bs_featured_business']): ?>
-    <img style="float: right; padding: 2px 0 4px 4px;" src="<?php echo Broadstreet_Utility::featuredBusinessImage() ?>" />
+    <img style="float: right; padding: 2px 0 4px 4px;" src="<?php echo esc_url(Broadstreet_Utility::featuredBusinessImage()) ?>" />
     <?php endif; ?>
-    <?php echo $content; ?>
+    <?php echo wp_kses_post($content); ?>
 
 <?php if($meta['bs_video']): ?>
 <div class="bs-video">Video</div>
 <div class="bs-videoWrapper">
-    <?php echo Broadstreet_Utility::setVideoWidth($meta['bs_video'], 350); ?>
+    <?php echo wp_kses_post(Broadstreet_Utility::setVideoWidth($meta['bs_video'], 350)); ?>
 </div>
 <?php endif; ?>
 </div>

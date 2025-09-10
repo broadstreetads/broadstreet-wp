@@ -37,7 +37,7 @@ class Broadstreet_Zone_Widget extends WP_Widget
         echo $before_widget;
 
         if(trim($title))
-            echo $before_title . $title. $after_title;
+            echo $before_title . esc_html($title) . $after_title;
 
         if (!is_null($place_id)) {
             $attrs = array('place' => $place_id);
@@ -85,21 +85,21 @@ class Broadstreet_Zone_Widget extends WP_Widget
         <?php else: ?>
         <p>
             <label for="<?php echo $this->get_field_id('w_title'); ?>">Title (optional):</label>
-            <input class="widefat" type="input" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="<?php echo $instance['w_title'] ?>" />
+            <input class="widefat" type="input" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="<?php echo esc_attr($instance['w_title']) ?>" />
         </p>
         
         <p>
             <label for="<?php echo $this->get_field_id('w_info_string'); ?>">Zone</label>
             <select class="widefat" id="<?php echo $this->get_field_id( 'w_zone' ); ?>" name="<?php echo $this->get_field_name('w_zone'); ?>" >
                 <?php foreach($zones as $id => $zone): ?>
-                <option <?php if(isset($instance['w_zone']) && $instance['w_zone'] == $zone->id) echo "selected" ?> value="<?php echo $zone->id ?>"><?php echo $zone->name . ' (ID: ' . $zone->id . ')' ?></option>
+                <option <?php if(isset($instance['w_zone']) && $instance['w_zone'] == $zone->id) echo "selected" ?> value="<?php echo esc_attr($zone->id) ?>"><?php echo esc_html($zone->name . ' (ID: ' . $zone->id . ')') ?></option>
                 <?php endforeach; ?>
             </select>
         </p>
 
         <p>
             <label for="<?php echo $this->get_field_id('w_title'); ?>">Place (For AMP, the position number of this zone):</label>
-            <input class="widefat" type="input" id="<?php echo $this->get_field_id('w_place'); ?>" name="<?php echo $this->get_field_name('w_place'); ?>" value="<?php echo isset($instance['w_place']) ? $instance['w_place'] : null; ?>" />
+            <input class="widefat" type="input" id="<?php echo $this->get_field_id('w_place'); ?>" name="<?php echo $this->get_field_name('w_place'); ?>" value="<?php echo esc_attr(isset($instance['w_place']) ? $instance['w_place'] : '') ?>" />
         </p>
 
         <?php endif; ?>
@@ -142,7 +142,7 @@ class Broadstreet_Multiple_Zone_Widget extends WP_Widget
 
             for($i = 0; $i < intval($instance['w_num_zones']); $i++)
             {
-                echo $zone_data[$zone_ids[$i]]->html;
+                echo wp_kses_post($zone_data[$zone_ids[$i]]->html);
             }
 
             echo $after_widget;
@@ -200,14 +200,14 @@ class Broadstreet_Multiple_Zone_Widget extends WP_Widget
         <?php else: ?>
         <p>
             <label for="<?php echo $this->get_field_id('w_num_zones'); ?>">Number of Zones:</label>
-            <input class="widefat" type="text" id="<?php echo $this->get_field_id('w_num_zones'); ?>" name="<?php echo $this->get_field_name('w_num_zones'); ?>" value="<?php echo $instance['w_num_zones']; ?>" />
+            <input class="widefat" type="text" id="<?php echo $this->get_field_id('w_num_zones'); ?>" name="<?php echo $this->get_field_name('w_num_zones'); ?>" value="<?php echo esc_attr($instance['w_num_zones']); ?>" />
         </p>
        <?php for($i = 0; $i < intval($instance['w_num_zones']); $i++): ?>
        <p>
             <label for="<?php echo $this->get_field_id('w_zone') . "_$i"; ?>">Zone</label>
             <select class="widefat" id="<?php echo $this->get_field_id( 'w_zone' ). "_$i"; ?>" name="<?php echo $this->get_field_name('w_zone') . "[$i]"; ?>">
                 <?php foreach($zones as $id => $zone): ?>
-                <option <?php if(isset($instance['w_zone'][$i]) && $instance['w_zone'][$i] == $zone->id) echo "selected" ?> value="<?php echo $zone->id ?>"><?php echo $zone->name ?></option>
+                <option <?php if(isset($instance['w_zone'][$i]) && $instance['w_zone'][$i] == $zone->id) echo "selected" ?> value="<?php echo esc_attr($zone->id) ?>"><?php echo esc_html($zone->name) ?></option>
                 <?php endforeach; ?>
             </select>
        </p>
@@ -313,7 +313,7 @@ ZONE;
             <label for="<?php echo $this->get_field_id('w_zone1'); ?>">Left Zone</label>
             <select class="widefat" id="<?php echo $this->get_field_id( 'w_zone1' ); ?>" name="<?php echo $this->get_field_name('w_zone1'); ?>" >
                 <?php foreach($zones as $id => $zone): ?>
-                <option <?php if(isset($instance['w_zone1']) && $instance['w_zone1'] == $zone->id) echo "selected" ?> value="<?php echo $zone->id ?>"><?php echo $zone->name ?></option>
+                <option <?php if(isset($instance['w_zone1']) && $instance['w_zone1'] == $zone->id) echo "selected" ?> value="<?php echo esc_attr($zone->id) ?>"><?php echo esc_html($zone->name) ?></option>
                 <?php endforeach; ?>
             </select>
        </p>
@@ -321,7 +321,7 @@ ZONE;
             <label for="<?php echo $this->get_field_id('w_zone2'); ?>">Right Zone</label>
             <select class="widefat" id="<?php echo $this->get_field_id( 'w_zone2' ); ?>" name="<?php echo $this->get_field_name('w_zone2'); ?>" >
                 <?php foreach($zones as $id => $zone): ?>
-                <option <?php if(isset($instance['w_zone2']) && $instance['w_zone2'] == $zone->id) echo "selected" ?> value="<?php echo $zone->id ?>"><?php echo $zone->name ?></option>
+                <option <?php if(isset($instance['w_zone2']) && $instance['w_zone2'] == $zone->id) echo "selected" ?> value="<?php echo esc_attr($zone->id) ?>"><?php echo esc_html($zone->name) ?></option>
                 <?php endforeach; ?>
             </select>
        </p>
@@ -410,14 +410,14 @@ class Broadstreet_Business_Listing_Widget extends WP_Widget
         
         echo $before_widget;
         
-        if($title);
-            echo $before_title . $title. $after_title;
+        if($title)
+            echo $before_title . esc_html($title) . $after_title;
             
         echo '<ul>';
         // The 2nd Loop
         foreach($posts as $post)
         {
-            echo '<li><a href="'.get_permalink($post->ID).'">' . $post->post_title . '</a></li>';
+            echo '<li><a href="'.esc_url(get_permalink($post->ID)).'">' . esc_html($post->post_title) . '</a></li>';
         }
 
         echo '</ul>';
@@ -460,7 +460,7 @@ class Broadstreet_Business_Listing_Widget extends WP_Widget
             
         <p>
             <label for="<?php echo $this->get_field_id('w_title'); ?>">Title:</label>
-            <input class="widefat" type="text" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="<?php echo $instance['w_title']; ?>" />
+            <input class="widefat" type="text" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="<?php echo esc_attr($instance['w_title']); ?>" />
         </p>
         <?php if(is_array($categories)): ?>
        <p>
@@ -468,7 +468,7 @@ class Broadstreet_Business_Listing_Widget extends WP_Widget
             <select class="widefat" id="<?php echo $this->get_field_id( 'w_category' ); ?>" name="<?php echo $this->get_field_name('w_category'); ?>" >
                 <option value="all">All Categories</option>
                 <?php foreach($categories as $cat): ?>
-                <option <?php if($instance['w_category'] == $cat->term_id) echo "selected" ?> value="<?php echo $cat->term_id ?>"><?php echo $cat->name ?></option>
+                <option <?php if($instance['w_category'] == $cat->term_id) echo "selected" ?> value="<?php echo esc_attr($cat->term_id) ?>"><?php echo esc_html($cat->name) ?></option>
                 <?php endforeach; ?>
             </select>
        </p>
@@ -489,7 +489,7 @@ class Broadstreet_Business_Listing_Widget extends WP_Widget
        </p>
         <p>
             <label for="<?php echo $this->get_field_id('w_count'); ?>">Number of Items to List:</label>
-            <input class="widefat" type="text" id="<?php echo $this->get_field_id('w_count'); ?>" name="<?php echo $this->get_field_name('w_count'); ?>" value="<?php echo $instance['w_count']; ?>" />
+            <input class="widefat" type="text" id="<?php echo $this->get_field_id('w_count'); ?>" name="<?php echo $this->get_field_name('w_count'); ?>" value="<?php echo esc_attr($instance['w_count']); ?>" />
         </p>
         </div>
        <?php
@@ -559,9 +559,9 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
             $post = $posts[0];
             
             if($title)
-                echo $before_title . $title. $after_title;
+                echo $before_title . esc_html($title) . $after_title;
             else
-                echo $before_title . $post->post_title. $after_title;
+                echo $before_title . esc_html($post->post_title) . $after_title;
             
             echo '<div>';
             
@@ -585,14 +585,14 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
             }
 
             if($thumb_url)
-                echo '<a href="'.$link.'"><img width="100%" alt="Business profile" src="'.$thumb_url.'"></a>';
+                echo '<a href="'.esc_url($link).'"><img width="100%" alt="Business profile" src="'.esc_url($thumb_url).'"></a>';
             
-            echo '<strong><a href="'.$link.'">'.$post->post_title.'</a></strong><br/>';
+            echo '<strong><a href="'.esc_url($link).'">'.esc_html($post->post_title).'</a></strong><br/>';
 
             if($meta['bs_update_source'])
             {
                 echo '<div style="border:1px solid #ccc;margin:3px 0;border-radius:3px;padding:5px;text-align:center;background: rgb(254,252,234);background: -moz-linear-gradient(top,  rgba(254,252,234,1) 0%, rgba(241,218,54,1) 100%);background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(254,252,234,1)), color-stop(100%,rgba(241,218,54,1)));background: -webkit-linear-gradient(top,  rgba(254,252,234,1) 0%,rgba(241,218,54,1) 100%);background: -o-linear-gradient(top,  rgba(254,252,234,1) 0%,rgba(241,218,54,1) 100%);background: -ms-linear-gradient(top,  rgba(254,252,234,1) 0%,rgba(241,218,54,1) 100%);background: linear-gradient(to bottom,  rgba(254,252,234,1) 0%,rgba(241,218,54,1) 100%);filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#fefcea", endColorstr="#f1da36",GradientType=0 );padding: 5px;margin-bottom: 10px;border-radius: 3px;border: 1px solid #ddd;text-align: center;">';
-                echo $meta['bs_advertisement_html'];
+                echo wp_kses_post($meta['bs_advertisement_html']);
                 echo '</div>';
             }
             
@@ -601,7 +601,7 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
             if($meta['bs_featured_business'])
                 echo '<img style="width: 20%; float: right; padding: 2px 0 4px 4px;" src="' . Broadstreet_Utility::featuredBusinessImage().'" />';
             
-            echo wp_trim_words(strip_tags($post->post_content), 30).' <a href="'.$link.'">more.</a></p>';
+            echo wp_trim_words(strip_tags($post->post_content), 30).' <a href="'.esc_url($link).'">more.</a></p>';
             
             echo '</div>';
         }
@@ -656,14 +656,14 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
         <p>
             <label for="<?php echo $this->get_field_id('w_title'); ?>">Title:</label><br/>
             <small>If this is blank, we'll default to the business name.</small>
-            <input class="widefat" type="text" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="<?php echo $instance['w_title']; ?>" />
+            <input class="widefat" type="text" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="<?php echo esc_attr($instance['w_title']); ?>" />
         </p>
        <p>
             <label for="<?php echo $this->get_field_id('w_business'); ?>">Business to show:</label>
             <select class="widefat" id="<?php echo $this->get_field_id( 'w_business' ); ?>" name="<?php echo $this->get_field_name('w_business'); ?>" >
                 <option value="random">Random Listing</option>
                 <?php foreach($businesses as $bus): ?>
-                <option <?php if($instance['w_business'] == $bus->ID) echo "selected" ?> value="<?php echo $bus->ID ?>"><?php echo $bus->post_title ?></option>
+                <option <?php if($instance['w_business'] == $bus->ID) echo "selected" ?> value="<?php echo esc_attr($bus->ID) ?>"><?php echo esc_html($bus->post_title) ?></option>
                 <?php endforeach; ?>
             </select>
        </p>
@@ -674,7 +674,7 @@ class Broadstreet_Business_Profile_Widget extends WP_Widget
             <select class="widefat" id="<?php echo $this->get_field_id( 'w_category' ); ?>" name="<?php echo $this->get_field_name('w_category'); ?>" >
                 <option value="any">Any Category</option>
                 <?php foreach($categories as $cat): ?>
-                <option <?php if($instance['w_category'] == $cat->term_id) echo "selected" ?> value="<?php echo $cat->term_id ?>"><?php echo $cat->name ?></option>
+                <option <?php if($instance['w_category'] == $cat->term_id) echo "selected" ?> value="<?php echo esc_attr($cat->term_id) ?>"><?php echo esc_html($cat->name) ?></option>
                 <?php endforeach; ?>
             </select>
        </p>
@@ -726,13 +726,13 @@ class Broadstreet_Business_Categories_Widget extends WP_Widget
         echo $before_widget;
             
         if($title)
-            echo $before_title . $title. $after_title;
+            echo $before_title . esc_html($title) . $after_title;
         
         echo '<ul>';
         foreach($rows as $row)
         {
             echo '<li>';
-                echo '<a href="'.get_term_link($row->slug, $row->taxonomy).'">'.$row->name.($counts == 'yes' ? ' ('.$row->count.')' : '').'</a>';
+                echo '<a href="'.esc_url(get_term_link($row->slug, $row->taxonomy)).'">'.esc_html($row->name.($counts == 'yes' ? ' ('.$row->count.')' : '')).'</a>';
             echo '</li>';
         }
         echo '</ul>';
@@ -769,7 +769,7 @@ class Broadstreet_Business_Categories_Widget extends WP_Widget
         <div class="widget-content">
         <p>
             <label for="<?php echo $this->get_field_id('w_title'); ?>">Title:</label><br/>
-            <input class="widefat" type="text" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="<?php echo $instance['w_title']; ?>" />
+            <input class="widefat" type="text" id="<?php echo $this->get_field_id('w_title'); ?>" name="<?php echo $this->get_field_name('w_title'); ?>" value="<?php echo esc_attr($instance['w_title']); ?>" />
         </p>
        <p>
            <label for="<?php echo $this->get_field_id('w_show_counts'); ?>">Include post counts? </label>
