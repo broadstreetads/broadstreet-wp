@@ -1,5 +1,6 @@
 <script src="https://broadstreet-common.s3.amazonaws.com/broadstreet-net/init.js"></script>
 <form method="post">
+<?php wp_nonce_field('broadstreet_business_settings', 'broadstreet_business_nonce'); ?>
 <div id="main">
       <?php Broadstreet_View::load('admin/global/header') ?>
       <div class="left_column">

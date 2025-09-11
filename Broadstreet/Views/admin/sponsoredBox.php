@@ -91,7 +91,7 @@
                             var el = document.getElementById('bs_sponsor_old_advertisement_id');
                             var post_id = editor.getCurrentPostId();
 
-                            jQuery.get(window.ajaxurl + '?action=get_sponsored_meta&post_id=' + post_id, function (data) {
+                            jQuery.get(window.ajaxurl + '?action=get_sponsored_meta&post_id=' + post_id + '&nonce=' + broadstreet_ajax.get_sponsor_meta_nonce, function (data) {
                                 var meta = data.meta;
                                 console.info('Broadstreet Meta Update ...', meta);
                                 if (meta.bs_sponsor_is_sponsored == '1') {
