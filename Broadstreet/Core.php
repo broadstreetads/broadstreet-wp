@@ -209,7 +209,9 @@ class Broadstreet_Core
               'callback' => function($request) {
                 return Broadstreet_Utility::getAvailableTargets();
               },
-              'permission_callback' => '__return_true', # public
+              'permission_callback' => function() {
+                return current_user_can('read');
+              },
             ));
 
             # /wp-json/broadstreet/v1/refresh
@@ -221,7 +223,9 @@ class Broadstreet_Core
                       'success' => $info ? true : false
                   ];
                 },
-                'permission_callback' => '__return_true', #public
+                'permission_callback' => function() {
+                  return current_user_can('manage_options');
+                },
               ));            
         });
     }
@@ -688,6 +692,17 @@ class Broadstreet_Core
             wp_enqueue_script('angular-js', Broadstreet_Utility::getJSBaseURL().'angular.min.js?v='. BROADSTREET_VERSION);
             wp_enqueue_script('isteven-multi-js', Broadstreet_Utility::getJSBaseURL().'isteven-multi-select.js');
             wp_enqueue_style ('isteven-multi-css',  Broadstreet_Utility::getCSSBaseURL() . 'isteven-multi-select.css');
+            
+            // Localize script with nonces for AJAX security
+            wp_localize_script('Broadstreet-main', 'broadstreet_ajax', array(
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'save_settings_nonce' => wp_create_nonce('broadstreet_save_settings'),
+                'save_zone_settings_nonce' => wp_create_nonce('broadstreet_save_zone_settings'),
+                'register_nonce' => wp_create_nonce('broadstreet_register'),
+                'create_advertiser_nonce' => wp_create_nonce('broadstreet_create_advertiser'),
+                'import_facebook_nonce' => wp_create_nonce('broadstreet_import_facebook'),
+                'get_sponsor_meta_nonce' => wp_create_nonce('broadstreet_get_sponsor_meta')
+            ));
         }
 
         # Only register on the post editing page
@@ -697,6 +712,19 @@ class Broadstreet_Core
                 wp_enqueue_style ('Broadstreet-vendorcss-time', Broadstreet_Utility::getVendorBaseURL() . 'timepicker/css/timePicker.css');
                 wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js?v='. BROADSTREET_VERSION);
                 wp_enqueue_script('Broadstreet-vendorjs-time'  ,  Broadstreet_Utility::getVendorBaseURL().'timepicker/js/jquery.timePicker.min.js');
+                
+                // Only localize if not already localized (for admin pages)
+                if (!wp_script_is('Broadstreet-main', 'localized')) {
+                    wp_localize_script('Broadstreet-main', 'broadstreet_ajax', array(
+                        'ajax_url' => admin_url('admin-ajax.php'),
+                        'save_settings_nonce' => wp_create_nonce('broadstreet_save_settings'),
+                        'save_zone_settings_nonce' => wp_create_nonce('broadstreet_save_zone_settings'),
+                        'register_nonce' => wp_create_nonce('broadstreet_register'),
+                        'create_advertiser_nonce' => wp_create_nonce('broadstreet_create_advertiser'),
+                        'import_facebook_nonce' => wp_create_nonce('broadstreet_import_facebook'),
+                        'get_sponsor_meta_nonce' => wp_create_nonce('broadstreet_get_sponsor_meta')
+                    ));
+                }
             }
         }
 
@@ -812,8 +840,17 @@ class Broadstreet_Core
     }
 
     public function adminMenuBusinessCallback() {
-
+        // Verify nonce for security if POST data is present
         if (isset($_POST['featured_business_image'])) {
+            if (!isset($_POST['broadstreet_business_nonce']) || !wp_verify_nonce($_POST['broadstreet_business_nonce'], 'broadstreet_business_settings')) {
+                wp_die('Security check failed');
+            }
+            
+            // Check user capabilities
+            if (!current_user_can('manage_options')) {
+                wp_die('Insufficient permissions');
+            }
+            
             $featured_image = Broadstreet_Utility::featuredBusinessImage($_POST['featured_business_image']);
         } else {
             $featured_image = Broadstreet_Utility::featuredBusinessImage();
@@ -1073,6 +1110,16 @@ class Broadstreet_Core
      */
     public function saveAdVisibilityMeta($post_id) {
         if(isset($_POST['bs_ads_disabled_submit'])) {
+            // Verify nonce for security
+            if (!isset($_POST['broadstreetadvisibility']) || !wp_verify_nonce($_POST['broadstreetadvisibility'], plugin_basename(__FILE__))) {
+                return;
+            }
+            
+            // Check user capabilities
+            if (!current_user_can('edit_post', $post_id)) {
+                return;
+            }
+            
             # save settings
             foreach(self::$_visibilityDefaults as $key => $value)
             {
@@ -1142,6 +1189,16 @@ class Broadstreet_Core
     {
         if(isset($_POST['bs_sponsor_submit']))
         {
+            // Verify nonce for security
+            if (!isset($_POST['broadstreetsponsored']) || !wp_verify_nonce($_POST['broadstreetsponsored'], plugin_basename(__FILE__))) {
+                return;
+            }
+            
+            // Check user capabilities
+            if (!current_user_can('edit_post', $post_id)) {
+                return;
+            }
+            
             # hold on to this in case it changes
             $old_advertiser_id = $_POST['bs_sponsor_old_advertiser_id'];
 
@@ -1272,6 +1329,16 @@ class Broadstreet_Core
     {
         if(isset($_POST['bs_submit']))
         {
+            // Verify nonce for security
+            if (!isset($_POST['broadstreetnoncename']) || !wp_verify_nonce($_POST['broadstreetnoncename'], plugin_basename(__FILE__))) {
+                return;
+            }
+            
+            // Check user capabilities
+            if (!current_user_can('edit_post', $post_id)) {
+                return;
+            }
+            
             foreach(self::$_businessDefaults as $key => $value)
             {
                 // Special handling for video content - only allow video and iframe tags to prevent XSS attacks
