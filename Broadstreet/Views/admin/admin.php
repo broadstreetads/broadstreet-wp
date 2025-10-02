@@ -91,6 +91,7 @@
                         <div class="save-container">
                             <span class="success" id="save-success">Saved!</span>
                             <input id="save-broadstreet" type="button" value="Save" name="" />
+                            <input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce('bs_save_settings_nonce'); ?>" />
                         </div>
                     </div>
                     <div class="clearfix"></div>

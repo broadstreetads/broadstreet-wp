@@ -19,6 +19,16 @@ class Broadstreet_Ajax
      */
     public static function saveSettings()
     {
+        // Verify nonce to prevent CSRF attacks
+        if (!wp_verify_nonce($_POST['_wpnonce'], 'bs_save_settings_nonce')) {
+            die(json_encode(array('success' => false, 'message' => 'Security check failed. Please refresh the page and try again.')));
+        }
+        
+        // Check user capabilities
+        if (!current_user_can('manage_options')) {
+            die(json_encode(array('success' => false, 'message' => 'You do not have permission to perform this action.')));
+        }
+        
         // Sanitize the API key before storing it
         $api_key = sanitize_text_field($_POST['api_key']);
         Broadstreet_Utility::setOption(Broadstreet_Core::KEY_API_KEY, $api_key);
