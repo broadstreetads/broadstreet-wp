@@ -46,16 +46,17 @@ jQuery(function($){
 
         var network_id = $('#network').val();
 
-        jQuery.post(ajaxurl, {
-             action: 'bs_save_settings',
-             api_key: $('#api_key').val(),
-             business_enabled: $('#business_enabled').is(':checked'),
-             network_id: network_id
+        jQuery.post(
+            ajaxurl, {
+                action: 'bs_save_settings',
+                api_key: $('#api_key').val(),
+                business_enabled: $('#business_enabled').is(':checked'),
+                network_id: network_id,
+                _wpnonce: $('input[name="_wpnonce"]').val()
             },
             function(response) {
                 if (console) console.log(response);
-                if(response.success)
-                {
+                if(response.success) {
                     markSaved('#save-success');
                     $('#network').empty();
 
@@ -86,12 +87,18 @@ jQuery(function($){
                         alert(response.message);
                     }
 
-                    if(needRefresh) {
-                        location.reload();
-                    }
+                     if(needRefresh) {
+                         location.reload();
+                     }
+                } else {
+                    // Show error message if save failed
+                    alert('Save failed: ' + (response.message || 'Unknown error'));
                 }
             },
-        'json');
+            'json').fail(function(xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+                alert('Network error occurred. Please try again.');
+            });
     });
 
 
@@ -101,10 +108,10 @@ jQuery(function($){
         var el = $(e.target);
         var name = el.attr('data-name');
 
-        $.post(ajaxurl, {
-            action: 'create_advertiser',
-            name: name
-        }, function(response) {
+         $.post(ajaxurl, {
+             action: 'create_advertiser',
+             name: name
+         }, function(response) {
             console.log(response);
             if(response.success) {
 
