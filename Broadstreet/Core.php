@@ -673,7 +673,7 @@ class Broadstreet_Core
             // Check for video security warning
             $security_warning = get_transient('broadstreet_video_security_warning_' . get_current_user_id());
             if ($security_warning) {
-                echo '<div class="notice notice-warning is-dismissible"><p><strong>Broadstreet Security Notice:</strong> Potentially malicious content was detected and removed from the video embed field. JavaScript protocols, event handlers, and script tags are not allowed for security reasons.</p></div>';
+	                echo '<div class="notice notice-error is-dismissible"><p><strong>Broadstreet Security Notice:</strong> Potentially malicious content was detected and removed from the video embed field. JavaScript protocols, event handlers, and script tags are not allowed for security reasons.</p></div>';
                 delete_transient('broadstreet_video_security_warning_' . get_current_user_id());
             }
         }
@@ -1347,6 +1347,10 @@ class Broadstreet_Core
                     if (preg_match('/<script/i', $original_content)) {
                         $security_warning = true;
                     }
+
+                    // 5. Clean up any broken/suspicious src attributes after sanitization
+                    // This removes leftover garbage from removed javascript:/data: protocols
+                    $video_content = preg_replace('/(<(?:iframe|video|source)[^>]*\s+src\s*=\s*[\'"])(?![\'"]?https?:\/\/)[^\'"]*([\'"])/i', '$1$2', $video_content);
 
                     // Save the sanitized video content
                     Broadstreet_Utility::setPostMeta($post_id, $key, $video_content);
