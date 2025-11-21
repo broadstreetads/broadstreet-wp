@@ -131,7 +131,7 @@ $thumb_url     = wp_get_attachment_image_src(get_post_thumbnail_id($GLOBALS['pos
 <?php if($meta['bs_video']): ?>
 <div class="bs-video">Video</div>
 <div class="bs-videoWrapper">
-    <?php echo Broadstreet_Utility::setVideoWidth($meta['bs_video'], 350); ?>
+    <?php echo wp_kses_post(Broadstreet_Utility::setVideoWidth($meta['bs_video'], 350)); ?>
 </div>
 <?php endif; ?>
 </div>
