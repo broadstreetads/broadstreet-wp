@@ -14,7 +14,7 @@
                             </p>
                             <ol>
                                 <?php foreach($errors as $error): ?>
-                                    <li><?php echo $error; ?></li>
+                                    <li><?php echo wp_kses_post($error); ?></li>
                                 <?php endforeach; ?>
                             </ol>
                         </div>

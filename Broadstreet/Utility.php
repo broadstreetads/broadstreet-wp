@@ -342,28 +342,28 @@ class Broadstreet_Utility
         if($single_line)
         {
             if($meta['bs_address_1'])
-                $address = "{$meta['bs_address_1']}";
+                $address = esc_html($meta['bs_address_1']);
 
             if($meta['bs_address_2'])
-                $address .= ", {$meta['bs_address_2']}";
+                $address .= ", " . esc_html($meta['bs_address_2']);
 
-            $address .= ", {$meta['bs_city']}, {$meta['bs_state']}";
+            $address .= ", " . esc_html($meta['bs_city']) . ", " . esc_html($meta['bs_state']);
 
             if($meta['bs_postal'])
-                $address .= ", {$meta['bs_postal']}";
+                $address .= ", " . esc_html($meta['bs_postal']);
         }
         else
         {
             if($meta['bs_address_1'])
-                $address = "{$meta['bs_address_1']}";
+                $address = esc_html($meta['bs_address_1']);
 
             if($meta['bs_address_2'])
-                $address .= "\n{$meta['bs_address_2']}";
+                $address .= "\n" . esc_html($meta['bs_address_2']);
 
-            $address .= "\n{$meta['bs_city']}, {$meta['bs_state']}";
+            $address .= "\n" . esc_html($meta['bs_city']) . ", " . esc_html($meta['bs_state']);
 
             if($meta['bs_postal'])
-                $address .= " {$meta['bs_postal']}";
+                $address .= " " . esc_html($meta['bs_postal']);
 
             if($multi_html)
                 $address = nl2br($address);
