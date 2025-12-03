@@ -91,7 +91,8 @@ class Broadstreet_Ajax
     }
 
     public static function getSponsorPostMeta() {
-        die(json_encode(array('success' => true, 'meta' => Broadstreet_Utility::getAllPostMeta($_GET['post_id']))));
+        $post_id = isset($_GET['post_id']) ? intval($_GET['post_id']) : 0;
+        die(json_encode(array('success' => true, 'meta' => Broadstreet_Utility::getAllPostMeta($post_id))));
     }
 
     public static function importFacebook()
