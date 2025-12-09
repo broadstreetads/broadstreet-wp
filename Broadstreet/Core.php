@@ -1272,6 +1272,9 @@ class Broadstreet_Core
     {
         if(isset($_POST['bs_submit']))
         {
+            // Define URL fields that should use esc_url_raw for sanitization
+            $url_fields = array('bs_website', 'bs_menu', 'bs_twitter', 'bs_facebook', 'bs_gplus', 'bs_yelp', 'bs_offer_link');
+
             foreach(self::$_businessDefaults as $key => $value)
             {
                 // Special handling for video content - only allow video and iframe tags to prevent XSS attacks
@@ -1302,21 +1305,33 @@ class Broadstreet_Core
                             'allow' => true
                         )
                     );
-                    
+
                     // Strip all tags except those in the whitelist
                     $video_content = wp_kses($_POST[$key], $allowed_tags);
-                    
+
                     // Save the sanitized video content
                     Broadstreet_Utility::setPostMeta($post_id, $key, $video_content);
-                    
+
                     // Skip the default handling for this field
                     continue;
                 }
 
-                if(isset($_POST[$key]))
-                    Broadstreet_Utility::setPostMeta($post_id, $key, is_string($_POST[$key]) ? trim($_POST[$key]) : $_POST[$key]);
-                elseif($key == 'bs_images')
+                if(isset($_POST[$key])) {
+                    // Sanitize input based on field type to prevent XSS attacks
+                    if (is_array($_POST[$key])) {
+                        // Handle array fields (like bs_images)
+                        $sanitized_value = array_map('sanitize_text_field', $_POST[$key]);
+                    } elseif (in_array($key, $url_fields)) {
+                        // URL fields - use esc_url_raw for database storage
+                        $sanitized_value = esc_url_raw(trim($_POST[$key]));
+                    } else {
+                        // Text fields - use sanitize_text_field to strip tags and encode special chars
+                        $sanitized_value = sanitize_text_field(trim($_POST[$key]));
+                    }
+                    Broadstreet_Utility::setPostMeta($post_id, $key, $sanitized_value);
+                } elseif($key == 'bs_images') {
                     Broadstreet_Utility::setPostMeta($post_id, $key, self::$_businessDefaults[$key]);
+                }
             }
         }
     }
