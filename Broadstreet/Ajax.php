@@ -92,6 +92,12 @@ class Broadstreet_Ajax
 
     public static function getSponsorPostMeta() {
         $post_id = isset($_GET['post_id']) ? intval($_GET['post_id']) : 0;
+
+        // Verify user has permission to edit this post (fixes IDOR vulnerability)
+        if (!current_user_can('edit_post', $post_id)) {
+            die(json_encode(array('success' => false, 'error' => 'Permission denied')));
+        }
+
         die(json_encode(array('success' => true, 'meta' => Broadstreet_Utility::getAllPostMeta($post_id))));
     }
 
