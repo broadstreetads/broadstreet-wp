@@ -19,6 +19,11 @@ class Broadstreet_Ajax
      */
     public static function saveSettings()
     {
+        // Verify user has admin permissions (fixes Broken Access Control vulnerability)
+        if (!current_user_can('manage_options')) {
+            die(json_encode(array('success' => false, 'error' => 'Permission denied')));
+        }
+
         // Sanitize the API key before storing it
         $api_key = sanitize_text_field($_POST['api_key']);
         Broadstreet_Utility::setOption(Broadstreet_Core::KEY_API_KEY, $api_key);
@@ -64,6 +69,11 @@ class Broadstreet_Ajax
      */
     public static function saveZoneSettings()
     {
+        // Verify user has admin permissions (fixes Broken Access Control vulnerability)
+        if (!current_user_can('manage_options')) {
+            die(json_encode(array('success' => false, 'error' => 'Permission denied')));
+        }
+
         $settings = json_decode(file_get_contents("php://input"));
 
         if($settings)
@@ -81,11 +91,18 @@ class Broadstreet_Ajax
 
     public static function createAdvertiser()
     {
+        // Verify user has admin permissions (fixes Broken Access Control vulnerability)
+        if (!current_user_can('manage_options')) {
+            die(json_encode(array('success' => false, 'error' => 'Permission denied')));
+        }
+
         $api_key    = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_API_KEY);
         $network_id = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
 
         $api        = Broadstreet_Utility::getBroadstreetClient();
-        $advertiser = $api->createAdvertiser($network_id, stripslashes($_POST['name']));
+        // Sanitize advertiser name to prevent XSS
+        $name       = sanitize_text_field(stripslashes($_POST['name']));
+        $advertiser = $api->createAdvertiser($network_id, $name);
 
         die(json_encode(array('success' => true, 'advertiser' => $advertiser)));
     }
@@ -103,9 +120,16 @@ class Broadstreet_Ajax
 
     public static function importFacebook()
     {
+        $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+
+        // Verify user has permission to edit this post (fixes Broken Access Control vulnerability)
+        if (!current_user_can('edit_post', $post_id)) {
+            die(json_encode(array('success' => false, 'error' => 'Permission denied')));
+        }
+
         try
         {
-            $profile = Broadstreet_Utility::importBusiness($_POST['id'], $_POST['post_id']);
+            $profile = Broadstreet_Utility::importBusiness(sanitize_text_field($_POST['id']), $post_id);
             die(json_encode(array('success' => (bool)$profile, 'profile' => $profile)));
         }
         catch(Broadstreet_ServerException $ex)
@@ -116,12 +140,17 @@ class Broadstreet_Ajax
 
     public static function register()
     {
+        // Verify user has admin permissions (fixes Broken Access Control vulnerability)
+        if (!current_user_can('manage_options')) {
+            die(json_encode(array('success' => false, 'error' => 'Permission denied')));
+        }
+
         $api = Broadstreet_Utility::getBroadstreetClient(true);
 
         try
         {
             # Register the user by email address
-            $resp = $api->register($_POST['email']);
+            $resp = $api->register(sanitize_email($_POST['email']));
             Broadstreet_Utility::setOption(Broadstreet_Core::KEY_API_KEY, $resp->access_token);
 
             # Create a network for the new user
