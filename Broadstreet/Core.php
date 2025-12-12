@@ -688,6 +688,11 @@ class Broadstreet_Core
             wp_enqueue_script('angular-js', Broadstreet_Utility::getJSBaseURL().'angular.min.js?v='. BROADSTREET_VERSION);
             wp_enqueue_script('isteven-multi-js', Broadstreet_Utility::getJSBaseURL().'isteven-multi-select.js');
             wp_enqueue_style ('isteven-multi-css',  Broadstreet_Utility::getCSSBaseURL() . 'isteven-multi-select.css');
+
+            // Pass nonce to JavaScript for AJAX security
+            wp_localize_script('Broadstreet-main', 'broadstreetAjax', [
+                'nonce' => wp_create_nonce('broadstreet_ajax_nonce')
+            ]);
         }
 
         # Only register on the post editing page
@@ -697,6 +702,11 @@ class Broadstreet_Core
                 wp_enqueue_style ('Broadstreet-vendorcss-time', Broadstreet_Utility::getVendorBaseURL() . 'timepicker/css/timePicker.css');
                 wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js?v='. BROADSTREET_VERSION);
                 wp_enqueue_script('Broadstreet-vendorjs-time'  ,  Broadstreet_Utility::getVendorBaseURL().'timepicker/js/jquery.timePicker.min.js');
+
+                // Pass nonce to JavaScript for AJAX security
+                wp_localize_script('Broadstreet-main', 'broadstreetAjax', [
+                    'nonce' => wp_create_nonce('broadstreet_ajax_nonce')
+                ]);
             }
         }
 

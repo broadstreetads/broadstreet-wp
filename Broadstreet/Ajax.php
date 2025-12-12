@@ -19,6 +19,13 @@ class Broadstreet_Ajax
      */
     public static function saveSettings()
     {
+        // Verify nonce and check user permissions
+        check_ajax_referer('broadstreet_ajax_nonce', 'nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Unauthorized')));
+        }
+
         // Sanitize the API key before storing it
         $api_key = sanitize_text_field($_POST['api_key']);
         Broadstreet_Utility::setOption(Broadstreet_Core::KEY_API_KEY, $api_key);
@@ -64,6 +71,16 @@ class Broadstreet_Ajax
      */
     public static function saveZoneSettings()
     {
+        // Verify nonce (passed as URL parameter) and check user permissions
+        // Note: Using $_GET since nonce is in URL, not in php://input JSON body
+        if (!isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'broadstreet_ajax_nonce')) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Security check failed')));
+        }
+
+        if (!current_user_can('manage_options')) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Unauthorized')));
+        }
+
         $settings = json_decode(file_get_contents("php://input"));
 
         if($settings)
@@ -81,6 +98,13 @@ class Broadstreet_Ajax
 
     public static function createAdvertiser()
     {
+        // Verify nonce and check user permissions
+        check_ajax_referer('broadstreet_ajax_nonce', 'nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Unauthorized')));
+        }
+
         $api_key    = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_API_KEY);
         $network_id = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
 
@@ -91,12 +115,26 @@ class Broadstreet_Ajax
     }
 
     public static function getSponsorPostMeta() {
+        // Verify nonce and check user permissions
+        check_ajax_referer('broadstreet_ajax_nonce', 'nonce');
+
+        if (!current_user_can('edit_posts')) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Unauthorized')));
+        }
+
         $post_id = isset($_GET['post_id']) ? intval($_GET['post_id']) : 0;
         die(json_encode(array('success' => true, 'meta' => Broadstreet_Utility::getAllPostMeta($post_id))));
     }
 
     public static function importFacebook()
     {
+        // Verify nonce and check user permissions
+        check_ajax_referer('broadstreet_ajax_nonce', 'nonce');
+
+        if (!current_user_can('edit_posts')) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Unauthorized')));
+        }
+
         try
         {
             $profile = Broadstreet_Utility::importBusiness($_POST['id'], $_POST['post_id']);
@@ -110,6 +148,13 @@ class Broadstreet_Ajax
 
     public static function register()
     {
+        // Verify nonce and check user permissions
+        check_ajax_referer('broadstreet_ajax_nonce', 'nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Unauthorized')));
+        }
+
         $api = Broadstreet_Utility::getBroadstreetClient(true);
 
         try

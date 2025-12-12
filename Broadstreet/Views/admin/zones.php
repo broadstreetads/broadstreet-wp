@@ -460,7 +460,7 @@ try {
                 console.log('Saving settings:', $scope.data.positions_zones);
                 $scope.loadingMessage = 'Saving ...';
                 var params = $scope.data.positions_zones;
-                $http.post(window.ajaxurl + '?action=save_zone_settings', params)
+                $http.post(window.ajaxurl + '?action=save_zone_settings&nonce=' + broadstreetAjax.nonce, params)
                     .success(function(response) {
                         $scope.loadingMessage = null;
                         var saveSuccessEl = document.getElementById('save-success');
