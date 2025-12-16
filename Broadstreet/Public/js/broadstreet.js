@@ -30,7 +30,7 @@ jQuery(function($){
 
         if(!email) return false;
 
-        $.post(ajaxurl, {action: 'register', email: email}, function(response) {
+        $.post(ajaxurl, {action: 'register', email: email, nonce: broadstreetAjax.nonce}, function(response) {
             if(response.success)
             {
                 location.reload();
@@ -50,7 +50,8 @@ jQuery(function($){
              action: 'bs_save_settings',
              api_key: $('#api_key').val(),
              business_enabled: $('#business_enabled').is(':checked'),
-             network_id: network_id
+             network_id: network_id,
+             nonce: broadstreetAjax.nonce
             },
             function(response) {
                 if (console) console.log(response);
@@ -103,7 +104,8 @@ jQuery(function($){
 
         $.post(ajaxurl, {
             action: 'create_advertiser',
-            name: name
+            name: name,
+            nonce: broadstreetAjax.nonce
         }, function(response) {
             console.log(response);
             if(response.success) {
@@ -241,7 +243,7 @@ jQuery(function($){
 
         $('#import-progress').show();
 
-        $.post(ajaxurl, {id:id, post_id: window.bs_post_id, action: 'import_facebook'}, function(response) {
+        $.post(ajaxurl, {id:id, post_id: window.bs_post_id, action: 'import_facebook', nonce: broadstreetAjax.nonce}, function(response) {
             console.log(response);
             if(response.success) {
                 var count = 0;
