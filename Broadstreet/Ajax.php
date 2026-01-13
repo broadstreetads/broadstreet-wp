@@ -19,13 +19,13 @@ class Broadstreet_Ajax
      */
     public static function saveSettings()
     {
-        // Verify user has admin permissions (fixes Broken Access Control vulnerability)
+        // Verify nonce and check user permissions
+        check_ajax_referer('broadstreet_ajax_nonce', 'nonce');
+
         if (!current_user_can('manage_options')) {
-            die(json_encode(array('success' => false, 'error' => 'Permission denied')));
+            wp_die(json_encode(array('success' => false, 'message' => 'Unauthorized')));
         }
 
-        // Verify nonce and referer (fixes CSRF vulnerability)
-        check_ajax_referer('broadstreet_settings_nonce', '_wpnonce');
 
         // Sanitize the API key before storing it
         $api_key = sanitize_text_field($_POST['api_key']);
@@ -72,13 +72,15 @@ class Broadstreet_Ajax
      */
     public static function saveZoneSettings()
     {
-        // Verify user has admin permissions (fixes Broken Access Control vulnerability)
-        if (!current_user_can('manage_options')) {
-            die(json_encode(array('success' => false, 'error' => 'Permission denied')));
+        // Verify nonce (passed as URL parameter) and check user permissions
+        // Note: Using $_GET since nonce is in URL, not in php://input JSON body
+        if (!isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'broadstreet_ajax_nonce')) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Security check failed')));
         }
 
-        // Verify nonce and referer (fixes CSRF vulnerability)
-        check_ajax_referer('broadstreet_zone_settings_nonce', '_wpnonce');
+        if (!current_user_can('manage_options')) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Unauthorized')));
+        }
 
         $settings = json_decode(file_get_contents("php://input"));
 
@@ -97,13 +99,13 @@ class Broadstreet_Ajax
 
     public static function createAdvertiser()
     {
-        // Verify user has admin permissions (fixes Broken Access Control vulnerability)
+        // Verify nonce and check user permissions
+        check_ajax_referer('broadstreet_ajax_nonce', 'nonce');
+
         if (!current_user_can('manage_options')) {
-            die(json_encode(array('success' => false, 'error' => 'Permission denied')));
+            wp_die(json_encode(array('success' => false, 'message' => 'Unauthorized')));
         }
 
-        // Verify nonce and referer (fixes CSRF vulnerability)
-        check_ajax_referer('broadstreet_advertiser_nonce', '_wpnonce');
 
         $api_key    = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_API_KEY);
         $network_id = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
@@ -117,6 +119,13 @@ class Broadstreet_Ajax
     }
 
     public static function getSponsorPostMeta() {
+        // Verify nonce and check user permissions
+        check_ajax_referer('broadstreet_ajax_nonce', 'nonce');
+
+        if (!current_user_can('edit_posts')) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Unauthorized')));
+        }
+
         $post_id = isset($_GET['post_id']) ? intval($_GET['post_id']) : 0;
 
         // Verify user has permission to edit this post (fixes IDOR vulnerability)
@@ -132,15 +141,14 @@ class Broadstreet_Ajax
 
     public static function importFacebook()
     {
-        $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+        // Verify nonce and check user permissions
+        check_ajax_referer('broadstreet_ajax_nonce', 'nonce');
 
-        // Verify user has permission to edit this post (fixes Broken Access Control vulnerability)
-        if (!current_user_can('edit_post', $post_id)) {
-            die(json_encode(array('success' => false, 'error' => 'Permission denied')));
+        if (!current_user_can('edit_posts')) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Unauthorized')));
         }
 
-        // Verify nonce and referer (fixes CSRF vulnerability)
-        check_ajax_referer('broadstreet_facebook_nonce', '_wpnonce');
+        $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
 
         try
         {
@@ -155,13 +163,13 @@ class Broadstreet_Ajax
 
     public static function register()
     {
-        // Verify user has admin permissions (fixes Broken Access Control vulnerability)
+        // Verify nonce and check user permissions
+        check_ajax_referer('broadstreet_ajax_nonce', 'nonce');
+
         if (!current_user_can('manage_options')) {
-            die(json_encode(array('success' => false, 'error' => 'Permission denied')));
+            wp_die(json_encode(array('success' => false, 'message' => 'Unauthorized')));
         }
 
-        // Verify nonce and referer (fixes CSRF vulnerability)
-        check_ajax_referer('broadstreet_register_nonce', '_wpnonce');
 
         $api = Broadstreet_Utility::getBroadstreetClient(true);
 

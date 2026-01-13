@@ -30,7 +30,7 @@ jQuery(function($){
 
         if(!email) return false;
 
-        $.post(ajaxurl, {action: 'register', email: email, _wpnonce: window.broadstreet_register_nonce}, function(response) {
+        $.post(ajaxurl, {action: 'register', email: email, nonce: broadstreetAjax.nonce}, function(response) {
             if(response.success)
             {
                 location.reload();
@@ -45,14 +45,13 @@ jQuery(function($){
     $('#save-broadstreet').click(function() {
 
         var network_id = $('#network').val();
-        var nonce_value = $(this).attr('data-nonce');
 
         jQuery.post(ajaxurl, {
              action: 'bs_save_settings',
              api_key: $('#api_key').val(),
              business_enabled: $('#business_enabled').is(':checked'),
              network_id: network_id,
-             _wpnonce: nonce_value
+             nonce: broadstreetAjax.nonce
             },
             function(response) {
                 if (console) console.log(response);
@@ -106,7 +105,7 @@ jQuery(function($){
         $.post(ajaxurl, {
             action: 'create_advertiser',
             name: name,
-            _wpnonce: window.broadstreet_advertiser_nonce
+            nonce: broadstreetAjax.nonce
         }, function(response) {
             console.log(response);
             if(response.success) {
@@ -244,7 +243,7 @@ jQuery(function($){
 
         $('#import-progress').show();
 
-        $.post(ajaxurl, {id:id, post_id: window.bs_post_id, action: 'import_facebook', _wpnonce: window.broadstreet_facebook_nonce}, function(response) {
+        $.post(ajaxurl, {id:id, post_id: window.bs_post_id, action: 'import_facebook', nonce: broadstreetAjax.nonce}, function(response) {
             console.log(response);
             if(response.success) {
                 var count = 0;

@@ -669,6 +669,13 @@ class Broadstreet_Core
 
             //if(!$info || !$info->cc_on_file)
             //    echo '<div class="updated"><p>You\'re <strong>almost ready</strong> to start using Broadstreet! Check the <a href="admin.php?page=Broadstreet">plugin page</a> to take care of the last steps. When that\'s done, this message will clear shortly after.</p></div>';
+
+            // Check for video security warning
+            $security_warning = get_transient('broadstreet_video_security_warning_' . get_current_user_id());
+            if ($security_warning) {
+	                echo '<div class="notice notice-error is-dismissible"><p><strong>Broadstreet Security Notice:</strong> Potentially malicious content was detected and removed from the video embed field. JavaScript protocols, event handlers, and script tags are not allowed for security reasons.</p></div>';
+                delete_transient('broadstreet_video_security_warning_' . get_current_user_id());
+            }
         }
     }
 
@@ -688,6 +695,11 @@ class Broadstreet_Core
             wp_enqueue_script('angular-js', Broadstreet_Utility::getJSBaseURL().'angular.min.js?v='. BROADSTREET_VERSION);
             wp_enqueue_script('isteven-multi-js', Broadstreet_Utility::getJSBaseURL().'isteven-multi-select.js');
             wp_enqueue_style ('isteven-multi-css',  Broadstreet_Utility::getCSSBaseURL() . 'isteven-multi-select.css');
+
+            // Pass nonce to JavaScript for AJAX security
+            wp_localize_script('Broadstreet-main', 'broadstreetAjax', [
+                'nonce' => wp_create_nonce('broadstreet_ajax_nonce')
+            ]);
         }
 
         # Only register on the post editing page
@@ -697,6 +709,11 @@ class Broadstreet_Core
                 wp_enqueue_style ('Broadstreet-vendorcss-time', Broadstreet_Utility::getVendorBaseURL() . 'timepicker/css/timePicker.css');
                 wp_enqueue_script('Broadstreet-main'  ,  Broadstreet_Utility::getJSBaseURL().'broadstreet.js?v='. BROADSTREET_VERSION);
                 wp_enqueue_script('Broadstreet-vendorjs-time'  ,  Broadstreet_Utility::getVendorBaseURL().'timepicker/js/jquery.timePicker.min.js');
+
+                // Pass nonce to JavaScript for AJAX security
+                wp_localize_script('Broadstreet-main', 'broadstreetAjax', [
+                    'nonce' => wp_create_nonce('broadstreet_ajax_nonce')
+                ]);
             }
         }
 
@@ -1297,6 +1314,9 @@ class Broadstreet_Core
             {
                 // Special handling for video content - only allow video and iframe tags to prevent XSS attacks
                 if(isset($_POST[$key]) && $key == 'bs_video') {
+                    $original_content = $_POST[$key];
+                    $security_warning = false;
+
                     // Create a whitelist of allowed tags
                     $allowed_tags = array(
                         'video' => array(
@@ -1308,7 +1328,9 @@ class Broadstreet_Core
                             'muted' => true,
                             'poster' => true,
                             'preload' => true,
-                            'src' => true
+                            'src' => true,
+                            'class' => true,
+                            'id' => true
                         ),
                         'source' => array(
                             'src' => true,
@@ -1320,15 +1342,54 @@ class Broadstreet_Core
                             'height' => true,
                             'frameborder' => true,
                             'allowfullscreen' => true,
-                            'allow' => true
+                            'allow' => true,
+                            'title' => true,
+                            'class' => true,
+                            'id' => true
                         )
                     );
 
-                    // Strip all tags except those in the whitelist
-                    $video_content = wp_kses($_POST[$key], $allowed_tags);
+                    // Define allowed protocols for URLs (prevent javascript:, data:, etc.)
+                    $allowed_protocols = array('http', 'https');
+
+                    // Strip all tags except those in the whitelist, with protocol validation
+                    $video_content = wp_kses($_POST[$key], $allowed_tags, $allowed_protocols);
+
+                    // Check for and remove dangerous patterns
+                    // 1. Detect javascript: protocol
+                    if (preg_match('/javascript:/i', $original_content)) {
+                        $security_warning = true;
+                        $video_content = preg_replace('/(<[^>]*[\s\'"](src|href|poster|data)\s*=\s*[\'"]?)javascript:/i', '$1', $video_content);
+                    }
+
+                    // 2. Detect data: protocol
+                    if (preg_match('/data:/i', $original_content)) {
+                        $security_warning = true;
+                        $video_content = preg_replace('/(<[^>]*[\s\'"](src|href|poster|data)\s*=\s*[\'"]?)data:/i', '$1', $video_content);
+                    }
+
+                    // 3. Detect and remove event handlers (on*)
+                    if (preg_match('/<[^>]*\s+on\w+\s*=/i', $original_content)) {
+                        $security_warning = true;
+                        $video_content = preg_replace('/<([^>]*)\s+on\w+\s*=\s*[\'"][^\'"]*[\'"]([^>]*)>/i', '<$1$2>', $video_content);
+                    }
+
+                    // 4. Detect <script> tags
+                    if (preg_match('/<script/i', $original_content)) {
+                        $security_warning = true;
+                    }
+
+                    // 5. Clean up any broken/suspicious src attributes after sanitization
+                    // This removes leftover garbage from removed javascript:/data: protocols
+                    $video_content = preg_replace('/(<(?:iframe|video|source)[^>]*\s+src\s*=\s*[\'"])(?![\'"]?https?:\/\/)[^\'"]*([\'"])/i', '$1$2', $video_content);
 
                     // Save the sanitized video content
                     Broadstreet_Utility::setPostMeta($post_id, $key, $video_content);
+
+                    // Store security warning flag as transient for admin notice
+                    if ($security_warning) {
+                        set_transient('broadstreet_video_security_warning_' . get_current_user_id(), true, 45);
+                    }
 
                     // Skip the default handling for this field
                     continue;

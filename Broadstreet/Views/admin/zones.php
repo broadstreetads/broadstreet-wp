@@ -463,7 +463,7 @@ window.broadstreet_zone_settings_nonce = '<?php echo wp_create_nonce('broadstree
                 console.log('Saving settings:', $scope.data.positions_zones);
                 $scope.loadingMessage = 'Saving ...';
                 var params = $scope.data.positions_zones;
-                $http.post(window.ajaxurl + '?action=save_zone_settings&_wpnonce=' + window.broadstreet_zone_settings_nonce, params)
+                $http.post(window.ajaxurl + '?action=save_zone_settings&nonce=' + broadstreetAjax.nonce, params)
                     .success(function(response) {
                         $scope.loadingMessage = null;
                         var saveSuccessEl = document.getElementById('save-success');
