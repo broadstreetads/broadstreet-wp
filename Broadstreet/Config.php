@@ -140,4 +140,4 @@ class Broadstreet_Config
     }
 }
 
-define('BROADSTREET_VERSION', '1.52.4');
+define('BROADSTREET_VERSION', '1.53.0');
