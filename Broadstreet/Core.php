@@ -812,11 +812,29 @@ class Broadstreet_Core
     }
 
     public function adminMenuBusinessCallback() {
+        // Handle POSTed settings securely
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Require capability
+            if (!current_user_can('manage_options')) {
+                wp_die('Permission denied');
+            }
 
-        if (isset($_POST['featured_business_image'])) {
-            $featured_image = Broadstreet_Utility::featuredBusinessImage($_POST['featured_business_image']);
+            // Verify nonce for the businesses settings form
+            check_admin_referer('broadstreet_business_nonce');
+
+            // Sanitize and persist the featured image setting
+            if (isset($_POST['featured_business_image'])) {
+                $featured_image_value = sanitize_text_field($_POST['featured_business_image']);
+                $featured_image = Broadstreet_Utility::featuredBusinessImage($featured_image_value);
+            } else {
+                $featured_image = Broadstreet_Utility::featuredBusinessImage();
+            }
         } else {
-            $featured_image = Broadstreet_Utility::featuredBusinessImage();
+            if (isset($_POST['featured_business_image'])) {
+                $featured_image = Broadstreet_Utility::featuredBusinessImage($_POST['featured_business_image']);
+            } else {
+                $featured_image = Broadstreet_Utility::featuredBusinessImage();
+            }
         }
 
         Broadstreet_View::load('admin/businesses', array('featured_image' => $featured_image));

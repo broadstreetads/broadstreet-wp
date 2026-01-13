@@ -24,6 +24,9 @@ class Broadstreet_Ajax
             die(json_encode(array('success' => false, 'error' => 'Permission denied')));
         }
 
+        // Verify nonce and referer (fixes CSRF vulnerability)
+        check_ajax_referer('broadstreet_settings_nonce', '_wpnonce');
+
         // Sanitize the API key before storing it
         $api_key = sanitize_text_field($_POST['api_key']);
         Broadstreet_Utility::setOption(Broadstreet_Core::KEY_API_KEY, $api_key);
@@ -74,6 +77,9 @@ class Broadstreet_Ajax
             die(json_encode(array('success' => false, 'error' => 'Permission denied')));
         }
 
+        // Verify nonce and referer (fixes CSRF vulnerability)
+        check_ajax_referer('broadstreet_zone_settings_nonce', '_wpnonce');
+
         $settings = json_decode(file_get_contents("php://input"));
 
         if($settings)
@@ -96,6 +102,9 @@ class Broadstreet_Ajax
             die(json_encode(array('success' => false, 'error' => 'Permission denied')));
         }
 
+        // Verify nonce and referer (fixes CSRF vulnerability)
+        check_ajax_referer('broadstreet_advertiser_nonce', '_wpnonce');
+
         $api_key    = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_API_KEY);
         $network_id = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
 
@@ -115,6 +124,9 @@ class Broadstreet_Ajax
             die(json_encode(array('success' => false, 'error' => 'Permission denied')));
         }
 
+        // Verify nonce and referer (fixes CSRF vulnerability)
+        check_ajax_referer('broadstreet_sponsor_nonce', '_wpnonce');
+
         die(json_encode(array('success' => true, 'meta' => Broadstreet_Utility::getAllPostMeta($post_id))));
     }
 
@@ -126,6 +138,9 @@ class Broadstreet_Ajax
         if (!current_user_can('edit_post', $post_id)) {
             die(json_encode(array('success' => false, 'error' => 'Permission denied')));
         }
+
+        // Verify nonce and referer (fixes CSRF vulnerability)
+        check_ajax_referer('broadstreet_facebook_nonce', '_wpnonce');
 
         try
         {
@@ -144,6 +159,9 @@ class Broadstreet_Ajax
         if (!current_user_can('manage_options')) {
             die(json_encode(array('success' => false, 'error' => 'Permission denied')));
         }
+
+        // Verify nonce and referer (fixes CSRF vulnerability)
+        check_ajax_referer('broadstreet_register_nonce', '_wpnonce');
 
         $api = Broadstreet_Utility::getBroadstreetClient(true);
 

@@ -7,7 +7,10 @@ $zones_page_render_error = null;
 try {
     // --- START OF ORIGINAL PAGE CONTENT ---
 ?>
-<script>window.bs_bootstrap = <?php echo json_encode($data); ?>;</script>
+<script>
+window.bs_bootstrap = <?php echo json_encode($data); ?>;
+window.broadstreet_zone_settings_nonce = '<?php echo wp_create_nonce('broadstreet_zone_settings_nonce'); ?>';
+</script>
 <div id="main" ng-app="bs_zones">
       <?php Broadstreet_View::load('admin/global/header') ?>
       <div class="left_column" ng-controller="ZoneCtrl">
@@ -460,7 +463,7 @@ try {
                 console.log('Saving settings:', $scope.data.positions_zones);
                 $scope.loadingMessage = 'Saving ...';
                 var params = $scope.data.positions_zones;
-                $http.post(window.ajaxurl + '?action=save_zone_settings', params)
+                $http.post(window.ajaxurl + '?action=save_zone_settings&_wpnonce=' + window.broadstreet_zone_settings_nonce, params)
                     .success(function(response) {
                         $scope.loadingMessage = null;
                         var saveSuccessEl = document.getElementById('save-success');

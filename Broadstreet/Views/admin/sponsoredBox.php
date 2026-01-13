@@ -91,7 +91,7 @@
                             var el = document.getElementById('bs_sponsor_old_advertisement_id');
                             var post_id = editor.getCurrentPostId();
 
-                            jQuery.get(window.ajaxurl + '?action=get_sponsored_meta&post_id=' + post_id, function (data) {
+                            jQuery.get(window.ajaxurl + '?action=get_sponsored_meta&post_id=' + post_id + '&_wpnonce=' + window.broadstreet_sponsor_nonce, function (data) {
                                 var meta = data.meta;
                                 console.info('Broadstreet Meta Update ...', meta);
                                 if (meta.bs_sponsor_is_sponsored == '1') {
@@ -121,4 +121,7 @@
         and make sure your access token is correct, and make sure you have zones set up.</p>
 <?php endif; ?>
 <input type="hidden" name="bs_sponsor_submit" value="1" />
-<script>window.bs_post_id = <?php echo (int)$GLOBALS['post']->ID ?>;</script>
+<script>
+window.bs_post_id = <?php echo (int)$GLOBALS['post']->ID ?>;
+window.broadstreet_sponsor_nonce = '<?php echo wp_create_nonce('broadstreet_sponsor_nonce'); ?>';
+</script>

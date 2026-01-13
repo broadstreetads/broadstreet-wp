@@ -266,4 +266,8 @@
 <input type="hidden" name="bs_submit" value="1" />
 
 <script src="<?php echo esc_url(Broadstreet_Utility::getVendorBaseURL()) ?>jquery/jquery-ui-1.9.1.sortable-custom.min.js"></script>
-<script>window.bs_post_id = <?php echo (int)$GLOBALS['post']->ID ?>;</script>
+<script>
+window.bs_post_id = <?php echo (int)$GLOBALS['post']->ID ?>;
+window.broadstreet_advertiser_nonce = '<?php echo wp_create_nonce('broadstreet_advertiser_nonce'); ?>';
+window.broadstreet_facebook_nonce = '<?php echo wp_create_nonce('broadstreet_facebook_nonce'); ?>';
+</script>

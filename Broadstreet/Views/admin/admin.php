@@ -90,7 +90,7 @@
                         </div>
                         <div class="save-container">
                             <span class="success" id="save-success">Saved!</span>
-                            <input id="save-broadstreet" type="button" value="Save" name="" />
+                            <input id="save-broadstreet" type="button" value="Save" name="" data-nonce="<?php echo wp_create_nonce('broadstreet_settings_nonce'); ?>" />
                         </div>
                     </div>
                     <div class="clearfix"></div>
@@ -104,3 +104,9 @@
     </div>
       <div class="clearfix"></div>
       <!-- <img src="http://report.Broadstreet2.com/checkin/?s=<?php echo $service_tag.'&'.time(); ?>" alt="" /> -->
+      <script>
+      window.broadstreet_register_nonce = '<?php echo wp_create_nonce('broadstreet_register_nonce'); ?>';
+      window.broadstreet_advertiser_nonce = '<?php echo wp_create_nonce('broadstreet_advertiser_nonce'); ?>';
+      window.broadstreet_facebook_nonce = '<?php echo wp_create_nonce('broadstreet_facebook_nonce'); ?>';
+      window.broadstreet_zone_settings_nonce = '<?php echo wp_create_nonce('broadstreet_zone_settings_nonce'); ?>';
+      </script>
