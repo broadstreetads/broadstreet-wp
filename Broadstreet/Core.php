@@ -465,7 +465,14 @@ class Broadstreet_Core
             'page'
         );
 
-        $screens = get_post_types();
+        /**
+         * Filter the post types on which Broadstreet meta boxes appear.
+         * Defaults to all registered post types.
+         *
+         * @param array $post_types Array of post type slugs.
+         */
+        $screens = apply_filters('broadstreet_meta_box_post_types', get_post_types());
+
         if (Broadstreet_Utility::getOption(self::KEY_API_KEY)) {
             foreach ( $screens as $screen ) {
                 add_meta_box(
@@ -473,8 +480,8 @@ class Broadstreet_Core
                     __( '<span class="dashicons dashicons-performance"></span> Sponsored Content', 'broadstreet_textdomain'),
                     array($this, 'broadstreetSponsoredBox'),
                     $screen,
-                    'side',
-                    'high'
+                    apply_filters('broadstreet_sponsored_meta_box_context', 'side', $screen),
+                    apply_filters('broadstreet_sponsored_meta_box_priority', 'high', $screen)
                 );
             }
         }
@@ -485,7 +492,8 @@ class Broadstreet_Core
                 __( '<span class="dashicons dashicons-format-image"></span> Broadstreet Options', 'broadstreet_textdomain'),
                 array($this, 'broadstreetAdVisibilityBox'),
                 $screen,
-                'side'
+                apply_filters('broadstreet_options_meta_box_context', 'side', $screen),
+                apply_filters('broadstreet_options_meta_box_priority', 'default', $screen)
             );
         }
 
@@ -496,7 +504,8 @@ class Broadstreet_Core
                 __( 'Business Details', 'broadstreet_textdomain'),
                 array($this, 'broadstreetBusinessBox'),
                 self::BIZ_POST_TYPE,
-                'normal'
+                apply_filters('broadstreet_business_meta_box_context', 'normal'),
+                apply_filters('broadstreet_business_meta_box_priority', 'default')
             );
         }
     }
