@@ -622,10 +622,12 @@ class Broadstreet_Core
 	        if (property_exists($placement_settings, 'adserver_whitelabel') && strlen($placement_settings->adserver_whitelabel) > 0) {
 		        $adserver_host = $placement_settings->adserver_whitelabel;
 	        }
-	        if (property_exists($placement_settings, 'enable_analytics') && strlen($placement_settings->enable_analytics)) {
+	        if (Broadstreet_Utility::isAnalyticsEnabled()) {
 		        $network_id = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
-		        wp_register_script('broadstreet-analytics', "//$adserver_host/emit/$network_id.js", array(), '1.0.0', array('strategy'  => 'async'));
-		        wp_enqueue_script('broadstreet-analytics');
+		        if ($network_id) {
+			        wp_register_script('broadstreet-analytics', "//$adserver_host/emit/$network_id.js", array(), '1.0.0', array('strategy'  => 'async'));
+			        wp_enqueue_script('broadstreet-analytics');
+		        }
 	        }
 
             wp_register_script('broadstreet-init', "//$host/$file");

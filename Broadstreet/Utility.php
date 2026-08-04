@@ -408,6 +408,22 @@ class Broadstreet_Utility
         return $host;
     }
 
+    /**
+     * Whether Broadstreet Flux analytics should be loaded. On by default: only an
+     * explicit opt-out in Zone Options turns it off.
+     * @return boolean
+     */
+    public static function isAnalyticsEnabled()
+    {
+        $placement_settings = Broadstreet_Utility::getPlacementSettings();
+
+        if (property_exists($placement_settings, 'enable_analytics')) {
+            return (bool) $placement_settings->enable_analytics;
+        }
+
+        return true;
+    }
+
     public static function useLocalBSA()
     {
         $placement_settings = Broadstreet_Utility::getPlacementSettings();

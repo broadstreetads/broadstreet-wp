@@ -249,7 +249,7 @@ window.broadstreet_zone_settings_nonce = '<?php echo wp_create_nonce('broadstree
                     <div class="option">
                         <div class="control-label">
                             <div class="name nomargin">
-                                Web Analytics (Beta)
+                                Web Analytics
                             </div>
                             <div class="desc nomargin">
                                 Enable this for website analytics, a simple and free alternative to Google Analytics. This can safely run alongside Google Analytics too.
@@ -432,6 +432,12 @@ window.broadstreet_zone_settings_nonce = '<?php echo wp_create_nonce('broadstree
                 }),
                 positions_zones: bootstrap.placements || {}
             };
+
+            // Web analytics is on by default; the box only unchecks if it was explicitly turned off
+            if ($scope.data.positions_zones.enable_analytics === undefined
+                || $scope.data.positions_zones.enable_analytics === null) {
+                $scope.data.positions_zones.enable_analytics = true;
+            }
 
             var catList = [], found = false;
             if (bootstrap.categories && angular.isArray(bootstrap.categories)) {
