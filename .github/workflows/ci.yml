@@ -38,3 +38,28 @@ jobs:
         run: |
           find . -path ./.git -prune -o -type f -name '*.php' -print0 \
             | xargs -0 -n1 php -l
+
+  php-compat:
+    name: PHP compatibility (7.2-8.4)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the plugin
+        uses: actions/checkout@v4
+
+      # 8.4 is only the runtime for the analyser. PHPCS works statically, so
+      # the range actually targeted comes from testVersion in phpcs.xml.dist.
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      - name: Install analysis tools
+        working-directory: .github
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Check PHP compatibility
+        run: >
+          .github/vendor/bin/phpcs -p -n
+          --standard=.github/phpcs.xml.dist
+          broadstreet.php Broadstreet/

@@ -1,0 +1,18 @@
+{
+    "name": "broadstreetads/broadstreet-wp-ci",
+    "description": "Development-only analysis tooling for CI. Not part of the distributed plugin. PHPCompatibility 10 is a pre-release, deliberately: the 9.3.5 stable line dates from 2019 and has no sniff data at all for PHP 8.1 through 8.4. Versions are pinned by composer.lock, and PHP_CodeSniffer itself stays on a stable release.",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.13",
+        "phpcompatibility/phpcompatibility-wp": "^3.0@alpha",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}
