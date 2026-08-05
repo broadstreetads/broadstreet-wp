@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Syntax (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      # Deliberate: if the code breaks on 8.4, we want to know whether it also
+      # breaks on 7.2, not have the matrix cancelled after the first red leg.
+      fail-fast: false
+      matrix:
+        php: ['7.2', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
+    steps:
+      - name: Check out the plugin
+        uses: actions/checkout@v4
+
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: none
+
+      - name: Check PHP syntax
+        run: |
+          find . -path ./.git -prune -o -type f -name '*.php' -print0 \
+            | xargs -0 -n1 php -l
