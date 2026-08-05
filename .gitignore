@@ -2,3 +2,4 @@ Broadstreet/Logs/*.txt
 .idea
 .DS_Store
 .github/vendor/
+.github/docs/

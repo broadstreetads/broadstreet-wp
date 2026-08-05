@@ -1,0 +1,12 @@
+# Keep development-only paths out of `git archive` output, which is what
+# GitHub serves for "Download ZIP" and for release tarballs. Without this,
+# anyone unzipping the repository straight into wp-content/plugins would get
+# the CI configuration alongside the plugin.
+#
+# This is belt-and-braces. The wp.org package is built by ./deploy, whose
+# `rsync --exclude=".*/"` over a `$GIT/*` glob already skips every path below.
+
+/.github        export-ignore
+/.gitattributes export-ignore
+/.gitignore     export-ignore
+/.gitmodules    export-ignore
