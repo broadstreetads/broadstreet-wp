@@ -1256,6 +1256,9 @@ class Broadstreet_Utility
             $keywords[] = $slug;
         }
 
+        // Allow developers to add custom keywords
+        $keywords = apply_filters('broadstreet_ad_keywords', $keywords);
+
         if ($omit_quotes) {
             $keywords_string = implode(",", $keywords);
         } else {

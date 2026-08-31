@@ -30,6 +30,35 @@ Publishers into your Broadstreet site.
 To learn more about Broadstreet, and how it can help you as a local publisher,
 send an email to [frontdesk@broadstreetads.com](frontdesk@broadstreetads.com).
 
+**Developer Hooks**
+
+The plugin provides filters for developers to customize behavior:
+
+`broadstreet_ad_keywords` - Filter the keywords sent to the ad server for targeting
+
+Example usage:
+
+```php
+add_filter( 'broadstreet_ad_keywords', function( $keywords ) {
+    // Add logged-in status
+    if ( is_user_logged_in() ) {
+        $keywords[] = 'user_logged_in';
+    }
+
+    // Add custom taxonomy terms
+    if ( is_singular() ) {
+        $terms = get_the_terms( get_the_ID(), 'my_custom_taxonomy' );
+        if ( $terms && ! is_wp_error( $terms ) ) {
+            foreach ( $terms as $term ) {
+                $keywords[] = $term->name;
+            }
+        }
+    }
+
+    return $keywords;
+} );
+```
+
 **How can I report security bugs?**
 
 You can report security bugs through the Patchstack Vulnerability Disclosure
