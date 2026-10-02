@@ -18,16 +18,15 @@
             <?php if (isset($meta['bs_sponsor_advertiser_id'])): ?>
                 <input type="hidden" id="bs_sponsor_old_advertiser_id" name="bs_sponsor_old_advertiser_id" value="<?php echo esc_attr($meta['bs_sponsor_advertiser_id']) ?>">
             <?php endif; ?>
-            <select id="bs_sponsor_advertiser_id" name="bs_sponsor_advertiser_id" onchange="sponsorSelect()">
-                <?php $linked = false; ?>
-                <?php $has_match = false ?>
-                <?php foreach($advertisers as $advertiser): ?>
-                    <?php if($advertiser->name == $GLOBALS['post']->post_title) $has_match = true; ?>
-                    <?php if($meta['bs_sponsor_advertiser_id'] == $advertiser->id) $linked = true; ?>
-                    <option value="<?php echo esc_attr($advertiser->id) ?>" <?php if($meta['bs_sponsor_advertiser_id'] == $advertiser->id) echo ' selected="selected"' ?>><?php echo esc_html($advertiser->name) ?> (ID: <?php echo esc_html($advertiser->id) ?>)</option>
-                <?php endforeach; ?>
-                <option value="new_advertiser">-- Create a New Advertiser --</option>
+            <?php
+                # The advertiser list is loaded by bsaLoadAdvertisers() once tracking is on. Until then,
+                # hold on to the post's current advertiser (if it has one) so that saving doesn't change it
+                $has_advertiser = $meta['bs_sponsor_advertiser_id'] && $meta['bs_sponsor_advertiser_id'] != 'new_advertiser';
+            ?>
+            <select id="bs_sponsor_advertiser_id" name="bs_sponsor_advertiser_id" onchange="sponsorSelect()" <?php if (!$has_advertiser) echo 'disabled' ?>>
+                <option value="<?php if ($has_advertiser) echo esc_attr($meta['bs_sponsor_advertiser_id']) ?>" selected="selected">Loading advertisers...</option>
             </select>
+            <a href="#" id="bsa_sponsor_advertisers_retry" onclick="bsaLoadAdvertisers(); return false;" style="display:none;">Try again</a>
             <input type="text" name="bs_sponsor_advertiser_name" id="bs_sponsor_advertiser_name" placeholder="Untitled Advertiser" minlength="3" value="" style="display:none;" />
             <?php if (isset($meta['bs_sponsor_advertisement_id'])): ?>
                 <input type="hidden" id="bs_sponsor_advertisement_id" name="bs_sponsor_advertisement_id" value="<?php echo esc_attr($meta['bs_sponsor_advertisement_id']) ?>">
@@ -43,10 +42,50 @@
     </div>
 
     <script>
+        window.bsaAdvertisersState = null; // null, 'loading' or 'loaded'
+
+        // The advertiser list comes from Broadstreet's API, so it's only fetched
+        // once tracking is on for this post, not every time the editor opens
+        window.bsaLoadAdvertisers = function () {
+            if (window.bsaAdvertisersState) return;
+            window.bsaAdvertisersState = 'loading';
+
+            var select = jQuery('#bs_sponsor_advertiser_id');
+            var retry = jQuery('#bsa_sponsor_advertisers_retry').hide();
+            select.find('option').first().text('Loading advertisers...');
+
+            var failed = function () {
+                window.bsaAdvertisersState = null;
+                select.find('option').first().text('Could not load advertisers');
+                retry.show();
+            };
+
+            jQuery.get(window.ajaxurl, {action: 'bs_get_advertisers', _wpnonce: '<?php echo esc_js(wp_create_nonce('broadstreet_sponsor_nonce')); ?>'}, function (data) {
+                if (!data || !data.success) return failed();
+
+                var current = select.val();
+                select.empty();
+                jQuery.each(data.advertisers, function (i, advertiser) {
+                    select.append(jQuery('<option></option>').val(advertiser.id).text(advertiser.name + ' (ID: ' + advertiser.id + ')'));
+                });
+                select.append(jQuery('<option value="new_advertiser"></option>').text('-- Create a New Advertiser --'));
+
+                var has_current = select.find('option').filter(function () { return current && this.value == current; }).length;
+                if (has_current) {
+                    select.val(current);
+                }
+
+                select.prop('disabled', false);
+                window.bsaAdvertisersState = 'loaded';
+                sponsorSelect();
+            }, 'json').fail(failed);
+        }
+
         window.bsaSponsorToggle = function (e) {
             var sel = jQuery('#bsa_sponsor_advertiser_selection');
             if (jQuery('#bsa_is_sponsored').is(':checked')) {
                 sel.fadeIn();
+                bsaLoadAdvertisers();
             } else {
                 sel.fadeOut();
             }

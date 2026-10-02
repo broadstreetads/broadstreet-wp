@@ -139,6 +139,44 @@ class Broadstreet_Ajax
         die(json_encode(array('success' => true, 'meta' => Broadstreet_Utility::getAllPostMeta($post_id))));
     }
 
+    /**
+     * The list of advertisers for the sponsored content box. Loaded on demand
+     *  so that the post editor doesn't wait on the API every time it opens
+     */
+    public static function getAdvertisers()
+    {
+        // Verify nonce and check user permissions
+        check_ajax_referer('broadstreet_sponsor_nonce', '_wpnonce');
+
+        if (!current_user_can('edit_posts')) {
+            wp_die(json_encode(array('success' => false, 'message' => 'Unauthorized')));
+        }
+
+        $network_id = Broadstreet_Utility::getOption(Broadstreet_Core::KEY_NETWORK_ID);
+        $api        = Broadstreet_Utility::getBroadstreetClient();
+
+        try
+        {
+            $advertisers = $api->getAdvertisers($network_id) ?? array();
+
+            usort($advertisers, function($a, $b) {
+                return strcmp($a->name, $b->name);
+            });
+        }
+        catch(Exception $ex)
+        {
+            die(json_encode(array('success' => false, 'message' => 'Could not load advertisers')));
+        }
+
+        $list = array();
+        foreach($advertisers as $advertiser)
+        {
+            $list[] = array('id' => $advertiser->id, 'name' => $advertiser->name);
+        }
+
+        die(json_encode(array('success' => true, 'advertisers' => $list)));
+    }
+
     public static function importFacebook()
     {
         // Verify nonce and check user permissions
