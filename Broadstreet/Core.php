@@ -201,6 +201,7 @@ class Broadstreet_Core
         add_action('wp_ajax_register', array('Broadstreet_Ajax', 'register'));
         add_action('wp_ajax_save_zone_settings', array('Broadstreet_Ajax', 'saveZoneSettings'));
         add_action('wp_ajax_get_sponsored_meta', array('Broadstreet_Ajax', 'getSponsorPostMeta'));
+        add_action('wp_ajax_bs_get_advertisers', array('Broadstreet_Ajax', 'getAdvertisers'));
 
         add_action('rest_api_init', function () {
             # /wp-json/broadstreet/v1/targets
@@ -1089,27 +1090,11 @@ class Broadstreet_Core
         $meta = Broadstreet_Utility::getAllPostMeta($post->ID, self::$_sponsoredDefaults);
 
         $network_id       = Broadstreet_Utility::getOption(self::KEY_NETWORK_ID);
-        $advertiser_id    = Broadstreet_Utility::getPostMeta($post->ID, 'bs_sponsor_advertiser_id');
-        $advertisement_id = Broadstreet_Utility::getPostMeta($post->ID, 'bs_sponsor_advertisement_id');
 
-        $api = $this->getBroadstreetClient();
-
-        try
-        {
-            $advertisers = $api->getAdvertisers($network_id) ?? array();
-
-            usort($advertisers, function($a, $b) {
-                return strcmp($a->name, $b->name);
-            });
-        }
-        catch(Exception $ex)
-        {
-            $advertisers = array();
-        }
-
+        # The advertiser list is loaded over AJAX (Broadstreet_Ajax::getAdvertisers)
+        # only when the box needs it, so that opening the editor doesn't wait on the API
         Broadstreet_View::load('admin/sponsoredBox', array(
             'meta'        => $meta,
-            'advertisers' => $advertisers,
             'network_id' => $network_id
         ));
     }
